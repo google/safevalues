@@ -94,8 +94,8 @@ without relying on typing tricks or additional tooling.
 ## Sinks
 
 Using Trusted Types in TypeScript still has a limitation as the standard lib has
-no awareness of Trusted Types. This means that you cannot assign a Trusted Type
-value to a sink directly.
+[no awareness of Trusted Types](https://github.com/microsoft/TypeScript/issues/30024).
+This means that you cannot assign a Trusted Type value to a sink directly.
 
 As explained in
 [tsec's README](https://github.com/googleinterns/tsec#trusted-type-awareness-in-tsec-rules),
