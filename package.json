@@ -1,0 +1,27 @@
+{
+  "name": "safevalues",
+  "version": "0.1.0",
+  "description": "Safe builders for Trusted Types values",
+  "repository": "https://github.com/google/safevalues",
+  "author": "ISE Hardening",
+  "license": "Apache-2.0",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "files": ["dist/src/**/*"],
+  "scripts": {
+    "build": "yarn && tsc",
+    "ibuild": "yarn && tsc --watch",
+    "test": "yarn build && karma start --browsers ChromeHeadless"
+  },
+  "devDependencies": {
+    "@types/jasmine": "^3.6.2",
+    "@types/trusted-types": "^1.0.6",
+    "jasmine-core": "^3.6.0",
+    "karma": "^5.2.3",
+    "karma-chrome-launcher": "^3.1.0",
+    "karma-jasmine": "^4.0.1",
+    "karma-spec-reporter": "^0.0.32",
+    "karma-typescript": "^5.2.0",
+    "typescript": "^4.1.2"
+  }
+}
