@@ -152,3 +152,68 @@ purposes:
 -   They perform runtime checks to ensure the passed in value was created by the
     library, giving you similar runtime guarantees as for Trusted Types enforced
     browsers.
+
+## Unchecked and legacy conversions
+
+There are certain situations when migrating a codebase to be safe using Trusted
+Types can be difficult because it requires changing large parts of the code
+together or because the provided builders are too restrictive for some
+particular usage.
+
+To help with these migrations, we provide two additional sets of functions that
+can reduce the impact of the issues above.
+
+WARNING: Make sure you use `tsec` to keep track of how your code is using these
+functions.
+
+### Legacy conversions
+
+When migrating from using string values to using Trusted Types, we often want to
+move the "sensitive" part of the code from where the value is used (`innerHTML`,
+`eval`, ect..) to where the value is constructed. This can be difficult as there
+is not always a direct path from creation to usage. Successfully changing the
+code might require updating many files at once.
+
+To avoid this issue, we provide a conversion from string -> Trusted Type that is
+unsafe, but can be used to make the code compatible with Trusted Type where the
+value is used. This function can then be "moved up" closer to where the values
+are created in independent changes. Once the conversion is in a place where the
+context makes it possible to construct the value safely, it can be removed
+completely.
+
+```typescript
+import {legacyConversionToTrustedScriptURL} from 'safevalues/legacy';
+import {unwrapScriptURL} from 'safevalues';
+
+// TODO: move legacyConversion to caller
+script.src = unwrapScriptURL(legacyConversionToTrustedScriptURL(url));
+```
+
+### Unchecked conversions
+
+When creating Trusted Types, you might run into some use cases where the
+builders that are provided in this package don't match the needs of the
+particular application. Sometimes, the use case is narrow enough that it does
+not make sense to provide a library function. In these cases, if the context
+makes it obvious that the code cannot be misused to create unsafe values.
+
+If you are in a browser that has native support for TrustedTypes, you can create
+a new policy, add it to your headers and add an extensive comment explaining why
+it is safe to do so.
+
+If you are using tsec however, you can directly use an unchecked conversion
+which will let you create a polyfilled value & force you to provide a
+justification.
+
+```typescript
+import {trustedScriptFromStringKnownToSatisfyTypeContract} from 'safevalues/unchecked';
+import {unwrapScript} from 'safevalues';
+
+if (document.domain === '') {
+    const scriptText = trustedScriptFromStringKnownToSatisfyTypeContract(
+        userInput,
+        `Even though the input is user controller, the wrapping if statement
+         ensures that this code is only ever run in a sandboxed origin`);
+    scriptEl.text = unwrapScript(scriptText);
+}
+```
