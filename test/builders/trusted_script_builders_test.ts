@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-import {concatScripts, trustedScript} from '../src/trusted_script_builders';
+import {concatScripts, trustedScript} from '../../src/builders/trusted_script_builders';
 
 describe('trusted_script_builders', () => {
   describe('trustedScript', () => {

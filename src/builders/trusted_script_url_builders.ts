@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-import {unwrapTrustedScriptAsString} from './implementation/trusted_script_impl';
-import {assertIsTemplateObject} from './implementation/safe_string_literal';
-import {createTrustedScriptURL, unwrapTrustedScriptURLAsString} from './implementation/trusted_script_url_impl';
+import {unwrapTrustedScriptAsString} from '../implementation/trusted_script_impl';
+import {assertIsTemplateObject} from '../implementation/safe_string_literal';
+import {createTrustedScriptURL, unwrapTrustedScriptURLAsString} from '../implementation/trusted_script_url_impl';
 
 /** Type that we know how to interpolate */
 type Primitive = string|number|boolean;

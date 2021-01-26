@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-import {trustedScript} from '../src/trusted_script_builders';
-import {appendParams, blobUrlFromScript, trustedScriptURL} from '../src/trusted_script_url_builders';
+import {trustedScript} from '../../src/builders/trusted_script_builders';
+import {appendParams, blobUrlFromScript, trustedScriptURL} from '../../src/builders/trusted_script_url_builders';
 
 describe('trusted_script_url_builders', () => {
   describe('trustedScriptURL', () => {

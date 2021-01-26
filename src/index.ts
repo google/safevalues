@@ -21,9 +21,11 @@
  * Only used in open source version for now.
  */
 
+export {htmlEscape} from './builders/trusted_html_builders';
+export {trustedScript} from './builders/trusted_script_builders';
+export {trustedScriptURL} from './builders/trusted_script_url_builders';
+
+/** Reexport the public type (but not the Impl). */
 export {EMPTY_HTML, unwrapTrustedHTML} from './implementation/trusted_html_impl';
 export {EMPTY_SCRIPT, unwrapTrustedScript} from './implementation/trusted_script_impl';
 export {unwrapTrustedScriptURL} from './implementation/trusted_script_url_impl';
-export {htmlEscape} from './trusted_html_builders';
-export {trustedScript} from './trusted_script_builders';
-export {trustedScriptURL} from './trusted_script_url_builders';

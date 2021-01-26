@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-import {concatHtmls, createScriptSrc, htmlEscape} from '../src/trusted_html_builders';
-import {testingConversionToTrustedScriptURL} from './testing_conversions';
+import {testingConversionToTrustedScriptURL} from '../testing_conversions';
+import {concatHtmls, createScriptSrc, htmlEscape} from '../../src/builders/trusted_html_builders';
 
 describe('trusted_html_builders', () => {
   describe('htmlEscape', () => {

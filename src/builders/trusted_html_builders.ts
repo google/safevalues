@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-import {createTrustedHTML, unwrapTrustedHTMLAsString} from './implementation/trusted_html_impl';
-import {unwrapTrustedScriptURLAsString} from './implementation/trusted_script_url_impl';
+import {createTrustedHTML, unwrapTrustedHTMLAsString} from '../implementation/trusted_html_impl';
+import {unwrapTrustedScriptURLAsString} from '../implementation/trusted_script_url_impl';
 
 /**
  * Returns HTML-escaped text as a `TrustedHTML` object.

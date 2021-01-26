@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-import {htmlEscape} from '../../src/trusted_html_builders';
-import {trustedScript} from '../../src/trusted_script_builders';
-import {trustedScriptURL} from '../../src/trusted_script_url_builders';
+import {htmlEscape} from '../../src/builders/trusted_html_builders';
+import {trustedScript} from '../../src/builders/trusted_script_builders';
+import {trustedScriptURL} from '../../src/builders/trusted_script_url_builders';
 
 import {unwrapTrustedHTMLAsString, unwrapTrustedHTML} from '../../src/implementation/trusted_html_impl';
 import {unwrapTrustedScriptAsString, unwrapTrustedScript} from '../../src/implementation/trusted_script_impl';

@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-import {createTrustedScript, unwrapTrustedScriptAsString} from './implementation/trusted_script_impl';
-import {assertIsTemplateObject} from './implementation/safe_string_literal';
+import {createTrustedScript, unwrapTrustedScriptAsString} from '../implementation/trusted_script_impl';
+import {assertIsTemplateObject} from '../implementation/safe_string_literal';
 
 /**
  * Creates a TrustedScript object from a template literal (without any embedded
