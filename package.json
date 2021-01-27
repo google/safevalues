@@ -5,13 +5,21 @@
   "repository": "https://github.com/google/safevalues",
   "author": "ISE Hardening",
   "license": "Apache-2.0",
-  "main": "dist/src/index.js",
-  "types": "dist/src/index.d.ts",
-  "files": ["dist/src/**/*"],
+  "main": "index.js",
+  "types": "index.d.ts",
+  "files": [
+    "/index.*",
+    "/unsafe/*",
+    "/implementation/*",
+    "/builders/*"
+  ],
   "scripts": {
     "build": "yarn && tsc",
     "ibuild": "yarn && tsc --watch",
-    "test": "yarn build && karma start --browsers ChromeHeadless"
+    "test": "yarn build && karma start --browsers ChromeHeadless --single-run",
+    "itest": "yarn build && karma start --browsers ChromeHeadless",
+    "prepack": "yarn test && mv dist/src/* .",
+    "postpack": "mv unsafe implementation builders index.* dist/src/"
   },
   "devDependencies": {
     "@types/jasmine": "^3.6.2",
