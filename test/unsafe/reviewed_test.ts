@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-import {safeHtmlFromStringKnownToSatisfyTypeContract} from '../src/unchecked';
+import {safeHtmlFromStringKnownToSatisfyTypeContract} from '../../src/unsafe/reviewed';
 
 describe('unchecked conversions', () => {
   it('require a justification', () => {

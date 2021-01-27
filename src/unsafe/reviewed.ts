@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-import {createTrustedHTML} from './implementation/trusted_html_impl';
-import {createTrustedScript} from './implementation/trusted_script_impl';
-import {createTrustedScriptURL} from './implementation/trusted_script_url_impl';
+import {createTrustedHTML} from '../implementation/trusted_html_impl';
+import {createTrustedScript} from '../implementation/trusted_script_impl';
+import {createTrustedScriptURL} from '../implementation/trusted_script_url_impl';
 
 
 /**

@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-import {createTrustedHTML} from './implementation/trusted_html_impl';
-import {createTrustedScript} from './implementation/trusted_script_impl';
-import {createTrustedScriptURL} from './implementation/trusted_script_url_impl';
+import {createTrustedHTML} from '../implementation/trusted_html_impl';
+import {createTrustedScript} from '../implementation/trusted_script_impl';
+import {createTrustedScriptURL} from '../implementation/trusted_script_url_impl';
 
 /*
  * Transitional utilities to unsafely trust random strings as
@@ -32,7 +32,7 @@ import {createTrustedScriptURL} from './implementation/trusted_script_url_impl';
  * unchecked conversions and undergo security review.
  *
  * The semantics of the conversions in legacyconversions are very
- * different from the ones provided by unchecked. The
+ * different from the ones provided by reviewed. The
  * latter are for use in code where it has been established through manual
  * security review that the value produced by a piece of code will always
  * satisfy the TrustedHTML contract (e.g., the output of a secure HTML sanitizer).

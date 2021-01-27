@@ -153,7 +153,7 @@ purposes:
     library, giving you similar runtime guarantees as for Trusted Types enforced
     browsers.
 
-## Unchecked and legacy conversions
+## Reviewed and legacy conversions
 
 There are certain situations when migrating a codebase to be safe using Trusted
 Types can be difficult because it requires changing large parts of the code
@@ -182,14 +182,14 @@ context makes it possible to construct the value safely, it can be removed
 completely.
 
 ```typescript
-import {legacyConversionToTrustedScriptURL} from 'safevalues/legacy';
+import {legacyConversionToTrustedScriptURL} from 'safevalues/unsafe/legacy';
 import {unwrapScriptURL} from 'safevalues';
 
 // TODO: move legacyConversion to caller
 script.src = unwrapScriptURL(legacyConversionToTrustedScriptURL(url));
 ```
 
-### Unchecked conversions
+### Reviewed conversions
 
 When creating Trusted Types, you might run into some use cases where the
 builders that are provided in this package don't match the needs of the
@@ -201,12 +201,11 @@ If you are in a browser that has native support for TrustedTypes, you can create
 a new policy, add it to your headers and add an extensive comment explaining why
 it is safe to do so.
 
-If you are using tsec however, you can directly use an unchecked conversion
-which will let you create a polyfilled value & force you to provide a
-justification.
+If you are using tsec however, you can directly use a reviewed conversion which
+will let you create a polyfilled value & force you to provide a justification.
 
 ```typescript
-import {trustedScriptFromStringKnownToSatisfyTypeContract} from 'safevalues/unchecked';
+import {trustedScriptFromStringKnownToSatisfyTypeContract} from 'safevalues/unsafe/reviewed';
 import {unwrapScript} from 'safevalues';
 
 if (document.domain === '') {
