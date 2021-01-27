@@ -5,6 +5,9 @@
   "repository": "https://github.com/google/safevalues",
   "author": "ISE Hardening",
   "license": "Apache-2.0",
+  "publishConfig":{
+    "registry":"https://wombat-dressing-room.appspot.com"
+  },
   "main": "index.js",
   "types": "index.d.ts",
   "files": [
