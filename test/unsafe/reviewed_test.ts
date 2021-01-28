@@ -15,20 +15,20 @@
  * limitations under the License.
  */
 
-import {safeHtmlFromStringKnownToSatisfyTypeContract} from '../../src/unsafe/reviewed';
+import {trustedHTMLFromStringKnownToSatisfyTypeContract} from '../../src/unsafe/reviewed';
 
 describe('unchecked conversions', () => {
   it('require a justification', () => {
     expect(() => {
-      safeHtmlFromStringKnownToSatisfyTypeContract(
+      trustedHTMLFromStringKnownToSatisfyTypeContract(
           'aaa', null as unknown as string);
     }).toThrowError(/A justification must be provided/);
 
     expect(() => {
-      safeHtmlFromStringKnownToSatisfyTypeContract('aaa', '   ');
+      trustedHTMLFromStringKnownToSatisfyTypeContract('aaa', '   ');
     }).toThrowError(/A justification must be provided/);
 
-    expect(safeHtmlFromStringKnownToSatisfyTypeContract(
+    expect(trustedHTMLFromStringKnownToSatisfyTypeContract(
                'aaa', 'This is just a test')
                .toString())
         .toEqual('aaa');

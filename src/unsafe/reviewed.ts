@@ -52,7 +52,7 @@ function assertValidJustification(justification: string) {
  * possible program states. An appropriate `justification` must be provided
  * explaining why this particular use of the function is safe.
  */
-export function safeHtmlFromStringKnownToSatisfyTypeContract(
+export function trustedHTMLFromStringKnownToSatisfyTypeContract(
     html: string, justification: string): TrustedHTML {
   assertValidJustification(justification);
   return createTrustedHTML(html);
