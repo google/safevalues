@@ -15,13 +15,13 @@
  * limitations under the License.
  */
 
-import {htmlEscape} from '../../src/builders/trusted_html_builders';
-import {trustedScript} from '../../src/builders/trusted_script_builders';
-import {trustedScriptURL} from '../../src/builders/trusted_script_url_builders';
+import {htmlEscape} from '../../src/builders/html_builders';
+import {script} from '../../src/builders/script_builders';
+import {scriptUrl} from '../../src/builders/script_url_builders';
 
-import {unwrapTrustedHTMLAsString, unwrapTrustedHTML} from '../../src/implementation/trusted_html_impl';
-import {unwrapTrustedScriptAsString, unwrapTrustedScript} from '../../src/implementation/trusted_script_impl';
-import {unwrapTrustedScriptURLAsString, unwrapTrustedScriptURL} from '../../src/implementation/trusted_script_url_impl';
+import {unwrapHtmlAsString, uwrapHtmlForSink} from '../../src/implementation/html_impl';
+import {unwrapScriptAsString, uwrapScriptForSink} from '../../src/implementation/script_impl';
+import {unwrapScriptUrlAsString, uwrapScriptUrlForSink} from '../../src/implementation/script_url_impl';
 import {TEST_ONLY} from '../../src/implementation/trusted_types';
 
 /** A mock TrustedHTML type */
@@ -118,24 +118,24 @@ describe('Trusted Types in safevalues', () => {
     it('should be used by TrustedHTML', () => {
       const safe = htmlEscape('aaa');
       expect(safe.toString()).toEqual('aaa');
-      expect(unwrapTrustedHTMLAsString(safe)).toEqual('aaa');
-      expect(unwrapTrustedHTML(safe) as unknown)
+      expect(unwrapHtmlAsString(safe)).toEqual('aaa');
+      expect(uwrapHtmlForSink(safe) as unknown)
           .toEqual(new MockTrustedHTML('aaa'));
     });
 
     it('should be used by TrustedScript', () => {
-      const safe = trustedScript`a = b;`;
+      const safe = script`a = b;`;
       expect(safe.toString()).toEqual('a = b;');
-      expect(unwrapTrustedScriptAsString(safe)).toEqual('a = b;');
-      expect(unwrapTrustedScript(safe) as unknown)
+      expect(unwrapScriptAsString(safe)).toEqual('a = b;');
+      expect(uwrapScriptForSink(safe) as unknown)
           .toEqual(new MockTrustedScript('a = b;'));
     });
 
     it('should be used by TrustedScriptURL', () => {
-      const safe = trustedScriptURL`a/b/c`;
+      const safe = scriptUrl`a/b/c`;
       expect(safe.toString()).toEqual('a/b/c');
-      expect(unwrapTrustedScriptURLAsString(safe)).toEqual('a/b/c');
-      expect(unwrapTrustedScriptURL(safe) as unknown)
+      expect(unwrapScriptUrlAsString(safe)).toEqual('a/b/c');
+      expect(uwrapScriptUrlForSink(safe) as unknown)
           .toEqual(new MockTrustedScriptURL('a/b/c'));
     });
   };
@@ -148,22 +148,22 @@ describe('Trusted Types in safevalues', () => {
     it('should not be used by TrustedHTML', () => {
       const safe = htmlEscape('aaa');
       expect(safe.toString()).toEqual('aaa');
-      expect(unwrapTrustedHTMLAsString(safe)).toEqual('aaa');
-      expect(unwrapTrustedHTML(safe) as unknown).toEqual('aaa');
+      expect(unwrapHtmlAsString(safe)).toEqual('aaa');
+      expect(uwrapHtmlForSink(safe) as unknown).toEqual('aaa');
     });
 
     it('should not be used by TrustedScript', () => {
-      const safe = trustedScript`a = b;`;
+      const safe = script`a = b;`;
       expect(safe.toString()).toEqual('a = b;');
-      expect(unwrapTrustedScriptAsString(safe)).toEqual('a = b;');
-      expect(unwrapTrustedScript(safe) as unknown).toEqual('a = b;');
+      expect(unwrapScriptAsString(safe)).toEqual('a = b;');
+      expect(uwrapScriptForSink(safe) as unknown).toEqual('a = b;');
     });
 
     it('should not be used by TrustedScriptURL', () => {
-      const safe = trustedScriptURL`a/b/c`;
+      const safe = scriptUrl`a/b/c`;
       expect(safe.toString()).toEqual('a/b/c');
-      expect(unwrapTrustedScriptURLAsString(safe)).toEqual('a/b/c');
-      expect(unwrapTrustedScriptURL(safe) as unknown).toEqual('a/b/c');
+      expect(unwrapScriptUrlAsString(safe)).toEqual('a/b/c');
+      expect(uwrapScriptUrlForSink(safe) as unknown).toEqual('a/b/c');
     });
   };
 

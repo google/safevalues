@@ -15,25 +15,25 @@
  * limitations under the License.
  */
 
-import {concatScripts, trustedScript} from '../../src/builders/trusted_script_builders';
+import {concatScripts, script} from '../../src/builders/script_builders';
 
-describe('trusted_script_builders', () => {
-  describe('trustedScript', () => {
+describe('script_builders', () => {
+  describe('script', () => {
     it('can build a simple script', () => {
-      expect(trustedScript`return this;`.toString()).toEqual('return this;');
+      expect(script`return this;`.toString()).toEqual('return this;');
     });
 
     it('rejects any interpolation', () => {
-      const castTrustedScript =
-          trustedScript as (arr: TemplateStringsArray, str: string) => TrustedScript;
-      expect(() => castTrustedScript`return ${'this'};`).toThrowError();
+      const castScript =
+          script as (arr: TemplateStringsArray, str: string) => TrustedScript;
+      expect(() => castScript`return ${'this'};`).toThrowError();
     });
   });
 
   describe('concatScripts', () => {
     it('concatenates `TrustedScript` values', () => {
-      const script1 = trustedScript`1;`;
-      const script2 = trustedScript`2;`;
+      const script1 = script`1;`;
+      const script2 = script`2;`;
       expect(concatScripts(script1, script2).toString()).toEqual('1;2;');
     });
   });

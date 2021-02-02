@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-import {createTrustedHTML, unwrapTrustedHTMLAsString} from '../implementation/trusted_html_impl';
-import {unwrapTrustedScriptURLAsString} from '../implementation/trusted_script_url_impl';
+import {createHtml, unwrapHtmlAsString} from '../implementation/html_impl';
+import {unwrapScriptUrlAsString} from '../implementation/script_url_impl';
 
 /**
  * Returns HTML-escaped text as a `TrustedHTML` object.
@@ -37,7 +37,7 @@ export function htmlEscape(
   if (options.preserveNewlines) {
     htmlEscapedString = htmlEscapedString.replace(/(\r\n|\n|\r)/g, '<br />');
   }
-  return createTrustedHTML(htmlEscapedString);
+  return createHtml(htmlEscapedString);
 }
 
 /**
@@ -46,7 +46,7 @@ export function htmlEscape(
  */
 export function createScriptSrc(
     src: TrustedScriptURL, async?: boolean, nonce?: string): TrustedHTML {
-  const unwrappedSrc = unwrapTrustedScriptURLAsString(src);
+  const unwrappedSrc = unwrapScriptUrlAsString(src);
   let stringTag = `<script src="${htmlEscapeToString(unwrappedSrc)}"`;
   if (async) {
     stringTag += ' async';
@@ -55,7 +55,7 @@ export function createScriptSrc(
     stringTag += ` nonce="${htmlEscapeToString(nonce)}"`;
   }
   stringTag += '></script>';
-  return createTrustedHTML(stringTag);
+  return createHtml(stringTag);
 }
 
 /**
@@ -72,5 +72,5 @@ function htmlEscapeToString(text: string): string {
 
 /** Creates a `TrustedHTML` value by concatenating multiple `TrustedHTML`s. */
 export function concatHtmls(...htmls: TrustedHTML[]): TrustedHTML {
-  return createTrustedHTML(htmls.map(unwrapTrustedHTMLAsString).join(''));
+  return createHtml(htmls.map(unwrapHtmlAsString).join(''));
 }

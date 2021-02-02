@@ -19,7 +19,7 @@ import {ensureTokenIsValid, secretToken} from './secrets';
 import {getTrustedTypes, getTrustedTypesPolicy} from './trusted_types';
 
 /** Implementation for `TrustedScript` */
-class TrustedScriptImpl  {
+class ScriptImpl  {
   readonly privateDoNotAccessOrElseWrappedScript: string;
 
   constructor(script: string, token: object) {
@@ -33,9 +33,9 @@ class TrustedScriptImpl  {
   }
 }
 
-function createTrustedScriptInternal(
+function createScriptInternal(
     script: string, trusted?: TrustedScript): TrustedScript {
-  return (trusted ?? new TrustedScriptImpl(script, secretToken)) as TrustedScript;
+  return (trusted ?? new ScriptImpl(script, secretToken)) as TrustedScript;
 }
 
 /**
@@ -44,8 +44,8 @@ function createTrustedScriptInternal(
  * policy. This shouldn't be exposed to application developers, and must only be
  * used as a step towards safe builders or safe constants.
  */
-export function createTrustedScript(script: string): TrustedScript {
-  return createTrustedScriptInternal(
+export function createScript(script: string): TrustedScript {
+  return createScriptInternal(
       script, getTrustedTypesPolicy()?.createScript(script));
 }
 
@@ -54,7 +54,7 @@ export function createTrustedScript(script: string): TrustedScript {
  * Unlike the functions above, using this will not create a policy.
  */
 export const EMPTY_SCRIPT: TrustedScript =
-    createTrustedScriptInternal('', getTrustedTypes()?.emptyScript);
+    createScriptInternal('', getTrustedTypes()?.emptyScript);
 
 /**
  * Returns the value of the passed `TrustedScript` object while ensuring it
@@ -70,10 +70,10 @@ export const EMPTY_SCRIPT: TrustedScript =
  * use any string functions on the result as that will fail in browsers
  * supporting Trusted Types.
  */
-export function unwrapTrustedScript(value: TrustedScript): TrustedScript&string {
+export function uwrapScriptForSink(value: TrustedScript): TrustedScript&string {
   if (getTrustedTypes()?.isScript(value)) {
     return value as TrustedScript & string;
-  } else if (value instanceof TrustedScriptImpl) {
+  } else if (value instanceof ScriptImpl) {
     const unwrapped = value.privateDoNotAccessOrElseWrappedScript;
     return unwrapped as TrustedScript & string;
   } else {
@@ -82,13 +82,13 @@ export function unwrapTrustedScript(value: TrustedScript): TrustedScript&string 
 }
 
 /**
- * Same as `unwrapTrustedScript`, but returns an actual string
+ * Same as `uwrapScriptForSink`, but returns an actual string
  *
  * Also ensures to return the right string value for `TrustedScript` objects if
  * the `toString function has been overwritten on the object.
  */
-export function unwrapTrustedScriptAsString(value: TrustedScript): string {
-  const unwrapped = unwrapTrustedScript(value);
+export function unwrapScriptAsString(value: TrustedScript): string {
+  const unwrapped = uwrapScriptForSink(value);
   if (getTrustedTypes()?.isScript(unwrapped)) {
     // TODO: Remove once the spec freezes instances of `TrustedScript`.
     return TrustedScript.prototype.toString.apply(unwrapped);

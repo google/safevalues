@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-import {createTrustedHTML} from '../implementation/trusted_html_impl';
-import {createTrustedScript} from '../implementation/trusted_script_impl';
-import {createTrustedScriptURL} from '../implementation/trusted_script_url_impl';
+import {createHtml} from '../implementation/html_impl';
+import {createScript} from '../implementation/script_impl';
+import {createScriptUrl} from '../implementation/script_url_impl';
 
 
 /**
@@ -52,10 +52,10 @@ function assertValidJustification(justification: string) {
  * possible program states. An appropriate `justification` must be provided
  * explaining why this particular use of the function is safe.
  */
-export function trustedHTMLFromStringKnownToSatisfyTypeContract(
+export function htmlFromStringKnownToSatisfyTypeContract(
     html: string, justification: string): TrustedHTML {
   assertValidJustification(justification);
-  return createTrustedHTML(html);
+  return createHtml(html);
 }
 
 /**
@@ -67,10 +67,10 @@ export function trustedHTMLFromStringKnownToSatisfyTypeContract(
  * all possible program states. An appropriate `justification` must be provided
  * explaining why this particular use of the function is safe.
  */
-export function trustedScriptFromStringKnownToSatisfyTypeContract(
+export function scriptFromStringKnownToSatisfyTypeContract(
     script: string, justification: string): TrustedScript {
   assertValidJustification(justification);
-  return createTrustedScript(script);
+  return createScript(script);
 }
 
 /**
@@ -82,8 +82,8 @@ export function trustedScriptFromStringKnownToSatisfyTypeContract(
  * contract in all possible program states. An appropriate `justification` must
  * be provided explaining why this particular use of the function is safe.
  */
-export function trustedScriptURLFromStringKnownToSatisfyTypeContract(
+export function scriptUrlFromStringKnownToSatisfyTypeContract(
     url: string, justification: string): TrustedScriptURL {
   assertValidJustification(justification);
-  return createTrustedScriptURL(url);
+  return createScriptUrl(url);
 }

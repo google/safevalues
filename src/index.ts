@@ -21,11 +21,11 @@
  * Only used in open source version for now.
  */
 
-export {htmlEscape} from './builders/trusted_html_builders';
-export {trustedScript} from './builders/trusted_script_builders';
-export {trustedScriptURL} from './builders/trusted_script_url_builders';
+export {htmlEscape} from './builders/html_builders';
+export {script} from './builders/script_builders';
+export {scriptUrl} from './builders/script_url_builders';
 
 /** Reexport the public type (but not the Impl). */
-export {EMPTY_HTML, unwrapTrustedHTML} from './implementation/trusted_html_impl';
-export {EMPTY_SCRIPT, unwrapTrustedScript} from './implementation/trusted_script_impl';
-export {unwrapTrustedScriptURL} from './implementation/trusted_script_url_impl';
+export {EMPTY_HTML, uwrapHtmlForSink} from './implementation/html_impl';
+export {EMPTY_SCRIPT, uwrapScriptForSink} from './implementation/script_impl';
+export {uwrapScriptUrlForSink} from './implementation/script_url_impl';

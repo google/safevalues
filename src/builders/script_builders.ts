@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-import {createTrustedScript, unwrapTrustedScriptAsString} from '../implementation/trusted_script_impl';
+import {createScript, unwrapScriptAsString} from '../implementation/script_impl';
 import {assertIsTemplateObject} from '../implementation/safe_string_literal';
 
 /**
@@ -24,20 +24,20 @@ import {assertIsTemplateObject} from '../implementation/safe_string_literal';
  *
  * This function is a template literal tag function. It should be called with
  * a template literal that does not contain any expressions. For example,
- *                           trustedScript`foo`;
+ *                           script`foo`;
  *
  * @param templateObj This contains the literal part of the template literal.
  */
-export function trustedScript(templateObj: TemplateStringsArray): TrustedScript {
+export function script(templateObj: TemplateStringsArray): TrustedScript {
   assertIsTemplateObject(
       templateObj, false,
-      'trustedScript is a template literal tag function ' +
+      'script is a template literal tag function ' +
           'that only accepts template literals without expressions. ' +
-          'For example, trustedScript`foo`;');
-  return createTrustedScript(templateObj[0]);
+          'For example, script`foo`;');
+  return createScript(templateObj[0]);
 }
 
 /** Creates a `TrustedScript` value by concatenating multiple `TrustedScript`s. */
 export function concatScripts(...scripts: TrustedScript[]): TrustedScript {
-  return createTrustedScript(scripts.map(unwrapTrustedScriptAsString).join(''));
+  return createScript(scripts.map(unwrapScriptAsString).join(''));
 }

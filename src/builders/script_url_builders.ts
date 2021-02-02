@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-import {unwrapTrustedScriptAsString} from '../implementation/trusted_script_impl';
+import {unwrapScriptAsString} from '../implementation/script_impl';
 import {assertIsTemplateObject} from '../implementation/safe_string_literal';
-import {createTrustedScriptURL, unwrapTrustedScriptURLAsString} from '../implementation/trusted_script_url_impl';
+import {createScriptUrl, unwrapScriptUrlAsString} from '../implementation/script_url_impl';
 
 /** Type that we know how to interpolate */
 type Primitive = string|number|boolean;
@@ -96,9 +96,9 @@ function isValidPathStart(base: string): boolean {
  *
  * This factory is a template literal tag function. It should be called with
  * a template literal, with or without embedded expressions. For example,
- *               trustedScriptURL`//example.com/${bar}`;
+ *               scriptUrl`//example.com/${bar}`;
  * or
- *               trustedScriptURL`//example.com`;
+ *               scriptUrl`//example.com`;
  *
  * When this function is called with a template literal without any embedded
  * expressions, the template string may contain anything as the whole URL is
@@ -129,19 +129,19 @@ function isValidPathStart(base: string): boolean {
  * @param templateObj This contains the literal part of the template literal.
  * @param rest This represents the template's embedded expressions.
  */
-export function trustedScriptURL(
+export function scriptUrl(
     templateObj: TemplateStringsArray,
     ...rest: Primitive[]): TrustedScriptURL {
   // Check if templateObj is actually from a template literal.
   assertIsTemplateObject(
       templateObj, true,
-      'trustedScriptURL is a template literal tag function ' +
+      'scriptUrl is a template literal tag function ' +
           'that only accepts template literals with or without expressions. ' +
-          'For example, trustedScriptURL`foo`; or ' +
-          'trustedScriptURL`foo${bar}`');
+          'For example, scriptUrl`foo`; or ' +
+          'scriptUrl`foo${bar}`');
 
   if (rest.length === 0) {
-    return createTrustedScriptURL(templateObj[0]);
+    return createScriptUrl(templateObj[0]);
   }
 
   const base = templateObj[0].toLowerCase();
@@ -162,7 +162,7 @@ export function trustedScriptURL(
     urlParts.push(encodeURIComponent(rest[i]));
     urlParts.push(templateObj[i + 1]);
   }
-  return createTrustedScriptURL(urlParts.join(''));
+  return createScriptUrl(urlParts.join(''));
 }
 
 /**
@@ -176,7 +176,7 @@ export function appendParams(
     trustedUrl: TrustedScriptURL,
     params: Map<string, Primitive|null|Array<Primitive|null>>):
     TrustedScriptURL {
-  let url = unwrapTrustedScriptURLAsString(trustedUrl);
+  let url = unwrapScriptUrlAsString(trustedUrl);
   if (/#/.test(url)) {
     throw new Error(`Found a hash in url (${url}), appending not supported`);
   }
@@ -192,7 +192,7 @@ export function appendParams(
       separator = '&';
     }
   }
-  return createTrustedScriptURL(url);
+  return createScriptUrl(url);
 }
 
 /**
@@ -202,8 +202,8 @@ export function appendParams(
  * Caller must call `URL.revokeObjectUrl()` on the stringified url to
  * release the underlying `Blob`.
  */
-export function blobUrlFromScript(trustedScript: TrustedScript): TrustedScriptURL {
-  const scriptContent = unwrapTrustedScriptAsString(trustedScript);
+export function blobUrlFromScript(script: TrustedScript): TrustedScriptURL {
+  const scriptContent = unwrapScriptAsString(script);
   const blob = new Blob([scriptContent], {type: 'text/javascript'});
-  return createTrustedScriptURL(URL.createObjectURL(blob));
+  return createScriptUrl(URL.createObjectURL(blob));
 }

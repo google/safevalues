@@ -19,7 +19,7 @@
  * A secret token that must be passed to safe type constructors. It is only
  * accessible from within safevalues, ensuring that unrestricted safe type
  * creation is only possible within safevalues. In particular, this prevents
- * forgery such as `trustedHTMLValue.constructor('javascript:evil')`.
+ * forgery such as `htmlValue.constructor('javascript:evil')`.
  */
 export const secretToken = {};
 

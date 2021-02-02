@@ -26,31 +26,31 @@
  * avoids, by design, non-contract complying instances from being created.
  */
 
-import {createTrustedHTML} from '../src/implementation/trusted_html_impl';
-import {createTrustedScript} from '../src/implementation/trusted_script_impl';
-import {createTrustedScriptURL} from '../src/implementation/trusted_script_url_impl';
+import {createHtml} from '../src/implementation/html_impl';
+import {createScript} from '../src/implementation/script_impl';
+import {createScriptUrl} from '../src/implementation/script_url_impl';
 
 /**
  * Turns a string into TrustedHTML for testing purposes. This function is for use
  * in tests only and must never be used in production code.
  */
-export function testingConversionToTrustedHTML(s: string): TrustedHTML {
-  return createTrustedHTML(s);
+export function testingConversionToHtml(s: string): TrustedHTML {
+  return createHtml(s);
 }
 
 /**
  * Turns a string into TrustedScript for testing API purposes. This function is for
  * use in tests only and must never be used in production code.
  */
-export function testingConversionToTrustedScript(s: string): TrustedScript {
-  return createTrustedScript(s);
+export function testingConversionToScript(s: string): TrustedScript {
+  return createScript(s);
 }
 
 /**
  * Turns a string into TrustedScriptURL for testing purposes. This function is
  * for use in tests only and must never be used in production code.
  */
-export function testingConversionToTrustedScriptURL(s: string):
+export function testingConversionToScriptUrl(s: string):
     TrustedScriptURL {
-  return createTrustedScriptURL(s);
+  return createScriptUrl(s);
 }

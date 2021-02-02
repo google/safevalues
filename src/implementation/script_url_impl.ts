@@ -19,7 +19,7 @@ import {ensureTokenIsValid, secretToken} from './secrets';
 import {getTrustedTypes, getTrustedTypesPolicy} from './trusted_types';
 
 /** Implementation for `TrustedScriptURL` */
-class TrustedScriptURLImpl  {
+class ScriptUrlImpl  {
   readonly privateDoNotAccessOrElseWrappedResourceUrl: string;
 
   constructor(url: string, token: object) {
@@ -39,10 +39,10 @@ class TrustedScriptURLImpl  {
  * Types policy. This shouldn't be exposed to application developers, and must
  * only be used as a step towards safe builders or safe constants.
  */
-export function createTrustedScriptURL(url: string): TrustedScriptURL {
+export function createScriptUrl(url: string): TrustedScriptURL {
   const trustedScriptURL = getTrustedTypesPolicy()?.createScriptURL(url);
   return (trustedScriptURL ??
-  new TrustedScriptURLImpl(url, secretToken)) as TrustedScriptURL;
+  new ScriptUrlImpl(url, secretToken)) as TrustedScriptURL;
 }
 
 /**
@@ -60,11 +60,11 @@ export function createTrustedScriptURL(url: string): TrustedScriptURL {
  * use any string functions on the result as that will fail in browsers
  * supporting Trusted Types.
  */
-export function unwrapTrustedScriptURL(value: TrustedScriptURL):
+export function uwrapScriptUrlForSink(value: TrustedScriptURL):
     TrustedScriptURL&string {
   if (getTrustedTypes()?.isScriptURL(value)) {
     return value as TrustedScriptURL & string;
-  } else if (value instanceof TrustedScriptURLImpl) {
+  } else if (value instanceof ScriptUrlImpl) {
     const unwrapped = value.privateDoNotAccessOrElseWrappedResourceUrl;
     return unwrapped as TrustedScriptURL & string;
   } else {
@@ -73,14 +73,14 @@ export function unwrapTrustedScriptURL(value: TrustedScriptURL):
 }
 
 /**
- * Same as `unwrapTrustedScriptURL`, but returns an actual string
+ * Same as `uwrapScriptUrlForSink`, but returns an actual string
  *
  * Also ensures to return the right string value for `TrustedScriptURL` objects
  * if the `toString function has been overwritten on the object.
  */
-export function unwrapTrustedScriptURLAsString(value: TrustedScriptURL):
+export function unwrapScriptUrlAsString(value: TrustedScriptURL):
     string {
-  const unwrapped = unwrapTrustedScriptURL(value);
+  const unwrapped = uwrapScriptUrlForSink(value);
   if (getTrustedTypes()?.isScriptURL(unwrapped)) {
     // TODO: Remove once the spec freezes instances of `TrustedScriptURL`.
     return TrustedScriptURL.prototype.toString.apply(unwrapped);

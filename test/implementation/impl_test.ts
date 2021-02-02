@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-import {createTrustedHTML, unwrapTrustedHTMLAsString} from '../../src/implementation/trusted_html_impl';
-import {createTrustedScript, unwrapTrustedScriptAsString} from '../../src/implementation/trusted_script_impl';
-import {createTrustedScriptURL, unwrapTrustedScriptURLAsString} from '../../src/implementation/trusted_script_url_impl';
+import {createHtml, unwrapHtmlAsString} from '../../src/implementation/html_impl';
+import {createScript, unwrapScriptAsString} from '../../src/implementation/script_impl';
+import {createScriptUrl, unwrapScriptUrlAsString} from '../../src/implementation/script_url_impl';
 
 interface Impl {
   name: string;
@@ -31,18 +31,18 @@ interface Impl {
 const IMPLEMENTATIONS: Impl[] = [
   {
     name: 'TrustedHTML',
-    create: createTrustedHTML,
-    unwrap: unwrapTrustedHTMLAsString,
+    create: createHtml,
+    unwrap: unwrapHtmlAsString,
   },
   {
     name: 'TrustedScript',
-    create: createTrustedScript,
-    unwrap: unwrapTrustedScriptAsString,
+    create: createScript,
+    unwrap: unwrapScriptAsString,
   },
   {
     name: 'TrustedScriptURL',
-    create: createTrustedScriptURL,
-    unwrap: unwrapTrustedScriptURLAsString,
+    create: createScriptUrl,
+    unwrap: unwrapScriptUrlAsString,
   },
 ];
 

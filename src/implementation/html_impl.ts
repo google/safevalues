@@ -19,7 +19,7 @@ import {ensureTokenIsValid, secretToken} from './secrets';
 import {getTrustedTypes, getTrustedTypesPolicy} from './trusted_types';
 
 /** Implementation for `TrustedHTML` */
-class TrustedHTMLImpl  {
+class HtmlImpl  {
   readonly privateDoNotAccessOrElseWrappedHtml: string;
 
   constructor(html: string, token: object) {
@@ -33,8 +33,8 @@ class TrustedHTMLImpl  {
   }
 }
 
-function createTrustedHTMLInternal(html: string, trusted?: TrustedHTML): TrustedHTML {
-  return (trusted ?? new TrustedHTMLImpl(html, secretToken)) as TrustedHTML;
+function createHtmlInternal(html: string, trusted?: TrustedHTML): TrustedHTML {
+  return (trusted ?? new HtmlImpl(html, secretToken)) as TrustedHTML;
 }
 
 /**
@@ -43,8 +43,8 @@ function createTrustedHTMLInternal(html: string, trusted?: TrustedHTML): Trusted
  * This shouldn't be exposed to application developers, and must only be used as
  * a step towards safe builders or safe constants.
  */
-export function createTrustedHTML(html: string): TrustedHTML {
-  return createTrustedHTMLInternal(
+export function createHtml(html: string): TrustedHTML {
+  return createHtmlInternal(
       html, getTrustedTypesPolicy()?.createHTML(html));
 }
 
@@ -53,7 +53,7 @@ export function createTrustedHTML(html: string): TrustedHTML {
  * Unlike the function above, using this will not create a policy.
  */
 export const EMPTY_HTML: TrustedHTML =
-    createTrustedHTMLInternal('', getTrustedTypes()?.emptyHTML);
+    createHtmlInternal('', getTrustedTypes()?.emptyHTML);
 
 /**
  * Returns the value of the passed `TrustedHTML` object while ensuring it
@@ -69,10 +69,10 @@ export const EMPTY_HTML: TrustedHTML =
  * use any string functions on the result as that will fail in browsers
  * supporting Trusted Types.
  */
-export function unwrapTrustedHTML(value: TrustedHTML): TrustedHTML&string {
+export function uwrapHtmlForSink(value: TrustedHTML): TrustedHTML&string {
   if (getTrustedTypes()?.isHTML(value)) {
     return value as TrustedHTML & string;
-  } else if (value instanceof TrustedHTMLImpl) {
+  } else if (value instanceof HtmlImpl) {
     const unwrapped = value.privateDoNotAccessOrElseWrappedHtml;
     return unwrapped as TrustedHTML & string;
   } else {
@@ -81,13 +81,13 @@ export function unwrapTrustedHTML(value: TrustedHTML): TrustedHTML&string {
 }
 
 /**
- * Same as `unwrapTrustedHTML`, but returns an actual string.
+ * Same as `uwrapHtmlForSink`, but returns an actual string.
  *
  * Also ensures to return the right string value for `TrustedHTML` objects if
  * the `toString` function has been overwritten on the object.
  */
-export function unwrapTrustedHTMLAsString(value: TrustedHTML): string {
-  const unwrapped = unwrapTrustedHTML(value);
+export function unwrapHtmlAsString(value: TrustedHTML): string {
+  const unwrapped = uwrapHtmlForSink(value);
   if (getTrustedTypes()?.isHTML(unwrapped)) {
     // TODO: Remove once the spec freezes instances of `TrustedHTML`.
     return TrustedHTML.prototype.toString.apply(unwrapped);

@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-import {createTrustedHTML} from '../implementation/trusted_html_impl';
-import {createTrustedScript} from '../implementation/trusted_script_impl';
-import {createTrustedScriptURL} from '../implementation/trusted_script_url_impl';
+import {createHtml} from '../implementation/html_impl';
+import {createScript} from '../implementation/script_impl';
+import {createScriptUrl} from '../implementation/script_url_impl';
 
 /*
  * Transitional utilities to unsafely trust random strings as
@@ -46,7 +46,7 @@ import {createTrustedScriptURL} from '../implementation/trusted_script_url_impl'
  * string and passes that string to a DOM API which can execute script - and
  * hence cause XSS - like innerHTML. For example, Dialog might expose a
  * setContent method which takes a string and sets the innerHTML property of
- * an element with it. In this case a setTrustedHTMLContent function could be
+ * an element with it. In this case a setHtmlContent function could be
  * added, consuming TrustedHTML instead of string. setContent could then internally
  *  use legacyconversions to create a TrustedHTML
  * from string and pass the TrustedHTML to a safe values consumer down the line. In
@@ -73,8 +73,8 @@ import {createTrustedScriptURL} from '../implementation/trusted_script_url_impl'
  *
  * Please read fileoverview documentation before using.
  */
-export function legacyConversionToTrustedHTML(s: string): TrustedHTML {
-  return createTrustedHTML(s);
+export function legacyConversionToHtml(s: string): TrustedHTML {
+  return createHtml(s);
 }
 
 /**
@@ -82,8 +82,8 @@ export function legacyConversionToTrustedHTML(s: string): TrustedHTML {
  *
  * Please read fileoverview documentation before using.
  */
-export function legacyConversionToTrustedScript(s: string): TrustedScript {
-  return createTrustedScript(s);
+export function legacyConversionToScript(s: string): TrustedScript {
+  return createScript(s);
 }
 
 /**
@@ -91,7 +91,7 @@ export function legacyConversionToTrustedScript(s: string): TrustedScript {
  *
  * Please read fileoverview documentation before using.
  */
-export function legacyConversionToTrustedScriptURL(s: string):
+export function legacyConversionToScriptUrl(s: string):
     TrustedScriptURL {
-  return createTrustedScriptURL(s);
+  return createScriptUrl(s);
 }

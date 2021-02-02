@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 
-import {testingConversionToTrustedScriptURL} from '../testing_conversions';
-import {concatHtmls, createScriptSrc, htmlEscape} from '../../src/builders/trusted_html_builders';
+import {testingConversionToScriptUrl} from '../testing_conversions';
+import {concatHtmls, createScriptSrc, htmlEscape} from '../../src/builders/html_builders';
 
-describe('trusted_html_builders', () => {
+describe('html_builders', () => {
   describe('htmlEscape', () => {
     it('handles metacharacters as expected', () => {
       expect(htmlEscape('a<a').toString()).toEqual('a&lt;a');
@@ -75,29 +75,29 @@ describe('trusted_html_builders', () => {
 
   describe('createScriptSrc', () => {
     it('builds the right tags', () => {
-      expect(createScriptSrc(testingConversionToTrustedScriptURL('//abc<'))
+      expect(createScriptSrc(testingConversionToScriptUrl('//abc<'))
                  .toString())
           .toEqual('<script src="//abc&lt;"></script>');
       expect(
-          createScriptSrc(testingConversionToTrustedScriptURL('//abc<'), true)
+          createScriptSrc(testingConversionToScriptUrl('//abc<'), true)
               .toString())
           .toEqual('<script src="//abc&lt;" async></script>');
       expect(createScriptSrc(
-                 testingConversionToTrustedScriptURL('//abc<'), false)
+                 testingConversionToScriptUrl('//abc<'), false)
                  .toString())
           .toEqual('<script src="//abc&lt;"></script>');
       expect(createScriptSrc(
-                 testingConversionToTrustedScriptURL('//abc<'), false, '123')
+                 testingConversionToScriptUrl('//abc<'), false, '123')
                  .toString())
           .toEqual('<script src="//abc&lt;" nonce="123"></script>');
       expect(createScriptSrc(
-                 testingConversionToTrustedScriptURL('//abc<<'), false, '123')
+                 testingConversionToScriptUrl('//abc<<'), false, '123')
                  .toString())
           .toEqual('<script src="//abc&lt;&lt;" nonce="123"></script>');
     });
 
     it('escapes attributes', () => {
-      const url = testingConversionToTrustedScriptURL('//a?b&c');
+      const url = testingConversionToScriptUrl('//a?b&c');
       expect(createScriptSrc(url, false, `"'&`).toString())
           .toEqual(
               '<script src="//a?b&amp;c" nonce="&quot;&apos;&amp;"></script>');
