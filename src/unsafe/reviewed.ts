@@ -24,7 +24,7 @@ import {createScriptUrl} from '../implementation/script_url_impl';
  * Defines whether we use/check the justification or not, setting it to false
  * allows the optimizer to strip all the justifications.
  */
-const isDebug: boolean = false;
+let isDebug: boolean = false;
 
 /**
  * Asserts that the provided justification is valid (non-empty). Throws an
@@ -87,3 +87,10 @@ export function scriptUrlFromStringKnownToSatisfyTypeContract(
   assertValidJustification(justification);
   return createScriptUrl(url);
 }
+
+
+export const TEST_ONLY = {
+  setDebug(value: boolean) {
+    isDebug = value;
+  }
+};

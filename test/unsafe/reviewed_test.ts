@@ -15,10 +15,11 @@
  * limitations under the License.
  */
 
-import {htmlFromStringKnownToSatisfyTypeContract} from '../../src/unsafe/reviewed';
+import {htmlFromStringKnownToSatisfyTypeContract, TEST_ONLY} from '../../src/unsafe/reviewed';
 
 describe('unchecked conversions', () => {
-  it('require a justification', () => {
+  it('require a justification when in debug mode', () => {
+    TEST_ONLY.setDebug(true);
     expect(() => {
       htmlFromStringKnownToSatisfyTypeContract(
           'aaa', null as unknown as string);
