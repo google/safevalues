@@ -38,9 +38,9 @@ preventing any interpolation in the script's value we ensure it can never
 contain user data.
 
 ```typescript
-import {trustedScript} from 'safevalues';
+import {script} from 'safevalues';
 
-const script = trustedScript`return this;`;
+const script = script`return this;`;
 // TrustedScript{'return this;'}
 ```
 
@@ -59,14 +59,14 @@ implicitly with a path absolute url) as well as the path (no relative URLs are
 allowed & all interpolations are passed to `encodeURIComponent`)
 
 ```typescript
-import {trustedScriptURL} from 'safevalues';
+import {scriptUrl} from 'safevalues';
 
-const script1 = trustedScriptURL`/static/js/main.js`;
+const url1 = scriptUrl`/static/js/main.js`;
 // TrustedScriptURL{'/static/js/main.js'}
 
 const env = 'a/b';
 const opt = 'min&test=1';
-const script2 = trustedScriptURL`/static/${env}/js/main.js?opt=${opt}`;
+const url2 = scriptUrl`/static/${env}/js/main.js?opt=${opt}`;
 // TrustedScriptURL{'/static/a%2Fb/js/main.js?opt=min%26test%3D1'}
 ```
 
@@ -132,7 +132,7 @@ before passing them to sinks in a way that tsec will understand.
 ```typescript
 import {unwrapScript} from 'safevalues';
 const script: TrustedScript = ...;
-eval(unwrapScript(script)); // works!
+eval(unwrapScriptForSink(script)); // works!
 ```
 
 The unwrap functions' return type is `string&Trusted*`, which ensures that the
@@ -182,11 +182,11 @@ context makes it possible to construct the value safely, it can be removed
 completely.
 
 ```typescript
-import {legacyConversionToTrustedScriptURL} from 'safevalues/unsafe/legacy';
-import {unwrapScriptURL} from 'safevalues';
+import {legacyConversionToScriptUrl} from 'safevalues/unsafe/legacy';
+import {unwrapScriptUrlForSink} from 'safevalues';
 
 // TODO: move legacyConversion to caller
-script.src = unwrapScriptURL(legacyConversionToTrustedScriptURL(url));
+script.src = unwrapScriptUrlForSink(legacyConversionToScriptUrl(url));
 ```
 
 ### Reviewed conversions
@@ -205,14 +205,14 @@ If you are using tsec however, you can directly use a reviewed conversion which
 will let you create a polyfilled value & force you to provide a justification.
 
 ```typescript
-import {trustedScriptFromStringKnownToSatisfyTypeContract} from 'safevalues/unsafe/reviewed';
+import {scriptFromStringKnownToSatisfyTypeContract} from 'safevalues/unsafe/reviewed';
 import {unwrapScript} from 'safevalues';
 
 if (document.domain === '') {
-    const scriptText = trustedScriptFromStringKnownToSatisfyTypeContract(
+    const scriptText = scriptFromStringKnownToSatisfyTypeContract(
         userInput,
         `Even though the input is user controller, the wrapping if statement
          ensures that this code is only ever run in a sandboxed origin`);
-    scriptEl.text = unwrapScript(scriptText);
+    scriptEl.text = unwrapScriptForSink(scriptText);
 }
 ```
