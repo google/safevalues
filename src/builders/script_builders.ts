@@ -16,7 +16,7 @@
  */
 
 import {createScript, unwrapScriptAsString} from '../implementation/script_impl';
-import {assertIsTemplateObject} from '../implementation/safe_string_literal';
+import {assertIsConstantTemplateObject} from '../implementation/safe_string_literal';
 
 /**
  * Creates a TrustedScript object from a template literal (without any embedded
@@ -27,14 +27,18 @@ import {assertIsTemplateObject} from '../implementation/safe_string_literal';
  *                           script`foo`;
  *
  * @param templateObj This contains the literal part of the template literal.
+ * @param emptyArgs Expressions that evaluate to the empty string to enable
+ *     inline comments.
  */
-export function script(templateObj: TemplateStringsArray): TrustedScript {
-  assertIsTemplateObject(
-      templateObj, false,
+export function script(
+    templateObj: TemplateStringsArray,
+    ...emptyArgs: ReadonlyArray<''>): TrustedScript {
+  assertIsConstantTemplateObject(
+      templateObj, emptyArgs,
       'script is a template literal tag function ' +
           'that only accepts template literals without expressions. ' +
           'For example, script`foo`;');
-  return createScript(templateObj[0]);
+  return createScript(templateObj.join(''));
 }
 
 /** Creates a `TrustedScript` value by concatenating multiple `TrustedScript`s. */

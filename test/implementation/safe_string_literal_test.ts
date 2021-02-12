@@ -15,11 +15,11 @@
  * limitations under the License.
  */
 
-import {assertIsTemplateObject} from '../../src/implementation/safe_string_literal';
+import {assertIsConstantTemplateObject, assertIsTemplateObject} from '../../src/implementation/safe_string_literal';
 
-function getTagFunction(allowInterpolation: boolean, errMsg: string) {
+function getTagFunction(errMsg: string) {
   return (templateObj: TemplateStringsArray, ...args: unknown[]) => {
-    assertIsTemplateObject(templateObj, allowInterpolation, errMsg);
+    assertIsTemplateObject(templateObj, errMsg);
     const parts = [templateObj[0]];
     for (let i = 0; i < args.length; i++) {
       parts.push(String(args[i]));
@@ -29,35 +29,70 @@ function getTagFunction(allowInterpolation: boolean, errMsg: string) {
   };
 }
 
+function getConstantTagFunction(errMsg: string) {
+  return (templateObj: TemplateStringsArray,
+          ...emptyArgs: ReadonlyArray<''>) => {
+    assertIsConstantTemplateObject(templateObj, emptyArgs, errMsg);
+    return templateObj.join('');
+  };
+}
+
 describe('assertIsTemplateObject', () => {
   it('accepts valid input', () => {
-    const tagFn = getTagFunction(false, 'unexpected error');
+    const tagFn = getTagFunction('unexpected error');
     expect(tagFn`valid string`).toEqual('valid string');
   });
 
-  it('can support interpolation', () => {
-    const tagFn = getTagFunction(true, 'unexpected error');
-    expect(tagFn`hello ${'world'}`).toEqual('hello world');
-  });
-
-  it('can reject interpolation', () => {
-    const tagFn = getTagFunction(false, 'tagFn does not support interpolation');
-    expect(() => {
-      return tagFn`hello ${'world'}`;
-    }).toThrowError(/tagFn does not support interpolation/);
+  it('supports interpolation', () => {
+    const tagFn = getTagFunction('unexpected error');
+    expect(tagFn`hello ${'world'}!`).toEqual('hello world!');
   });
 
   it('rejects invalid input 1: missing property \"raw\"', () => {
-    const tagFn = getTagFunction(false, 'tagFn is a template tag function');
+    const tagFn = getTagFunction('tagFn is a template tag function');
     expect(() => {
       return tagFn(['evil'] as never as TemplateStringsArray);
     }).toThrowError(/tagFn is a template tag function/);
   });
 
   it('rejects invalid input 2: missing properties of string[]', () => {
-    const tagFn = getTagFunction(false, 'tagFn is a template tag function');
+    const tagFn = getTagFunction('tagFn is a template tag function');
     expect(() => {
       return tagFn({raw: ['evil']} as never as TemplateStringsArray);
     }).toThrowError(/tagFn is a template tag function/);
+  });
+});
+
+describe('assertIsConstantTemplateObject', () => {
+  it('accepts valid input', () => {
+    const tagFn = getConstantTagFunction('unexpected error');
+    expect(tagFn`valid string`).toEqual('valid string');
+  });
+
+  it('rejects interpolation', () => {
+    const tagFn =
+        getConstantTagFunction('tagFn does not support interpolation');
+    expect(() => {
+      return tagFn`hello ${'world' as unknown as ''}`;
+    }).toThrowError(/tagFn does not support interpolation/);
+  });
+
+  it('rejects invalid input 1: missing property \"raw\"', () => {
+    const tagFn = getConstantTagFunction('tagFn is a template tag function');
+    expect(() => {
+      return tagFn(['evil'] as never as TemplateStringsArray);
+    }).toThrowError(/tagFn is a template tag function/);
+  });
+
+  it('rejects invalid input 2: missing properties of string[]', () => {
+    const tagFn = getConstantTagFunction('tagFn is a template tag function');
+    expect(() => {
+      return tagFn({raw: ['evil']} as never as TemplateStringsArray);
+    }).toThrowError(/tagFn is a template tag function/);
+  });
+
+  it('supports inline comments', () => {
+    const tagFn = getConstantTagFunction('unexpected error');
+    expect(tagFn`hello${/* awesome */ ''} world!`).toEqual('hello world!');
   });
 });

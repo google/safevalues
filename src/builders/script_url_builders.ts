@@ -134,7 +134,7 @@ export function scriptUrl(
     ...rest: Primitive[]): TrustedScriptURL {
   // Check if templateObj is actually from a template literal.
   assertIsTemplateObject(
-      templateObj, true,
+      templateObj,
       'scriptUrl is a template literal tag function ' +
           'that only accepts template literals with or without expressions. ' +
           'For example, scriptUrl`foo`; or ' +

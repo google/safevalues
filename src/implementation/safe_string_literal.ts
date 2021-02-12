@@ -21,14 +21,32 @@
  * actually from a template literal.
  *
  * @param templateObj This contains the literal part of the template literal.
- * @param hasExprs If true, the input template may contain embedded expressions.
  * @param errorMsg The custom error message in case any checks fail.
  */
 export function assertIsTemplateObject(
-    templateObj: TemplateStringsArray, hasExprs: boolean,
+    templateObj: TemplateStringsArray, errorMsg: string): void {
+  if (!Array.isArray(templateObj) || !Array.isArray(templateObj.raw)) {
+    throw new TypeError(errorMsg);
+  }
+  return;
+}
+
+/**
+ * An object of type TemplateStringsArray represents the literal part(s) of a
+ * template literal. This function checks if a TemplateStringsArray object is
+ * actually from a template literal, and that its value is constant. Empty
+ * interpolations are allowed to enable inline comments in the template literal.
+ *
+ * @param templateObj This contains the literal part of the template literal.
+ * @param emptyArgs Arguments passed to the template, which should only consist
+ *     of empty strings.
+ * @param errorMsg The custom error message in case any checks fail.
+ */
+export function assertIsConstantTemplateObject(
+    templateObj: TemplateStringsArray, emptyArgs: ReadonlyArray<''>,
     errorMsg: string): void {
-  if (!Array.isArray(templateObj) || !Array.isArray(templateObj.raw) ||
-      (!hasExprs && templateObj.length !== 1)) {
+  assertIsTemplateObject(templateObj, errorMsg);
+  if (templateObj.length !== 1 && emptyArgs.some(arg => arg !== '')) {
     throw new TypeError(errorMsg);
   }
   return;
