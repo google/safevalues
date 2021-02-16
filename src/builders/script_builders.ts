@@ -15,7 +15,9 @@
  * limitations under the License.
  */
 
-import {createScript, unwrapScriptAsString} from '../implementation/script_impl';
+import {createScript} from '../implementation/script_impl';
+import {unwrapScriptAsString} from '../implementation/script_impl';
+
 import {assertIsTemplateObject} from '../implementation/safe_string_literal';
 
 type Primitive = number|string|boolean|null;
