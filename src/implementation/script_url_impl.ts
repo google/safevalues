@@ -15,15 +15,17 @@
  * limitations under the License.
  */
 
-import {ensureTokenIsValid, secretToken} from './secrets';
+import {ensureTokenIsValid} from './secrets';
 import {getTrustedTypes, getTrustedTypesPolicy} from './trusted_types';
+
+const secretToken = {};
 
 /** Implementation for `TrustedScriptURL` */
 class ScriptUrlImpl  {
   readonly privateDoNotAccessOrElseWrappedResourceUrl: string;
 
   constructor(url: string, token: object) {
-    ensureTokenIsValid(token);
+    ensureTokenIsValid(token, secretToken);
     this.privateDoNotAccessOrElseWrappedResourceUrl = url;
   }
 

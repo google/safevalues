@@ -21,13 +21,12 @@
  * creation is only possible within safevalues. In particular, this prevents
  * forgery such as `htmlValue.constructor('javascript:evil')`.
  */
-export const secretToken = {};
 
 /**
  * Asserts that the given token matches the secret safevalues token. An
  * exception is thrown if that is not the case.
  */
-export function ensureTokenIsValid(token: object) {
+export function ensureTokenIsValid(token: object, secretToken: object) {
   if (token !== secretToken) {
     throw new Error('Bad secret');
   }

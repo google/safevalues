@@ -15,15 +15,17 @@
  * limitations under the License.
  */
 
-import {ensureTokenIsValid, secretToken} from './secrets';
+import {ensureTokenIsValid} from './secrets';
 import {getTrustedTypes, getTrustedTypesPolicy} from './trusted_types';
+
+const secretToken = {};
 
 /** Implementation for `TrustedScript` */
 class ScriptImpl  {
   readonly privateDoNotAccessOrElseWrappedScript: string;
 
   constructor(script: string, token: object) {
-    ensureTokenIsValid(token);
+    ensureTokenIsValid(token, secretToken);
     this.privateDoNotAccessOrElseWrappedScript = script;
   }
 
@@ -53,8 +55,11 @@ export function createScript(script: string): TrustedScript {
  * An empty `TrustedScript` constant.
  * Unlike the functions above, using this will not create a policy.
  */
-export const EMPTY_SCRIPT: TrustedScript =
-    createScriptInternal('', getTrustedTypes()?.emptyScript);
+export const EMPTY_SCRIPT: TrustedScript = {
+  valueOf() {
+    return createScriptInternal('', getTrustedTypes()?.emptyScript);
+  }
+}.valueOf();
 
 /**
  * Returns the value of the passed `TrustedScript` object while ensuring it

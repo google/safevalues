@@ -15,15 +15,17 @@
  * limitations under the License.
  */
 
-import {ensureTokenIsValid, secretToken} from './secrets';
+import {ensureTokenIsValid} from './secrets';
 import {getTrustedTypes, getTrustedTypesPolicy} from './trusted_types';
+
+const secretToken = {};
 
 /** Implementation for `TrustedHTML` */
 class HtmlImpl  {
   readonly privateDoNotAccessOrElseWrappedHtml: string;
 
   constructor(html: string, token: object) {
-    ensureTokenIsValid(token);
+    ensureTokenIsValid(token, secretToken);
     this.privateDoNotAccessOrElseWrappedHtml = html;
   }
 
@@ -52,8 +54,11 @@ export function createHtml(html: string): TrustedHTML {
  * An empty `TrustedHTML` constant.
  * Unlike the function above, using this will not create a policy.
  */
-export const EMPTY_HTML: TrustedHTML =
-    createHtmlInternal('', getTrustedTypes()?.emptyHTML);
+export const EMPTY_HTML: TrustedHTML = {
+  valueOf() {
+    return createHtmlInternal('', getTrustedTypes()?.emptyHTML);
+  }
+}.valueOf();
 
 /**
  * Returns the value of the passed `TrustedHTML` object while ensuring it
