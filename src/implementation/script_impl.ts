@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+import {pure} from './pure';
 import {ensureTokenIsValid, secretToken} from './secrets';
 import {getTrustedTypes, getTrustedTypesPolicy} from './trusted_types';
 
@@ -54,7 +55,7 @@ export function createScript(script: string): TrustedScript {
  * Unlike the functions above, using this will not create a policy.
  */
 export const EMPTY_SCRIPT: TrustedScript =
-    createScriptInternal('', getTrustedTypes()?.emptyScript);
+    pure(() => createScriptInternal('', getTrustedTypes()?.emptyScript));
 
 /**
  * Returns the value of the passed `TrustedScript` object while ensuring it
