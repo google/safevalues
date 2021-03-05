@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+import {pure} from './pure';
 import {ensureTokenIsValid, secretToken} from './secrets';
 import {getTrustedTypes, getTrustedTypesPolicy} from './trusted_types';
 
@@ -53,7 +54,7 @@ export function createHtml(html: string): TrustedHTML {
  * Unlike the function above, using this will not create a policy.
  */
 export const EMPTY_HTML: TrustedHTML =
-    createHtmlInternal('', getTrustedTypes()?.emptyHTML);
+    pure(() => createHtmlInternal('', getTrustedTypes()?.emptyHTML));
 
 /**
  * Returns the value of the passed `TrustedHTML` object while ensuring it
