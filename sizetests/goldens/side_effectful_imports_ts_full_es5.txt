@@ -1,0 +1,96 @@
+/*
+
+ Copyright The Closure Library Authors.
+ SPDX-License-Identifier: Apache-2.0
+*/
+var $$jscomp$objectCreate$$ = "function" == typeof Object.create ? Object.create : function($prototype$$) {
+  var $ctor$$ = function() {
+  };
+  $ctor$$.prototype = $prototype$$;
+  return new $ctor$$;
+}, $JSCompiler_temp$jscomp$13$$;
+if ("function" == typeof Object.setPrototypeOf) {
+  $JSCompiler_temp$jscomp$13$$ = Object.setPrototypeOf;
+} else {
+  var $JSCompiler_inline_result$jscomp$14$$;
+  a: {
+    var $x$jscomp$inline_16$$ = {a:!0}, $y$jscomp$inline_17$$ = {};
+    try {
+      $y$jscomp$inline_17$$.__proto__ = $x$jscomp$inline_16$$;
+      $JSCompiler_inline_result$jscomp$14$$ = $y$jscomp$inline_17$$.a;
+      break a;
+    } catch ($e$jscomp$inline_18$$) {
+    }
+    $JSCompiler_inline_result$jscomp$14$$ = !1;
+  }
+  $JSCompiler_temp$jscomp$13$$ = $JSCompiler_inline_result$jscomp$14$$ ? function($target$jscomp$94$$, $proto$jscomp$4$$) {
+    $target$jscomp$94$$.__proto__ = $proto$jscomp$4$$;
+    if ($target$jscomp$94$$.__proto__ !== $proto$jscomp$4$$) {
+      throw new TypeError($target$jscomp$94$$ + " is not extensible");
+    }
+    return $target$jscomp$94$$;
+  } : null;
+}
+var $$jscomp$setPrototypeOf$$ = $JSCompiler_temp$jscomp$13$$, $$jscomp$inherits$$ = function($childCtor$$, $parentCtor$$) {
+  $childCtor$$.prototype = $$jscomp$objectCreate$$($parentCtor$$.prototype);
+  $childCtor$$.prototype.constructor = $childCtor$$;
+  if ($$jscomp$setPrototypeOf$$) {
+    $$jscomp$setPrototypeOf$$($childCtor$$, $parentCtor$$);
+  } else {
+    for (var $p$$ in $parentCtor$$) {
+      if ("prototype" != $p$$) {
+        if (Object.defineProperties) {
+          var $descriptor$jscomp$2$$ = Object.getOwnPropertyDescriptor($parentCtor$$, $p$$);
+          $descriptor$jscomp$2$$ && Object.defineProperty($childCtor$$, $p$$, $descriptor$jscomp$2$$);
+        } else {
+          $childCtor$$[$p$$] = $parentCtor$$[$p$$];
+        }
+      }
+    }
+  }
+  $childCtor$$.$superClass_$ = $parentCtor$$.prototype;
+};
+var $module$exports$google3$javascript$typescript$safevalues$implementation$secrets$secretToken$$ = {};
+function $module$contents$google3$javascript$typescript$safevalues$implementation$secrets_ensureTokenIsValid$$($token$jscomp$4$$) {
+  if ($token$jscomp$4$$ !== $module$exports$google3$javascript$typescript$safevalues$implementation$secrets$secretToken$$) {
+    throw Error("Bad secret");
+  }
+}
+;function $module$contents$google3$javascript$typescript$safevalues$implementation$trusted_types_getTrustedTypes$$() {
+  var $JSCompiler_inline_result$jscomp$15$$ = "undefined" !== typeof window ? window.trustedTypes : void 0;
+  return null !== $JSCompiler_inline_result$jscomp$15$$ && void 0 !== $JSCompiler_inline_result$jscomp$15$$ ? $JSCompiler_inline_result$jscomp$15$$ : null;
+}
+;var $module$contents$google3$javascript$typescript$safevalues$implementation$html_impl__a$$, $module$exports$google3$javascript$typescript$safevalues$implementation$html_impl$TrustedHTML$$ = function() {
+}, $module$contents$google3$javascript$typescript$safevalues$implementation$html_impl_HtmlImpl$$ = function($html$$, $token$jscomp$5$$) {
+  $module$contents$google3$javascript$typescript$safevalues$implementation$secrets_ensureTokenIsValid$$($token$jscomp$5$$);
+  this.$privateDoNotAccessOrElseWrappedHtml$ = $html$$;
+};
+$$jscomp$inherits$$($module$contents$google3$javascript$typescript$safevalues$implementation$html_impl_HtmlImpl$$, $module$exports$google3$javascript$typescript$safevalues$implementation$html_impl$TrustedHTML$$);
+$module$contents$google3$javascript$typescript$safevalues$implementation$html_impl_HtmlImpl$$.prototype.toString = function() {
+  return this.$privateDoNotAccessOrElseWrappedHtml$.toString();
+};
+var $trusted$jscomp$inline_22$$ = null === ($module$contents$google3$javascript$typescript$safevalues$implementation$html_impl__a$$ = $module$contents$google3$javascript$typescript$safevalues$implementation$trusted_types_getTrustedTypes$$()) || void 0 === $module$contents$google3$javascript$typescript$safevalues$implementation$html_impl__a$$ ? void 0 : $module$contents$google3$javascript$typescript$safevalues$implementation$html_impl__a$$.emptyHTML;
+new $module$contents$google3$javascript$typescript$safevalues$implementation$html_impl_HtmlImpl$$(null !== $trusted$jscomp$inline_22$$ && void 0 !== $trusted$jscomp$inline_22$$ ? $trusted$jscomp$inline_22$$ : "", $module$exports$google3$javascript$typescript$safevalues$implementation$secrets$secretToken$$);
+var $module$contents$google3$javascript$typescript$safevalues$implementation$script_impl__a$$, $module$exports$google3$javascript$typescript$safevalues$implementation$script_impl$TrustedScript$$ = function() {
+}, $module$contents$google3$javascript$typescript$safevalues$implementation$script_impl_ScriptImpl$$ = function($script$jscomp$8$$, $token$jscomp$7$$) {
+  $module$contents$google3$javascript$typescript$safevalues$implementation$secrets_ensureTokenIsValid$$($token$jscomp$7$$);
+  this.$privateDoNotAccessOrElseWrappedScript$ = $script$jscomp$8$$;
+};
+$$jscomp$inherits$$($module$contents$google3$javascript$typescript$safevalues$implementation$script_impl_ScriptImpl$$, $module$exports$google3$javascript$typescript$safevalues$implementation$script_impl$TrustedScript$$);
+$module$contents$google3$javascript$typescript$safevalues$implementation$script_impl_ScriptImpl$$.prototype.toString = function() {
+  return this.$privateDoNotAccessOrElseWrappedScript$.toString();
+};
+var $trusted$jscomp$inline_25$$ = null === ($module$contents$google3$javascript$typescript$safevalues$implementation$script_impl__a$$ = $module$contents$google3$javascript$typescript$safevalues$implementation$trusted_types_getTrustedTypes$$()) || void 0 === $module$contents$google3$javascript$typescript$safevalues$implementation$script_impl__a$$ ? void 0 : $module$contents$google3$javascript$typescript$safevalues$implementation$script_impl__a$$.emptyScript;
+new $module$contents$google3$javascript$typescript$safevalues$implementation$script_impl_ScriptImpl$$(null !== $trusted$jscomp$inline_25$$ && void 0 !== $trusted$jscomp$inline_25$$ ? $trusted$jscomp$inline_25$$ : "", $module$exports$google3$javascript$typescript$safevalues$implementation$secrets$secretToken$$);
+var $module$exports$google3$javascript$typescript$safevalues$implementation$safe_url_impl$SafeUrl$$ = function() {
+}, $module$contents$google3$javascript$typescript$safevalues$implementation$safe_url_impl_SafeUrlImpl$$ = function($url$jscomp$24$$, $token$jscomp$10$$) {
+  $module$contents$google3$javascript$typescript$safevalues$implementation$secrets_ensureTokenIsValid$$($token$jscomp$10$$);
+  this.$privateDoNotAccessOrElseWrappedUrl$ = $url$jscomp$24$$;
+};
+$$jscomp$inherits$$($module$contents$google3$javascript$typescript$safevalues$implementation$safe_url_impl_SafeUrlImpl$$, $module$exports$google3$javascript$typescript$safevalues$implementation$safe_url_impl$SafeUrl$$);
+$module$contents$google3$javascript$typescript$safevalues$implementation$safe_url_impl_SafeUrlImpl$$.prototype.toString = function() {
+  return this.$privateDoNotAccessOrElseWrappedUrl$;
+};
+new $module$contents$google3$javascript$typescript$safevalues$implementation$safe_url_impl_SafeUrlImpl$$("about:blank", $module$exports$google3$javascript$typescript$safevalues$implementation$secrets$secretToken$$);
+new $module$contents$google3$javascript$typescript$safevalues$implementation$safe_url_impl_SafeUrlImpl$$("about:invalid#zTSz", $module$exports$google3$javascript$typescript$safevalues$implementation$secrets$secretToken$$);
+
