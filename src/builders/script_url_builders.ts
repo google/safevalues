@@ -134,10 +134,8 @@ export function scriptUrl(
   // Check if templateObj is actually from a template literal.
   assertIsTemplateObject(
       templateObj, true,
-      'scriptUrl is a template literal tag function ' +
-          'that only accepts template literals with or without expressions. ' +
-          'For example, scriptUrl`foo`; or ' +
-          'scriptUrl`foo${bar}`');
+      'scriptUrl is a template literal tag function and ' +
+          'can only be called as such (e.g. scriptUrl`/somepath.js`)');
 
   if (rest.length === 0) {
     return createScriptUrl(templateObj[0]);
