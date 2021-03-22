@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-import {createScript, unwrapScriptAsString} from '../implementation/script_impl';
 import {assertIsTemplateObject} from '../implementation/safe_string_literal';
+import {createScript, unwrapScriptAsString} from '../implementation/script_impl';
 
 type Primitive = number|string|boolean|null;
 type Serializable =
@@ -41,7 +41,9 @@ export function script(templateObj: TemplateStringsArray): TrustedScript {
   return createScript(templateObj[0]);
 }
 
-/** Creates a `TrustedScript` value by concatenating multiple `TrustedScript`s. */
+/**
+ * Creates a `TrustedScript` value by concatenating multiple `TrustedScript`s.
+ */
 export function concatScripts(...scripts: TrustedScript[]): TrustedScript {
   return createScript(scripts.map(unwrapScriptAsString).join(''));
 }
@@ -57,10 +59,10 @@ function serializeAsScriptValue(value: Serializable): string {
 }
 
 /**
- * Creates a `TrustedScript` object from a template literal (without any embedded
- * expressions) along with additional arguments that the script should have
- * access to. These arguments will be JSON-encoded and passed to the script as
- * a function call.
+ * Creates a `TrustedScript` object from a template literal (without any
+ * embedded expressions) along with additional arguments that the script should
+ * have access to. These arguments will be JSON-encoded and passed to the script
+ * as a function call.
  * @example
  * ```ts
  * scriptWithArgs`function (name, props) {

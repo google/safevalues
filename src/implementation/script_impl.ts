@@ -20,7 +20,7 @@ import {ensureTokenIsValid, secretToken} from './secrets';
 import {getTrustedTypes, getTrustedTypesPolicy} from './trusted_types';
 
 /** Implementation for `TrustedScript` */
-class ScriptImpl  {
+class ScriptImpl {
   readonly privateDoNotAccessOrElseWrappedScript: string;
 
   constructor(script: string, token: object) {

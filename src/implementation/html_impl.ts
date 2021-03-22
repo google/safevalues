@@ -20,7 +20,7 @@ import {ensureTokenIsValid, secretToken} from './secrets';
 import {getTrustedTypes, getTrustedTypesPolicy} from './trusted_types';
 
 /** Implementation for `TrustedHTML` */
-class HtmlImpl  {
+class HtmlImpl {
   readonly privateDoNotAccessOrElseWrappedHtml: string;
 
   constructor(html: string, token: object) {
@@ -45,8 +45,7 @@ function createHtmlInternal(html: string, trusted?: TrustedHTML): TrustedHTML {
  * a step towards safe builders or safe constants.
  */
 export function createHtml(html: string): TrustedHTML {
-  return createHtmlInternal(
-      html, getTrustedTypesPolicy()?.createHTML(html));
+  return createHtmlInternal(html, getTrustedTypesPolicy()?.createHTML(html));
 }
 
 /**

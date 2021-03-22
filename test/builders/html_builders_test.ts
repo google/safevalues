@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-import {testingConversionToScriptUrl} from '../testing_conversions';
 import {concatHtmls, createScriptSrc, htmlEscape} from '../../src/builders/html_builders';
+import {testingConversionToScriptUrl} from '../testing_conversions';
 
 describe('html_builders', () => {
   describe('htmlEscape', () => {
@@ -75,24 +75,21 @@ describe('html_builders', () => {
 
   describe('createScriptSrc', () => {
     it('builds the right tags', () => {
-      expect(createScriptSrc(testingConversionToScriptUrl('//abc<'))
+      expect(createScriptSrc(testingConversionToScriptUrl('//abc<')).toString())
+          .toEqual('<script src="//abc&lt;"></script>');
+      expect(createScriptSrc(testingConversionToScriptUrl('//abc<'), true)
+                 .toString())
+          .toEqual('<script src="//abc&lt;" async></script>');
+      expect(createScriptSrc(testingConversionToScriptUrl('//abc<'), false)
                  .toString())
           .toEqual('<script src="//abc&lt;"></script>');
       expect(
-          createScriptSrc(testingConversionToScriptUrl('//abc<'), true)
+          createScriptSrc(testingConversionToScriptUrl('//abc<'), false, '123')
               .toString())
-          .toEqual('<script src="//abc&lt;" async></script>');
-      expect(createScriptSrc(
-                 testingConversionToScriptUrl('//abc<'), false)
-                 .toString())
-          .toEqual('<script src="//abc&lt;"></script>');
-      expect(createScriptSrc(
-                 testingConversionToScriptUrl('//abc<'), false, '123')
-                 .toString())
           .toEqual('<script src="//abc&lt;" nonce="123"></script>');
-      expect(createScriptSrc(
-                 testingConversionToScriptUrl('//abc<<'), false, '123')
-                 .toString())
+      expect(
+          createScriptSrc(testingConversionToScriptUrl('//abc<<'), false, '123')
+              .toString())
           .toEqual('<script src="//abc&lt;&lt;" nonce="123"></script>');
     });
 

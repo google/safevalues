@@ -35,8 +35,8 @@ import {createScriptUrl} from '../implementation/script_url_impl';
  * different from the ones provided by reviewed. The
  * latter are for use in code where it has been established through manual
  * security review that the value produced by a piece of code will always
- * satisfy the TrustedHTML contract (e.g., the output of a secure HTML sanitizer).
- * In uses of legacyconversions, this guarantee is not given -- the
+ * satisfy the TrustedHTML contract (e.g., the output of a secure HTML
+ * sanitizer). In uses of legacyconversions, this guarantee is not given -- the
  * value in question originates in unreviewed legacy code and there is no
  * guarantee that it satisfies the TrustedHTML contract.
  *
@@ -47,11 +47,11 @@ import {createScriptUrl} from '../implementation/script_url_impl';
  * hence cause XSS - like innerHTML. For example, Dialog might expose a
  * setContent method which takes a string and sets the innerHTML property of
  * an element with it. In this case a setHtmlContent function could be
- * added, consuming TrustedHTML instead of string. setContent could then internally
- *  use legacyconversions to create a TrustedHTML
- * from string and pass the TrustedHTML to a safe values consumer down the line. In
- * this scenario remember to document the use of legacyconversions in the
- * modified setContent and consider deprecating it as well.
+ * added, consuming TrustedHTML instead of string. setContent could then
+ * internally use legacyconversions to create a TrustedHTML from string and pass
+ * the TrustedHTML to a safe values consumer down the line. In this scenario
+ * remember to document the use of legacyconversions in the modified setContent
+ * and consider deprecating it as well.
  *
  * 2. Automated refactoring of application code which handles HTML as string
  * but needs to call a function which only takes safe values types. For example,
@@ -91,7 +91,6 @@ export function legacyConversionToScript(s: string): TrustedScript {
  *
  * Please read fileoverview documentation before using.
  */
-export function legacyConversionToScriptUrl(s: string):
-    TrustedScriptURL {
+export function legacyConversionToScriptUrl(s: string): TrustedScriptURL {
   return createScriptUrl(s);
 }

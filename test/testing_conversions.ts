@@ -31,16 +31,16 @@ import {createScript} from '../src/implementation/script_impl';
 import {createScriptUrl} from '../src/implementation/script_url_impl';
 
 /**
- * Turns a string into TrustedHTML for testing purposes. This function is for use
- * in tests only and must never be used in production code.
+ * Turns a string into TrustedHTML for testing purposes. This function is for
+ * use in tests only and must never be used in production code.
  */
 export function testingConversionToHtml(s: string): TrustedHTML {
   return createHtml(s);
 }
 
 /**
- * Turns a string into TrustedScript for testing API purposes. This function is for
- * use in tests only and must never be used in production code.
+ * Turns a string into TrustedScript for testing API purposes. This function is
+ * for use in tests only and must never be used in production code.
  */
 export function testingConversionToScript(s: string): TrustedScript {
   return createScript(s);
@@ -50,7 +50,6 @@ export function testingConversionToScript(s: string): TrustedScript {
  * Turns a string into TrustedScriptURL for testing purposes. This function is
  * for use in tests only and must never be used in production code.
  */
-export function testingConversionToScriptUrl(s: string):
-    TrustedScriptURL {
+export function testingConversionToScriptUrl(s: string): TrustedScriptURL {
   return createScriptUrl(s);
 }

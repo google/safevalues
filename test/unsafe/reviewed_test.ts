@@ -29,9 +29,9 @@ describe('unchecked conversions', () => {
       htmlFromStringKnownToSatisfyTypeContract('aaa', '   ');
     }).toThrowError(/A justification must be provided/);
 
-    expect(htmlFromStringKnownToSatisfyTypeContract(
-               'aaa', 'This is just a test')
-               .toString())
+    expect(
+        htmlFromStringKnownToSatisfyTypeContract('aaa', 'This is just a test')
+            .toString())
         .toEqual('aaa');
   });
 });

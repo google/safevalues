@@ -43,8 +43,7 @@ describe('script_url_builders', () => {
       // Mixed case.
       expect(scriptUrl`httpS://www.google.cOm/pAth/${foo}`.toString())
           .toBe('httpS://www.google.cOm/pAth/foo');
-      expect(scriptUrl`about:blank#${foo}`.toString())
-          .toBe('about:blank#foo');
+      expect(scriptUrl`about:blank#${foo}`.toString()).toBe('about:blank#foo');
     });
 
     it('rejects invalid formats', () => {
@@ -110,8 +109,7 @@ describe('script_url_builders', () => {
     });
 
     it('can interpolate numbers and booleans', () => {
-      const url =
-          scriptUrl`https://www.google.com/path?foo=${3}&bar=${true}`;
+      const url = scriptUrl`https://www.google.com/path?foo=${3}&bar=${true}`;
       expect(url.toString())
           .toEqual('https://www.google.com/path?foo=3&bar=true');
     });
@@ -146,8 +144,7 @@ describe('script_url_builders', () => {
     it('does not support urls with fragments', () => {
       expect(() => {
         appendParams(
-            scriptUrl`https://google.com/#`,
-            new Map([['&x/', '&y/']]));
+            scriptUrl`https://google.com/#`, new Map([['&x/', '&y/']]));
       }).toThrowError(/Found a hash/);
     });
 

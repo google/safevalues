@@ -20,22 +20,22 @@
  * support both Closure and TS safe types.
  */
 
-import GoogHtml from 'goog:goog.html.TrustedHTML'; // from //third_party/javascript/closure/html:safehtml
-import GoogScript from 'goog:goog.html.TrustedScript'; // from //third_party/javascript/closure/html:safescript
+import * as googUnchecked from 'goog:goog.html.reviewed';  // from //third_party/javascript/closure/html:reviewed
 import GoogSafeStyle from 'goog:goog.html.SafeStyle'; // from //third_party/javascript/closure/html:safestyle
 import GoogSafeStyleSheet from 'goog:goog.html.SafeStyleSheet'; // from //third_party/javascript/closure/html:safestylesheet
 import GoogSafeUrl from 'goog:goog.html.SafeUrl'; // from //third_party/javascript/closure/html:safeurl
+import GoogHtml from 'goog:goog.html.TrustedHTML'; // from //third_party/javascript/closure/html:safehtml
+import GoogScript from 'goog:goog.html.TrustedScript'; // from //third_party/javascript/closure/html:safescript
 import GoogScriptUrl from 'goog:goog.html.TrustedScriptURL'; // from //third_party/javascript/closure/html:trustedresourceurl
-import * as googUnchecked from 'goog:goog.html.reviewed';  // from //third_party/javascript/closure/html:reviewed
 import Const from 'goog:goog.string.Const'; // from //third_party/javascript/closure/string:const
 import {TrustedHTML as TSTrustedHTML} from 'google3/javascript/typescript/safevalues/html';
-import {TrustedScript as TSTrustedScript} from 'google3/javascript/typescript/safevalues/script';
+import * as unchecked from 'google3/javascript/typescript/safevalues/reviewed';
 import {SafeStyle as TSSafeStyle} from 'google3/javascript/typescript/safevalues/safe_style';
 import {SafeStyleSheet as TSSafeStyleSheet} from 'google3/javascript/typescript/safevalues/safe_style_sheet';
-import {unwrapSafeStyle as tsUnwrapSafeStyle, unwrapSafeStyleSheet as tsUnwrapSafeStyleSheet, unwrapSafeUrl as tsUnwrapSafeUrl, uwrapHtmlForSink as tsUnwrapTrustedHTML, unwrapScriptUrl as tsUnwrapScriptUrl, uwrapScriptForSink as tsUnwrapTrustedScript, uwrapScriptUrlForSink as tsUnwrapTrustedScriptURL} from 'google3/javascript/typescript/safevalues/safe_unwrappers';
+import {unwrapSafeStyle as tsUnwrapSafeStyle, unwrapSafeStyleSheet as tsUnwrapSafeStyleSheet, unwrapSafeUrl as tsUnwrapSafeUrl, unwrapScriptUrl as tsUnwrapScriptUrl, uwrapHtmlForSink as tsUnwrapTrustedHTML, uwrapScriptForSink as tsUnwrapTrustedScript, uwrapScriptUrlForSink as tsUnwrapTrustedScriptURL} from 'google3/javascript/typescript/safevalues/safe_unwrappers';
 import {SafeUrl as TSSafeUrl} from 'google3/javascript/typescript/safevalues/safe_url';
+import {TrustedScript as TSTrustedScript} from 'google3/javascript/typescript/safevalues/script';
 import {TrustedScriptURL as TSTrustedScriptURL} from 'google3/javascript/typescript/safevalues/script_url';
-import * as unchecked from 'google3/javascript/typescript/safevalues/reviewed';
 
 /** Compat type for Closure and TS SafeTypes. */
 export type TrustedHTML = GoogHtml|TSTrustedHTML;
@@ -74,7 +74,11 @@ export function unwrapSafeStyle(style: SafeStyle): string {
   return GoogSafeStyle.unwrap(style);
 }
 
-/** Safe unwrapper that support both Closure and TS safe types. */
+/**
+ * Safe unwrapper that support both Closure and TS safe types.
+ * @noinline due to b/182875660. This prevents a Closure optimization that
+ * breaks IE11 with the location object.
+ */
 export function unwrapSafeUrl(url: SafeUrl): string {
   if (url instanceof TSSafeUrl) {
     return tsUnwrapSafeUrl(url);
@@ -148,8 +152,7 @@ export function fromTsSafeUrl(url: SafeUrl): GoogSafeUrl {
 /**
  * Converts a goog.html.TrustedScriptURL into a TypeScript TrustedScriptURL
  */
-export function toTsScriptUrl(url: TrustedScriptURL):
-    TSTrustedScriptURL {
+export function toTsScriptUrl(url: TrustedScriptURL): TSTrustedScriptURL {
   return unchecked.scriptUrlFromStringKnownToSatisfyTypeContract(
       uwrapScriptUrlForSink(url).toString(), 'Conversion from closure');
 }
@@ -157,8 +160,7 @@ export function toTsScriptUrl(url: TrustedScriptURL):
 /**
  * Converts a TypeScript TrustedScriptURL into a goog.html.TrustedScriptURL
  */
-export function fromTsScriptUrl(url: TrustedScriptURL):
-    GoogScriptUrl {
+export function fromTsScriptUrl(url: TrustedScriptURL): GoogScriptUrl {
   return googUnchecked.scriptUrlFromStringKnownToSatisfyTypeContract(
       Const.from('TS-Closure conversions of the same types'),
       uwrapScriptUrlForSink(url).toString());

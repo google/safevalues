@@ -24,8 +24,8 @@ describe('script_builders', () => {
     });
 
     it('rejects any interpolation', () => {
-      const castScript =
-          script as (arr: TemplateStringsArray, str: string) => TrustedScript;
+      const castScript = script as (arr: TemplateStringsArray, str: string) =>
+                             TrustedScript;
       expect(() => castScript`return ${'this'};`).toThrowError();
     });
   });
@@ -59,8 +59,7 @@ describe('script_builders', () => {
       const castScriptWithArgs =
           scriptWithArgs as (arr: TemplateStringsArray, str: string) =>
               (arg: string) => TrustedScript;
-      expect(() => castScriptWithArgs`${'console.log'}`('test'))
-          .toThrowError();
+      expect(() => castScriptWithArgs`${'console.log'}`('test')).toThrowError();
     });
 
     it('allows inline comments', () => {

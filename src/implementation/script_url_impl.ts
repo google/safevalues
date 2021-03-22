@@ -19,7 +19,7 @@ import {ensureTokenIsValid, secretToken} from './secrets';
 import {getTrustedTypes, getTrustedTypesPolicy} from './trusted_types';
 
 /** Implementation for `TrustedScriptURL` */
-class ScriptUrlImpl  {
+class ScriptUrlImpl {
   readonly privateDoNotAccessOrElseWrappedResourceUrl: string;
 
   constructor(url: string, token: object) {
@@ -41,8 +41,8 @@ class ScriptUrlImpl  {
  */
 export function createScriptUrl(url: string): TrustedScriptURL {
   const trustedScriptURL = getTrustedTypesPolicy()?.createScriptURL(url);
-  return (trustedScriptURL ??
-  new ScriptUrlImpl(url, secretToken)) as TrustedScriptURL;
+  return (trustedScriptURL ?? new ScriptUrlImpl(url, secretToken)) as
+      TrustedScriptURL;
 }
 
 /**
@@ -78,8 +78,7 @@ export function uwrapScriptUrlForSink(value: TrustedScriptURL):
  * Also ensures to return the right string value for `TrustedScriptURL` objects
  * if the `toString function has been overwritten on the object.
  */
-export function unwrapScriptUrlAsString(value: TrustedScriptURL):
-    string {
+export function unwrapScriptUrlAsString(value: TrustedScriptURL): string {
   const unwrapped = uwrapScriptUrlForSink(value);
   if (getTrustedTypes()?.isScriptURL(unwrapped)) {
     // TODO: Remove once the spec freezes instances of `TrustedScriptURL`.

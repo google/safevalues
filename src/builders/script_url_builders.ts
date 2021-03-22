@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-import {unwrapScriptAsString} from '../implementation/script_impl';
 import {assertIsTemplateObject} from '../implementation/safe_string_literal';
+import {unwrapScriptAsString} from '../implementation/script_impl';
 import {createScriptUrl, unwrapScriptUrlAsString} from '../implementation/script_url_impl';
 
 /** Type that we know how to interpolate */
@@ -130,8 +130,7 @@ function isValidPathStart(base: string): boolean {
  * @param rest This represents the template's embedded expressions.
  */
 export function scriptUrl(
-    templateObj: TemplateStringsArray,
-    ...rest: Primitive[]): TrustedScriptURL {
+    templateObj: TemplateStringsArray, ...rest: Primitive[]): TrustedScriptURL {
   // Check if templateObj is actually from a template literal.
   assertIsTemplateObject(
       templateObj, true,
