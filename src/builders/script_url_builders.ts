@@ -26,8 +26,12 @@ type Primitive = string|number|boolean;
  * Check whether the base url contains a valid origin,
  *
  * A string for an origin must contain only alphanumeric or any of the
- * following: `-.:[]`. Remember that, as per the documentation for
+ * following: `-.:`. Remember that, as per the documentation for
  * TrustedScriptURL, the origin must be trustworthy.
+ *
+ * IPv6 origins (e.g. `https://[2001:db8::8a2e:370:7334]/`) are considered
+ * invalid. IPv4 origins (e.g. `https://192.0.2.235/`) should not be used, but
+ * currently pass validation (b/184051990).
  *
  * @param base The base url that contains an origin.
  */
@@ -112,7 +116,7 @@ function isValidPathStart(base: string): boolean {
  * - `about:blank`
  * - `data:`
  *
- * `<origin>` must contain only alphanumeric or any of the following: `-.:[]`.
+ * `<origin>` must contain only alphanumeric or any of the following: `-.:`.
  * Remember that, as per the documentation for TrustedScriptURL, the origin
  * must be trustworthy. An origin of "example.com" could be set with this
  * method, but would tie the security of your site to the security of
