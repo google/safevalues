@@ -60,7 +60,7 @@ export function createScriptUrl(url: string): TrustedScriptURL {
  * use any string functions on the result as that will fail in browsers
  * supporting Trusted Types.
  */
-export function uwrapScriptUrlForSink(value: TrustedScriptURL):
+export function unwrapScriptUrlForSink(value: TrustedScriptURL):
     TrustedScriptURL&string {
   if (getTrustedTypes()?.isScriptURL(value)) {
     return value as TrustedScriptURL & string;
@@ -73,13 +73,13 @@ export function uwrapScriptUrlForSink(value: TrustedScriptURL):
 }
 
 /**
- * Same as `uwrapScriptUrlForSink`, but returns an actual string
+ * Same as `unwrapScriptUrlForSink`, but returns an actual string
  *
  * Also ensures to return the right string value for `TrustedScriptURL` objects
  * if the `toString function has been overwritten on the object.
  */
 export function unwrapScriptUrlAsString(value: TrustedScriptURL): string {
-  const unwrapped = uwrapScriptUrlForSink(value);
+  const unwrapped = unwrapScriptUrlForSink(value);
   if (getTrustedTypes()?.isScriptURL(unwrapped)) {
     // TODO: Remove once the spec freezes instances of `TrustedScriptURL`.
     return TrustedScriptURL.prototype.toString.apply(unwrapped);

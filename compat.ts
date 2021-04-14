@@ -32,7 +32,7 @@ import {TrustedHTML as TSTrustedHTML} from 'google3/javascript/typescript/safeva
 import * as unchecked from 'google3/javascript/typescript/safevalues/reviewed';
 import {SafeStyle as TSSafeStyle} from 'google3/javascript/typescript/safevalues/safe_style';
 import {SafeStyleSheet as TSSafeStyleSheet} from 'google3/javascript/typescript/safevalues/safe_style_sheet';
-import {unwrapSafeStyle as tsUnwrapSafeStyle, unwrapSafeStyleSheet as tsUnwrapSafeStyleSheet, unwrapSafeUrl as tsUnwrapSafeUrl, unwrapScriptUrl as tsUnwrapScriptUrl, uwrapHtmlForSink as tsUnwrapTrustedHTML, uwrapScriptForSink as tsUnwrapTrustedScript, uwrapScriptUrlForSink as tsUnwrapTrustedScriptURL} from 'google3/javascript/typescript/safevalues/safe_unwrappers';
+import {unwrapHtmlForSink as tsUnwrapTrustedHTML, unwrapSafeStyle as tsUnwrapSafeStyle, unwrapSafeStyleSheet as tsUnwrapSafeStyleSheet, unwrapSafeUrl as tsUnwrapSafeUrl, unwrapScriptForSink as tsUnwrapTrustedScript, unwrapScriptUrl as tsUnwrapScriptUrl, unwrapScriptUrlForSink as tsUnwrapTrustedScriptURL} from 'google3/javascript/typescript/safevalues/safe_unwrappers';
 import {SafeUrl as TSSafeUrl} from 'google3/javascript/typescript/safevalues/safe_url';
 import {TrustedScript as TSTrustedScript} from 'google3/javascript/typescript/safevalues/script';
 import {TrustedScriptURL as TSTrustedScriptURL} from 'google3/javascript/typescript/safevalues/script_url';
@@ -51,19 +51,19 @@ export type SafeUrl = GoogSafeUrl|TSSafeUrl;
 export type TrustedScriptURL = GoogScriptUrl|TSTrustedScriptURL;
 
 /** Safe unwrapper that support both Closure and TS safe types. */
-export function uwrapHtmlForSink(html: TrustedHTML): string {
+export function unwrapHtmlForSink(html: TrustedHTML): string {
   if (html instanceof TSTrustedHTML) {
     return tsUnwrapTrustedHTML(html);
   }
-  return GoogHtml.uwrapHtmlForSink(html) as string;
+  return GoogHtml.unwrapHtmlForSink(html) as string;
 }
 
 /** Safe unwrapper that support both Closure and TS safe types. */
-export function uwrapScriptUrlForSink(url: TrustedScriptURL): string {
+export function unwrapScriptUrlForSink(url: TrustedScriptURL): string {
   if (url instanceof TSTrustedScriptURL) {
     return tsUnwrapTrustedScriptURL(url);
   }
-  return GoogScriptUrl.uwrapScriptUrlForSink(url) as string;
+  return GoogScriptUrl.unwrapScriptUrlForSink(url) as string;
 }
 
 /** Safe unwrapper that support both Closure and TS safe types. */
@@ -95,11 +95,11 @@ export function unwrapScriptUrl(url: TrustedScriptURL) {
 }
 
 /** Safe unwrapper that support both Closure and TS safe types. */
-export function uwrapScriptForSink(script: TrustedScript): string {
+export function unwrapScriptForSink(script: TrustedScript): string {
   if (script instanceof TSTrustedScript) {
     return tsUnwrapTrustedScript(script);
   }
-  return GoogScript.uwrapScriptForSink(script) as string;
+  return GoogScript.unwrapScriptForSink(script) as string;
 }
 
 /** Safe unwrapper that support both Closure and TS safe types. */
@@ -113,27 +113,27 @@ export function unwrapSafeStyleSheet(styleSheet: SafeStyleSheet): string {
 /** Converts a goog.html.TrustedHTML into a TypeScript TrustedHTML */
 export function toTsHtml(html: TrustedHTML): TSTrustedHTML {
   return unchecked.htmlFromStringKnownToSatisfyTypeContract(
-      uwrapHtmlForSink(html).toString(), 'Conversion from closure');
+      unwrapHtmlForSink(html).toString(), 'Conversion from closure');
 }
 
 /** Converts a TypeScript TrustedHTML into a goog.html.TrustedHTML */
 export function fromTsHtml(html: TrustedHTML): GoogHtml {
   return googUnchecked.htmlFromStringKnownToSatisfyTypeContract(
       Const.from('TS-Closure conversions of the same types'),
-      uwrapHtmlForSink(html).toString());
+      unwrapHtmlForSink(html).toString());
 }
 
 /** Converts a goog.html.TrustedScript into a TypeScript TrustedScript */
 export function toTsScript(script: TrustedScript): TSTrustedScript {
   return unchecked.scriptFromStringKnownToSatisfyTypeContract(
-      uwrapScriptForSink(script).toString(), 'Conversion from closure');
+      unwrapScriptForSink(script).toString(), 'Conversion from closure');
 }
 
 /** Converts a TypeScript TrustedScript into a goog.html.TrustedScript */
 export function fromTsScript(script: TrustedScript): GoogScript {
   return googUnchecked.scriptFromStringKnownToSatisfyTypeContract(
       Const.from('TS-Closure conversions of the same types'),
-      uwrapScriptForSink(script).toString());
+      unwrapScriptForSink(script).toString());
 }
 
 /** Converts a goog.html.SafeUrl into a TypeScript SafeUrl */
@@ -154,7 +154,7 @@ export function fromTsSafeUrl(url: SafeUrl): GoogSafeUrl {
  */
 export function toTsScriptUrl(url: TrustedScriptURL): TSTrustedScriptURL {
   return unchecked.scriptUrlFromStringKnownToSatisfyTypeContract(
-      uwrapScriptUrlForSink(url).toString(), 'Conversion from closure');
+      unwrapScriptUrlForSink(url).toString(), 'Conversion from closure');
 }
 
 /**
@@ -163,7 +163,7 @@ export function toTsScriptUrl(url: TrustedScriptURL): TSTrustedScriptURL {
 export function fromTsScriptUrl(url: TrustedScriptURL): GoogScriptUrl {
   return googUnchecked.scriptUrlFromStringKnownToSatisfyTypeContract(
       Const.from('TS-Closure conversions of the same types'),
-      uwrapScriptUrlForSink(url).toString());
+      unwrapScriptUrlForSink(url).toString());
 }
 
 /** Converts a goog.html.SafeStyle into a TypeScript SafeStyle */
