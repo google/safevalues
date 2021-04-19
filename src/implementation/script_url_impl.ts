@@ -40,8 +40,11 @@ class ScriptUrlImpl {
  * only be used as a step towards safe builders or safe constants.
  */
 export function createScriptUrl(url: string): TrustedScriptURL {
-  const trustedScriptURL = getTrustedTypesPolicy()?.createScriptURL(url);
-  return (trustedScriptURL ?? new ScriptUrlImpl(url, secretToken)) as
+  /** @noinline */
+  const noinlineUrl = url;
+  const trustedScriptURL =
+      getTrustedTypesPolicy()?.createScriptURL(noinlineUrl);
+  return (trustedScriptURL ?? new ScriptUrlImpl(noinlineUrl, secretToken)) as
       TrustedScriptURL;
 }
 

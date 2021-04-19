@@ -46,8 +46,10 @@ function createScriptInternal(
  * used as a step towards safe builders or safe constants.
  */
 export function createScript(script: string): TrustedScript {
+  /** @noinline */
+  const noinlineScript = script;
   return createScriptInternal(
-      script, getTrustedTypesPolicy()?.createScript(script));
+      noinlineScript, getTrustedTypesPolicy()?.createScript(noinlineScript));
 }
 
 /**

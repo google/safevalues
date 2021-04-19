@@ -45,7 +45,10 @@ function createHtmlInternal(html: string, trusted?: TrustedHTML): TrustedHTML {
  * a step towards safe builders or safe constants.
  */
 export function createHtml(html: string): TrustedHTML {
-  return createHtmlInternal(html, getTrustedTypesPolicy()?.createHTML(html));
+  /** @noinline */
+  const noinlineHtml = html;
+  return createHtmlInternal(
+      noinlineHtml, getTrustedTypesPolicy()?.createHTML(noinlineHtml));
 }
 
 /**
