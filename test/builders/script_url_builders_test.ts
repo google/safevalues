@@ -20,7 +20,7 @@ import {appendParams, blobUrlFromScript, scriptUrl} from '../../src/builders/scr
 
 describe('script_url_builders', () => {
   describe('scriptUrl', () => {
-    it('can create constants with no contraints', () => {
+    it('can create constants with no constraints', () => {
       expect(scriptUrl`a/b/c`.toString()).toEqual('a/b/c');
       expect(scriptUrl`about:blank`.toString()).toEqual('about:blank');
     });
@@ -35,6 +35,9 @@ describe('script_url_builders', () => {
       // Origin with hyphen and port.
       expect(scriptUrl`//ww-w.google.com:1000/path/${foo}`.toString())
           .toBe('//ww-w.google.com:1000/path/foo');
+      // IPv6 origin and port.
+      expect(scriptUrl`//[::1]:1000/path/${foo}`.toString())
+          .toBe('//[::1]:1000/path/foo');
       // Path-absolute.
       expect(scriptUrl`/${foo}`.toString()).toBe('/foo');
       expect(scriptUrl`/path/${foo}`.toString()).toBe('/path/foo');

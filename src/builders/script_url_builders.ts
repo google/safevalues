@@ -52,7 +52,7 @@ function hasValidOrigin(base: string): boolean {
   }
 
   const origin = base.substring(originStart, originEnd);
-  if (!/^[0-9a-z.:-]+$/i.test(origin)) {
+  if (!/^[0-9a-z\-.:\[\]]+$/i.test(origin)) {
     throw new Error('The origin contains unsupported characters.');
   }
   return true;
