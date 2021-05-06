@@ -1,6 +1,6 @@
 /*
  * @license
- * Copyright 2020 Google LLC
+ * Copyright 2021 Google LLC
 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@
 import {htmlEscape} from '../../src/builders/html_builders';
 import {script} from '../../src/builders/script_builders';
 import {scriptUrl} from '../../src/builders/script_url_builders';
-
 import {unwrapHtmlAsString, unwrapHtmlForSink} from '../../src/implementation/html_impl';
 import {unwrapScriptAsString, unwrapScriptForSink} from '../../src/implementation/script_impl';
 import {unwrapScriptUrlAsString, unwrapScriptUrlForSink} from '../../src/implementation/script_url_impl';
