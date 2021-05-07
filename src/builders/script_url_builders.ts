@@ -26,12 +26,8 @@ type Primitive = string|number|boolean;
  * Check whether the base url contains a valid origin,
  *
  * A string for an origin must contain only alphanumeric or any of the
- * following: `-.:`. Remember that, as per the documentation for
- * TrustedScriptURL, the origin must be trustworthy.
- *
- * IPv6 origins (e.g. `https://[2001:db8::8a2e:370:7334]/`) are considered
- * invalid. IPv4 origins (e.g. `https://192.0.2.235/`) should not be used, but
- * currently pass validation (b/184051990).
+ * following: `-.:`, and must not be an IP address. Remember that, as per the
+ * documentation for TrustedScriptURL, the origin must be trustworthy.
  *
  * @param base The base url that contains an origin.
  */
@@ -54,6 +50,12 @@ function hasValidOrigin(base: string): boolean {
   const origin = base.substring(originStart, originEnd);
   if (!/^[0-9a-z.:-]+$/i.test(origin)) {
     throw new Error('The origin contains unsupported characters.');
+  }
+  if (!/^[^:]*(:[0-9]+)?$/i.test(origin)) {
+    throw new Error('Invalid port number.');
+  }
+  if (!/(^|\.)[a-z][^.]*$/i.test(origin)) {
+    throw new Error('The top-level domain must start with a letter.');
   }
   return true;
 }

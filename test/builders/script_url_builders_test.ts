@@ -35,6 +35,8 @@ describe('script_url_builders', () => {
       // Origin with hyphen and port.
       expect(scriptUrl`//ww-w.google.com:1000/path/${foo}`.toString())
           .toBe('//ww-w.google.com:1000/path/foo');
+      expect(scriptUrl`//localhost:1000/path/${foo}`.toString())
+          .toBe('//localhost:1000/path/foo');
       // Path-absolute.
       expect(scriptUrl`/${foo}`.toString()).toBe('/foo');
       expect(scriptUrl`/path/${foo}`.toString()).toBe('/path/foo');
@@ -44,6 +46,9 @@ describe('script_url_builders', () => {
       expect(scriptUrl`httpS://www.google.cOm/pAth/${foo}`.toString())
           .toBe('httpS://www.google.cOm/pAth/foo');
       expect(scriptUrl`about:blank#${foo}`.toString()).toBe('about:blank#foo');
+      // Numeric and international domains.
+      expect(scriptUrl`https://9.xn--3ds443g/${foo}`.toString())
+          .toBe('https://9.xn--3ds443g/foo');
     });
 
     it('rejects invalid formats', () => {
@@ -80,6 +85,42 @@ describe('script_url_builders', () => {
       expect(() => {
         return scriptUrl`https://user:password@www.google.com/${foo}`;
       }).toThrowError(/The origin contains unsupported characters./);
+      // Invalid port number.
+      expect(() => {
+        return scriptUrl`//ww-w.google.com:1x00/path/${foo}`;
+      }).toThrowError(/Invalid port number./);
+      expect(() => {
+        return scriptUrl`//ww-w.google.com:/path/${foo}`;
+      }).toThrowError(/Invalid port number./);
+      expect(() => {
+        return scriptUrl`//ww-w.google.com::1000/path/${foo}`;
+      }).toThrowError(/Invalid port number./);
+      // IP addresses.
+      expect(() => {
+        return scriptUrl`//[2001:db8::8a2e:370:7334]/${foo}`;
+      }).toThrowError(/The origin contains unsupported characters./);
+      expect(() => {
+        return scriptUrl`//127.0.0.1/${foo}`;
+      }).toThrowError(/The top-level domain must start with a letter./);
+      expect(() => {
+        return scriptUrl`//1.1/${foo}`;
+      }).toThrowError(/The top-level domain must start with a letter./);
+      expect(() => {
+        return scriptUrl`//1337/${foo}`;
+      }).toThrowError(/The top-level domain must start with a letter./);
+      expect(() => {
+        return scriptUrl`//0x1337/${foo}`;
+      }).toThrowError(/The top-level domain must start with a letter./);
+      expect(() => {
+        return scriptUrl`//1.0x1337/${foo}`;
+      }).toThrowError(/The top-level domain must start with a letter./);
+      expect(() => {
+        return scriptUrl`//127.0.0.1:1337/${foo}`;
+      }).toThrowError(/The top-level domain must start with a letter./);
+      // Odd cases.
+      expect(() => {
+        return scriptUrl`//./${foo}`;
+      }).toThrowError(/The top-level domain must start with a letter./);
       // Two slashes. IE allowed (allows?) '\' instead of '/'.
       expect(() => {
         return scriptUrl`/\\${foo}`;
