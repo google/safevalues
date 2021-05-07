@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-import {concatScripts, script, scriptWithArgs} from '../../src/builders/script_builders';
+import {concatScripts, script, scriptFromJson, scriptWithArgs} from '../../src/builders/script_builders';
 
 describe('script_builders', () => {
   describe('script', () => {
@@ -35,6 +35,19 @@ describe('script_builders', () => {
       const script1 = script`1;`;
       const script2 = script`2;`;
       expect(concatScripts(script1, script2).toString()).toEqual('1;2;');
+    });
+  });
+
+  describe('scriptFromJson', () => {
+    it('should serialize as JSON', () => {
+      const json = scriptFromJson(
+          {'a': 1, 'b': (() => 'unserializable') as unknown as string});
+      expect(json.toString()).toEqual('{"a":1}');
+    });
+
+    it('escapes < signs', () => {
+      const json = scriptFromJson('<script></script>');
+      expect(json.toString()).toEqual('"\\x3cscript>\\x3c/script>"');
     });
   });
 

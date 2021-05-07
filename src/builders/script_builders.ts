@@ -52,10 +52,10 @@ export function concatScripts(...scripts: TrustedScript[]): TrustedScript {
  * Converts a serializable value into JSON that is safe to interpolate into a
  * script context. In particular it escapes < characters so that a value of
  * "</script>" doesn't break out of the context.
- * @param value: The value to serialize.
+ * @param value The value to serialize.
  */
-function serializeAsScriptValue(value: Serializable): string {
-  return JSON.stringify(value).replace(/</g, '\\x3c');
+export function scriptFromJson(value: Serializable): TrustedScript {
+  return createScript(JSON.stringify(value).replace(/</g, '\\x3c'));
 }
 
 /**
@@ -95,7 +95,7 @@ export function scriptWithArgs(
           'that only accepts template literals. ' +
           'For example, scriptWithArgs`foo`;');
   return (...argValues: Serializable[]) => {
-    const values = argValues.map(serializeAsScriptValue);
+    const values = argValues.map((v) => scriptFromJson(v).toString());
     return createScript(`(${templateObj.join('')})(${values.join(',')})`);
   };
 }
