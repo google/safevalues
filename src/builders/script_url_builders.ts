@@ -32,7 +32,7 @@ type Primitive = string|number|boolean;
  * @param base The base url that contains an origin.
  */
 function hasValidOrigin(base: string): boolean {
-  if (!(base.startsWith('https://') || base.startsWith('//'))) {
+  if (!(/^https:\/\//.test(base) || /^\/\//.test(base))) {
     return false;
   }
 
@@ -69,10 +69,10 @@ function hasValidOrigin(base: string): boolean {
  * @param base The base url.
  */
 function isValidAboutUrl(base: string): boolean {
-  if (!base.startsWith('about:blank')) {
+  if (!/^about:blank/.test(base)) {
     return false;
   }
-  if (base !== 'about:blank' && !base.startsWith('about:blank#')) {
+  if (base !== 'about:blank' && !/^about:blank#/.test(base)) {
     throw new Error('The about url is invalid.');
   }
   return true;
@@ -87,7 +87,7 @@ function isValidAboutUrl(base: string): boolean {
  * @param base The base url.
  */
 function isValidPathStart(base: string): boolean {
-  if (!base.startsWith('/')) {
+  if (!/^\//.test(base)) {
     return false;
   }
   if ((base === '/') ||
@@ -149,7 +149,7 @@ export function scriptUrl(
 
   const base = templateObj[0].toLowerCase();
 
-  if (base.startsWith('data:')) {
+  if (/^data:/.test(base)) {
     throw new Error(
         'Data URLs cannot have expressions in the template literal input.');
   }
@@ -184,9 +184,12 @@ export function appendParams(
     throw new Error(`Found a hash in url (${url}), appending not supported`);
   }
   let separator = /\?/.test(url) ? '&' : '?';
-  for (const [key, value] of params.entries()) {
+  // for-of has a big polyfill.
+  // tslint:disable-next-line:ban-iterable-foreach
+  params.forEach((value: Primitive|null|Array<Primitive|null>, key: string) => {
     const values = (value instanceof Array) ? value : [value];
-    for (const v of values) {
+    for (let i = 0; i < values.length; i++) {
+      const v = values[i];
       if (v === null || v === undefined) {
         continue;
       }
@@ -194,7 +197,7 @@ export function appendParams(
           encodeURIComponent(String(v));
       separator = '&';
     }
-  }
+  });
   return createScriptUrl(url);
 }
 
