@@ -105,7 +105,7 @@ describe('html_builders', () => {
     it('concatenates `TrustedHTML` values', () => {
       const html1 = htmlEscape('a');
       const html2 = htmlEscape('b');
-      expect(concatHtmls(html1, html2).toString()).toEqual('ab');
+      expect(concatHtmls([html1, html2]).toString()).toEqual('ab');
     });
   });
 });

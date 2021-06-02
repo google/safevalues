@@ -71,6 +71,6 @@ function htmlEscapeToString(text: string): string {
 }
 
 /** Creates a `TrustedHTML` value by concatenating multiple `TrustedHTML`s. */
-export function concatHtmls(...htmls: TrustedHTML[]): TrustedHTML {
+export function concatHtmls(htmls: readonly TrustedHTML[]): TrustedHTML {
   return createHtml(htmls.map(unwrapHtmlAsString).join(''));
 }
