@@ -55,15 +55,16 @@ export function safeAttrPrefix(templ: TemplateStringsArray):
 
   const attrPrefix = templ[0].toLowerCase();
 
-  for (const sensitiveAttr of SECURITY_SENSITIVE_ATTRIBUTES) {
-    if (sensitiveAttr.startsWith(attrPrefix)) {
+  SECURITY_SENSITIVE_ATTRIBUTES.forEach(sensitiveAttr => {
+    if (sensitiveAttr.indexOf(attrPrefix) === 0) {
       throw new Error(
           `Prefix '${templ[0]}' does not guarantee the attribute ` +
           `to be safe as it is also a prefix for ` +
           `the security sensitive attribute '${sensitiveAttr}'. ` +
           `Please use native or safe DOM APIs to set the attribute.`);
     }
-  }
+  });
+
 
   return createSafeAttributePrefix(attrPrefix);
 }
