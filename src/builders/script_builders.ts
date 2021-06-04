@@ -44,7 +44,8 @@ export function script(templateObj: TemplateStringsArray): TrustedScript {
 /**
  * Creates a `TrustedScript` value by concatenating multiple `TrustedScript`s.
  */
-export function concatScripts(...scripts: TrustedScript[]): TrustedScript {
+export function concatScripts(scripts: readonly TrustedScript[]):
+    TrustedScript {
   return createScript(scripts.map(unwrapScriptAsString).join(''));
 }
 

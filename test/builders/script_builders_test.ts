@@ -34,7 +34,7 @@ describe('script_builders', () => {
     it('concatenates `TrustedScript` values', () => {
       const script1 = script`1;`;
       const script2 = script`2;`;
-      expect(concatScripts(script1, script2).toString()).toEqual('1;2;');
+      expect(concatScripts([script1, script2]).toString()).toEqual('1;2;');
     });
   });
 
