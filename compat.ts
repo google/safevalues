@@ -50,6 +50,21 @@ export type SafeUrl = GoogSafeUrl|TSSafeUrl;
 /** Compat type for Closure and TS SafeTypes. */
 export type TrustedScriptURL = GoogScriptUrl|TSTrustedScriptURL;
 
+/** Guard function that supports both Closure and TS safe types. */
+export function isScriptUrl(u: unknown): u is TrustedScriptURL {
+  return u instanceof GoogScriptUrl || u instanceof TSTrustedScriptURL;
+}
+
+/** Guard function that supports both Closure and TS safe types. */
+export function isHtml(u: unknown): u is TrustedHTML {
+  return u instanceof GoogHtml || u instanceof TSTrustedHTML;
+}
+
+/** Guard function that supports both Closure and TS safe types. */
+export function isSafeUrl(u: unknown): u is SafeUrl {
+  return u instanceof GoogSafeUrl || u instanceof TSSafeUrl;
+}
+
 /** Safe unwrapper that support both Closure and TS safe types. */
 export function unwrapHtmlForSink(html: TrustedHTML): string {
   if (html instanceof TSTrustedHTML) {
