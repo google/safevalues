@@ -79,7 +79,7 @@ export function unwrapScriptUrlForSink(value: TrustedScriptURL):
  * Same as `unwrapScriptUrlForSink`, but returns an actual string
  *
  * Also ensures to return the right string value for `TrustedScriptURL` objects
- * if the `toString function has been overwritten on the object.
+ * if the `toString` function has been overwritten on the object.
  */
 export function unwrapScriptUrlAsString(value: TrustedScriptURL): string {
   const unwrapped = unwrapScriptUrlForSink(value);
