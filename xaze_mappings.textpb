@@ -1,0 +1,63 @@
+# proto-file: java/com/google/apps/docs/xaze/configuration.proto
+# proto-message: Configuration
+
+dependency_mapping {
+  class_matcher: "google3.javascript.typescript.safevalues.safedom.safedom"
+  javascript_dependency {
+    name: "//javascript/typescript/safevalues/safedom"
+  }
+}
+
+dependency_mapping {
+  class_matcher: "google3.javascript.typescript.safevalues.safe_attribute"
+  class_matcher: "google3.javascript.typescript.safevalues.html"
+  class_matcher: "google3.javascript.typescript.safevalues.script"
+  class_matcher: "google3.javascript.typescript.safevalues.safe_style"
+  class_matcher: "google3.javascript.typescript.safevalues.safe_style_sheet"
+  class_matcher: "google3.javascript.typescript.safevalues.safe_url"
+  class_matcher: "google3.javascript.typescript.safevalues.script_url"
+  javascript_dependency {
+    name: "//javascript/typescript/safevalues:types"
+  }
+}
+
+dependency_mapping {
+  class_matcher: "google3.javascript.typescript.safevalues.safe_attribute_builders"
+  class_matcher: "google3.javascript.typescript.safevalues.html_builders"
+  class_matcher: "google3.javascript.typescript.safevalues.script_builders"
+  class_matcher: "google3.javascript.typescript.safevalues.safe_style_builders"
+  class_matcher: "google3.javascript.typescript.safevalues.safe_style_sheet_builders"
+  class_matcher: "google3.javascript.typescript.safevalues.safe_url_builders"
+  class_matcher: "google3.javascript.typescript.safevalues.script_url_builders"
+  javascript_dependency {
+    name: "//javascript/typescript/safevalues:builders"
+  }
+}
+
+dependency_mapping {
+  class_matcher: "google3.javascript.typescript.safevalues.safe_unwrappers"
+  javascript_dependency {
+    name: "//javascript/typescript/safevalues:safeunwrappers"
+  }
+}
+
+dependency_mapping {
+  class_matcher: "google3.javascript.typescript.safevalues.legacy_conversions"
+  javascript_dependency {
+    name: "//javascript/typescript/safevalues:legacyconversions"
+  }
+}
+
+dependency_mapping {
+  class_matcher: "google3.javascript.typescript.safevalues.testing_conversions"
+  javascript_dependency {
+    name: "//javascript/typescript/safevalues:testingconversions"
+  }
+}
+
+dependency_mapping {
+  class_matcher: "google3.javascript.typescript.safevalues.reviewed"
+  javascript_dependency {
+    name: "//javascript/typescript/safevalues:reviewed"
+  }
+}
