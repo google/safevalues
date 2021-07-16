@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+import {sanitize} from 'google3/webutil/html/types/sanitizer/typescript/html_sanitizer';
+
 import {createHtml, unwrapHtmlAsString} from '../implementation/html_impl';
 import {unwrapScriptUrlAsString} from '../implementation/script_url_impl';
 
@@ -38,6 +40,11 @@ export function htmlEscape(
     htmlEscapedString = htmlEscapedString.replace(/(\r\n|\n|\r)/g, '<br />');
   }
   return createHtml(htmlEscapedString);
+}
+
+/** Returns a sanitized version of `html` as a `TrustedHTML` object. */
+export function sanitizeHtml(html: string): TrustedHTML {
+  return sanitize(html);
 }
 
 /**
