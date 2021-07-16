@@ -28,6 +28,7 @@ export function assertIsTemplateObject(
     templateObj: TemplateStringsArray, hasExprs: boolean,
     errorMsg: string): void {
   if (!Array.isArray(templateObj) || !Array.isArray(templateObj.raw) ||
+      !(templateObj instanceof Array) ||
       (!hasExprs && templateObj.length !== 1)) {
     throw new TypeError(errorMsg);
   }
