@@ -1,0 +1,77 @@
+/*
+
+ Copyright The Closure Library Authors.
+ SPDX-License-Identifier: Apache-2.0
+*/
+'use strict';
+var $module$exports$google3$javascript$typescript$safevalues$implementation$secrets$secretToken$$ = {};
+function $module$contents$google3$javascript$typescript$safevalues$implementation$secrets_ensureTokenIsValid$$() {
+  if ($module$exports$google3$javascript$typescript$safevalues$implementation$secrets$secretToken$$ !== $module$exports$google3$javascript$typescript$safevalues$implementation$secrets$secretToken$$) {
+    throw Error("Bad secret");
+  }
+}
+;function $module$contents$google3$javascript$typescript$safevalues$implementation$trusted_types_getTrustedTypes$$() {
+  var $JSCompiler_inline_result$jscomp$0$$ = "undefined" !== typeof window ? window.trustedTypes : void 0;
+  return null !== $JSCompiler_inline_result$jscomp$0$$ && void 0 !== $JSCompiler_inline_result$jscomp$0$$ ? $JSCompiler_inline_result$jscomp$0$$ : null;
+}
+;var $module$contents$google3$javascript$typescript$safevalues$implementation$html_impl__a$$, $module$exports$google3$javascript$typescript$safevalues$implementation$html_impl$TrustedHTML$$ = class {
+};
+class $module$contents$google3$javascript$typescript$safevalues$implementation$html_impl_HtmlImpl$$ extends $module$exports$google3$javascript$typescript$safevalues$implementation$html_impl$TrustedHTML$$ {
+  constructor() {
+    var $html$$ = null !== $trusted$jscomp$inline_3$$ && void 0 !== $trusted$jscomp$inline_3$$ ? $trusted$jscomp$inline_3$$ : "";
+    super();
+    $module$contents$google3$javascript$typescript$safevalues$implementation$secrets_ensureTokenIsValid$$();
+    this.$privateDoNotAccessOrElseWrappedHtml$ = $html$$;
+  }
+  toString() {
+    return this.$privateDoNotAccessOrElseWrappedHtml$.toString();
+  }
+}
+var $trusted$jscomp$inline_3$$ = null === ($module$contents$google3$javascript$typescript$safevalues$implementation$html_impl__a$$ = $module$contents$google3$javascript$typescript$safevalues$implementation$trusted_types_getTrustedTypes$$()) || void 0 === $module$contents$google3$javascript$typescript$safevalues$implementation$html_impl__a$$ ? void 0 : $module$contents$google3$javascript$typescript$safevalues$implementation$html_impl__a$$.emptyHTML;
+new $module$contents$google3$javascript$typescript$safevalues$implementation$html_impl_HtmlImpl$$;
+var $module$contents$google3$javascript$typescript$safevalues$implementation$script_impl__a$$, $module$exports$google3$javascript$typescript$safevalues$implementation$script_impl$TrustedScript$$ = class {
+};
+class $module$contents$google3$javascript$typescript$safevalues$implementation$script_impl_ScriptImpl$$ extends $module$exports$google3$javascript$typescript$safevalues$implementation$script_impl$TrustedScript$$ {
+  constructor() {
+    var $script$jscomp$8$$ = null !== $trusted$jscomp$inline_6$$ && void 0 !== $trusted$jscomp$inline_6$$ ? $trusted$jscomp$inline_6$$ : "";
+    super();
+    $module$contents$google3$javascript$typescript$safevalues$implementation$secrets_ensureTokenIsValid$$();
+    this.$privateDoNotAccessOrElseWrappedScript$ = $script$jscomp$8$$;
+  }
+  toString() {
+    return this.$privateDoNotAccessOrElseWrappedScript$.toString();
+  }
+}
+var $trusted$jscomp$inline_6$$ = null === ($module$contents$google3$javascript$typescript$safevalues$implementation$script_impl__a$$ = $module$contents$google3$javascript$typescript$safevalues$implementation$trusted_types_getTrustedTypes$$()) || void 0 === $module$contents$google3$javascript$typescript$safevalues$implementation$script_impl__a$$ ? void 0 : $module$contents$google3$javascript$typescript$safevalues$implementation$script_impl__a$$.emptyScript;
+new $module$contents$google3$javascript$typescript$safevalues$implementation$script_impl_ScriptImpl$$;
+var $module$exports$google3$javascript$typescript$safevalues$implementation$safe_url_impl$SafeUrl$$ = class {
+};
+class $module$contents$google3$javascript$typescript$safevalues$implementation$safe_url_impl_SafeUrlImpl$$ extends $module$exports$google3$javascript$typescript$safevalues$implementation$safe_url_impl$SafeUrl$$ {
+  constructor($url$jscomp$24$$) {
+    super();
+    $module$contents$google3$javascript$typescript$safevalues$implementation$secrets_ensureTokenIsValid$$();
+    this.$privateDoNotAccessOrElseWrappedUrl$ = $url$jscomp$24$$;
+  }
+  toString() {
+    return this.$privateDoNotAccessOrElseWrappedUrl$;
+  }
+}
+new $module$contents$google3$javascript$typescript$safevalues$implementation$safe_url_impl_SafeUrlImpl$$("about:blank");
+new $module$contents$google3$javascript$typescript$safevalues$implementation$safe_url_impl_SafeUrlImpl$$("about:invalid#zTSz");
+(class {
+  constructor($value$jscomp$133$$, $token$jscomp$15$$) {
+    this.$privateDoNotAccessOrElseSafeStyleWrappedValue_$ = $token$jscomp$15$$ === $goog$html$SafeStyle$CONSTRUCTOR_TOKEN_PRIVATE_$$ ? $value$jscomp$133$$ : "";
+  }
+}).prototype.toString = function() {
+  return this.$privateDoNotAccessOrElseSafeStyleWrappedValue_$.toString();
+};
+var $goog$html$SafeStyle$CONSTRUCTOR_TOKEN_PRIVATE_$$ = {};
+(class {
+  constructor($value$jscomp$142$$, $dir$jscomp$1$$, $token$jscomp$17$$) {
+    this.$privateDoNotAccessOrElseHtmlWrappedValue_$ = $token$jscomp$17$$ === $goog$html$TrustedHTML$CONSTRUCTOR_TOKEN_PRIVATE_$$ ? $value$jscomp$142$$ : "";
+  }
+}).prototype.toString = function() {
+  return this.$privateDoNotAccessOrElseHtmlWrappedValue_$.toString();
+};
+var $goog$html$TrustedHTML$CONSTRUCTOR_TOKEN_PRIVATE_$$ = {};
+
