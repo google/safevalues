@@ -16,7 +16,7 @@
  */
 
 import {script} from '../../src/builders/script_builders';
-import {appendParams, blobUrlFromScript, scriptUrl} from '../../src/builders/script_url_builders';
+import {appendParams, blobUrlFromScript, replaceFragment, scriptUrl} from '../../src/builders/script_url_builders';
 
 describe('script_url_builders', () => {
   describe('scriptUrl', () => {
@@ -204,6 +204,19 @@ describe('script_url_builders', () => {
       ]);
       expect(appendParams(urlWithoutSearch, params2).toString())
           .toBe('https://google.com/?%26=ampersand&%23=hash&%23=mesh');
+    });
+  });
+
+  describe('replaceFragment', () => {
+    it('appends when there is no existing fragment', () => {
+      expect(replaceFragment(scriptUrl`https://google.com/`, 'def').toString())
+          .toBe('https://google.com/#def');
+    });
+
+    it('overwrites an existing fragment', () => {
+      expect(
+          replaceFragment(scriptUrl`https://google.com/#abc`, 'def').toString())
+          .toBe('https://google.com/#def');
     });
   });
 

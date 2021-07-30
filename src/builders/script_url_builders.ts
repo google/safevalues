@@ -201,6 +201,29 @@ export function appendParams(
   return createScriptUrl(url);
 }
 
+const BEFORE_FRAGMENT_REGEXP = /[^#]*/;
+
+/**
+ * Creates a new TrustedScriptURL based on an existing one but with the
+ * addition of a fragment (the part after `#`). If the URL already has a
+ * fragment, it is replaced with the new one.
+ * @param fragment The fragment to add to the URL, verbatim, without the leading
+ * `#`. No additional escaping is applied.
+ */
+export function replaceFragment(
+    trustedUrl: TrustedScriptURL, fragment: string) {
+  const urlString = unwrapScriptUrlAsString(trustedUrl);
+  if ('URL' in window && typeof URL === 'function') {
+    const url = new URL(urlString);
+    url.hash = fragment;
+    return createScriptUrl(url.toString());
+  } else {
+    // Fallback for IE
+    return createScriptUrl(
+        BEFORE_FRAGMENT_REGEXP.exec(urlString)![0] + '#' + fragment);
+  }
+}
+
 /**
  * Creates a `TrustedScriptURL` by generating a `Blob` from a
  * `TrustedScript` and then calling `URL.createObjectURL` with that `Blob`.
