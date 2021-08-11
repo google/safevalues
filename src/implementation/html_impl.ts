@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+import {devMode} from '../environment';
+
 import {pure} from './pure';
 import {ensureTokenIsValid, secretToken} from './secrets';
 import {getTrustedTypes, getTrustedTypesPolicy} from './trusted_types';
@@ -24,7 +26,7 @@ class HtmlImpl {
   readonly privateDoNotAccessOrElseWrappedHtml: string;
 
   constructor(html: string, token: object) {
-    ensureTokenIsValid(token);
+    devMode && ensureTokenIsValid(token);
     this.privateDoNotAccessOrElseWrappedHtml = html;
   }
 
@@ -35,7 +37,9 @@ class HtmlImpl {
 }
 
 function createHtmlInternal(html: string, trusted?: TrustedHTML): TrustedHTML {
-  return (trusted ?? new HtmlImpl(html, secretToken)) as TrustedHTML;
+  // BEGIN-EXTERNAL
+  // return (trusted ?? new HtmlImpl(html, devMode ? secretToken : {})) as
+  // TrustedHTML; END-EXTERNAL
 }
 
 /**

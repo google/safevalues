@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+import {devMode} from '../environment';
 import {assertIsTemplateObject} from '../implementation/safe_string_literal';
 import {unwrapScriptAsString} from '../implementation/script_impl';
 import {createScriptUrl, unwrapScriptUrlAsString} from '../implementation/script_url_impl';
@@ -43,19 +44,23 @@ function hasValidOrigin(base: string): boolean {
   // missing.
   if (originEnd <= originStart) {
     throw new Error(
-        `Can't interpolate data in a url's origin, ` +
-        `Please make sure to fully specify the origin, terminated with '/'.`);
+        devMode ? `Can't interpolate data in a url's origin, ` +
+                `Please make sure to fully specify the origin, terminated with '/'.` :
+                  'origin underspecified');
   }
 
   const origin = base.substring(originStart, originEnd);
+  const error = 'unsafe url';
   if (!/^[0-9a-z.:-]+$/i.test(origin)) {
-    throw new Error('The origin contains unsupported characters.');
+    throw new Error(
+        devMode ? 'The origin contains unsupported characters.' : error);
   }
   if (!/^[^:]*(:[0-9]+)?$/i.test(origin)) {
-    throw new Error('Invalid port number.');
+    throw new Error(devMode ? 'Invalid port number.' : 'error');
   }
   if (!/(^|\.)[a-z][^.]*$/i.test(origin)) {
-    throw new Error('The top-level domain must start with a letter.');
+    throw new Error(
+        devMode ? 'The top-level domain must start with a letter.' : 'error');
   }
   return true;
 }
@@ -73,7 +78,7 @@ function isValidAboutUrl(base: string): boolean {
     return false;
   }
   if (base !== 'about:blank' && !/^about:blank#/.test(base)) {
-    throw new Error('The about url is invalid.');
+    throw new Error(devMode ? 'The about url is invalid.' : 'unsafe url');
   }
   return true;
 }
@@ -94,7 +99,8 @@ function isValidPathStart(base: string): boolean {
       (base.length > 1 && base[1] !== '/' && base[1] !== '\\')) {
     return true;
   }
-  throw new Error('The path start in the url is invalid.');
+  throw new Error(
+      devMode ? 'The path start in the url is invalid.' : 'unsafe url');
 }
 
 /**
@@ -138,10 +144,11 @@ function isValidPathStart(base: string): boolean {
 export function scriptUrl(
     templateObj: TemplateStringsArray, ...rest: Primitive[]): TrustedScriptURL {
   // Check if templateObj is actually from a template literal.
-  assertIsTemplateObject(
-      templateObj, true,
-      'scriptUrl is a template literal tag function and ' +
-          'can only be called as such (e.g. scriptUrl`/somepath.js`)');
+  devMode &&
+      assertIsTemplateObject(
+          templateObj, true,
+          'scriptUrl is a template literal tag function and ' +
+              'can only be called as such (e.g. scriptUrl`/somepath.js`)');
 
   if (rest.length === 0) {
     return createScriptUrl(templateObj[0]);
@@ -149,15 +156,17 @@ export function scriptUrl(
 
   const base = templateObj[0].toLowerCase();
 
-  if (/^data:/.test(base)) {
-    throw new Error(
-        'Data URLs cannot have expressions in the template literal input.');
-  }
+  if (devMode) {
+    if (/^data:/.test(base)) {
+      throw new Error(
+          'Data URLs cannot have expressions in the template literal input.');
+    }
 
-  if (!hasValidOrigin(base) && !isValidPathStart(base) &&
-      !isValidAboutUrl(base)) {
-    throw new Error(
-        'Trying to interpolate expressions in an unsupported url format.');
+    if (!hasValidOrigin(base) && !isValidPathStart(base) &&
+        !isValidAboutUrl(base)) {
+      throw new Error(
+          'Trying to interpolate expressions in an unsupported url format.');
+    }
   }
 
   const urlParts = [templateObj[0]];
@@ -181,7 +190,9 @@ export function appendParams(
     TrustedScriptURL {
   let url = unwrapScriptUrlAsString(trustedUrl);
   if (/#/.test(url)) {
-    throw new Error(`Found a hash in url (${url}), appending not supported`);
+    throw new Error(
+        devMode ? `Found a hash in url (${url}), appending not supported` :
+                  'unexpected hash');
   }
   let separator = /\?/.test(url) ? '&' : '?';
   // for-of has a big polyfill.

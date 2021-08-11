@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+import {devMode} from '../environment';
+
 import {pure} from './pure';
 import {ensureTokenIsValid, secretToken} from './secrets';
 import {getTrustedTypes, getTrustedTypesPolicy} from './trusted_types';
@@ -24,7 +26,7 @@ class ScriptImpl {
   readonly privateDoNotAccessOrElseWrappedScript: string;
 
   constructor(script: string, token: object) {
-    ensureTokenIsValid(token);
+    devMode && ensureTokenIsValid(token);
     this.privateDoNotAccessOrElseWrappedScript = script;
   }
 
@@ -36,7 +38,9 @@ class ScriptImpl {
 
 function createScriptInternal(
     script: string, trusted?: TrustedScript): TrustedScript {
-  return (trusted ?? new ScriptImpl(script, secretToken)) as TrustedScript;
+  // BEGIN-EXTERNAL
+  // return (trusted ?? new ScriptImpl(script, devMode ? secretToken : {}))
+  // as TrustedScript; END-EXTERNAL
 }
 
 /**

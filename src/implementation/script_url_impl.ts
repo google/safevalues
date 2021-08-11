@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+import {devMode} from '../environment';
+
 import {ensureTokenIsValid, secretToken} from './secrets';
 import {getTrustedTypes, getTrustedTypesPolicy} from './trusted_types';
 
@@ -23,7 +25,7 @@ class ScriptUrlImpl {
   readonly privateDoNotAccessOrElseWrappedResourceUrl: string;
 
   constructor(url: string, token: object) {
-    ensureTokenIsValid(token);
+    devMode && ensureTokenIsValid(token);
     this.privateDoNotAccessOrElseWrappedResourceUrl = url;
   }
 
@@ -44,7 +46,8 @@ export function createScriptUrl(url: string): TrustedScriptURL {
   const noinlineUrl = url;
   const trustedScriptURL =
       getTrustedTypesPolicy()?.createScriptURL(noinlineUrl);
-  return (trustedScriptURL ?? new ScriptUrlImpl(noinlineUrl, secretToken)) as
+  return (trustedScriptURL ??
+          new ScriptUrlImpl(noinlineUrl, devMode ? secretToken : {})) as
       TrustedScriptURL;
 }
 

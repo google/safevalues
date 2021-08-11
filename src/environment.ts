@@ -15,5 +15,6 @@
  * limitations under the License.
  */
 
-/** Reexport the public type (but not the Impl). */
-export {SafeAttributePrefix} from './implementation/safe_attribute_impl';
+
+/** Whether we are in development mode. Used for verbose error messages. */
+export const devMode = (process.env.NODE_ENV !== 'production');

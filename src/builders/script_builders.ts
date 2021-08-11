@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+import {devMode} from '../environment';
 import {assertIsTemplateObject} from '../implementation/safe_string_literal';
 import {createScript, unwrapScriptAsString} from '../implementation/script_impl';
 
@@ -33,11 +34,12 @@ type Serializable =
  * @param templateObj This contains the literal part of the template literal.
  */
 export function script(templateObj: TemplateStringsArray): TrustedScript {
-  assertIsTemplateObject(
-      templateObj, false,
-      'script is a template literal tag function ' +
-          'that only accepts template literals without expressions. ' +
-          'For example, script`foo`;');
+  devMode &&
+      assertIsTemplateObject(
+          templateObj, false,
+          'script is a template literal tag function ' +
+              'that only accepts template literals without expressions. ' +
+              'For example, script`foo`;');
   return createScript(templateObj[0]);
 }
 
@@ -87,14 +89,16 @@ export function scriptWithArgs(
     (...argValues: Serializable[]) => TrustedScript {
   if (emptyArgs.some(a => a !== '')) {
     throw new Error(
-        'scriptWithArgs only allows empty string expressions ' +
-        'to enable inline comments.');
+        devMode ? 'scriptWithArgs only allows empty string expressions ' +
+                'to enable inline comments.' :
+                  'nonempty args');
   }
-  assertIsTemplateObject(
-      templateObj, true,
-      'scriptWithArgs is a template literal tag function ' +
-          'that only accepts template literals. ' +
-          'For example, scriptWithArgs`foo`;');
+  devMode &&
+      assertIsTemplateObject(
+          templateObj, true,
+          'scriptWithArgs is a template literal tag function ' +
+              'that only accepts template literals. ' +
+              'For example, scriptWithArgs`foo`;');
   return (...argValues: Serializable[]) => {
     const values = argValues.map((v) => scriptFromJson(v).toString());
     return createScript(`(${templateObj.join('')})(${values.join(',')})`);
