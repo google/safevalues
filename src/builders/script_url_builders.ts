@@ -213,15 +213,8 @@ const BEFORE_FRAGMENT_REGEXP = /[^#]*/;
 export function replaceFragment(
     trustedUrl: TrustedScriptURL, fragment: string) {
   const urlString = unwrapScriptUrlAsString(trustedUrl);
-  if ('URL' in window && typeof URL === 'function') {
-    const url = new URL(urlString);
-    url.hash = fragment;
-    return createScriptUrl(url.toString());
-  } else {
-    // Fallback for IE
-    return createScriptUrl(
-        BEFORE_FRAGMENT_REGEXP.exec(urlString)![0] + '#' + fragment);
-  }
+  return createScriptUrl(
+      BEFORE_FRAGMENT_REGEXP.exec(urlString)![0] + '#' + fragment);
 }
 
 /**
