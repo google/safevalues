@@ -24,7 +24,7 @@ export function getChromeRuntimeUrl(
     chromeObject: typeof chrome, url: TrustedScriptURL): TrustedScriptURL {
   const result = chromeObject.runtime.getURL(unwrapScriptUrlAsString(url));
   if (!trySanitizeUrl(result, [SanitizableUrlScheme.EXTENSION])) {
-    throw new Error('"' + result + '" is not a extension URL.');
+    throw new Error('"' + result + '" is not an extension URL.');
   }
   return createScriptUrl(result);
 }
