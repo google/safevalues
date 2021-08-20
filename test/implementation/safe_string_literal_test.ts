@@ -47,7 +47,7 @@ describe('assertIsTemplateObject', () => {
     }).toThrowError(/tagFn does not support interpolation/);
   });
 
-  it('rejects invalid input 1: missing property \"raw\"', () => {
+  it('rejects invalid input 1: missing property "raw"', () => {
     const tagFn = getTagFunction(false, 'tagFn is a template tag function');
     expect(() => {
       return tagFn(['evil'] as never as TemplateStringsArray);
