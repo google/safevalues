@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+import '../environment';
+
 import {assertIsTemplateObject} from '../implementation/safe_string_literal';
 import {unwrapScriptAsString} from '../implementation/script_impl';
 import {createScriptUrl, unwrapScriptUrlAsString} from '../implementation/script_url_impl';
@@ -138,10 +140,12 @@ function isValidPathStart(base: string): boolean {
 export function scriptUrl(
     templateObj: TemplateStringsArray, ...rest: Primitive[]): TrustedScriptURL {
   // Check if templateObj is actually from a template literal.
-  assertIsTemplateObject(
-      templateObj, true,
-      'scriptUrl is a template literal tag function and ' +
-          'can only be called as such (e.g. scriptUrl`/somepath.js`)');
+  if (process.env.NODE_ENV !== 'production') {
+    assertIsTemplateObject(
+        templateObj, true,
+        'scriptUrl is a template literal tag function and ' +
+            'can only be called as such (e.g. scriptUrl`/somepath.js`)');
+  }
 
   if (rest.length === 0) {
     return createScriptUrl(templateObj[0]);
@@ -149,15 +153,17 @@ export function scriptUrl(
 
   const base = templateObj[0].toLowerCase();
 
-  if (/^data:/.test(base)) {
-    throw new Error(
-        'Data URLs cannot have expressions in the template literal input.');
-  }
+  if (process.env.NODE_ENV !== 'production') {
+    if (/^data:/.test(base)) {
+      throw new Error(
+          'Data URLs cannot have expressions in the template literal input.');
+    }
 
-  if (!hasValidOrigin(base) && !isValidPathStart(base) &&
-      !isValidAboutUrl(base)) {
-    throw new Error(
-        'Trying to interpolate expressions in an unsupported url format.');
+    if (!hasValidOrigin(base) && !isValidPathStart(base) &&
+        !isValidAboutUrl(base)) {
+      throw new Error(
+          'Trying to interpolate expressions in an unsupported url format.');
+    }
   }
 
   const urlParts = [templateObj[0]];
@@ -181,7 +187,11 @@ export function appendParams(
     TrustedScriptURL {
   let url = unwrapScriptUrlAsString(trustedUrl);
   if (/#/.test(url)) {
-    throw new Error(`Found a hash in url (${url}), appending not supported`);
+    let message = '';
+    if (process.env.NODE_ENV !== 'production') {
+      message = `Found a hash in url (${url}), appending not supported`;
+    }
+    throw new Error(message);
   }
   let separator = /\?/.test(url) ? '&' : '?';
   // for-of has a big polyfill.

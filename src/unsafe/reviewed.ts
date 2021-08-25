@@ -15,26 +15,19 @@
  * limitations under the License.
  */
 
+import '../environment';
+
 import {createHtml} from '../implementation/html_impl';
 import {createScript} from '../implementation/script_impl';
 import {createScriptUrl} from '../implementation/script_url_impl';
 
 
 /**
- * Defines whether we use/check the justification or not, setting it to false
- * allows the optimizer to strip all the justifications.
- */
-let isDebug: boolean = goog.DEBUG;
-
-/**
  * Asserts that the provided justification is valid (non-empty). Throws an
  * exception if that is not the case.
  */
 function assertValidJustification(justification: string) {
-  // The following assertion as well as all justification strings will be
-  // stripped out of production JS binaries
-  if (isDebug &&
-      (typeof justification !== 'string' || justification.trim() === '')) {
+  if (typeof justification !== 'string' || justification.trim() === '') {
     let errMsg =
         'Calls to uncheckedconversion functions must go through security review.';
     errMsg += ' A justification must be provided to capture what security' +
@@ -54,7 +47,9 @@ function assertValidJustification(justification: string) {
  */
 export function htmlFromStringKnownToSatisfyTypeContract(
     html: string, justification: string): TrustedHTML {
-  assertValidJustification(justification);
+  if (process.env.NODE_ENV !== 'production') {
+    assertValidJustification(justification);
+  }
   return createHtml(html);
 }
 
@@ -69,7 +64,9 @@ export function htmlFromStringKnownToSatisfyTypeContract(
  */
 export function scriptFromStringKnownToSatisfyTypeContract(
     script: string, justification: string): TrustedScript {
-  assertValidJustification(justification);
+  if (process.env.NODE_ENV !== 'production') {
+    assertValidJustification(justification);
+  }
   return createScript(script);
 }
 
@@ -84,13 +81,8 @@ export function scriptFromStringKnownToSatisfyTypeContract(
  */
 export function scriptUrlFromStringKnownToSatisfyTypeContract(
     url: string, justification: string): TrustedScriptURL {
-  assertValidJustification(justification);
+  if (process.env.NODE_ENV !== 'production') {
+    assertValidJustification(justification);
+  }
   return createScriptUrl(url);
 }
-
-
-export const TEST_ONLY = {
-  setDebug(value: boolean) {
-    isDebug = value;
-  }
-};

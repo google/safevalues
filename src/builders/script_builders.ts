@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+import '../environment';
+
 import {assertIsTemplateObject} from '../implementation/safe_string_literal';
 import {createScript, unwrapScriptAsString} from '../implementation/script_impl';
 
@@ -33,11 +35,13 @@ type Serializable =
  * @param templateObj This contains the literal part of the template literal.
  */
 export function script(templateObj: TemplateStringsArray): TrustedScript {
-  assertIsTemplateObject(
-      templateObj, false,
-      'script is a template literal tag function ' +
-          'that only accepts template literals without expressions. ' +
-          'For example, script`foo`;');
+  if (process.env.NODE_ENV !== 'production') {
+    assertIsTemplateObject(
+        templateObj, false,
+        'script is a template literal tag function ' +
+            'that only accepts template literals without expressions. ' +
+            'For example, script`foo`;');
+  }
   return createScript(templateObj[0]);
 }
 
@@ -85,16 +89,18 @@ export function scriptFromJson(value: Serializable): TrustedScript {
 export function scriptWithArgs(
     templateObj: TemplateStringsArray, ...emptyArgs: ReadonlyArray<''>):
     (...argValues: Serializable[]) => TrustedScript {
-  if (emptyArgs.some(a => a !== '')) {
-    throw new Error(
-        'scriptWithArgs only allows empty string expressions ' +
-        'to enable inline comments.');
+  if (process.env.NODE_ENV !== 'production') {
+    if (emptyArgs.some(a => a !== '')) {
+      throw new Error(
+          'scriptWithArgs only allows empty string expressions ' +
+          'to enable inline comments.');
+    }
+    assertIsTemplateObject(
+        templateObj, true,
+        'scriptWithArgs is a template literal tag function ' +
+            'that only accepts template literals. ' +
+            'For example, scriptWithArgs`foo`;');
   }
-  assertIsTemplateObject(
-      templateObj, true,
-      'scriptWithArgs is a template literal tag function ' +
-          'that only accepts template literals. ' +
-          'For example, scriptWithArgs`foo`;');
   return (...argValues: Serializable[]) => {
     const values = argValues.map((v) => scriptFromJson(v).toString());
     return createScript(`(${templateObj.join('')})(${values.join(',')})`);

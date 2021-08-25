@@ -31,5 +31,4 @@ export function assertIsTemplateObject(
       (!hasExprs && templateObj.length !== 1)) {
     throw new TypeError(errorMsg);
   }
-  return;
 }

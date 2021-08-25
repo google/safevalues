@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+import '../environment';
+
 import {pure} from './pure';
 import {ensureTokenIsValid, secretToken} from './secrets';
 import {getTrustedTypes, getTrustedTypesPolicy} from './trusted_types';
@@ -24,7 +26,9 @@ class ScriptImpl {
   readonly privateDoNotAccessOrElseWrappedScript: string;
 
   constructor(script: string, token: object) {
-    ensureTokenIsValid(token);
+    if (process.env.NODE_ENV !== 'production') {
+      ensureTokenIsValid(token);
+    }
     this.privateDoNotAccessOrElseWrappedScript = script;
   }
 
@@ -81,7 +85,11 @@ export function unwrapScriptForSink(value: TrustedScript): TrustedScript&
     const unwrapped = value.privateDoNotAccessOrElseWrappedScript;
     return unwrapped as TrustedScript & string;
   } else {
-    throw new Error('wrong type');
+    let message = '';
+    if (process.env.NODE_ENV !== 'production') {
+      message = 'Unexpected type when unwrapping TrustedScript';
+    }
+    throw new Error(message);
   }
 }
 

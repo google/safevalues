@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+import '../environment';
+
 import {ensureTokenIsValid, secretToken} from './secrets';
 import {getTrustedTypes, getTrustedTypesPolicy} from './trusted_types';
 
@@ -23,7 +25,9 @@ class ScriptUrlImpl {
   readonly privateDoNotAccessOrElseWrappedResourceUrl: string;
 
   constructor(url: string, token: object) {
-    ensureTokenIsValid(token);
+    if (process.env.NODE_ENV !== 'production') {
+      ensureTokenIsValid(token);
+    }
     this.privateDoNotAccessOrElseWrappedResourceUrl = url;
   }
 
@@ -71,7 +75,11 @@ export function unwrapScriptUrlForSink(value: TrustedScriptURL):
     const unwrapped = value.privateDoNotAccessOrElseWrappedResourceUrl;
     return unwrapped as TrustedScriptURL & string;
   } else {
-    throw new Error('wrong type');
+    let message = '';
+    if (process.env.NODE_ENV !== 'production') {
+      message = 'Unexpected type when unwrapping TrustedScriptURL';
+    }
+    throw new Error(message);
   }
 }
 

@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+import '../environment';
+
 import {pure} from './pure';
 import {ensureTokenIsValid, secretToken} from './secrets';
 import {getTrustedTypes, getTrustedTypesPolicy} from './trusted_types';
@@ -24,7 +26,9 @@ class HtmlImpl {
   readonly privateDoNotAccessOrElseWrappedHtml: string;
 
   constructor(html: string, token: object) {
-    ensureTokenIsValid(token);
+    if (process.env.NODE_ENV !== 'production') {
+      ensureTokenIsValid(token);
+    }
     this.privateDoNotAccessOrElseWrappedHtml = html;
   }
 
@@ -79,7 +83,11 @@ export function unwrapHtmlForSink(value: TrustedHTML): TrustedHTML&string {
     const unwrapped = value.privateDoNotAccessOrElseWrappedHtml;
     return unwrapped as TrustedHTML & string;
   } else {
-    throw new Error('wrong type');
+    let message = '';
+    if (process.env.NODE_ENV !== 'production') {
+      message = 'Unexpected type when unwrapping TrustedHTML';
+    }
+    throw new Error(message);
   }
 }
 
