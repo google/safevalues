@@ -1,6 +1,6 @@
 {
   "name": "safevalues",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Safe builders for Trusted Types values",
   "repository": "https://github.com/google/safevalues",
   "author": "ISE Hardening",
@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@types/jasmine": "^3.6.2",
-    "@types/node": "^16.4.13",
+    "@types/node": "*",
     "@types/trusted-types": "^1.0.6",
     "jasmine-core": "^3.6.0",
     "karma": "^5.2.3",
