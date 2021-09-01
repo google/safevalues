@@ -79,7 +79,8 @@ export const EMPTY_HTML: TrustedHTML =
 export function unwrapHtmlForSink(value: TrustedHTML): TrustedHTML&string {
   if (getTrustedTypes()?.isHTML(value)) {
     return value as TrustedHTML & string;
-  } else if (value instanceof HtmlImpl) {
+  }
+  if (value instanceof HtmlImpl) {
     const unwrapped = value.privateDoNotAccessOrElseWrappedHtml;
     return unwrapped as TrustedHTML & string;
   } else {

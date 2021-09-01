@@ -81,7 +81,8 @@ export function unwrapScriptForSink(value: TrustedScript): TrustedScript&
     string {
   if (getTrustedTypes()?.isScript(value)) {
     return value as TrustedScript & string;
-  } else if (value instanceof ScriptImpl) {
+  }
+  if (value instanceof ScriptImpl) {
     const unwrapped = value.privateDoNotAccessOrElseWrappedScript;
     return unwrapped as TrustedScript & string;
   } else {

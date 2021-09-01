@@ -71,7 +71,8 @@ export function unwrapScriptUrlForSink(value: TrustedScriptURL):
     TrustedScriptURL&string {
   if (getTrustedTypes()?.isScriptURL(value)) {
     return value as TrustedScriptURL & string;
-  } else if (value instanceof ScriptUrlImpl) {
+  }
+  if (value instanceof ScriptUrlImpl) {
     const unwrapped = value.privateDoNotAccessOrElseWrappedResourceUrl;
     return unwrapped as TrustedScriptURL & string;
   } else {
