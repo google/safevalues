@@ -32,7 +32,7 @@ class ScriptUrlImpl {
   }
 
   /** @override */
-  override toString(): string {
+  toString(): string {
     return this.privateDoNotAccessOrElseWrappedResourceUrl.toString();
   }
 }
