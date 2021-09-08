@@ -1,6 +1,6 @@
 {
   "name": "safevalues",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Safe builders for Trusted Types values",
   "repository": "https://github.com/google/safevalues",
   "author": "ISE Hardening",
@@ -13,6 +13,7 @@
   "sideEffects": false,
   "files": [
     "/index.*",
+    "/environment.*",
     "/unsafe/*",
     "/implementation/*",
     "/builders/*"
@@ -23,7 +24,7 @@
     "test": "yarn build && karma start --browsers ChromeHeadless --single-run",
     "itest": "yarn build && karma start --browsers ChromeHeadless",
     "prepack": "yarn test && mv dist/src/* .",
-    "postpack": "mv unsafe implementation builders index.* dist/src/"
+    "postpack": "mv unsafe implementation builders index.* environment.* dist/src/"
   },
   "devDependencies": {
     "@types/jasmine": "^3.6.2",
