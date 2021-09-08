@@ -33,7 +33,7 @@ class HtmlImpl {
   }
 
   /** @override */
-  override toString(): string {
+  toString(): string {
     return this.privateDoNotAccessOrElseWrappedHtml.toString();
   }
 }
