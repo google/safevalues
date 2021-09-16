@@ -60,14 +60,13 @@ export function getTrustedTypesPolicy(): TrustedTypePolicy|null {
             createScriptURL: (s: string) => s
           }) ??
           null;
-    } catch (e: unknown) {
+    } catch {
       // In Chromium versions before 81, trustedTypes.createPolicy throws if
       // called with a name that is already registered, even if no CSP is set.
       // Until users have largely migrated to 81 or above, catch the error not
       // to break the applications functionally. In such case, the code will
       // fall back to using regular Safe Types.
       trustedTypesPolicy = null;
-      console.log(e);
     }
   }
   return trustedTypesPolicy;
