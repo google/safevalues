@@ -32,7 +32,6 @@ class HtmlImpl {
     this.privateDoNotAccessOrElseWrappedHtml = html;
   }
 
-  /** @override */
   toString(): string {
     return this.privateDoNotAccessOrElseWrappedHtml.toString();
   }

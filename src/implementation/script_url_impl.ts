@@ -31,7 +31,6 @@ class ScriptUrlImpl {
     this.privateDoNotAccessOrElseWrappedResourceUrl = url;
   }
 
-  /** @override */
   toString(): string {
     return this.privateDoNotAccessOrElseWrappedResourceUrl.toString();
   }

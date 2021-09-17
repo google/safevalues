@@ -32,7 +32,6 @@ class ScriptImpl {
     this.privateDoNotAccessOrElseWrappedScript = script;
   }
 
-  /** @override */
   toString(): string {
     return this.privateDoNotAccessOrElseWrappedScript.toString();
   }
