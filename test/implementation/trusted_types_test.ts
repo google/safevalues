@@ -170,7 +170,6 @@ describe('Trusted Types in safevalues', () => {
     beforeEach(() => {
       setTrustedTypesSupported(true);
       TEST_ONLY.resetDefaults();
-      TEST_ONLY.setTrustedTypesPolicyName('safevalues#testing');
       spyOn(mockTrustedTypes, 'createPolicy').and.callThrough();
     });
 
@@ -182,43 +181,10 @@ describe('Trusted Types in safevalues', () => {
     usesTrustedTypes();
   });
 
-  describe('when supported but disabled', () => {
-    beforeEach(() => {
-      setTrustedTypesSupported(true);
-      TEST_ONLY.resetDefaults();
-      TEST_ONLY.setTrustedTypesPolicyName('');
-      spyOn(mockTrustedTypes, 'createPolicy').and.callThrough();
-    });
-
-    afterEach(() => {
-      resetDefaultTrustedTypesSupport();
-      TEST_ONLY.resetDefaults();
-    });
-
-    usesStrings();
-  });
-
   describe('when enabled but not supported', () => {
     beforeEach(() => {
       setTrustedTypesSupported(false);
       TEST_ONLY.resetDefaults();
-      TEST_ONLY.setTrustedTypesPolicyName('safevalues#testing');
-      spyOn(mockTrustedTypes, 'createPolicy').and.callThrough();
-    });
-
-    afterEach(() => {
-      resetDefaultTrustedTypesSupport();
-      TEST_ONLY.resetDefaults();
-    });
-
-    usesStrings();
-  });
-
-  describe('when disabled and not supported', () => {
-    beforeEach(() => {
-      setTrustedTypesSupported(false);
-      TEST_ONLY.resetDefaults();
-      TEST_ONLY.setTrustedTypesPolicyName('');
       spyOn(mockTrustedTypes, 'createPolicy').and.callThrough();
     });
 

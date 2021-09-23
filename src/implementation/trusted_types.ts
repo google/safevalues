@@ -15,13 +15,6 @@
  * limitations under the License.
  */
 
-/**
- * The name of the Trusted Types policy used by TS safevalues, or empty
- * to disable Trusted Types. This duplicates the 'google#safe', but
- * can be overridden in tests.
- */
-let trustedTypesPolicyName = 'google#safe';
-
 /** Helper to retrieve the value of `window.trustedTypes`. */
 function trustedTypes() {
   if (typeof window !== 'undefined') {
@@ -35,7 +28,7 @@ function trustedTypes() {
  * null otherwise.
  */
 export function getTrustedTypes(): TrustedTypePolicyFactory|null {
-  return (trustedTypesPolicyName !== '') ? (trustedTypes() ?? null) : null;
+  // return trustedTypes() ?? null;  // LINE-EXTERNAL
 }
 
 /**
@@ -53,19 +46,18 @@ let trustedTypesPolicy: TrustedTypePolicy|null|undefined;
 export function getTrustedTypesPolicy(): TrustedTypePolicy|null {
   if (trustedTypesPolicy === undefined) {
     try {
-      trustedTypesPolicy =
-          getTrustedTypes()?.createPolicy(trustedTypesPolicyName, {
-            createHTML: (s: string) => s,
-            createScript: (s: string) => s,
-            createScriptURL: (s: string) => s
-          }) ??
+      trustedTypesPolicy = getTrustedTypes()?.createPolicy('google#safe', {
+        createHTML: (s: string) => s,
+        createScript: (s: string) => s,
+        createScriptURL: (s: string) => s
+      }) ??
           null;
     } catch {
       // In Chromium versions before 81, trustedTypes.createPolicy throws if
-      // called with a name that is already registered, even if no CSP is set.
-      // Until users have largely migrated to 81 or above, catch the error not
-      // to break the applications functionally. In such case, the code will
-      // fall back to using regular Safe Types.
+      // called with a name that is already registered, even if no CSP is
+      // set. Until users have largely migrated to 81 or above, catch the
+      // error not to break the applications functionally. In such case, the
+      // code will fall back to using regular Safe Types.
       trustedTypesPolicy = null;
     }
   }
@@ -75,10 +67,6 @@ export function getTrustedTypesPolicy(): TrustedTypePolicy|null {
 /** Helpers for tests. */
 export const TEST_ONLY = {
   resetDefaults() {
-    trustedTypesPolicy = undefined;
-    trustedTypesPolicyName = 'google#safe';
-  },
-  setTrustedTypesPolicyName(name: string) {
-    trustedTypesPolicyName = name;
+    // trustedTypesPolicy = undefined;  // LINE-EXTERNAL
   },
 };
