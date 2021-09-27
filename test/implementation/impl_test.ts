@@ -89,4 +89,10 @@ describe('safevalues implementation', () => {
       });
     });
   }
+
+  it('compares correctly', () => {
+    expect(createHtml('first')).toEqual(createHtml('first'));
+    expect(createHtml('first')).not.toEqual(createHtml('second'));
+    expect(createHtml('first')).not.toEqual(createScript('first'));
+  });
 });
