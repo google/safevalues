@@ -21,7 +21,7 @@ export function htmlEscape(
     TrustedHTML {
   let htmlEscapedString = htmlEscapeToString(text);
   if (options.preserveSpaces) {
-    htmlEscapedString = htmlEscapedString.replace(/  /g, ' &#160;');
+    htmlEscapedString = htmlEscapedString.replace(/(^| ) /gm, '$1&#160;');
   }
   if (options.preserveNewlines) {
     htmlEscapedString = htmlEscapedString.replace(/(\r\n|\n|\r)/g, '<br />');
