@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import '../environment';
+import '../environment/dev';
 
 import {createHtml} from '../implementation/html_impl';
 import {createScript} from '../implementation/script_impl';

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import '../environment';
+import '../environment/dev';
 
 import {assertIsTemplateObject} from '../implementation/safe_string_literal';
 import {createScript, unwrapScriptAsString} from '../implementation/script_impl';

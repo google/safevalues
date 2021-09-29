@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import '../environment';
+import '../environment/dev';
 
 import {pure} from './pure';
 import {ensureTokenIsValid, secretToken} from './secrets';

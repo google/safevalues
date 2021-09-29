@@ -5,9 +5,9 @@
  */
 
 /**
- * @fileoverview Export for main builders of the library.
+ * @fileoverview Main safevalues module
  *
- * Only used in open source version for now.
+ * Exports types, constants and safe builders.
  */
 
 export {concatHtmls, createScriptSrc, htmlEscape} from './builders/html_builders';
