@@ -6,7 +6,7 @@
 
 import {htmlFromStringKnownToSatisfyTypeContract} from '../../src/unsafe/reviewed';
 
-describe('unchecked conversions', () => {
+describe('reviewed conversions', () => {
   it('require a justification', () => {
     expect(() => {
       htmlFromStringKnownToSatisfyTypeContract(

@@ -17,11 +17,11 @@ import {createScriptUrl} from '../implementation/script_url_impl';
  * IMPORTANT: No new code should use the conversion functions in this file,
  * they are intended for refactoring old code to use safe values. New code
  * should construct safe values via their APIs, template systems or
- * sanitizers. If that’s not possible it should use
- * unchecked conversions and undergo security review.
+ * sanitizers. If that’s not possible it should use a reviewed conversion and
+ * undergo security review.
  *
  * The semantics of the conversions in legacyconversions are very
- * different from the ones provided by reviewed. The
+ * different from the ones provided by reviewed conversions. The
  * latter are for use in code where it has been established through manual
  * security review that the value produced by a piece of code will always
  * satisfy the TrustedHTML contract (e.g., the output of a secure HTML
@@ -29,7 +29,7 @@ import {createScriptUrl} from '../implementation/script_url_impl';
  * value in question originates in unreviewed legacy code and there is no
  * guarantee that it satisfies the TrustedHTML contract.
  *
- * There are only three valid uses of legacyconversions:
+ * There are only three valid uses of legacy conversions:
  *
  * 1. Introducing a safe values version of a function which currently consumes
  * string and passes that string to a DOM API which can execute script - and

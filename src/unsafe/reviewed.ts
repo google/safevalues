@@ -26,7 +26,7 @@ function assertValidJustification(justification: string) {
 }
 
 /**
- * Performs an "unchecked conversion" to TrustedHTML from a plain string that is
+ * Performs a "reviewed conversion" to TrustedHTML from a plain string that is
  * known to satisfy the TrustedHTML type contract.
  *
  * IMPORTANT: Uses of this method must be carefully security-reviewed to ensure
@@ -43,7 +43,7 @@ export function htmlFromStringKnownToSatisfyTypeContract(
 }
 
 /**
- * Performs an "unchecked conversion" to TrustedScript from a plain string that
+ * Performs a "reviewed conversion" to TrustedScript from a plain string that
  * is known to satisfy the TrustedScript type contract.
  *
  * IMPORTANT: Uses of this method must be carefully security-reviewed to ensure
@@ -60,7 +60,7 @@ export function scriptFromStringKnownToSatisfyTypeContract(
 }
 
 /**
- * Performs an "unchecked conversion" to TrustedScriptURL from a plain string
+ * Performs a "reviewed conversion" to TrustedScriptURL from a plain string
  * that is known to satisfy the SafeUrl type contract.
  *
  * IMPORTANT: Uses of this method must be carefully security-reviewed to ensure
