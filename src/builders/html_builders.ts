@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {createHtml, unwrapHtmlAsString} from '../implementation/html_impl';
-import {unwrapScriptUrlAsString} from '../implementation/script_url_impl';
+import {createHtml, unwrapHtmlAsString} from '../internals/html_impl';
+import {unwrapScriptUrlAsString} from '../internals/script_url_impl';
 
 /**
  * Returns HTML-escaped text as a `TrustedHTML` object.

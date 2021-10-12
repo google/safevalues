@@ -5,8 +5,8 @@
 
 import '../environment/dev';
 
-import {assertIsTemplateObject} from '../implementation/safe_string_literal';
-import {createScript, unwrapScriptAsString} from '../implementation/script_impl';
+import {assertIsTemplateObject} from '../internals/safe_string_literal';
+import {createScript, unwrapScriptAsString} from '../internals/script_impl';
 
 type Primitive = number|string|boolean|null;
 type Serializable =

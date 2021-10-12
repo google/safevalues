@@ -6,10 +6,10 @@
 import {htmlEscape} from '../../src/builders/html_builders';
 import {script} from '../../src/builders/script_builders';
 import {scriptUrl} from '../../src/builders/script_url_builders';
-import {unwrapHtmlAsString, unwrapHtmlForSink} from '../../src/implementation/html_impl';
-import {unwrapScriptAsString, unwrapScriptForSink} from '../../src/implementation/script_impl';
-import {unwrapScriptUrlAsString, unwrapScriptUrlForSink} from '../../src/implementation/script_url_impl';
-import {TEST_ONLY} from '../../src/implementation/trusted_types';
+import {unwrapHtmlAsString, unwrapHtmlForSink} from '../../src/internals/html_impl';
+import {unwrapScriptAsString, unwrapScriptForSink} from '../../src/internals/script_impl';
+import {unwrapScriptUrlAsString, unwrapScriptUrlForSink} from '../../src/internals/script_url_impl';
+import {TEST_ONLY} from '../../src/internals/trusted_types';
 
 /** A mock TrustedHTML type */
 class MockTrustedHTML {

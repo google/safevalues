@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {assertIsTemplateObject} from '../../src/implementation/safe_string_literal';
+import {assertIsTemplateObject} from '../../src/internals/safe_string_literal';
 
 function getTagFunction(allowInterpolation: boolean, errMsg: string) {
   return (templateObj: TemplateStringsArray, ...args: unknown[]) => {

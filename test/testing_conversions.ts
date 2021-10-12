@@ -14,9 +14,9 @@
  * avoids, by design, non-contract complying instances from being created.
  */
 
-import {createHtml} from '../src/implementation/html_impl';
-import {createScript} from '../src/implementation/script_impl';
-import {createScriptUrl} from '../src/implementation/script_url_impl';
+import {createHtml} from '../src/internals/html_impl';
+import {createScript} from '../src/internals/script_impl';
+import {createScriptUrl} from '../src/internals/script_url_impl';
 
 /**
  * Turns a string into TrustedHTML for testing purposes. This function is for

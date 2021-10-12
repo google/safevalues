@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {ensureTokenIsValid, secretToken} from '../../src/implementation/secrets';
+import {ensureTokenIsValid, secretToken} from '../../src/internals/secrets';
 
 describe('ensureTokenIsValid', () => {
   it('accepts the secret token', () => {

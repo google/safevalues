@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {createHtml} from '../implementation/html_impl';
-import {createScript} from '../implementation/script_impl';
-import {createScriptUrl} from '../implementation/script_url_impl';
+import {createHtml} from '../internals/html_impl';
+import {createScript} from '../internals/script_impl';
+import {createScriptUrl} from '../internals/script_url_impl';
 
 /*
  * Transitional utilities to unsafely trust random strings as

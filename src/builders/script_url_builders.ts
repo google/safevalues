@@ -5,9 +5,9 @@
 
 import '../environment/dev';
 
-import {assertIsTemplateObject} from '../implementation/safe_string_literal';
-import {unwrapScriptAsString} from '../implementation/script_impl';
-import {createScriptUrl, unwrapScriptUrlAsString} from '../implementation/script_url_impl';
+import {assertIsTemplateObject} from '../internals/safe_string_literal';
+import {unwrapScriptAsString} from '../internals/script_impl';
+import {createScriptUrl, unwrapScriptUrlAsString} from '../internals/script_url_impl';
 
 /** Type that we know how to interpolate */
 type Primitive = string|number|boolean;

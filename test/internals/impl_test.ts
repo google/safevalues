@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {createHtml, unwrapHtmlAsString} from '../../src/implementation/html_impl';
-import {createScript, unwrapScriptAsString} from '../../src/implementation/script_impl';
-import {createScriptUrl, unwrapScriptUrlAsString} from '../../src/implementation/script_url_impl';
+import {createHtml, unwrapHtmlAsString} from '../../src/internals/html_impl';
+import {createScript, unwrapScriptAsString} from '../../src/internals/script_impl';
+import {createScriptUrl, unwrapScriptUrlAsString} from '../../src/internals/script_url_impl';
 
 interface Impl {
   name: string;
