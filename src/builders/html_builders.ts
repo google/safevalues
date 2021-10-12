@@ -20,7 +20,9 @@ export function htmlEscape(
     TrustedHTML {
   let htmlEscapedString = htmlEscapeToString(text);
   if (options.preserveSpaces) {
-    htmlEscapedString = htmlEscapedString.replace(/(^| ) /gm, '$1&#160;');
+    // Do this first to ensure we preserve spaces after newlines.
+    htmlEscapedString =
+        htmlEscapedString.replace(/(^|[\r\n\t ]) /g, '$1&#160;');
   }
   if (options.preserveNewlines) {
     htmlEscapedString = htmlEscapedString.replace(/(\r\n|\n|\r)/g, '<br />');

@@ -45,6 +45,8 @@ describe('html_builders', () => {
           .toEqual('&amp;&amp;\n&#160;&amp;');
       expect(htmlEscape('&&\n  &', {preserveSpaces: true}).toString())
           .toEqual('&amp;&amp;\n&#160; &amp;');
+      expect(htmlEscape('a \t b', {preserveSpaces: true}).toString())
+          .toEqual('a \t&#160;b');
     });
 
     it('keeps spaces and newlines as expected', () => {
@@ -58,6 +60,9 @@ describe('html_builders', () => {
                preserveSpaces: true
              }).toString())
           .toEqual('a&lt;<br />&#160; &#160;b');
+      expect(htmlEscape('a\r b', {preserveNewlines: true, preserveSpaces: true})
+                 .toString())
+          .toEqual('a<br />&#160;b');
     });
   });
 
