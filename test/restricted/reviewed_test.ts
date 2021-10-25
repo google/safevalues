@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {htmlFromStringKnownToSatisfyTypeContract} from '../../src/unsafe/reviewed';
+import {htmlFromStringKnownToSatisfyTypeContract} from '../../src/restricted/reviewed';
 
 describe('reviewed conversions', () => {
   it('require a justification', () => {
