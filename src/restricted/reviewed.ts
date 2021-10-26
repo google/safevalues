@@ -6,7 +6,7 @@
 import '../environment/dev';
 
 import {createHtml} from '../internals/html_impl';
-import {createScriptUrl} from '../internals/resource_url_impl';
+import {createResourceUrl} from '../internals/resource_url_impl';
 import {createScript} from '../internals/script_impl';
 
 
@@ -72,5 +72,5 @@ export function scriptUrlFromStringKnownToSatisfyTypeContract(
   if (process.env.NODE_ENV !== 'production') {
     assertValidJustification(justification);
   }
-  return createScriptUrl(url);
+  return createResourceUrl(url);
 }

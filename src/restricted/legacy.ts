@@ -4,7 +4,7 @@
  */
 
 import {createHtml} from '../internals/html_impl';
-import {createScriptUrl} from '../internals/resource_url_impl';
+import {createResourceUrl} from '../internals/resource_url_impl';
 import {createScript} from '../internals/script_impl';
 
 /*
@@ -80,5 +80,5 @@ export function legacyConversionToScript(s: string): TrustedScript {
  * Please read fileoverview documentation before using.
  */
 export function legacyConversionToScriptUrl(s: string): TrustedScriptURL {
-  return createScriptUrl(s);
+  return createResourceUrl(s);
 }

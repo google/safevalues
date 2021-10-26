@@ -5,7 +5,7 @@
 
 import '../environment/dev';
 
-import {createScriptUrl, unwrapScriptUrlAsString} from '../internals/resource_url_impl';
+import {createResourceUrl, unwrapScriptUrlAsString} from '../internals/resource_url_impl';
 import {unwrapScriptAsString} from '../internals/script_impl';
 import {assertIsTemplateObject} from '../internals/string_literal';
 
@@ -136,7 +136,7 @@ export function scriptUrl(
   }
 
   if (rest.length === 0) {
-    return createScriptUrl(templateObj[0]);
+    return createResourceUrl(templateObj[0]);
   }
 
   const base = templateObj[0].toLowerCase();
@@ -159,7 +159,7 @@ export function scriptUrl(
     urlParts.push(encodeURIComponent(rest[i]));
     urlParts.push(templateObj[i + 1]);
   }
-  return createScriptUrl(urlParts.join(''));
+  return createResourceUrl(urlParts.join(''));
 }
 
 /**
@@ -196,7 +196,7 @@ export function appendParams(
       separator = '&';
     }
   });
-  return createScriptUrl(url);
+  return createResourceUrl(url);
 }
 
 const BEFORE_FRAGMENT_REGEXP = /[^#]*/;
@@ -211,7 +211,7 @@ const BEFORE_FRAGMENT_REGEXP = /[^#]*/;
 export function replaceFragment(
     trustedUrl: TrustedScriptURL, fragment: string) {
   const urlString = unwrapScriptUrlAsString(trustedUrl);
-  return createScriptUrl(
+  return createResourceUrl(
       BEFORE_FRAGMENT_REGEXP.exec(urlString)![0] + '#' + fragment);
 }
 
@@ -225,5 +225,5 @@ export function replaceFragment(
 export function blobUrlFromScript(script: TrustedScript): TrustedScriptURL {
   const scriptContent = unwrapScriptAsString(script);
   const blob = new Blob([scriptContent], {type: 'text/javascript'});
-  return createScriptUrl(URL.createObjectURL(blob));
+  return createResourceUrl(URL.createObjectURL(blob));
 }

@@ -4,7 +4,7 @@
  */
 
 import {createHtml, unwrapHtmlAsString} from '../../src/internals/html_impl';
-import {createScriptUrl, unwrapScriptUrlAsString} from '../../src/internals/resource_url_impl';
+import {createResourceUrl, unwrapScriptUrlAsString} from '../../src/internals/resource_url_impl';
 import {createScript, unwrapScriptAsString} from '../../src/internals/script_impl';
 
 interface Impl {
@@ -29,7 +29,7 @@ const IMPLEMENTATIONS: Impl[] = [
   },
   {
     name: 'TrustedScriptURL',
-    create: createScriptUrl,
+    create: createResourceUrl,
     unwrap: unwrapScriptUrlAsString,
   },
 ];

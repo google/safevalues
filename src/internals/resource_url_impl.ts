@@ -9,7 +9,7 @@ import {ensureTokenIsValid, secretToken} from './secrets';
 import {getTrustedTypes, getTrustedTypesPolicy} from './trusted_types';
 
 /** Implementation for `TrustedScriptURL` */
-class ScriptUrlImpl {
+class ResourceUrlImpl {
   readonly privateDoNotAccessOrElseWrappedResourceUrl: string;
 
   constructor(url: string, token: object) {
@@ -30,12 +30,12 @@ class ScriptUrlImpl {
  * Types policy. This shouldn't be exposed to application developers, and must
  * only be used as a step towards safe builders or safe constants.
  */
-export function createScriptUrl(url: string): TrustedScriptURL {
+export function createResourceUrl(url: string): TrustedScriptURL {
   /** @noinline */
   const noinlineUrl = url;
   const trustedScriptURL =
       getTrustedTypesPolicy()?.createScriptURL(noinlineUrl);
-  return (trustedScriptURL ?? new ScriptUrlImpl(noinlineUrl, secretToken)) as
+  return (trustedScriptURL ?? new ResourceUrlImpl(noinlineUrl, secretToken)) as
       TrustedScriptURL;
 }
 
@@ -59,7 +59,7 @@ export function unwrapScriptUrlForSink(value: TrustedScriptURL):
   if (getTrustedTypes()?.isScriptURL(value)) {
     return value as TrustedScriptURL & string;
   }
-  if (value instanceof ScriptUrlImpl) {
+  if (value instanceof ResourceUrlImpl) {
     const unwrapped = value.privateDoNotAccessOrElseWrappedResourceUrl;
     return unwrapped as TrustedScriptURL & string;
   } else {

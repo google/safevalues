@@ -15,7 +15,7 @@
  */
 
 import {createHtml} from '../src/internals/html_impl';
-import {createScriptUrl} from '../src/internals/resource_url_impl';
+import {createResourceUrl} from '../src/internals/resource_url_impl';
 import {createScript} from '../src/internals/script_impl';
 
 /**
@@ -39,5 +39,5 @@ export function testingConversionToScript(s: string): TrustedScript {
  * for use in tests only and must never be used in production code.
  */
 export function testingConversionToScriptUrl(s: string): TrustedScriptURL {
-  return createScriptUrl(s);
+  return createResourceUrl(s);
 }
