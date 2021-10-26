@@ -13,19 +13,25 @@ import {unwrapResourceUrlAsString} from '../internals/resource_url_impl';
  * - `preserveSpaces` turns every second consecutive space character into its
  * HTML entity representation (`&#160;`).
  * - `preserveNewlines` turns newline characters into breaks (`<br />`).
+ * - `preserveTabs` wraps tab characters in a span with style=white-space:pre.
  */
-export function htmlEscape(
-    text: string,
-    options: {preserveNewlines?: boolean, preserveSpaces?: boolean} = {}):
-    TrustedHTML {
+export function htmlEscape(text: string, options: {
+  preserveNewlines?: boolean,
+  preserveSpaces?: boolean,
+  preserveTabs?: boolean
+} = {}): TrustedHTML {
   let htmlEscapedString = htmlEscapeToString(text);
   if (options.preserveSpaces) {
-    // Do this first to ensure we preserve spaces after newlines.
+    // Do this first to ensure we preserve spaces after newlines and tabs.
     htmlEscapedString =
         htmlEscapedString.replace(/(^|[\r\n\t ]) /g, '$1&#160;');
   }
   if (options.preserveNewlines) {
     htmlEscapedString = htmlEscapedString.replace(/(\r\n|\n|\r)/g, '<br />');
+  }
+  if (options.preserveTabs) {
+    htmlEscapedString = htmlEscapedString.replace(
+        /(\t+)/g, '<span style="white-space:pre">$1</span>');
   }
   return createHtml(htmlEscapedString);
 }
