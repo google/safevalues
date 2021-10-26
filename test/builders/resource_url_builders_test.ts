@@ -3,10 +3,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import {appendParams, blobUrlFromScript, replaceFragment, scriptUrl} from '../../src/builders/resource_url_builders';
 import {script} from '../../src/builders/script_builders';
-import {appendParams, blobUrlFromScript, replaceFragment, scriptUrl} from '../../src/builders/script_url_builders';
 
-describe('script_url_builders', () => {
+describe('resource_url_builders', () => {
   describe('scriptUrl', () => {
     it('can create constants with no contraints', () => {
       expect(scriptUrl`a/b/c`.toString()).toEqual('a/b/c');

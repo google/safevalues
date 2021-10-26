@@ -15,8 +15,8 @@
  */
 
 import {createHtml} from '../src/internals/html_impl';
+import {createScriptUrl} from '../src/internals/resource_url_impl';
 import {createScript} from '../src/internals/script_impl';
-import {createScriptUrl} from '../src/internals/script_url_impl';
 
 /**
  * Turns a string into TrustedHTML for testing purposes. This function is for

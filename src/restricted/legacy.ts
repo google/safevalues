@@ -4,8 +4,8 @@
  */
 
 import {createHtml} from '../internals/html_impl';
+import {createScriptUrl} from '../internals/resource_url_impl';
 import {createScript} from '../internals/script_impl';
-import {createScriptUrl} from '../internals/script_url_impl';
 
 /*
  * Transitional utilities to unsafely trust random strings as

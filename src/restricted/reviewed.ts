@@ -6,8 +6,8 @@
 import '../environment/dev';
 
 import {createHtml} from '../internals/html_impl';
+import {createScriptUrl} from '../internals/resource_url_impl';
 import {createScript} from '../internals/script_impl';
-import {createScriptUrl} from '../internals/script_url_impl';
 
 
 /**

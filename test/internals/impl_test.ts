@@ -4,8 +4,8 @@
  */
 
 import {createHtml, unwrapHtmlAsString} from '../../src/internals/html_impl';
+import {createScriptUrl, unwrapScriptUrlAsString} from '../../src/internals/resource_url_impl';
 import {createScript, unwrapScriptAsString} from '../../src/internals/script_impl';
-import {createScriptUrl, unwrapScriptUrlAsString} from '../../src/internals/script_url_impl';
 
 interface Impl {
   name: string;
