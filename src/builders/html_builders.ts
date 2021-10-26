@@ -4,7 +4,7 @@
  */
 
 import {createHtml, unwrapHtmlAsString} from '../internals/html_impl';
-import {unwrapScriptUrlAsString} from '../internals/resource_url_impl';
+import {unwrapResourceUrlAsString} from '../internals/resource_url_impl';
 
 /**
  * Returns HTML-escaped text as a `TrustedHTML` object.
@@ -36,7 +36,7 @@ export function htmlEscape(
  */
 export function createScriptSrc(
     src: TrustedScriptURL, async?: boolean, nonce?: string): TrustedHTML {
-  const unwrappedSrc = unwrapScriptUrlAsString(src);
+  const unwrappedSrc = unwrapResourceUrlAsString(src);
   let stringTag = `<script src="${htmlEscapeToString(unwrappedSrc)}"`;
   if (async) {
     stringTag += ' async';

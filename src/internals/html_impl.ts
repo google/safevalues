@@ -63,7 +63,7 @@ export const EMPTY_HTML: TrustedHTML =
  * use any string functions on the result as that will fail in browsers
  * supporting Trusted Types.
  */
-export function unwrapHtmlForSink(value: TrustedHTML): TrustedHTML&string {
+export function unwrapHtml(value: TrustedHTML): TrustedHTML&string {
   if (getTrustedTypes()?.isHTML(value)) {
     return value as TrustedHTML & string;
   }
@@ -80,13 +80,13 @@ export function unwrapHtmlForSink(value: TrustedHTML): TrustedHTML&string {
 }
 
 /**
- * Same as `unwrapHtmlForSink`, but returns an actual string.
+ * Same as `unwrapHtml`, but returns an actual string.
  *
  * Also ensures to return the right string value for `TrustedHTML` objects if
  * the `toString` function has been overwritten on the object.
  */
 export function unwrapHtmlAsString(value: TrustedHTML): string {
-  const unwrapped = unwrapHtmlForSink(value);
+  const unwrapped = unwrapHtml(value);
   if (getTrustedTypes()?.isHTML(unwrapped)) {
     // TODO: Remove once the spec freezes instances of `TrustedHTML`.
     return TrustedHTML.prototype.toString.apply(unwrapped);

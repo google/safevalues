@@ -64,8 +64,7 @@ export const EMPTY_SCRIPT: TrustedScript =
  * use any string functions on the result as that will fail in browsers
  * supporting Trusted Types.
  */
-export function unwrapScriptForSink(value: TrustedScript): TrustedScript&
-    string {
+export function unwrapScript(value: TrustedScript): TrustedScript&string {
   if (getTrustedTypes()?.isScript(value)) {
     return value as TrustedScript & string;
   }
@@ -82,13 +81,13 @@ export function unwrapScriptForSink(value: TrustedScript): TrustedScript&
 }
 
 /**
- * Same as `unwrapScriptForSink`, but returns an actual string
+ * Same as `unwrapScript`, but returns an actual string
  *
  * Also ensures to return the right string value for `TrustedScript` objects if
  * the `toString function has been overwritten on the object.
  */
 export function unwrapScriptAsString(value: TrustedScript): string {
-  const unwrapped = unwrapScriptForSink(value);
+  const unwrapped = unwrapScript(value);
   if (getTrustedTypes()?.isScript(unwrapped)) {
     // TODO: Remove once the spec freezes instances of `TrustedScript`.
     return TrustedScript.prototype.toString.apply(unwrapped);

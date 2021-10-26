@@ -5,7 +5,7 @@
 
 import '../environment/dev';
 
-import {createResourceUrl, unwrapScriptUrlAsString} from '../internals/resource_url_impl';
+import {createResourceUrl, unwrapResourceUrlAsString} from '../internals/resource_url_impl';
 import {unwrapScriptAsString} from '../internals/script_impl';
 import {assertIsTemplateObject} from '../internals/string_literal';
 
@@ -173,7 +173,7 @@ export function appendParams(
     trustedUrl: TrustedScriptURL,
     params: Map<string, Primitive|null|Array<Primitive|null>>):
     TrustedScriptURL {
-  let url = unwrapScriptUrlAsString(trustedUrl);
+  let url = unwrapResourceUrlAsString(trustedUrl);
   if (/#/.test(url)) {
     let message = '';
     if (process.env.NODE_ENV !== 'production') {
@@ -210,7 +210,7 @@ const BEFORE_FRAGMENT_REGEXP = /[^#]*/;
  */
 export function replaceFragment(
     trustedUrl: TrustedScriptURL, fragment: string) {
-  const urlString = unwrapScriptUrlAsString(trustedUrl);
+  const urlString = unwrapResourceUrlAsString(trustedUrl);
   return createResourceUrl(
       BEFORE_FRAGMENT_REGEXP.exec(urlString)![0] + '#' + fragment);
 }
