@@ -132,7 +132,7 @@ before passing them to sinks in a way that tsec will understand.
 ```typescript
 import {unwrapScript} from 'safevalues';
 const script: TrustedScript = ...;
-eval(unwrapScript(script)); // works!
+eval(unwrapScriptForSink(script)); // works!
 ```
 
 The unwrap functions' return type is `string&Trusted*`, which ensures that the
@@ -183,10 +183,10 @@ completely.
 
 ```typescript
 import {legacyConversionToScriptUrl} from 'safevalues/unsafe/legacy';
-import {unwrapResourceUrl} from 'safevalues';
+import {unwrapScriptUrlForSink} from 'safevalues';
 
 // TODO: move legacyConversion to caller
-script.src = unwrapResourceUrl(legacyConversionToScriptUrl(url));
+script.src = unwrapScriptUrlForSink(legacyConversionToScriptUrl(url));
 ```
 
 ### Reviewed conversions
@@ -213,6 +213,6 @@ if (document.domain === '') {
         userInput,
         `Even though the input is user controller, the wrapping if statement
          ensures that this code is only ever run in a sandboxed origin`);
-    scriptEl.text = unwrapScript(scriptText);
+    scriptEl.text = unwrapScriptForSink(scriptText);
 }
 ```
