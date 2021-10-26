@@ -14,7 +14,7 @@
   "files": [
     "/index.*",
     "/environment.*",
-    "/unsafe/*",
+    "/restricted/*",
     "/internals/*",
     "/builders/*"
   ],
@@ -24,7 +24,7 @@
     "test": "yarn build && karma start --browsers ChromeHeadless --single-run",
     "itest": "yarn build && karma start --browsers ChromeHeadless",
     "prepack": "yarn test && mv dist/src/* .",
-    "postpack": "mv unsafe internals builders environment index.* dist/src/"
+    "postpack": "mv restricted internals builders environment index.* dist/src/"
   },
   "devDependencies": {
     "@types/jasmine": "^3.6.2",
