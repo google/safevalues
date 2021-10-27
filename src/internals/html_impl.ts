@@ -20,7 +20,7 @@ class HtmlImpl {
     this.privateDoNotAccessOrElseWrappedHtml = html;
   }
 
-  toString(): string {
+  override toString(): string {
     return this.privateDoNotAccessOrElseWrappedHtml.toString();
   }
 }

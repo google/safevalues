@@ -20,7 +20,7 @@ class ScriptImpl {
     this.privateDoNotAccessOrElseWrappedScript = script;
   }
 
-  toString(): string {
+  override toString(): string {
     return this.privateDoNotAccessOrElseWrappedScript.toString();
   }
 }

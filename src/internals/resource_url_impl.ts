@@ -19,7 +19,7 @@ class ResourceUrlImpl {
     this.privateDoNotAccessOrElseWrappedResourceUrl = url;
   }
 
-  toString(): string {
+  override toString(): string {
     return this.privateDoNotAccessOrElseWrappedResourceUrl.toString();
   }
 }
