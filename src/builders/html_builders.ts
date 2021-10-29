@@ -12,7 +12,7 @@ import {unwrapResourceUrlAsString} from '../internals/resource_url_impl';
  * Available options:
  * - `preserveSpaces` turns every second consecutive space character into its
  * HTML entity representation (`&#160;`).
- * - `preserveNewlines` turns newline characters into breaks (`<br />`).
+ * - `preserveNewlines` turns newline characters into breaks (`<br>`).
  * - `preserveTabs` wraps tab characters in a span with style=white-space:pre.
  */
 export function htmlEscape(text: string, options: {
@@ -27,7 +27,7 @@ export function htmlEscape(text: string, options: {
         htmlEscapedString.replace(/(^|[\r\n\t ]) /g, '$1&#160;');
   }
   if (options.preserveNewlines) {
-    htmlEscapedString = htmlEscapedString.replace(/(\r\n|\n|\r)/g, '<br />');
+    htmlEscapedString = htmlEscapedString.replace(/(\r\n|\n|\r)/g, '<br>');
   }
   if (options.preserveTabs) {
     htmlEscapedString = htmlEscapedString.replace(

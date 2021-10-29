@@ -24,9 +24,9 @@ describe('html_builders', () => {
       expect(htmlEscape('a<br />b', {preserveNewlines: true}).toString())
           .toEqual('a&lt;br /&gt;b');
       expect(htmlEscape('a\nb', {preserveNewlines: true}).toString())
-          .toEqual('a<br />b');
+          .toEqual('a<br>b');
       expect(htmlEscape('&&\n\r\n&', {preserveNewlines: true}).toString())
-          .toEqual('&amp;&amp;<br /><br />&amp;');
+          .toEqual('&amp;&amp;<br><br>&amp;');
       expect(htmlEscape('   a   b   ', {preserveNewlines: true}).toString())
           .toEqual('   a   b   ');
     });
@@ -54,15 +54,15 @@ describe('html_builders', () => {
                preserveNewlines: true,
                preserveSpaces: true
              }).toString())
-          .toEqual('a&lt;<br />&#160; b');
+          .toEqual('a&lt;<br>&#160; b');
       expect(htmlEscape('a<\n   b', {
                preserveNewlines: true,
                preserveSpaces: true
              }).toString())
-          .toEqual('a&lt;<br />&#160; &#160;b');
+          .toEqual('a&lt;<br>&#160; &#160;b');
       expect(htmlEscape('a\r b', {preserveNewlines: true, preserveSpaces: true})
                  .toString())
-          .toEqual('a<br />&#160;b');
+          .toEqual('a<br>&#160;b');
     });
 
     it('keeps tabs as expected', () => {
@@ -81,7 +81,7 @@ describe('html_builders', () => {
                preserveSpaces: true,
                preserveTabs: true
              }).toString())
-          .toEqual('<span style="white-space:pre">\t\t</span>&#160;a<br />b');
+          .toEqual('<span style="white-space:pre">\t\t</span>&#160;a<br>b');
     });
   });
 
