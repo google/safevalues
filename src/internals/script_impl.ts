@@ -48,7 +48,8 @@ export function createScript(script: string): TrustedScript {
  * Unlike the functions above, using this will not create a policy.
  */
 export const EMPTY_SCRIPT: TrustedScript =
-    pure(() => createScriptInternal('', getTrustedTypes()?.emptyScript));
+    /* #__PURE__ */ pure(
+        () => createScriptInternal('', getTrustedTypes()?.emptyScript));
 
 /**
  * Returns the value of the passed `TrustedScript` object while ensuring it

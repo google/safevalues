@@ -47,7 +47,8 @@ export function createHtml(html: string): TrustedHTML {
  * Unlike the function above, using this will not create a policy.
  */
 export const EMPTY_HTML: TrustedHTML =
-    pure(() => createHtmlInternal('', getTrustedTypes()?.emptyHTML));
+    /* #__PURE__ */ pure(
+        () => createHtmlInternal('', getTrustedTypes()?.emptyHTML));
 
 /**
  * Returns the value of the passed `TrustedHTML` object while ensuring it
