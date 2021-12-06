@@ -51,6 +51,11 @@ export const EMPTY_HTML: TrustedHTML =
         () => createHtmlInternal('', getTrustedTypes()?.emptyHTML));
 
 /**
+ * A `TrustedHTML` constant that contains a newline character.
+ */
+export const NEWLINE_HTML: TrustedHTML = createHtml('\n');
+
+/**
  * Returns the value of the passed `TrustedHTML` object while ensuring it
  * has the correct type.
  *
