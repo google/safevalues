@@ -51,6 +51,16 @@ export const EMPTY_HTML: TrustedHTML =
         () => createHtmlInternal('', getTrustedTypes()?.emptyHTML))();
 
 /**
+ * Checks if the given value is a `TrustedHTML` instance.
+ */
+export function isHtml(value: unknown): value is TrustedHTML {
+  if (getTrustedTypes()?.isHTML(value)) {
+    return true;
+  }
+  return value instanceof HtmlImpl;
+}
+
+/**
  * Returns the value of the passed `TrustedHTML` object while ensuring it
  * has the correct type.
  *

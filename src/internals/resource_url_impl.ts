@@ -40,6 +40,16 @@ export function createResourceUrl(url: string): TrustedScriptURL {
 }
 
 /**
+ * Checks if the given value is a `TrustedScriptURL` instance.
+ */
+export function isResourceUrl(value: unknown): value is TrustedScriptURL {
+  if (getTrustedTypes()?.isScriptURL(value)) {
+    return true;
+  }
+  return value instanceof ResourceUrlImpl;
+}
+
+/**
  * Returns the value of the passed `TrustedScriptURL` object while ensuring it
  * has the correct type.
  *

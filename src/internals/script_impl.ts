@@ -52,6 +52,16 @@ export const EMPTY_SCRIPT: TrustedScript =
         () => createScriptInternal('', getTrustedTypes()?.emptyScript))();
 
 /**
+ * Checks if the given value is a `TrustedScript` instance.
+ */
+export function isScript(value: unknown): value is TrustedScript {
+  if (getTrustedTypes()?.isScript(value)) {
+    return true;
+  }
+  return value instanceof ScriptImpl;
+}
+
+/**
  * Returns the value of the passed `TrustedScript` object while ensuring it
  * has the correct type.
  *

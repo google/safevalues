@@ -3,12 +3,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {createHtml, unwrapHtmlAsString} from '../../src/internals/html_impl';
-import {createResourceUrl, unwrapResourceUrlAsString} from '../../src/internals/resource_url_impl';
-import {createScript, unwrapScriptAsString} from '../../src/internals/script_impl';
+import {createHtml, isHtml, unwrapHtmlAsString} from '../../src/internals/html_impl';
+import {createResourceUrl, isResourceUrl, unwrapResourceUrlAsString} from '../../src/internals/resource_url_impl';
+import {createScript, isScript, unwrapScriptAsString} from '../../src/internals/script_impl';
 
 interface Impl {
   name: string;
+  guard: (value: unknown) => boolean;
   create: (str: string) => {};
   // Functions are contravariant in regards to their param types so unknown does
   // not work here.
@@ -19,16 +20,19 @@ interface Impl {
 const IMPLEMENTATIONS: Impl[] = [
   {
     name: 'TrustedHTML',
+    guard: isHtml,
     create: createHtml,
     unwrap: unwrapHtmlAsString,
   },
   {
     name: 'TrustedScript',
+    guard: isScript,
     create: createScript,
     unwrap: unwrapScriptAsString,
   },
   {
     name: 'TrustedScriptURL',
+    guard: isResourceUrl,
     create: createResourceUrl,
     unwrap: unwrapResourceUrlAsString,
   },
@@ -48,6 +52,24 @@ describe('safevalues implementation', () => {
         expect(() => value.constructor('danger', null)).toThrowError();
         expect(() => value.constructor('danger', {})).toThrowError();
         expect(() => value.constructor('danger', 'secret')).toThrowError();
+      });
+
+      describe('guard', () => {
+        it('returns true for correct safe type', () => {
+          expect(impl.guard(impl.create('test'))).toBeTrue();
+        });
+
+        it('returns false for other safe types', () => {
+          for (const impl2 of IMPLEMENTATIONS) {
+            if (impl.name !== impl2.name) {
+              expect(impl.guard(impl2.create('test'))).toBeFalse();
+            }
+          }
+        });
+
+        it('returns false for incorrect type', () => {
+          expect(impl.guard('test')).toBeFalse();
+        });
       });
 
       describe('unwrappers', () => {
