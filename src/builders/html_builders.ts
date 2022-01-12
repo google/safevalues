@@ -5,6 +5,7 @@
 
 import {createHtml, unwrapHtmlAsString} from '../internals/html_impl';
 import {unwrapResourceUrlAsString} from '../internals/resource_url_impl';
+import {unwrapScriptAsString} from '../internals/script_impl';
 
 /**
  * Returns HTML-escaped text as a `TrustedHTML` object.
@@ -34,6 +35,29 @@ export function htmlEscape(text: string, options: {
         /(\t+)/g, '<span style="white-space:pre">$1</span>');
   }
   return createHtml(htmlEscapedString);
+}
+
+/**
+ * Creates a `TrustedHTML` representing a script tag with inline script content.
+ */
+export function createScript(script: TrustedScript, options: {
+  id?: string,
+  nonce?: string,
+  type?: string,
+} = {}): TrustedHTML {
+  const unwrappedScript = unwrapScriptAsString(script);
+  let stringTag = `<script`;
+  if (options.id) {
+    stringTag += ` id="${htmlEscapeToString(options.id)}"`;
+  }
+  if (options.nonce) {
+    stringTag += ` nonce="${htmlEscapeToString(options.nonce)}"`;
+  }
+  if (options.type) {
+    stringTag += ` type="${htmlEscapeToString(options.type)}"`;
+  }
+  stringTag += `>${unwrappedScript}</script>`;
+  return createHtml(stringTag);
 }
 
 /**

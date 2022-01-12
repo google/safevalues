@@ -3,7 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {concatHtmls, createScriptSrc, htmlEscape} from '../../src/builders/html_builders';
+import {concatHtmls, createScript, createScriptSrc, htmlEscape} from '../../src/builders/html_builders';
+import {script, scriptFromJson} from '../../src/builders/script_builders';
 import {testingConversionToScriptUrl} from '../testing_conversions';
 
 describe('html_builders', () => {
@@ -82,6 +83,49 @@ describe('html_builders', () => {
                preserveTabs: true
              }).toString())
           .toEqual('<span style="white-space:pre">\t\t</span>&#160;a<br>b');
+    });
+  });
+
+  describe('createScript', () => {
+    it('builds the right tags', () => {
+      expect(createScript(script`const a = b < c;`).toString())
+          .toEqual('<script>const a = b < c;</script>');
+      expect(createScript(script`const a = b < c;`, {id: 'myid'}).toString())
+          .toEqual('<script id="myid">const a = b < c;</script>');
+      expect(
+          createScript(script`const a = b < c;`, {nonce: 'mynonce'}).toString())
+          .toEqual('<script nonce="mynonce">const a = b < c;</script>');
+      expect(createScript(script`const a = b < c;`, {
+               id: 'myid',
+               nonce: 'mynonce'
+             }).toString())
+          .toEqual(
+              '<script id="myid" nonce="mynonce">const a = b < c;</script>');
+    });
+
+    it('allows setting type', () => {
+      const json = scriptFromJson({
+        '@context': 'https://schema.org/',
+        '@type': 'Test',
+        'name': 'JSON Script',
+      });
+      expect(createScript(json, {type: 'application/ld+json'}).toString())
+          .toEqual(
+              '<script type="application/ld+json">' +
+              '{"@context":"https://schema.org/","@type":"Test","name":"JSON Script"}' +
+              '</script>');
+      expect(createScript(script`const a = b < c;`, {
+               type: 'text/javascript'
+             }).toString())
+          .toEqual('<script type="text/javascript">const a = b < c;</script>');
+    });
+
+    it('escapes attributes', () => {
+      const script = script`xyz;`;
+      expect(createScript(script, {id: '<">'}).toString())
+          .toEqual('<script id="&lt;&quot;&gt;">xyz;</script>');
+      expect(createScript(script, {nonce: '<">'}).toString())
+          .toEqual('<script nonce="&lt;&quot;&gt;">xyz;</script>');
     });
   });
 
