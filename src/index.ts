@@ -4,7 +4,7 @@
  */
 
 /** Safe builders */
-export {concatHtmls, createScript, createScriptSrc, htmlEscape} from './builders/html_builders';
+export {concatHtmls, createScriptSrc, htmlEscape} from './builders/html_builders';
 export {appendParams, blobUrlFromScript, replaceFragment, scriptUrl} from './builders/resource_url_builders';
 export {concatScripts, script, scriptFromJson, scriptWithArgs} from './builders/script_builders';
 /** Types, constants and unwrappers */
