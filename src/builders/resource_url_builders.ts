@@ -116,8 +116,10 @@ function isValidPathStart(base: string): boolean {
  * on a trusted origin are problematic, since that could lead to untrusted
  * origins.
  *
- * `<pathStart>` is either a '/' or a '/' followed by at least one
- * character that is not '/' or '\'.
+ * `<pathStart>` is either an empty string, or a non empty string that does not
+ * start with '/' or '\'.
+ * In other words, `/<pathStart>` is either a '/' or a
+ * '/' followed by at least one character that is not '/' or '\'.
  *
  * `data:` (data URL) does not allow embedded expressions in the template
  * literal input.
