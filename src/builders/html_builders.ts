@@ -5,6 +5,7 @@
 
 import {createHtml, unwrapHtmlAsString} from '../internals/html_impl';
 import {unwrapResourceUrlAsString} from '../internals/resource_url_impl';
+import {unwrapScriptAsString} from '../internals/script_impl';
 
 /**
  * Returns HTML-escaped text as a `TrustedHTML` object.
@@ -37,6 +38,29 @@ export function htmlEscape(text: string, options: {
 }
 
 /**
+ * Creates a `TrustedHTML` representing a script tag with inline script content.
+ */
+export function createScript(script: TrustedScript, options: {
+  id?: string,
+  nonce?: string,
+  type?: string,
+} = {}): TrustedHTML {
+  const unwrappedScript = unwrapScriptAsString(script);
+  let stringTag = `<script`;
+  if (options.id) {
+    stringTag += ` id="${htmlEscapeToString(options.id)}"`;
+  }
+  if (options.nonce) {
+    stringTag += ` nonce="${htmlEscapeToString(options.nonce)}"`;
+  }
+  if (options.type) {
+    stringTag += ` type="${htmlEscapeToString(options.type)}"`;
+  }
+  stringTag += `>${unwrappedScript}\x3c/script>`;
+  return createHtml(stringTag);
+}
+
+/**
  * Creates a `TrustedHTML` representing a script tag with the src attribute.
  * This also supports CSP nonces and async loading.
  */
@@ -50,7 +74,7 @@ export function createScriptSrc(
   if (nonce) {
     stringTag += ` nonce="${htmlEscapeToString(nonce)}"`;
   }
-  stringTag += '></script>';
+  stringTag += '>\x3c/script>';
   return createHtml(stringTag);
 }
 
