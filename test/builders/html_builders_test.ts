@@ -121,10 +121,10 @@ describe('html_builders', () => {
     });
 
     it('escapes attributes', () => {
-      const script = script`xyz;`;
-      expect(createScript(script, {id: '<">'}).toString())
+      const createdScript = script`xyz;`;
+      expect(createScript(createdScript, {id: '<">'}).toString())
           .toEqual('<script id="&lt;&quot;&gt;">xyz;</script>');
-      expect(createScript(script, {nonce: '<">'}).toString())
+      expect(createScript(createdScript, {nonce: '<">'}).toString())
           .toEqual('<script nonce="&lt;&quot;&gt;">xyz;</script>');
     });
   });

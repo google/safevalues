@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import {htmlEscape} from '../builders/html_builders';
 import {createHtml} from '../internals/html_impl';
 import {createResourceUrl} from '../internals/resource_url_impl';
 import {createScript} from '../internals/script_impl';
@@ -57,12 +58,125 @@ import {createScript} from '../internals/script_impl';
  */
 
 /**
+ * Options for configuring {@link legacyConversionToHtml}.
+ */
+interface ReportingOptions {
+  /**
+   * A unique ID that identifies the callsite of a specific legacy conversion.
+   * If this option is set, the legacy conversion becomes a report-only legacy
+   * conversion that logs whether the callsite can be converted to a safer
+   * alternative to the go/security-collector. See
+   * go/report-only-safehtml-legacy-exemptions for more details on this design
+   * and project.
+   *
+   * This is set via LSC and should not be manually changed.
+   */
+  reportingId: string;
+
+  /**
+   * Override {@link 0.001} for this specific
+   * legacy conversion. It is generally not necessary to use this override
+   * unless this legacy conversion is triggering a massive number of reports and
+   * it is necessary to decrease the sampling rate to decrease the number of
+   * reports.
+   */
+  samplingRate?: number;
+
+  /**
+   * Override {@link 0.01} for this specific
+   * legacy conversion. It is generally not necessary to use this override
+   * unless this legacy conversion is triggering a massive number of reports and
+   * it is necessary to decrease the sampling rate to decrease the number of
+   * reports.
+   */
+  heartbeatRate?: number;
+
+  /**
+   * Override for how reports associated with this legacy conversion will be
+   * sent to the go/security-collector. It is generally not necessary to use
+   * this override unless a caller needs to change how reports are collected
+   * (e.g. choosing to collect them via a service's own collection
+   * infrastructure).
+   */
+  sendReport?: (url: string, data: string) => void;
+}
+
+/**
  * Turns a string into TrustedHTML for legacy API purposes.
  *
  * Please read fileoverview documentation before using.
  */
-export function legacyConversionToHtml(s: string): TrustedHTML {
-  return createHtml(s);
+export function legacyConversionToHtml(
+    s: string, options?: ReportingOptions): TrustedHTML {
+  const legacyHtml = createHtml(s);
+  if (!options || !isCallSampled(options)) {
+    return legacyHtml;
+  }
+  try {
+    maybeSendHeartbeat(options);
+    isChangedByEscaping(s, options);
+  } catch {
+    // Our reporting code crashed! Swallow (but report) the error so that the
+    // legacy conversion still works correctly no matter what.
+    try {
+      reportLegacyConversion(options, ReportingType.CRASHED);
+    } catch {
+      // Failed to send an error report! This should only happen if the security
+      // collector is down, which we monitor for. There is nothing else we can
+      // do at this point other than fail silently.
+    }
+  }
+  return legacyHtml;
+}
+
+function isCallSampled(options: ReportingOptions): boolean {
+  return Math.random() < (options.samplingRate ?? 0.001);
+}
+
+function maybeSendHeartbeat(options: ReportingOptions) {
+  if (Math.random() < (options.heartbeatRate ?? 0.01)) {
+    // Report a heartbeat signifying that the legacy conversion is being called
+    reportLegacyConversion(options, ReportingType.HEARTBEAT);
+  }
+}
+
+function isChangedByEscaping(s: string, options: ReportingOptions): boolean {
+  if (htmlEscape(s).toString() !== s) {
+    // The legacy conversion is being used with something other than plain
+    // text
+    reportLegacyConversion(options, ReportingType.HTML_CHANGED_BY_ESCAPING);
+    return true;
+  }
+  return false;
+}
+
+/**
+ * The type of the report
+ */
+enum ReportingType {
+  // The type if the report signifies just that the legacy conversion was
+  // called.
+  HEARTBEAT = 'HEARTBEAT',
+
+  // The type if the report signifies that the legacy conversion code crashed.
+  CRASHED = 'CRASHED',
+
+  // The type if the report signifies that escaping the input changed it.
+  HTML_CHANGED_BY_ESCAPING = 'H_ESCAPE',
+
+  // The type if the report signifies that escaping the input changed it.
+  HTML_CHANGED_BY_SANITIZING = 'H_SANITIZE',
+}
+
+function reportLegacyConversion(
+    options: ReportingOptions, type: ReportingType) {
+  const sendReport = options.sendReport || navigator.sendBeacon;
+  sendReport(
+      'https://csp.withgoogle.com/lcreport/' + options.reportingId,
+      JSON.stringify({
+        // TODO(b/205182814): Sent the hostname in the report too
+        'type': type,
+      }));
 }
 
 /**
