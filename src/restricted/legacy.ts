@@ -172,9 +172,9 @@ function reportLegacyConversion(
     options: ReportingOptions, type: ReportingType) {
   const sendReport = options.sendReport || navigator.sendBeacon;
   sendReport(
-      'https://csp.withgoogle.com/lcreport/' + options.reportingId,
+      'https://csp.withgoogle.com/csp/lcreport/' + options.reportingId,
       JSON.stringify({
-        // TODO(b/205182814): Sent the hostname in the report too
+        'host': window.location.hostname,
         'type': type,
       }));
 }

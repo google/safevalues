@@ -20,7 +20,7 @@ describe('legacy conversions', () => {
            }).toString())
         .toEqual('<html><b>hi</b></html>');
 
-    expect(collectedReports).toEqual([
+    expect(collectedReports.map(assertAndClearHostname)).toEqual([
       '{"type":"HEARTBEAT"}', '{"type":"H_ESCAPE"}'
     ])
   });
@@ -35,7 +35,9 @@ describe('legacy conversions', () => {
            }).toString())
         .toEqual('hi');
 
-    expect(collectedReports).toEqual(['{"type":"HEARTBEAT"}'])
+    expect(collectedReports.map(assertAndClearHostname)).toEqual([
+      '{"type":"HEARTBEAT"}'
+    ])
   });
   it('report-only conversion: low sampling rate', () => {
     const collectedReports: string[] = [];
@@ -48,6 +50,13 @@ describe('legacy conversions', () => {
            }).toString())
         .toEqual('<script>alert(0)</script>');
 
-    expect(collectedReports).toEqual([])
+    expect(collectedReports.map(assertAndClearHostname)).toEqual([])
   });
 });
+
+function assertAndClearHostname(report: string): any {
+  const parsed = JSON.parse(report) as any;
+  expect(parsed['host']).toBeTruthy();
+  delete parsed['host'];
+  return JSON.stringify(parsed);
+}
