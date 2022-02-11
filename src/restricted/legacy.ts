@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import '../environment/dev';
+
 import {htmlEscape} from '../builders/html_builders';
 import {createHtml} from '../internals/html_impl';
 import {createResourceUrl} from '../internals/resource_url_impl';
@@ -108,6 +110,9 @@ interface ReportingOptions {
  */
 export function legacyConversionToHtml(
     s: string, options?: ReportingOptions): TrustedHTML {
+  if (process.env.NODE_ENV !== 'production' && typeof s !== 'string') {
+    throw new Error('Expected a string');
+  }
   const legacyHtml = createHtml(s);
   if (!options || !isCallSampled(options)) {
     return legacyHtml;
@@ -185,6 +190,9 @@ function reportLegacyConversion(
  * Please read fileoverview documentation before using.
  */
 export function legacyConversionToScript(s: string): TrustedScript {
+  if (process.env.NODE_ENV !== 'production' && typeof s !== 'string') {
+    throw new Error('Expected a string');
+  }
   return createScript(s);
 }
 
@@ -194,5 +202,8 @@ export function legacyConversionToScript(s: string): TrustedScript {
  * Please read fileoverview documentation before using.
  */
 export function legacyConversionToScriptUrl(s: string): TrustedScriptURL {
+  if (process.env.NODE_ENV !== 'production' && typeof s !== 'string') {
+    throw new Error('Expected a string');
+  }
   return createResourceUrl(s);
 }
