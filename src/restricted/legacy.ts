@@ -175,13 +175,25 @@ enum ReportingType {
 
 function reportLegacyConversion(
     options: ReportingOptions, type: ReportingType) {
-  const sendReport = options.sendReport || navigator.sendBeacon;
+  const sendReport =
+      options.sendReport || navigator.sendBeacon || sendBeaconPolyfill;
   sendReport(
       'https://csp.withgoogle.com/csp/lcreport/' + options.reportingId,
       JSON.stringify({
         'host': window.location.hostname,
         'type': type,
       }));
+}
+
+/**
+ * A very naive polyfill for navigator.sendBeacon for browsers that don't
+ * support navigator.sendBeacon.
+ */
+function sendBeaconPolyfill(url: string, body: string) {
+  const req = new XMLHttpRequest();
+  req.open('POST', url);
+  req.setRequestHeader('Content-Type', 'application/json');
+  req.send(body);
 }
 
 /**

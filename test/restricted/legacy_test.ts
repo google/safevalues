@@ -39,6 +39,14 @@ describe('legacy conversions', () => {
       '{"type":"HEARTBEAT"}'
     ])
   });
+  it('report-only conversion: reports getting sent doesn\'t crash', () => {
+    expect(legacyConversionToHtml('<html><b>hi</b></html>', {
+             reportingId: 'legacy_conversion_unit_test',
+             samplingRate: 1.0,
+             heartbeatRate: 1.0,
+           }).toString())
+        .toEqual('<html><b>hi</b></html>');
+  });
   it('report-only conversion: low sampling rate', () => {
     const collectedReports: string[] = [];
 
