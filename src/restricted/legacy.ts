@@ -175,8 +175,8 @@ enum ReportingType {
 
 function reportLegacyConversion(
     options: ReportingOptions, type: ReportingType) {
-  const sendReport =
-      options.sendReport || navigator.sendBeacon || sendBeaconPolyfill;
+  const sendReport = options.sendReport ||
+      navigator.sendBeacon.bind(navigator) || sendBeaconPolyfill;
   sendReport(
       'https://csp.withgoogle.com/csp/lcreport/' + options.reportingId,
       JSON.stringify({
