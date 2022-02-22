@@ -124,6 +124,10 @@ function isValidPathStart(base: string): boolean {
  * `data:` (data URL) does not allow embedded expressions in the template
  * literal input.
  *
+ * All embedded expressions are URL encoded when they are interpolated. Do not
+ * embed expressions that are already URL encoded as they will be double encoded
+ * by the builder.
+ *
  * @param templateObj This contains the literal part of the template literal.
  * @param rest This represents the template's embedded expressions.
  */
@@ -167,9 +171,12 @@ export function scriptUrl(
 /**
  * Creates a new TrustedScriptURL with params added to the URL's search
  * parameters.
+ *
  * @param params What to add to the URL. Parameters with value `null` or
- * `undefined` are skipped. Both keys and values are encoded. If the value is
- * an array then the same parameter is added for every element in the array.
+ * `undefined` are skipped. Both keys and values will be encoded. Do not pass
+ * pre-encoded values as this will result them being double encoded. If the
+ * value is an array then the same parameter is added for every element in the
+ * array.
  */
 export function appendParams(
     trustedUrl: TrustedScriptURL,
