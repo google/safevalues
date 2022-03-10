@@ -7,8 +7,11 @@ import '../environment/dev';
 
 import {htmlEscape} from '../builders/html_builders';
 import {createHtml} from '../internals/html_impl';
+import {pure} from '../internals/pure';
 import {createResourceUrl} from '../internals/resource_url_impl';
 import {createScript} from '../internals/script_impl';
+
+
 
 /*
  * Transitional utilities to unsafely trust random strings as
@@ -169,8 +172,6 @@ enum ReportingType {
   // The type if the report signifies that escaping the input changed it.
   HTML_CHANGED_BY_ESCAPING = 'H_ESCAPE',
 
-  // The type if the report signifies that escaping the input changed it.
-  HTML_CHANGED_BY_SANITIZING = 'H_SANITIZE',
 }
 
 function reportLegacyConversion(
