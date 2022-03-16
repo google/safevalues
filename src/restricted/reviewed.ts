@@ -33,7 +33,7 @@ function assertValidJustification(justification: string) {
  * possible program states. An appropriate `justification` must be provided
  * explaining why this particular use of the function is safe.
  */
-export function htmlFromStringKnownToSatisfyTypeContract(
+export function htmlSafeByReview(
     html: string, justification: string): TrustedHTML {
   if (process.env.NODE_ENV !== 'production') {
     assertValidJustification(justification);
@@ -50,7 +50,7 @@ export function htmlFromStringKnownToSatisfyTypeContract(
  * all possible program states. An appropriate `justification` must be provided
  * explaining why this particular use of the function is safe.
  */
-export function scriptFromStringKnownToSatisfyTypeContract(
+export function scriptSafeByReview(
     script: string, justification: string): TrustedScript {
   if (process.env.NODE_ENV !== 'production') {
     assertValidJustification(justification);
@@ -67,7 +67,7 @@ export function scriptFromStringKnownToSatisfyTypeContract(
  * contract in all possible program states. An appropriate `justification` must
  * be provided explaining why this particular use of the function is safe.
  */
-export function scriptUrlFromStringKnownToSatisfyTypeContract(
+export function resourceUrlSafeByReview(
     url: string, justification: string): TrustedScriptURL {
   if (process.env.NODE_ENV !== 'production') {
     assertValidJustification(justification);
