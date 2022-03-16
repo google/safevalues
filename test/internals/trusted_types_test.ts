@@ -102,7 +102,7 @@ describe('Trusted Types in safevalues', () => {
   // evaluate the four possible states of Trusted Types enabled/disabled in the
   // library, and Trusted Types supported/not supported by the browser.
   const usesTrustedTypes = () => {
-    it('should be used by TrustedHTML', () => {
+    it('should be used by SafeHtml', () => {
       const safe = htmlEscape('aaa');
       expect(safe.toString()).toEqual('aaa');
       expect(unwrapHtmlAsString(safe)).toEqual('aaa');
@@ -131,7 +131,7 @@ describe('Trusted Types in safevalues', () => {
       expect(mockTrustedTypes.createPolicy).not.toHaveBeenCalled();
     });
 
-    it('should not be used by TrustedHTML', () => {
+    it('should not be used by SafeHtml', () => {
       const safe = htmlEscape('aaa');
       expect(safe.toString()).toEqual('aaa');
       expect(unwrapHtmlAsString(safe)).toEqual('aaa');

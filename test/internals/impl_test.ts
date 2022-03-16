@@ -19,7 +19,7 @@ interface Impl {
 
 const IMPLEMENTATIONS: Impl[] = [
   {
-    name: 'TrustedHTML',
+    name: 'SafeHtml',
     guard: isHtml,
     create: createHtml,
     unwrap: unwrapHtmlAsString,

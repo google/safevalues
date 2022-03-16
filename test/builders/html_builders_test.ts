@@ -154,7 +154,7 @@ describe('html_builders', () => {
   });
 
   describe('concatHtmls', () => {
-    it('concatenates `TrustedHTML` values', () => {
+    it('concatenates `SafeHtml` values', () => {
       const html1 = htmlEscape('a');
       const html2 = htmlEscape('b');
       expect(concatHtmls([html1, html2]).toString()).toEqual('ab');

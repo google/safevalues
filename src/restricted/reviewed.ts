@@ -5,7 +5,7 @@
 
 import '../environment/dev';
 
-import {createHtml} from '../internals/html_impl';
+import {createHtml, SafeHtml} from '../internals/html_impl';
 import {createResourceUrl} from '../internals/resource_url_impl';
 import {createScript} from '../internals/script_impl';
 
@@ -25,16 +25,16 @@ function assertValidJustification(justification: string) {
 }
 
 /**
- * Performs a "reviewed conversion" to TrustedHTML from a plain string that is
- * known to satisfy the TrustedHTML type contract.
+ * Performs a "reviewed conversion" to SafeHtml from a plain string that is
+ * known to satisfy the SafeHtml type contract.
  *
  * IMPORTANT: Uses of this method must be carefully security-reviewed to ensure
- * that the value of `html` satisfies the TrustedHTML type contract in all
+ * that the value of `html` satisfies the SafeHtml type contract in all
  * possible program states. An appropriate `justification` must be provided
  * explaining why this particular use of the function is safe.
  */
 export function htmlSafeByReview(
-    html: string, justification: string): TrustedHTML {
+    html: string, justification: string): SafeHtml {
   if (process.env.NODE_ENV !== 'production') {
     assertValidJustification(justification);
   }

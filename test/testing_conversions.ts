@@ -14,15 +14,15 @@
  * avoids, by design, non-contract complying instances from being created.
  */
 
-import {createHtml} from '../src/internals/html_impl';
+import {createHtml, SafeHtml} from '../src/internals/html_impl';
 import {createResourceUrl} from '../src/internals/resource_url_impl';
 import {createScript} from '../src/internals/script_impl';
 
 /**
- * Turns a string into TrustedHTML for testing purposes. This function is for
- * use in tests only and must never be used in production code.
+ * Turns a string into SafeHtml for testing purposes. This function is for use
+ * in tests only and must never be used in production code.
  */
-export function testonlyHtml(s: string): TrustedHTML {
+export function testonlyHtml(s: string): SafeHtml {
   return createHtml(s);
 }
 
