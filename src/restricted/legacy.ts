@@ -25,13 +25,13 @@ import {createScript} from '../internals/script_impl';
  * sanitizers. If that’s not possible it should use a reviewed conversion and
  * undergo security review.
  *
- * The semantics of the conversions in legacyconversions are very
+ * The semantics of the legacyUnsafe* conversions are very
  * different from the ones provided by reviewed conversions. The
  * latter are for use in code where it has been established through manual
  * security review that the value produced by a piece of code will always
  * satisfy the TrustedHTML contract (e.g., the output of a secure HTML
- * sanitizer). In uses of legacyconversions, this guarantee is not given -- the
- * value in question originates in unreviewed legacy code and there is no
+ * sanitizer). In uses of legacyUnsafe* conversions, this guarantee is not given
+ * -- the value in question originates in unreviewed legacy code and there is no
  * guarantee that it satisfies the TrustedHTML contract.
  *
  * There are only three valid uses of legacy conversions:
@@ -42,18 +42,18 @@ import {createScript} from '../internals/script_impl';
  * setContent method which takes a string and sets the innerHTML property of
  * an element with it. In this case a setHtmlContent function could be
  * added, consuming TrustedHTML instead of string. setContent could then
- * internally use legacyconversions to create a TrustedHTML from string and pass
- * the TrustedHTML to a safe values consumer down the line. In this scenario
- * remember to document the use of legacyconversions in the modified setContent
- * and consider deprecating it as well.
+ * internally use legacyUnhtml to create a TrustedHTML from string and pass the
+ * TrustedHTML to a safe values consumer down the line. In this scenario,
+ * remember to document the use of legacyUnhtml in the modified setContent and
+ * consider deprecating it as well.
  *
  * 2. Automated refactoring of application code which handles HTML as string
  * but needs to call a function which only takes safe values types. For example,
  * in the Dialog scenario from (1) an alternative option would be to refactor
  * setContent to accept TrustedHTML instead of string and then refactor
- * all current callers to use legacyconversions to pass TrustedHTML. This is
- * generally preferable to (1) because it keeps the library clean of
- * legacyconversions, and makes code sites in application code that are
+ * all current callers to use legacyUnsafe conversions to pass TrustedHTML. This
+ * is generally preferable to (1) because it keeps the library clean of
+ * legacyUnsafe conversions, and makes code sites in application code that are
  * potentially vulnerable to XSS more apparent.
  *
  * 3. Old code which needs to call APIs which consume safe values types and for
@@ -63,7 +63,7 @@ import {createScript} from '../internals/script_impl';
  */
 
 /**
- * Options for configuring {@link legacyConversionToHtml}.
+ * Options for configuring {@link legacyUnhtml}.
  */
 interface ReportingOptions {
   /**

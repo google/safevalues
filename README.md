@@ -182,11 +182,11 @@ context makes it possible to construct the value safely, it can be removed
 completely.
 
 ```typescript
-import {legacyConversionToScriptUrl} from 'safevalues/unsafe/legacy';
+import {legacyUnscriptUrl} from 'safevalues/unsafe/legacy';
 import {unwrapResourceUrl} from 'safevalues';
 
 // TODO: move legacyConversion to caller
-script.src = unwrapResourceUrl(legacyConversionToScriptUrl(url));
+script.src = unwrapResourceUrl(legacyUnscriptUrl(url));
 ```
 
 ### Reviewed conversions
@@ -205,11 +205,11 @@ If you are using tsec however, you can directly use a reviewed conversion which
 will let you create a polyfilled value & force you to provide a justification.
 
 ```typescript
-import {scriptFromStringKnownToSatisfyTypeContract} from 'safevalues/unsafe/reviewed';
+import {scriptSafeByReview} from 'safevalues/unsafe/reviewed';
 import {unwrapScript} from 'safevalues';
 
 if (document.domain === '') {
-    const scriptText = scriptFromStringKnownToSatisfyTypeContract(
+    const scriptText = scriptSafeByReview(
         userInput,
         `Even though the input is user controller, the wrapping if statement
          ensures that this code is only ever run in a sandboxed origin`);
