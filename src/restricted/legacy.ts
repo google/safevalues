@@ -111,7 +111,7 @@ interface ReportingOptions {
  *
  * Please read fileoverview documentation before using.
  */
-export function legacyConversionToHtml(
+export function legacyUnhtml(
     s: string, options?: ReportingOptions): TrustedHTML {
   if (process.env.NODE_ENV !== 'production' && typeof s !== 'string') {
     throw new Error('Expected a string');
@@ -202,7 +202,7 @@ function sendBeaconPolyfill(url: string, body: string) {
  *
  * Please read fileoverview documentation before using.
  */
-export function legacyConversionToScript(s: string): TrustedScript {
+export function legacyUnscript(s: string): TrustedScript {
   if (process.env.NODE_ENV !== 'production' && typeof s !== 'string') {
     throw new Error('Expected a string');
   }
@@ -214,7 +214,7 @@ export function legacyConversionToScript(s: string): TrustedScript {
  *
  * Please read fileoverview documentation before using.
  */
-export function legacyConversionToScriptUrl(s: string): TrustedScriptURL {
+export function legacyUnsafeResourceUrl(s: string): TrustedScriptURL {
   if (process.env.NODE_ENV !== 'production' && typeof s !== 'string') {
     throw new Error('Expected a string');
   }

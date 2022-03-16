@@ -1,18 +1,17 @@
 
-import {legacyConversionToHtml} from '../../src/restricted/legacy';
+import {legacyUnhtml} from '../../src/restricted/legacy';
 
 describe('legacy conversions', () => {
   it('safe HTML conversion with no options', () => {
-    expect(legacyConversionToHtml('<html><script>alert(0)</script></html>')
-               .toString())
+    expect(legacyUnhtml('<html><script>alert(0)</script></html>').toString())
         .toEqual('<html><script>alert(0)</script></html>');
-    expect(legacyConversionToHtml('<anything>at>all').toString())
+    expect(legacyUnhtml('<anything>at>all').toString())
         .toEqual('<anything>at>all');
   });
   it('report-only conversion: inactive HTML', () => {
     const collectedReports: string[] = [];
 
-    expect(legacyConversionToHtml('<html><b>hi</b></html>', {
+    expect(legacyUnhtml('<html><b>hi</b></html>', {
              reportingId: 'legacy_conversion_unit_test',
              samplingRate: 1.0,
              heartbeatRate: 1.0,
@@ -27,7 +26,7 @@ describe('legacy conversions', () => {
   it('report-only conversion: plaintext', () => {
     const collectedReports: string[] = [];
 
-    expect(legacyConversionToHtml('hi', {
+    expect(legacyUnhtml('hi', {
              reportingId: 'legacy_conversion_unit_test',
              samplingRate: 1.0,
              heartbeatRate: 1.0,
@@ -40,7 +39,7 @@ describe('legacy conversions', () => {
     ])
   });
   it('report-only conversion: reports getting sent doesn\'t crash', () => {
-    expect(legacyConversionToHtml('<html><b>hi</b></html>', {
+    expect(legacyUnhtml('<html><b>hi</b></html>', {
              reportingId: 'legacy_conversion_unit_test',
              samplingRate: 1.0,
              heartbeatRate: 1.0,
@@ -50,7 +49,7 @@ describe('legacy conversions', () => {
   it('report-only conversion: low sampling rate', () => {
     const collectedReports: string[] = [];
 
-    expect(legacyConversionToHtml('<script>alert(0)</script>', {
+    expect(legacyUnhtml('<script>alert(0)</script>', {
              reportingId: 'legacy_conversion_unit_test',
              samplingRate: 0.0,
              heartbeatRate: 0.0,
