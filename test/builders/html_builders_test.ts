@@ -5,7 +5,7 @@
 
 import {concatHtmls, createScript, createScriptSrc, htmlEscape} from '../../src/builders/html_builders';
 import {script, scriptFromJson} from '../../src/builders/script_builders';
-import {testingConversionToScriptUrl} from '../testing_conversions';
+import {testonlyResourceUrl} from '../testing_conversions';
 
 describe('html_builders', () => {
   describe('htmlEscape', () => {
@@ -131,26 +131,22 @@ describe('html_builders', () => {
 
   describe('createScriptSrc', () => {
     it('builds the right tags', () => {
-      expect(createScriptSrc(testingConversionToScriptUrl('//abc<')).toString())
+      expect(createScriptSrc(testonlyResourceUrl('//abc<')).toString())
           .toEqual('<script src="//abc&lt;"></script>');
-      expect(createScriptSrc(testingConversionToScriptUrl('//abc<'), true)
-                 .toString())
+      expect(createScriptSrc(testonlyResourceUrl('//abc<'), true).toString())
           .toEqual('<script src="//abc&lt;" async></script>');
-      expect(createScriptSrc(testingConversionToScriptUrl('//abc<'), false)
-                 .toString())
+      expect(createScriptSrc(testonlyResourceUrl('//abc<'), false).toString())
           .toEqual('<script src="//abc&lt;"></script>');
-      expect(
-          createScriptSrc(testingConversionToScriptUrl('//abc<'), false, '123')
-              .toString())
+      expect(createScriptSrc(testonlyResourceUrl('//abc<'), false, '123')
+                 .toString())
           .toEqual('<script src="//abc&lt;" nonce="123"></script>');
-      expect(
-          createScriptSrc(testingConversionToScriptUrl('//abc<<'), false, '123')
-              .toString())
+      expect(createScriptSrc(testonlyResourceUrl('//abc<<'), false, '123')
+                 .toString())
           .toEqual('<script src="//abc&lt;&lt;" nonce="123"></script>');
     });
 
     it('escapes attributes', () => {
-      const url = testingConversionToScriptUrl('//a?b&c');
+      const url = testonlyResourceUrl('//a?b&c');
       expect(createScriptSrc(url, false, `"'&`).toString())
           .toEqual(
               '<script src="//a?b&amp;c" nonce="&quot;&apos;&amp;"></script>');
