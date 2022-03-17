@@ -14,30 +14,30 @@
  * avoids, by design, non-contract complying instances from being created.
  */
 
-import {createHtml} from '../src/internals/html_impl';
-import {createResourceUrl} from '../src/internals/resource_url_impl';
-import {createScript} from '../src/internals/script_impl';
+import {createHtml, SafeHtml} from '../src/internals/html_impl';
+import {createResourceUrl, TrustedResourceUrl} from '../src/internals/resource_url_impl';
+import {createScript, SafeScript} from '../src/internals/script_impl';
 
 /**
- * Turns a string into TrustedHTML for testing purposes. This function is for
- * use in tests only and must never be used in production code.
+ * Turns a string into SafeHtml for testing purposes. This function is for use
+ * in tests only and must never be used in production code.
  */
-export function testonlyHtml(s: string): TrustedHTML {
+export function testonlyHtml(s: string): SafeHtml {
   return createHtml(s);
 }
 
 /**
- * Turns a string into TrustedScript for testing API purposes. This function is
- * for use in tests only and must never be used in production code.
+ * Turns a string into SafeScript for testing API purposes. This function is for
+ * use in tests only and must never be used in production code.
  */
-export function testonlyScript(s: string): TrustedScript {
+export function testonlyScript(s: string): SafeScript {
   return createScript(s);
 }
 
 /**
- * Turns a string into TrustedScriptURL for testing purposes. This function is
+ * Turns a string into TrustedResourceUrl for testing purposes. This function is
  * for use in tests only and must never be used in production code.
  */
-export function testonlyResourceUrl(s: string): TrustedScriptURL {
+export function testonlyResourceUrl(s: string): TrustedResourceUrl {
   return createResourceUrl(s);
 }

@@ -9,11 +9,13 @@ import '../environment/dev';
 import {ensureTokenIsValid, secretToken} from './secrets';
 import {getTrustedTypes, getTrustedTypesPolicy} from './trusted_types';
 
-/** Implementation for `TrustedScript` */
-class ScriptImpl {
-  readonly privateDoNotAccessOrElseWrappedScript: string;
+export type SafeScript = globalThis.TrustedScript;
 
-  constructor(script: string, token: object) {
+/** Implementation for `SafeScript` */
+class ScriptImpl {
+  readonly privateDoNotAccessOrElseWrappedScript: TrustedScript|string;
+
+  constructor(script: TrustedScript|string, token: object) {
     if (process.env.NODE_ENV !== 'production') {
       ensureTokenIsValid(token);
     }
@@ -26,17 +28,17 @@ class ScriptImpl {
 }
 
 function createScriptInternal(
-    script: string, trusted?: TrustedScript): TrustedScript {
-  return (trusted ?? new ScriptImpl(script, secretToken)) as TrustedScript;
+    script: string, trusted?: TrustedScript): SafeScript {
+  return (trusted ?? new ScriptImpl(script, secretToken)) as SafeScript;
 }
 
 /**
- * Builds a new `TrustedScript` from the given string, without enforcing
+ * Builds a new `SafeScript` from the given string, without enforcing
  * safety guarantees. It may cause side effects by creating a Trusted Types
  * policy. This shouldn't be exposed to application developers, and must only be
  * used as a step towards safe builders or safe constants.
  */
-export function createScript(script: string): TrustedScript {
+export function createScript(script: string): SafeScript {
   /** @noinline */
   const noinlineScript = script;
   return createScriptInternal(
@@ -44,17 +46,17 @@ export function createScript(script: string): TrustedScript {
 }
 
 /**
- * An empty `TrustedScript` constant.
+ * An empty `SafeScript` constant.
  * Unlike the functions above, using this will not create a policy.
  */
-export const EMPTY_SCRIPT: TrustedScript =
+export const EMPTY_SCRIPT: SafeScript =
     /* #__PURE__ */ (
         () => createScriptInternal('', getTrustedTypes()?.emptyScript))();
 
 /**
- * Checks if the given value is a `TrustedScript` instance.
+ * Checks if the given value is a `SafeScript`.
  */
-export function isScript(value: unknown): value is TrustedScript {
+export function isScript(value: unknown): value is SafeScript {
   if (getTrustedTypes()?.isScript(value)) {
     return true;
   }
@@ -62,7 +64,7 @@ export function isScript(value: unknown): value is TrustedScript {
 }
 
 /**
- * Returns the value of the passed `TrustedScript` object while ensuring it
+ * Returns the value of the passed `SafeScript` object while ensuring it
  * has the correct type.
  *
  * Returns a native `TrustedScript` or a string if Trusted Types are disabled.
@@ -75,7 +77,7 @@ export function isScript(value: unknown): value is TrustedScript {
  * use any string functions on the result as that will fail in browsers
  * supporting Trusted Types.
  */
-export function unwrapScript(value: TrustedScript): TrustedScript&string {
+export function unwrapScript(value: SafeScript): TrustedScript&string {
   if (getTrustedTypes()?.isScript(value)) {
     return value as TrustedScript & string;
   }
@@ -85,7 +87,7 @@ export function unwrapScript(value: TrustedScript): TrustedScript&string {
   } else {
     let message = '';
     if (process.env.NODE_ENV !== 'production') {
-      message = 'Unexpected type when unwrapping TrustedScript';
+      message = 'Unexpected type when unwrapping SafeScript';
     }
     throw new Error(message);
   }
@@ -97,7 +99,7 @@ export function unwrapScript(value: TrustedScript): TrustedScript&string {
  * Also ensures to return the right string value for `TrustedScript` objects if
  * the `toString function has been overwritten on the object.
  */
-export function unwrapScriptAsString(value: TrustedScript): string {
+export function unwrapScriptAsString(value: SafeScript): string {
   const unwrapped = unwrapScript(value);
   if (getTrustedTypes()?.isScript(unwrapped)) {
     // TODO: Remove once the spec freezes instances of `TrustedScript`.
@@ -106,3 +108,12 @@ export function unwrapScriptAsString(value: TrustedScript): string {
     return unwrapped;
   }
 }
+
+/**
+ * JavaScript code that is safe to evaluate and use as the content of an HTML
+ * script element.
+ */
+export const SafeScript =
+    (window.TrustedScript ?? ScriptImpl) as typeof window.TrustedScript;
+
+export {SafeScript as TrustedScript};

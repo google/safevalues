@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {createHtml, isHtml, unwrapHtmlAsString} from '../../src/internals/html_impl';
-import {createResourceUrl, isResourceUrl, unwrapResourceUrlAsString} from '../../src/internals/resource_url_impl';
-import {createScript, isScript, unwrapScriptAsString} from '../../src/internals/script_impl';
+import {createHtml, isHtml, SafeHtml, unwrapHtmlAsString} from '../../src/internals/html_impl';
+import {createResourceUrl, isResourceUrl, TrustedResourceUrl, unwrapResourceUrlAsString} from '../../src/internals/resource_url_impl';
+import {createScript, isScript, SafeScript, unwrapScriptAsString} from '../../src/internals/script_impl';
 
 interface Impl {
   name: string;
@@ -19,19 +19,19 @@ interface Impl {
 
 const IMPLEMENTATIONS: Impl[] = [
   {
-    name: 'TrustedHTML',
+    name: 'SafeHtml',
     guard: isHtml,
     create: createHtml,
     unwrap: unwrapHtmlAsString,
   },
   {
-    name: 'TrustedScript',
+    name: 'SafeScript',
     guard: isScript,
     create: createScript,
     unwrap: unwrapScriptAsString,
   },
   {
-    name: 'TrustedScriptURL',
+    name: 'TrustedResourceUrl',
     guard: isResourceUrl,
     create: createResourceUrl,
     unwrap: unwrapResourceUrlAsString,

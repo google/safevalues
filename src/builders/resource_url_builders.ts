@@ -5,8 +5,8 @@
 
 import '../environment/dev';
 
-import {createResourceUrl, unwrapResourceUrlAsString} from '../internals/resource_url_impl';
-import {unwrapScriptAsString} from '../internals/script_impl';
+import {createResourceUrl, TrustedResourceUrl, unwrapResourceUrlAsString} from '../internals/resource_url_impl';
+import {SafeScript, unwrapScriptAsString} from '../internals/script_impl';
 import {assertIsTemplateObject} from '../internals/string_literal';
 
 /** Type that we know how to interpolate */
@@ -17,7 +17,7 @@ type Primitive = string|number|boolean;
  *
  * A string for an origin must contain only alphanumeric or any of the
  * following: `-.:`, and must not be an IP address. Remember that, as per the
- * documentation for TrustedScriptURL, the origin must be trustworthy.
+ * documentation for TrustedResourceUrl, the origin must be trustworthy.
  *
  * @param base The base url that contains an origin.
  */
@@ -88,13 +88,13 @@ function isValidPathStart(base: string): boolean {
 }
 
 /**
- * Builds TrustedScriptURL from a template literal.
+ * Builds TrustedResourceUrl from a template literal.
  *
  * This factory is a template literal tag function. It should be called with
  * a template literal, with or without embedded expressions. For example,
- *               scriptUrl`//example.com/${bar}`;
+ *               trustedResourceUrl`//example.com/${bar}`;
  * or
- *               scriptUrl`//example.com`;
+ *               trustedResourceUrl`//example.com`;
  *
  * When this function is called with a template literal without any embedded
  * expressions, the template string may contain anything as the whole URL is
@@ -109,7 +109,7 @@ function isValidPathStart(base: string): boolean {
  * - `data:`
  *
  * `<origin>` must contain only alphanumeric or any of the following: `-.:`.
- * Remember that, as per the documentation for TrustedScriptURL, the origin
+ * Remember that, as per the documentation for TrustedResourceUrl, the origin
  * must be trustworthy. An origin of "example.com" could be set with this
  * method, but would tie the security of your site to the security of
  * example.com. Similarly, formats that potentially cover redirects hosted
@@ -131,14 +131,15 @@ function isValidPathStart(base: string): boolean {
  * @param templateObj This contains the literal part of the template literal.
  * @param rest This represents the template's embedded expressions.
  */
-export function scriptUrl(
-    templateObj: TemplateStringsArray, ...rest: Primitive[]): TrustedScriptURL {
+export function trustedResourceUrl(
+    templateObj: TemplateStringsArray,
+    ...rest: Primitive[]): TrustedResourceUrl {
   // Check if templateObj is actually from a template literal.
   if (process.env.NODE_ENV !== 'production') {
     assertIsTemplateObject(
         templateObj, true,
-        'scriptUrl is a template literal tag function and ' +
-            'can only be called as such (e.g. scriptUrl`/somepath.js`)');
+        'trustedResourceUrl is a template literal tag function and ' +
+            'can only be called as such (e.g. trustedResourceUrl`/somepath.js`)');
   }
 
   if (rest.length === 0) {
@@ -169,7 +170,7 @@ export function scriptUrl(
 }
 
 /**
- * Creates a new TrustedScriptURL with params added to the URL's search
+ * Creates a new TrustedResourceUrl with params added to the URL's search
  * parameters.
  *
  * @param params What to add to the URL. Parameters with value `null` or
@@ -179,9 +180,9 @@ export function scriptUrl(
  * array.
  */
 export function appendParams(
-    trustedUrl: TrustedScriptURL,
+    trustedUrl: TrustedResourceUrl,
     params: Map<string, Primitive|null|Array<Primitive|null>>):
-    TrustedScriptURL {
+    TrustedResourceUrl {
   let url = unwrapResourceUrlAsString(trustedUrl);
   if (/#/.test(url)) {
     let message = '';
@@ -211,28 +212,28 @@ export function appendParams(
 const BEFORE_FRAGMENT_REGEXP = /[^#]*/;
 
 /**
- * Creates a new TrustedScriptURL based on an existing one but with the
+ * Creates a new TrustedResourceUrl based on an existing one but with the
  * addition of a fragment (the part after `#`). If the URL already has a
  * fragment, it is replaced with the new one.
  * @param fragment The fragment to add to the URL, verbatim, without the leading
  * `#`. No additional escaping is applied.
  */
 export function replaceFragment(
-    trustedUrl: TrustedScriptURL, fragment: string) {
+    trustedUrl: TrustedResourceUrl, fragment: string) {
   const urlString = unwrapResourceUrlAsString(trustedUrl);
   return createResourceUrl(
       BEFORE_FRAGMENT_REGEXP.exec(urlString)![0] + '#' + fragment);
 }
 
 /**
- * Creates a `TrustedScriptURL` by generating a `Blob` from a
- * `TrustedScript` and then calling `URL.createObjectURL` with that `Blob`.
+ * Creates a `TrustedResourceUrl` by generating a `Blob` from a
+ * `SafeScript` and then calling `URL.createObjectURL` with that `Blob`.
  *
  * Caller must call `URL.revokeObjectUrl()` on the stringified url to
  * release the underlying `Blob`.
  */
-export function blobUrlFromScript(script: TrustedScript): TrustedScriptURL {
-  const scriptContent = unwrapScriptAsString(script);
+export function blobUrlFromScript(safeScript: SafeScript): TrustedResourceUrl {
+  const scriptContent = unwrapScriptAsString(safeScript);
   const blob = new Blob([scriptContent], {type: 'text/javascript'});
   return createResourceUrl(URL.createObjectURL(blob));
 }

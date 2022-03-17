@@ -9,7 +9,10 @@ import '../environment/dev';
 import {ensureTokenIsValid, secretToken} from './secrets';
 import {getTrustedTypes, getTrustedTypesPolicy} from './trusted_types';
 
-/** Implementation for `TrustedHTML` */
+
+/**
+ * Runtime implementation of `TrustedHTML` in browsers that don't support it.
+ */
 class HtmlImpl {
   readonly privateDoNotAccessOrElseWrappedHtml: string;
 
@@ -25,17 +28,31 @@ class HtmlImpl {
   }
 }
 
-function createHtmlInternal(html: string, trusted?: TrustedHTML): TrustedHTML {
-  return (trusted ?? new HtmlImpl(html, secretToken)) as TrustedHTML;
+function createHtmlInternal(html: string, trusted?: TrustedHTML): SafeHtml {
+  return (trusted ?? new HtmlImpl(html, secretToken)) as SafeHtml;
 }
 
+const GlobalTrustedHTML =
+    (typeof window !== undefined) ? window.TrustedHTML : undefined;
+
 /**
- * Builds a new `TrustedHTML` from the given string, without enforcing safety
+ * String that is safe to use in HTML contexts in DOM APIs and HTML
+ documents.
+ */
+export type SafeHtml = TrustedHTML;
+
+/**
+ * Also exports the constructor so that instanceof checks work.
+ */
+export const SafeHtml = (GlobalTrustedHTML ?? HtmlImpl) as typeof TrustedHTML;
+
+/**
+ * Builds a new `SafeHtml` from the given string, without enforcing safety
  * guarantees. It may cause side effects by creating a Trusted Types policy.
  * This shouldn't be exposed to application developers, and must only be used as
  * a step towards safe builders or safe constants.
  */
-export function createHtml(html: string): TrustedHTML {
+export function createHtml(html: string): SafeHtml {
   /** @noinline */
   const noinlineHtml = html;
   return createHtmlInternal(
@@ -43,25 +60,22 @@ export function createHtml(html: string): TrustedHTML {
 }
 
 /**
- * An empty `TrustedHTML` constant.
+ * An empty `SafeHtml` constant.
  * Unlike the function above, using this will not create a policy.
  */
-export const EMPTY_HTML: TrustedHTML =
+export const EMPTY_HTML: SafeHtml =
     /* #__PURE__ */ (
         () => createHtmlInternal('', getTrustedTypes()?.emptyHTML))();
 
 /**
- * Checks if the given value is a `TrustedHTML` instance.
+ * Checks if the given value is a `SafeHtml` instance.
  */
-export function isHtml(value: unknown): value is TrustedHTML {
-  if (getTrustedTypes()?.isHTML(value)) {
-    return true;
-  }
-  return value instanceof HtmlImpl;
+export function isHtml(value: unknown): value is SafeHtml {
+  return value instanceof SafeHtml;
 }
 
 /**
- * Returns the value of the passed `TrustedHTML` object while ensuring it
+ * Returns the value of the passed `SafeHtml` object while ensuring it
  * has the correct type.
  *
  * Returns a native `TrustedHTML` or a string if Trusted Types are disabled.
@@ -74,7 +88,7 @@ export function isHtml(value: unknown): value is TrustedHTML {
  * use any string functions on the result as that will fail in browsers
  * supporting Trusted Types.
  */
-export function unwrapHtml(value: TrustedHTML): TrustedHTML&string {
+export function unwrapHtml(value: SafeHtml): TrustedHTML&string {
   if (getTrustedTypes()?.isHTML(value)) {
     return value as TrustedHTML & string;
   }
@@ -84,7 +98,7 @@ export function unwrapHtml(value: TrustedHTML): TrustedHTML&string {
   } else {
     let message = '';
     if (process.env.NODE_ENV !== 'production') {
-      message = 'Unexpected type when unwrapping TrustedHTML';
+      message = 'Unexpected type when unwrapping SafeHtml';
     }
     throw new Error(message);
   }
@@ -96,7 +110,7 @@ export function unwrapHtml(value: TrustedHTML): TrustedHTML&string {
  * Also ensures to return the right string value for `TrustedHTML` objects if
  * the `toString` function has been overwritten on the object.
  */
-export function unwrapHtmlAsString(value: TrustedHTML): string {
+export function unwrapHtmlAsString(value: SafeHtml): string {
   const unwrapped = unwrapHtml(value);
   if (getTrustedTypes()?.isHTML(unwrapped)) {
     // TODO: Remove once the spec freezes instances of `TrustedHTML`.
