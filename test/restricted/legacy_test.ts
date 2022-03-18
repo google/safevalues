@@ -64,6 +64,7 @@ describe('legacy conversions', () => {
 function assertAndClearHostname(report: string): any {
   const parsed = JSON.parse(report) as any;
   expect(parsed['host']).toBeTruthy();
+  expect(parsed['host']).toBeInstanceOf(String);
   delete parsed['host'];
   return JSON.stringify(parsed);
 }
