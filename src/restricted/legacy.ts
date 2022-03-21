@@ -7,7 +7,6 @@ import '../environment/dev';
 
 import {htmlEscape} from '../builders/html_builders';
 import {createHtml} from '../internals/html_impl';
-import {pure} from '../internals/pure';
 import {createResourceUrl} from '../internals/resource_url_impl';
 import {createScript} from '../internals/script_impl';
 
