@@ -1,17 +1,18 @@
 
-import {legacyUnhtml} from '../../src/restricted/legacy';
+import {legacyUnsafeHtml} from '../../src/restricted/legacy';
 
 describe('legacy conversions', () => {
   it('safe HTML conversion with no options', () => {
-    expect(legacyUnhtml('<html><script>alert(0)</script></html>').toString())
+    expect(
+        legacyUnsafeHtml('<html><script>alert(0)</script></html>').toString())
         .toEqual('<html><script>alert(0)</script></html>');
-    expect(legacyUnhtml('<anything>at>all').toString())
+    expect(legacyUnsafeHtml('<anything>at>all').toString())
         .toEqual('<anything>at>all');
   });
   it('report-only conversion: inactive HTML', () => {
     const collectedReports: string[] = [];
 
-    expect(legacyUnhtml('<html><b>hi</b></html>', {
+    expect(legacyUnsafeHtml('<html><b>hi</b></html>', {
              reportingId: 'legacy_conversion_unit_test',
              samplingRate: 1.0,
              heartbeatRate: 1.0,
@@ -26,7 +27,7 @@ describe('legacy conversions', () => {
   it('report-only conversion: plaintext', () => {
     const collectedReports: string[] = [];
 
-    expect(legacyUnhtml('hi', {
+    expect(legacyUnsafeHtml('hi', {
              reportingId: 'legacy_conversion_unit_test',
              samplingRate: 1.0,
              heartbeatRate: 1.0,
@@ -39,7 +40,7 @@ describe('legacy conversions', () => {
     ])
   });
   it('report-only conversion: reports getting sent doesn\'t crash', () => {
-    expect(legacyUnhtml('<html><b>hi</b></html>', {
+    expect(legacyUnsafeHtml('<html><b>hi</b></html>', {
              reportingId: 'legacy_conversion_unit_test',
              samplingRate: 1.0,
              heartbeatRate: 1.0,
@@ -49,7 +50,7 @@ describe('legacy conversions', () => {
   it('report-only conversion: low sampling rate', () => {
     const collectedReports: string[] = [];
 
-    expect(legacyUnhtml('<script>alert(0)</script>', {
+    expect(legacyUnsafeHtml('<script>alert(0)</script>', {
              reportingId: 'legacy_conversion_unit_test',
              samplingRate: 0.0,
              heartbeatRate: 0.0,
