@@ -21,8 +21,8 @@
   "scripts": {
     "build": "yarn && tsc",
     "ibuild": "yarn && tsc --watch",
-    "test": "yarn build && karma start --browsers ChromeHeadless --single-run",
-    "itest": "yarn build && karma start --browsers ChromeHeadless",
+    "test": "yarn build && karma start --browsers ChromeHeadless,FirefoxHeadless --single-run",
+    "itest": "yarn build && karma start --browsers ChromeHeadless,FirefoxHeadless",
     "prepack": "yarn test && mv dist/src/* .",
     "postpack": "mv restricted internals builders environment index.* dist/src/"
   },
@@ -31,8 +31,9 @@
     "@types/node": "*",
     "@types/trusted-types": "^1.0.6",
     "jasmine-core": "^3.6.0",
-    "karma": "^5.2.3",
+    "karma": "^6.3.17",
     "karma-chrome-launcher": "^3.1.0",
+    "karma-firefox-launcher": "^2.1.2",
     "karma-jasmine": "^4.0.1",
     "karma-spec-reporter": "^0.0.32",
     "karma-typescript": "^5.2.0",

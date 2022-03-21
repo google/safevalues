@@ -9,6 +9,7 @@ module.exports = (config) => {
     plugins: [
       'karma-jasmine',
       'karma-chrome-launcher',
+      'karma-firefox-launcher',
       'karma-typescript',
       'karma-spec-reporter',
     ],
@@ -29,7 +30,7 @@ module.exports = (config) => {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['Chrome'],
+    browsers: ['Chrome', 'Firefox'],
     singleRun: false,
   })
 }
