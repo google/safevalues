@@ -6,9 +6,9 @@
 import '../environment/dev';
 
 import {htmlEscape} from '../builders/html_builders';
-import {createHtml} from '../internals/html_impl';
-import {createResourceUrl} from '../internals/resource_url_impl';
-import {createScript} from '../internals/script_impl';
+import {createHtml, SafeHtml} from '../internals/html_impl';
+import {createResourceUrl, TrustedResourceUrl} from '../internals/resource_url_impl';
+import {createScript, SafeScript} from '../internals/script_impl';
 
 
 
@@ -28,10 +28,10 @@ import {createScript} from '../internals/script_impl';
  * different from the ones provided by reviewed conversions. The
  * latter are for use in code where it has been established through manual
  * security review that the value produced by a piece of code will always
- * satisfy the TrustedHTML contract (e.g., the output of a secure HTML
- * sanitizer). In uses of legacyconversions, this guarantee is not given -- the
+ * satisfy the SafeHtml contract (e.g., the output of a secure HTML sanitizer).
+ * In uses of legacyconversions, this guarantee is not given -- the
  * value in question originates in unreviewed legacy code and there is no
- * guarantee that it satisfies the TrustedHTML contract.
+ * guarantee that it satisfies the SafeHtml contract.
  *
  * There are only three valid uses of legacy conversions:
  *
@@ -39,18 +39,18 @@ import {createScript} from '../internals/script_impl';
  * string and passes that string to a DOM API which can execute script - and
  * hence cause XSS - like innerHTML. For example, Dialog might expose a
  * setContent method which takes a string and sets the innerHTML property of
- * an element with it. In this case a setHtmlContent function could be
- * added, consuming TrustedHTML instead of string. setContent could then
- * internally use legacyconversions to create a TrustedHTML from string and pass
- * the TrustedHTML to a safe values consumer down the line. In this scenario
- * remember to document the use of legacyconversions in the modified setContent
- * and consider deprecating it as well.
+ * an element with it. In this case a setSafeHtmlContent function could be
+ * added, consuming SafeHtml instead of string. setContent could then internally
+ *  use legacyconversions to create a SafeHtml
+ * from string and pass the SafeHtml to a safe values consumer down the line. In
+ * this scenario remember to document the use of legacyconversions in the
+ * modified setContent and consider deprecating it as well.
  *
  * 2. Automated refactoring of application code which handles HTML as string
  * but needs to call a function which only takes safe values types. For example,
  * in the Dialog scenario from (1) an alternative option would be to refactor
- * setContent to accept TrustedHTML instead of string and then refactor
- * all current callers to use legacyconversions to pass TrustedHTML. This is
+ * setContent to accept SafeHtml instead of string and then refactor
+ * all current callers to use legacyconversions to pass SafeHtml. This is
  * generally preferable to (1) because it keeps the library clean of
  * legacyconversions, and makes code sites in application code that are
  * potentially vulnerable to XSS more apparent.
@@ -62,7 +62,7 @@ import {createScript} from '../internals/script_impl';
  */
 
 /**
- * Options for configuring {@link legacyConversionToHtml}.
+ * Options for configuring {@link legacyConversionToSafeHtml}.
  */
 interface ReportingOptions {
   /**
@@ -106,18 +106,18 @@ interface ReportingOptions {
 }
 
 /**
- * Turns a string into TrustedHTML for legacy API purposes.
+ * Turns a string into SafeHtml for legacy API purposes.
  *
  * Please read fileoverview documentation before using.
  */
-export function legacyUnhtml(
-    s: string, options?: ReportingOptions): TrustedHTML {
+export function legacyUnsafeHtml(
+    s: string, options?: ReportingOptions): SafeHtml {
   if (process.env.NODE_ENV !== 'production' && typeof s !== 'string') {
     throw new Error('Expected a string');
   }
-  const legacyHtml = createHtml(s);
+  const legacySafeHtml = createHtml(s);
   if (!options || !isCallSampled(options)) {
-    return legacyHtml;
+    return legacySafeHtml;
   }
   try {
     maybeSendHeartbeat(options);
@@ -133,7 +133,7 @@ export function legacyUnhtml(
       // do at this point other than fail silently.
     }
   }
-  return legacyHtml;
+  return legacySafeHtml;
 }
 
 function isCallSampled(options: ReportingOptions): boolean {
@@ -197,11 +197,11 @@ function sendBeaconPolyfill(url: string, body: string) {
 }
 
 /**
- * Turns a string into TrustedScript for legacy API purposes.
+ * Turns a string into SafeScript for legacy API purposes.
  *
  * Please read fileoverview documentation before using.
  */
-export function legacyUnscript(s: string): TrustedScript {
+export function legacyUnsafeScript(s: string): SafeScript {
   if (process.env.NODE_ENV !== 'production' && typeof s !== 'string') {
     throw new Error('Expected a string');
   }
@@ -209,11 +209,11 @@ export function legacyUnscript(s: string): TrustedScript {
 }
 
 /**
- * Turns a string into TrustedScriptURL for legacy API purposes.
+ * Turns a string into TrustedResourceUrl for legacy API purposes.
  *
  * Please read fileoverview documentation before using.
  */
-export function legacyUnsafeResourceUrl(s: string): TrustedScriptURL {
+export function legacyUnsafeResourceUrl(s: string): TrustedResourceUrl {
   if (process.env.NODE_ENV !== 'production' && typeof s !== 'string') {
     throw new Error('Expected a string');
   }

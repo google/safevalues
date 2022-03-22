@@ -3,25 +3,26 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {concatScripts, script, scriptFromJson, scriptWithArgs} from '../../src/builders/script_builders';
+import {concatScripts, safeScript, safeScriptWithArgs, scriptFromJson} from '../../src/builders/script_builders';
+import {SafeScript} from '../../src/internals/script_impl';
 
 describe('script_builders', () => {
-  describe('script', () => {
+  describe('safeScript', () => {
     it('can build a simple script', () => {
-      expect(script`return this;`.toString()).toEqual('return this;');
+      expect(safeScript`return this;`.toString()).toEqual('return this;');
     });
 
     it('rejects any interpolation', () => {
-      const castScript = script as (arr: TemplateStringsArray, str: string) =>
-                             TrustedScript;
-      expect(() => castScript`return ${'this'};`).toThrowError();
+      const castSafeScript =
+          safeScript as (arr: TemplateStringsArray, str: string) => SafeScript;
+      expect(() => castSafeScript`return ${'this'};`).toThrowError();
     });
   });
 
   describe('concatScripts', () => {
-    it('concatenates `TrustedScript` values', () => {
-      const script1 = script`1;`;
-      const script2 = script`2;`;
+    it('concatenates `SafeScript` values', () => {
+      const script1 = safeScript`1;`;
+      const script2 = safeScript`2;`;
       expect(concatScripts([script1, script2]).toString()).toEqual('1;2;');
     });
   });
@@ -39,10 +40,10 @@ describe('script_builders', () => {
     });
   });
 
-  describe('scriptWithArgs', () => {
+  describe('safeScriptWithArgs', () => {
     it('can build a simple script with arguments',
        () => {
-         expect(scriptWithArgs`function (a, b, c) {
+         expect(safeScriptWithArgs`function (a, b, c) {
   console.log(a, b, c);
 }`(['hello', 123, null], 'test',
    {'key': 'value'}).toString())
@@ -52,19 +53,20 @@ describe('script_builders', () => {
        });
 
     it('escapes < signs', () => {
-      expect(scriptWithArgs`alert`('</script</script').toString())
+      expect(safeScriptWithArgs`alert`('</script</script').toString())
           .toEqual(`(alert)("\\x3c/script\\x3c/script")`);
     });
 
     it('rejects any interpolation', () => {
-      const castScriptWithArgs =
-          scriptWithArgs as (arr: TemplateStringsArray, str: string) =>
-              (arg: string) => TrustedScript;
-      expect(() => castScriptWithArgs`${'console.log'}`('test')).toThrowError();
+      const castSafeScriptWithArgs =
+          safeScriptWithArgs as (arr: TemplateStringsArray, str: string) =>
+              (arg: string) => SafeScript;
+      expect(() => castSafeScriptWithArgs`${'console.log'}`('test'))
+          .toThrowError();
     });
 
     it('allows inline comments', () => {
-      expect(scriptWithArgs`function (a) {${/* Just a simple comment */ ''}
+      expect(safeScriptWithArgs`function (a) {${/* Just a simple comment */ ''}
   console.log(a);
 }`('arg').toString())
           .toEqual(`(function (a) {

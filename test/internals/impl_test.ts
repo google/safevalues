@@ -6,6 +6,9 @@
 import {createHtml, isHtml, unwrapHtmlAsString} from '../../src/internals/html_impl';
 import {createResourceUrl, isResourceUrl, unwrapResourceUrlAsString} from '../../src/internals/resource_url_impl';
 import {createScript, isScript, unwrapScriptAsString} from '../../src/internals/script_impl';
+import {createStyle, isStyle, unwrapStyle} from '../../src/internals/style_impl';
+import {createStyleSheet, isStyleSheet, unwrapStyleSheet} from '../../src/internals/style_sheet_impl';
+import {createUrl, isUrl, unwrapUrl} from '../../src/internals/url_impl';
 
 interface Impl {
   name: string;
@@ -19,19 +22,37 @@ interface Impl {
 
 const IMPLEMENTATIONS: Impl[] = [
   {
-    name: 'TrustedHTML',
+    name: 'SafeHtml',
     guard: isHtml,
     create: createHtml,
     unwrap: unwrapHtmlAsString,
   },
   {
-    name: 'TrustedScript',
+    name: 'SafeScript',
     guard: isScript,
     create: createScript,
     unwrap: unwrapScriptAsString,
   },
   {
-    name: 'TrustedScriptURL',
+    name: 'SafeUrl',
+    guard: isUrl,
+    create: createUrl,
+    unwrap: unwrapUrl,
+  },
+  {
+    name: 'SafeStyle',
+    guard: isStyle,
+    create: createStyle,
+    unwrap: unwrapStyle,
+  },
+  {
+    name: 'SafeStyleSheet',
+    guard: isStyleSheet,
+    create: createStyleSheet,
+    unwrap: unwrapStyleSheet,
+  },
+  {
+    name: 'TrustedResourceUrl',
     guard: isResourceUrl,
     create: createResourceUrl,
     unwrap: unwrapResourceUrlAsString,

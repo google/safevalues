@@ -3,12 +3,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {createHtml, unwrapHtmlAsString} from '../internals/html_impl';
-import {unwrapResourceUrlAsString} from '../internals/resource_url_impl';
-import {unwrapScriptAsString} from '../internals/script_impl';
+import {createHtml, SafeHtml, unwrapHtmlAsString} from '../internals/html_impl';
+import {TrustedResourceUrl, unwrapResourceUrlAsString} from '../internals/resource_url_impl';
+import {SafeScript, unwrapScriptAsString} from '../internals/script_impl';
 
 /**
- * Returns HTML-escaped text as a `TrustedHTML` object.
+ * Returns HTML-escaped text as a `SafeHtml` object.
  *
  * Available options:
  * - `preserveSpaces` turns every second consecutive space character into its
@@ -20,7 +20,7 @@ export function htmlEscape(text: string, options: {
   preserveNewlines?: boolean,
   preserveSpaces?: boolean,
   preserveTabs?: boolean
-} = {}): TrustedHTML {
+} = {}): SafeHtml {
   let htmlEscapedString = htmlEscapeToString(text);
   if (options.preserveSpaces) {
     // Do this first to ensure we preserve spaces after newlines and tabs.
@@ -38,13 +38,13 @@ export function htmlEscape(text: string, options: {
 }
 
 /**
- * Creates a `TrustedHTML` representing a script tag with inline script content.
+ * Creates a `SafeHtml` representing a script tag with inline script content.
  */
-export function createScript(script: TrustedScript, options: {
+export function createScript(script: SafeScript, options: {
   id?: string,
   nonce?: string,
   type?: string,
-} = {}): TrustedHTML {
+} = {}): SafeHtml {
   const unwrappedScript = unwrapScriptAsString(script);
   let stringTag = `<script`;
   if (options.id) {
@@ -61,11 +61,11 @@ export function createScript(script: TrustedScript, options: {
 }
 
 /**
- * Creates a `TrustedHTML` representing a script tag with the src attribute.
+ * Creates a `SafeHtml` representing a script tag with the src attribute.
  * This also supports CSP nonces and async loading.
  */
 export function createScriptSrc(
-    src: TrustedScriptURL, async?: boolean, nonce?: string): TrustedHTML {
+    src: TrustedResourceUrl, async?: boolean, nonce?: string): SafeHtml {
   const unwrappedSrc = unwrapResourceUrlAsString(src);
   let stringTag = `<script src="${htmlEscapeToString(unwrappedSrc)}"`;
   if (async) {
@@ -90,7 +90,7 @@ function htmlEscapeToString(text: string): string {
   return escaped;
 }
 
-/** Creates a `TrustedHTML` value by concatenating multiple `TrustedHTML`s. */
-export function concatHtmls(htmls: readonly TrustedHTML[]): TrustedHTML {
+/** Creates a `SafeHtml` value by concatenating multiple `SafeHtml`s. */
+export function concatHtmls(htmls: readonly SafeHtml[]): SafeHtml {
   return createHtml(htmls.map(unwrapHtmlAsString).join(''));
 }
