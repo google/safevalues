@@ -7,10 +7,8 @@ import '../environment/dev';
 
 import {htmlEscape} from '../builders/html_builders';
 import {createHtml, SafeHtml} from '../internals/html_impl';
-import {createResourceUrl} from '../internals/resource_url_impl';
-import {createScript} from '../internals/script_impl';
-
-
+import {createResourceUrl, TrustedResourceUrl} from '../internals/resource_url_impl';
+import {createScript, SafeScript} from '../internals/script_impl';
 
 /*
  * Transitional utilities to unsafely trust random strings as
@@ -197,11 +195,11 @@ function sendBeaconPolyfill(url: string, body: string) {
 }
 
 /**
- * Turns a string into TrustedScript for legacy API purposes.
+ * Turns a string into SafeScript for legacy API purposes.
  *
  * Please read fileoverview documentation before using.
  */
-export function legacyUnscript(s: string): TrustedScript {
+export function legacyUnsafeScript(s: string): SafeScript {
   if (process.env.NODE_ENV !== 'production' && typeof s !== 'string') {
     throw new Error('Expected a string');
   }
@@ -209,11 +207,11 @@ export function legacyUnscript(s: string): TrustedScript {
 }
 
 /**
- * Turns a string into TrustedScriptURL for legacy API purposes.
+ * Turns a string into TrustedResourceUrl for legacy API purposes.
  *
  * Please read fileoverview documentation before using.
  */
-export function legacyUnsafeResourceUrl(s: string): TrustedScriptURL {
+export function legacyUnsafeResourceUrl(s: string): TrustedResourceUrl {
   if (process.env.NODE_ENV !== 'production' && typeof s !== 'string') {
     throw new Error('Expected a string');
   }

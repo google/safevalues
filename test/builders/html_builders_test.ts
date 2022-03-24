@@ -4,7 +4,7 @@
  */
 
 import {concatHtmls, createScript, createScriptSrc, htmlEscape} from '../../src/builders/html_builders';
-import {script, scriptFromJson} from '../../src/builders/script_builders';
+import {safeScript, scriptFromJson} from '../../src/builders/script_builders';
 import {testonlyResourceUrl} from '../testing_conversions';
 
 describe('html_builders', () => {
@@ -88,14 +88,16 @@ describe('html_builders', () => {
 
   describe('createScript', () => {
     it('builds the right tags', () => {
-      expect(createScript(script`const a = b < c;`).toString())
+      expect(createScript(safeScript`const a = b < c;`).toString())
           .toEqual('<script>const a = b < c;</script>');
-      expect(createScript(script`const a = b < c;`, {id: 'myid'}).toString())
-          .toEqual('<script id="myid">const a = b < c;</script>');
       expect(
-          createScript(script`const a = b < c;`, {nonce: 'mynonce'}).toString())
+          createScript(safeScript`const a = b < c;`, {id: 'myid'}).toString())
+          .toEqual('<script id="myid">const a = b < c;</script>');
+      expect(createScript(safeScript`const a = b < c;`, {
+               nonce: 'mynonce'
+             }).toString())
           .toEqual('<script nonce="mynonce">const a = b < c;</script>');
-      expect(createScript(script`const a = b < c;`, {
+      expect(createScript(safeScript`const a = b < c;`, {
                id: 'myid',
                nonce: 'mynonce'
              }).toString())
@@ -114,17 +116,17 @@ describe('html_builders', () => {
               '<script type="application/ld+json">' +
               '{"@context":"https://schema.org/","@type":"Test","name":"JSON Script"}' +
               '</script>');
-      expect(createScript(script`const a = b < c;`, {
+      expect(createScript(safeScript`const a = b < c;`, {
                type: 'text/javascript'
              }).toString())
           .toEqual('<script type="text/javascript">const a = b < c;</script>');
     });
 
     it('escapes attributes', () => {
-      const createdScript = script`xyz;`;
-      expect(createScript(createdScript, {id: '<">'}).toString())
+      const createdSafeScript = safeScript`xyz;`;
+      expect(createScript(createdSafeScript, {id: '<">'}).toString())
           .toEqual('<script id="&lt;&quot;&gt;">xyz;</script>');
-      expect(createScript(createdScript, {nonce: '<">'}).toString())
+      expect(createScript(createdSafeScript, {nonce: '<">'}).toString())
           .toEqual('<script nonce="&lt;&quot;&gt;">xyz;</script>');
     });
   });

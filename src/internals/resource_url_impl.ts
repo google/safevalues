@@ -8,7 +8,11 @@ import '../environment/dev';
 import {ensureTokenIsValid, secretToken} from './secrets';
 import {getTrustedTypes, getTrustedTypesPolicy} from './trusted_types';
 
-/** Implementation for `TrustedScriptURL` */
+
+/**
+ * Runtime implementation of `TrustedScriptURL` in browsers that don't support
+ * it.
+ */
 class ResourceUrlImpl {
   readonly privateDoNotAccessOrElseWrappedResourceUrl: string;
 
@@ -24,33 +28,46 @@ class ResourceUrlImpl {
   }
 }
 
+const GlobalTrustedScriptURL =
+    (typeof window !== undefined) ? window.TrustedScriptURL : undefined;
+
 /**
- * Builds a new `TrustedScriptURL` from the given string, without
+ * String that is safe to use in all URL contexts in DOM APIs and HTML
+ * documents; even as a reference to resources that may load in the current
+ * origin (e.g. scripts and stylesheets).
+ */
+export type TrustedResourceUrl = TrustedScriptURL;
+
+/**
+ * Also exports the constructor so that instanceof checks work.
+ */
+export const TrustedResourceUrl = (GlobalTrustedScriptURL ?? ResourceUrlImpl) as
+    unknown as typeof TrustedScriptURL;
+
+/**
+ * Builds a new `TrustedResourceUrl` from the given string, without
  * enforcing safety guarantees. It may cause side effects by creating a Trusted
  * Types policy. This shouldn't be exposed to application developers, and must
  * only be used as a step towards safe builders or safe constants.
  */
-export function createResourceUrl(url: string): TrustedScriptURL {
+export function createResourceUrl(url: string): TrustedResourceUrl {
   /** @noinline */
   const noinlineUrl = url;
   const trustedScriptURL =
       getTrustedTypesPolicy()?.createScriptURL(noinlineUrl);
   return (trustedScriptURL ?? new ResourceUrlImpl(noinlineUrl, secretToken)) as
-      TrustedScriptURL;
+      TrustedResourceUrl;
 }
 
 /**
- * Checks if the given value is a `TrustedScriptURL` instance.
+ * Checks if the given value is a `TrustedResourceUrl` instance.
  */
-export function isResourceUrl(value: unknown): value is TrustedScriptURL {
-  if (getTrustedTypes()?.isScriptURL(value)) {
-    return true;
-  }
-  return value instanceof ResourceUrlImpl;
+export function isResourceUrl(value: unknown): value is TrustedResourceUrl {
+  return value instanceof TrustedResourceUrl;
 }
 
 /**
- * Returns the value of the passed `TrustedScriptURL` object while ensuring it
+ * Returns the value of the passed `TrustedResourceUrl` object while ensuring it
  * has the correct type.
  *
  * Returns a native `TrustedScriptURL` or a string if Trusted Types are
@@ -64,7 +81,7 @@ export function isResourceUrl(value: unknown): value is TrustedScriptURL {
  * use any string functions on the result as that will fail in browsers
  * supporting Trusted Types.
  */
-export function unwrapResourceUrl(value: TrustedScriptURL): TrustedScriptURL&
+export function unwrapResourceUrl(value: TrustedResourceUrl): TrustedScriptURL&
     string {
   if (getTrustedTypes()?.isScriptURL(value)) {
     return value as TrustedScriptURL & string;
@@ -75,7 +92,7 @@ export function unwrapResourceUrl(value: TrustedScriptURL): TrustedScriptURL&
   } else {
     let message = '';
     if (process.env.NODE_ENV !== 'production') {
-      message = 'Unexpected type when unwrapping TrustedScriptURL';
+      message = 'Unexpected type when unwrapping TrustedResourceUrl';
     }
     throw new Error(message);
   }
@@ -87,7 +104,7 @@ export function unwrapResourceUrl(value: TrustedScriptURL): TrustedScriptURL&
  * Also ensures to return the right string value for `TrustedScriptURL` objects
  * if the `toString` function has been overwritten on the object.
  */
-export function unwrapResourceUrlAsString(value: TrustedScriptURL): string {
+export function unwrapResourceUrlAsString(value: TrustedResourceUrl): string {
   const unwrapped = unwrapResourceUrl(value);
   if (getTrustedTypes()?.isScriptURL(unwrapped)) {
     // TODO: Remove once the spec freezes instances of `TrustedScriptURL`.

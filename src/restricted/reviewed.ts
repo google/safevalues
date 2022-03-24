@@ -6,8 +6,8 @@
 import '../environment/dev';
 
 import {createHtml, SafeHtml} from '../internals/html_impl';
-import {createResourceUrl} from '../internals/resource_url_impl';
-import {createScript} from '../internals/script_impl';
+import {createResourceUrl, TrustedResourceUrl} from '../internals/resource_url_impl';
+import {createScript, SafeScript} from '../internals/script_impl';
 
 
 /**
@@ -42,16 +42,16 @@ export function htmlSafeByReview(
 }
 
 /**
- * Performs a "reviewed conversion" to TrustedScript from a plain string that
- * is known to satisfy the TrustedScript type contract.
+ * Performs a "reviewed conversion" to SafeScript from a plain string that
+ * is known to satisfy the SafeScript type contract.
  *
  * IMPORTANT: Uses of this method must be carefully security-reviewed to ensure
- * that the value of `script` satisfies the TrustedScript type contract in
+ * that the value of `script` satisfies the SafeScript type contract in
  * all possible program states. An appropriate `justification` must be provided
  * explaining why this particular use of the function is safe.
  */
 export function scriptSafeByReview(
-    script: string, justification: string): TrustedScript {
+    script: string, justification: string): SafeScript {
   if (process.env.NODE_ENV !== 'production') {
     assertValidJustification(justification);
   }
@@ -59,16 +59,16 @@ export function scriptSafeByReview(
 }
 
 /**
- * Performs a "reviewed conversion" to TrustedScriptURL from a plain string
+ * Performs a "reviewed conversion" to TrustedResourceUrl from a plain string
  * that is known to satisfy the SafeUrl type contract.
  *
  * IMPORTANT: Uses of this method must be carefully security-reviewed to ensure
- * that the value of `url` satisfies the TrustedScriptURL type
+ * that the value of `url` satisfies the TrustedResourceUrl type
  * contract in all possible program states. An appropriate `justification` must
  * be provided explaining why this particular use of the function is safe.
  */
 export function resourceUrlSafeByReview(
-    url: string, justification: string): TrustedScriptURL {
+    url: string, justification: string): TrustedResourceUrl {
   if (process.env.NODE_ENV !== 'production') {
     assertValidJustification(justification);
   }
