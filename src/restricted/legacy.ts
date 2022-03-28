@@ -24,12 +24,12 @@ import {createScript, SafeScript} from '../internals/script_impl';
  * sanitizers. If that’s not possible it should use a reviewed conversion and
  * undergo security review.
  *
- * The semantics of the conversions in legacyconversions are very
+ * The semantics of the legacy conversions are very
  * different from the ones provided by reviewed conversions. The
  * latter are for use in code where it has been established through manual
  * security review that the value produced by a piece of code will always
  * satisfy the SafeHtml contract (e.g., the output of a secure HTML sanitizer).
- * In uses of legacyconversions, this guarantee is not given -- the
+ * In uses of legacy conversions, this guarantee is not given -- the
  * value in question originates in unreviewed legacy code and there is no
  * guarantee that it satisfies the SafeHtml contract.
  *
@@ -41,18 +41,18 @@ import {createScript, SafeScript} from '../internals/script_impl';
  * setContent method which takes a string and sets the innerHTML property of
  * an element with it. In this case a setSafeHtmlContent function could be
  * added, consuming SafeHtml instead of string. setContent could then internally
- *  use legacyconversions to create a SafeHtml
+ *  use legacyUnsafeHtml to create a SafeHtml
  * from string and pass the SafeHtml to a safe values consumer down the line. In
- * this scenario remember to document the use of legacyconversions in the
+ * this scenario, remember to document the use of legacyUnsafeHtml in the
  * modified setContent and consider deprecating it as well.
  *
  * 2. Automated refactoring of application code which handles HTML as string
  * but needs to call a function which only takes safe values types. For example,
  * in the Dialog scenario from (1) an alternative option would be to refactor
  * setContent to accept SafeHtml instead of string and then refactor
- * all current callers to use legacyconversions to pass SafeHtml. This is
+ * all current callers to use legacy conversions to pass SafeHtml. This is
  * generally preferable to (1) because it keeps the library clean of
- * legacyconversions, and makes code sites in application code that are
+ * legacy conversions, and makes code sites in application code that are
  * potentially vulnerable to XSS more apparent.
  *
  * 3. Old code which needs to call APIs which consume safe values types and for
@@ -62,7 +62,7 @@ import {createScript, SafeScript} from '../internals/script_impl';
  */
 
 /**
- * Options for configuring {@link legacyConversionToSafeHtml}.
+ * Options for configuring {@link legacyUnsafeHtml}.
  */
 interface ReportingOptions {
   /**

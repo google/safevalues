@@ -15,21 +15,23 @@ sinks in a way compatible with [tsec](https://github.com/googleinterns/tsec).
 
 Below are all the builders we currently provide.
 
-### `TrustedHTML`
+### `SafeHtml`
 
 #### Escaping HTML entities
 
 Escaping all HTML entities will make sure that the result is always interpreted
 as text when used in an HTML context.
 
+Note: this type aliases the [TrustedHTML](https://developer.mozilla.org/en-US/docs/Web/API/TrustedHTML) trusted type.
+
 ```typescript
 import {htmlEscape} from 'safevalues';
 
 const html = htmlEscape('<img src=a onerror="javascript:alert()">');
-// TrustedHTML{'&lt;img src=a onerror=&quot;javascript:alert()&quot;&gt'}
+// SafeHtml{'&lt;img src=a onerror=&quot;javascript:alert()&quot;&gt'}
 ```
 
-### `TrustedScript`
+### `SafeScript`
 
 #### Building a script from a literal value
 
@@ -37,14 +39,16 @@ There can be a need to defer the evaluation of a piece of JavaScript. By
 preventing any interpolation in the script's value we ensure it can never
 contain user data.
 
-```typescript
-import {script} from 'safevalues';
+Note: this type aliases the [TrustedScript](https://developer.mozilla.org/en-US/docs/Web/API/TrustedScript) trusted type.
 
-const script = script`return this;`;
-// TrustedScript{'return this;'}
+```typescript
+import {safeScript} from 'safevalues';
+
+const script = safeScript`return this;`;
+// SafeScript{'return this;'}
 ```
 
-### `TrustedScriptURL`
+### `TrustedResourceUrl`
 
 #### Building a URL from a literal value with limited interpolation
 
@@ -58,17 +62,21 @@ full origin (either by fully specifying it or by using the current origin
 implicitly with a path absolute url) as well as the path (no relative URLs are
 allowed & all interpolations are passed to `encodeURIComponent`)
 
-```typescript
-import {scriptUrl} from 'safevalues';
+Note: this type aliases the [TrustedScriptURL](https://developer.mozilla.org/en-US/docs/Web/API/TrustedScriptURL) trusted type.
 
-const url1 = scriptUrl`/static/js/main.js`;
-// TrustedScriptURL{'/static/js/main.js'}
+```typescript
+import {trustedResourceUrl} from 'safevalues';
+
+const url1 = trustedResourceUrl`/static/js/main.js`;
+// TrustedResourceURL{'/static/js/main.js'}
 
 const env = 'a/b';
 const opt = 'min&test=1';
-const url2 = scriptUrl`/static/${env}/js/main.js?opt=${opt}`;
-// TrustedScriptURL{'/static/a%2Fb/js/main.js?opt=min%26test%3D1'}
+const url2 = trustedResourceUrl`/static/${env}/js/main.js?opt=${opt}`;
+// TrustedResourceURL{'/static/a%2Fb/js/main.js?opt=min%26test%3D1'}
 ```
+
+<!-- TODO: Add documentation for SafeUrl, SafeStyle and SafeStyleSheet. -->
 
 ## Use with browsers that don't support Trusted Types
 
@@ -182,11 +190,11 @@ context makes it possible to construct the value safely, it can be removed
 completely.
 
 ```typescript
-import {legacyConversionToScriptUrl} from 'safevalues/unsafe/legacy';
+import {legacyUnsafeResourceUrl} from 'safevalues/unsafe/legacy';
 import {unwrapResourceUrl} from 'safevalues';
 
 // TODO: move legacyConversion to caller
-script.src = unwrapResourceUrl(legacyConversionToScriptUrl(url));
+script.src = unwrapResourceUrl(legacyUnsafeResourceUrl(url));
 ```
 
 ### Reviewed conversions
@@ -205,11 +213,11 @@ If you are using tsec however, you can directly use a reviewed conversion which
 will let you create a polyfilled value & force you to provide a justification.
 
 ```typescript
-import {scriptFromStringKnownToSatisfyTypeContract} from 'safevalues/unsafe/reviewed';
+import {scriptSafeByReview} from 'safevalues/unsafe/reviewed';
 import {unwrapScript} from 'safevalues';
 
 if (document.domain === '') {
-    const scriptText = scriptFromStringKnownToSatisfyTypeContract(
+    const scriptText = scriptSafeByReview(
         userInput,
         `Even though the input is user controller, the wrapping if statement
          ensures that this code is only ever run in a sandboxed origin`);
