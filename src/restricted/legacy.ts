@@ -9,6 +9,9 @@ import {htmlEscape} from '../builders/html_builders';
 import {createHtml, SafeHtml} from '../internals/html_impl';
 import {createResourceUrl, TrustedResourceUrl} from '../internals/resource_url_impl';
 import {createScript, SafeScript} from '../internals/script_impl';
+import {createStyle, SafeStyle} from '../internals/style_impl';
+import {createStyleSheet, SafeStyleSheet} from '../internals/style_sheet_impl';
+import {createUrl, SafeUrl} from '../internals/url_impl';
 
 
 
@@ -218,4 +221,40 @@ export function legacyUnsafeResourceUrl(s: string): TrustedResourceUrl {
     throw new Error('Expected a string');
   }
   return createResourceUrl(s);
+}
+
+/**
+ * Turns a string into SafeUrl for legacy API purposes.
+ *
+ * Please read fileoverview documentation before using.
+ */
+export function legacyUnsafeUrl(s: string): SafeUrl {
+  if (process.env.NODE_ENV !== 'production' && typeof s !== 'string') {
+    throw new Error('Expected a string');
+  }
+  return createUrl(s);
+}
+
+/**
+ * Turns a string into SafeStyle for legacy API purposes.
+ *
+ * Please read fileoverview documentation before using.
+ */
+export function legacyUnsafeStyle(s: string): SafeStyle {
+  if (process.env.NODE_ENV !== 'production' && typeof s !== 'string') {
+    throw new Error('Expected a string');
+  }
+  return createStyle(s);
+}
+
+/**
+ * Turns a string into SafeStyleSheet for legacy API purposes.
+ *
+ * Please read fileoverview documentation before using.
+ */
+export function legacyUnsafeStyleSheet(s: string): SafeStyleSheet {
+  if (process.env.NODE_ENV !== 'production' && typeof s !== 'string') {
+    throw new Error('Expected a string');
+  }
+  return createStyleSheet(s);
 }
