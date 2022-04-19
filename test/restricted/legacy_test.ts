@@ -1,5 +1,9 @@
 
+// Disabling formatting of these imports so we can use LINE-INTERNAL to strip
+// out the sanitizer import from the OSS version
+// clang-format off
 import {legacyUnsafeHtml} from '../../src/restricted/legacy';
+// clang-format on
 
 describe('legacy conversions', () => {
   it('safe HTML conversion with no options', () => {
@@ -17,7 +21,7 @@ describe('legacy conversions', () => {
              reportingId: 'legacy_conversion_unit_test',
              samplingRate: 1.0,
              heartbeatRate: 1.0,
-             sendReport: (url, data) => collectedReports.push(data)
+             sendReport: (_, data) => collectedReports.push(data)
            }).toString())
         .toEqual('<html><b>hi</b></html>');
 
@@ -34,7 +38,7 @@ describe('legacy conversions', () => {
              reportingId: 'legacy_conversion_unit_test',
              samplingRate: 1.0,
              heartbeatRate: 1.0,
-             sendReport: (url, data) => collectedReports.push(data)
+             sendReport: (_, data) => collectedReports.push(data)
            }).toString())
         .toEqual('hi');
 
@@ -59,7 +63,7 @@ describe('legacy conversions', () => {
              reportingId: 'legacy_conversion_unit_test',
              samplingRate: 0.0,
              heartbeatRate: 0.0,
-             sendReport: (url, data) => collectedReports.push(data)
+             sendReport: (_, data) => collectedReports.push(data)
            }).toString())
         .toEqual('<script>alert(0)</script>');
 
