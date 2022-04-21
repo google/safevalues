@@ -105,7 +105,7 @@ interface ReportingOptions {
    * (e.g. choosing to collect them via a service's own collection
    * infrastructure).
    */
-  sendReport?: (url: string, data: string) => void;
+  sendReport?: (data: string, url: string) => void;
 }
 
 /**
@@ -178,21 +178,27 @@ enum ReportingType {
 
 function reportLegacyConversion(
     options: ReportingOptions, type: ReportingType) {
-  const sendReport = options.sendReport ||
-      navigator.sendBeacon.bind(navigator) || sendBeaconPolyfill;
+  let sendReport = undefined;
+  if (options.sendReport) {
+    sendReport = options.sendReport;
+  } else if (!!navigator.sendBeacon) {
+    sendReport = (body: string, url: string) => navigator.sendBeacon(url, body);
+  } else {
+    sendReport = sendBeaconPolyfill;
+  }
   sendReport(
-      'https://csp.withgoogle.com/csp/lcreport/' + options.reportingId,
       JSON.stringify({
         'host': window.location.hostname,
         'type': type,
-      }));
+      }),
+      'https://csp.withgoogle.com/csp/lcreport/' + options.reportingId);
 }
 
 /**
  * A very naive polyfill for navigator.sendBeacon for browsers that don't
  * support navigator.sendBeacon.
  */
-function sendBeaconPolyfill(url: string, body: string) {
+function sendBeaconPolyfill(body: string, url: string) {
   const req = new XMLHttpRequest();
   req.open('POST', url);
   req.setRequestHeader('Content-Type', 'application/json');

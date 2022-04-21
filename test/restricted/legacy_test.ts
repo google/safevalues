@@ -21,7 +21,7 @@ describe('legacy conversions', () => {
              reportingId: 'legacy_conversion_unit_test',
              samplingRate: 1.0,
              heartbeatRate: 1.0,
-             sendReport: (_, data) => collectedReports.push(data)
+             sendReport: (data) => collectedReports.push(data)
            }).toString())
         .toEqual('<html><b>hi</b></html>');
 
@@ -38,7 +38,7 @@ describe('legacy conversions', () => {
              reportingId: 'legacy_conversion_unit_test',
              samplingRate: 1.0,
              heartbeatRate: 1.0,
-             sendReport: (_, data) => collectedReports.push(data)
+             sendReport: (data) => collectedReports.push(data)
            }).toString())
         .toEqual('hi');
 
@@ -63,7 +63,7 @@ describe('legacy conversions', () => {
              reportingId: 'legacy_conversion_unit_test',
              samplingRate: 0.0,
              heartbeatRate: 0.0,
-             sendReport: (_, data) => collectedReports.push(data)
+             sendReport: (data) => collectedReports.push(data)
            }).toString())
         .toEqual('<script>alert(0)</script>');
 
