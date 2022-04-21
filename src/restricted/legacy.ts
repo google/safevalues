@@ -65,6 +65,34 @@ import {createUrl, SafeUrl} from '../internals/url_impl';
  */
 
 /**
+ * If {@link legacyUnsafeHtml} is being used with a
+ * `reportingId` to enable reporting, the percentage of sampled calls that
+ * will be checked for active content. The key is the first character of the
+ * `reportingId` and the float is the proportion of requests (in the range
+ * 0.0-1.0).
+ */
+const REPORTING_ID_PREFIX_TO_SAMPLING_RATE: {[index: string]: number} = {
+  '0': 0.1,
+  '1': 0.01
+};
+
+
+/**
+ * If {@link legacyUnsafeHtml} is being used with a
+ * `reportingId` to enable reporting, the percentage of sampled calls that
+ * will trigger a heartbeat report to notify us that the function is being
+ * called. The key is the first character of the `reportingId` and the float
+ * is the proportion of requests (in the range 0.0-1.0).
+ *
+ * Note: This means that effectively samplingRate*heartbeatRate calls will send
+ * a heartbeat.
+ */
+const REPORTING_ID_PREFIX_TO_HEARTBEAT_RATE: {[index: string]: number} = {
+  '0': 0.01,
+  '1': 0.01
+};
+
+/**
  * Options for configuring {@link legacyUnsafeHtml}.
  */
 interface ReportingOptions {
@@ -81,7 +109,7 @@ interface ReportingOptions {
   reportingId: string;
 
   /**
-   * Override {@link 0.001} for this specific
+   * Override {@link DEFAULT_SAMPLING_RATE} for this specific
    * legacy conversion. It is generally not necessary to use this override
    * unless this legacy conversion is triggering a massive number of reports and
    * it is necessary to decrease the sampling rate to decrease the number of
@@ -90,7 +118,7 @@ interface ReportingOptions {
   samplingRate?: number;
 
   /**
-   * Override {@link 0.01} for this specific
+   * Override {@link DEFAULT_HEARTBEAT_RATE} for this specific
    * legacy conversion. It is generally not necessary to use this override
    * unless this legacy conversion is triggering a massive number of reports and
    * it is necessary to decrease the sampling rate to decrease the number of
@@ -140,11 +168,15 @@ export function legacyUnsafeHtml(
 }
 
 function isCallSampled(options: ReportingOptions): boolean {
-  return Math.random() < (options.samplingRate ?? 0.001);
+  return Math.random() <
+      (options.samplingRate ??
+       REPORTING_ID_PREFIX_TO_SAMPLING_RATE[options.reportingId[0]] ?? 0.0);
 }
 
 function maybeSendHeartbeat(options: ReportingOptions) {
-  if (Math.random() < (options.heartbeatRate ?? 0.01)) {
+  if (Math.random() <
+      (options.heartbeatRate ??
+       REPORTING_ID_PREFIX_TO_HEARTBEAT_RATE[options.reportingId[0]] ?? 0.0)) {
     // Report a heartbeat signifying that the legacy conversion is being called
     reportLegacyConversion(options, ReportingType.HEARTBEAT);
   }

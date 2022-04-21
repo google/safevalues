@@ -69,6 +69,22 @@ describe('legacy conversions', () => {
 
     expect(collectedReports.map(assertAndClearHostname)).toEqual([]);
   });
+
+  it('report-only conversion: using global sampling rates', () => {
+    const collectedReports: string[] = [];
+
+    expect(legacyUnsafeHtml('<script>alert(0)</script>', {
+             reportingId: '0_any_id',
+             sendReport: (_, data) => collectedReports.push(data)
+           }).toString())
+        .toEqual('<script>alert(0)</script>');
+
+    expect(legacyUnsafeHtml('<script>alert(0)</script>', {
+             reportingId: 'z_any_id',
+             sendReport: (_, data) => collectedReports.push(data)
+           }).toString())
+        .toEqual('<script>alert(0)</script>');
+  });
 });
 
 function assertAndClearHostname(report: string): unknown {
