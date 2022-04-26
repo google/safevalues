@@ -72,7 +72,7 @@ import {createUrl, SafeUrl} from '../internals/url_impl';
  * 0.0-1.0).
  */
 const REPORTING_ID_PREFIX_TO_SAMPLING_RATE: {[index: string]: number} = {
-  '0': 0.1,
+  '0': 0.5,
   '1': 0.01
 };
 
