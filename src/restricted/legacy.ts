@@ -5,7 +5,6 @@
 
 import '../environment/dev';
 
-import {htmlEscape} from '../builders/html_builders';
 import {createHtml, SafeHtml} from '../internals/html_impl';
 import {createResourceUrl, TrustedResourceUrl} from '../internals/resource_url_impl';
 import {createScript, SafeScript} from '../internals/script_impl';
@@ -64,171 +63,17 @@ import {createUrl, SafeUrl} from '../internals/url_impl';
  * unimportant.
  */
 
-/**
- * If {@link legacyUnsafeHtml} is being used with a
- * `reportingId` to enable reporting, the percentage of sampled calls that
- * will be checked for active content. The key is the first character of the
- * `reportingId` and the float is the proportion of requests (in the range
- * 0.0-1.0).
- */
-const REPORTING_ID_PREFIX_TO_SAMPLING_RATE: {[index: string]: number} = {
-  '0': 0.1,
-  '1': 0.01
-};
-
-
-/**
- * If {@link legacyUnsafeHtml} is being used with a
- * `reportingId` to enable reporting, the percentage of sampled calls that
- * will trigger a heartbeat report to notify us that the function is being
- * called. The key is the first character of the `reportingId` and the float
- * is the proportion of requests (in the range 0.0-1.0).
- *
- * Note: This means that effectively samplingRate*heartbeatRate calls will send
- * a heartbeat.
- */
-const REPORTING_ID_PREFIX_TO_HEARTBEAT_RATE: {[index: string]: number} = {
-  '0': 0.01,
-  '1': 0.01
-};
-
-/**
- * Options for configuring {@link legacyUnsafeHtml}.
- */
-interface ReportingOptions {
-  /**
-   * A unique ID that identifies the callsite of a specific legacy conversion.
-   * If this option is set, the legacy conversion becomes a report-only legacy
-   * conversion that logs whether the callsite can be converted to a safer
-   * alternative to the go/security-collector. See
-   * go/report-only-safehtml-legacy-exemptions for more details on this design
-   * and project.
-   *
-   * This is set via LSC and should not be manually changed.
-   */
-  reportingId: string;
-
-  /**
-   * Override {@link DEFAULT_SAMPLING_RATE} for this specific
-   * legacy conversion. It is generally not necessary to use this override
-   * unless this legacy conversion is triggering a massive number of reports and
-   * it is necessary to decrease the sampling rate to decrease the number of
-   * reports.
-   */
-  samplingRate?: number;
-
-  /**
-   * Override {@link DEFAULT_HEARTBEAT_RATE} for this specific
-   * legacy conversion. It is generally not necessary to use this override
-   * unless this legacy conversion is triggering a massive number of reports and
-   * it is necessary to decrease the sampling rate to decrease the number of
-   * reports.
-   */
-  heartbeatRate?: number;
-
-  /**
-   * Override for how reports associated with this legacy conversion will be
-   * sent to the go/security-collector. It is generally not necessary to use
-   * this override unless a caller needs to change how reports are collected
-   * (e.g. choosing to collect them via a service's own collection
-   * infrastructure).
-   */
-  sendReport?: (url: string, data: string) => void;
-}
 
 /**
  * Turns a string into SafeHtml for legacy API purposes.
  *
  * Please read fileoverview documentation before using.
  */
-export function legacyUnsafeHtml(
-    s: string, options?: ReportingOptions): SafeHtml {
+export function legacyUnsafeHtml(s: string): SafeHtml {
   if (process.env.NODE_ENV !== 'production' && typeof s !== 'string') {
     throw new Error('Expected a string');
   }
-  const legacySafeHtml = createHtml(s);
-  if (!options || !isCallSampled(options)) {
-    return legacySafeHtml;
-  }
-  try {
-    maybeSendHeartbeat(options);
-    isChangedByEscaping(s, options);
-  } catch {
-    // Our reporting code crashed! Swallow (but report) the error so that the
-    // legacy conversion still works correctly no matter what.
-    try {
-      reportLegacyConversion(options, ReportingType.CRASHED);
-    } catch {
-      // Failed to send an error report! This should only happen if the security
-      // collector is down, which we monitor for. There is nothing else we can
-      // do at this point other than fail silently.
-    }
-  }
-  return legacySafeHtml;
-}
-
-function isCallSampled(options: ReportingOptions): boolean {
-  return Math.random() <
-      (options.samplingRate ??
-       REPORTING_ID_PREFIX_TO_SAMPLING_RATE[options.reportingId[0]] ?? 0.0);
-}
-
-function maybeSendHeartbeat(options: ReportingOptions) {
-  if (Math.random() <
-      (options.heartbeatRate ??
-       REPORTING_ID_PREFIX_TO_HEARTBEAT_RATE[options.reportingId[0]] ?? 0.0)) {
-    // Report a heartbeat signifying that the legacy conversion is being called
-    reportLegacyConversion(options, ReportingType.HEARTBEAT);
-  }
-}
-
-function isChangedByEscaping(s: string, options: ReportingOptions): boolean {
-  if (htmlEscape(s).toString() !== s) {
-    // The legacy conversion is being used with something other than plain
-    // text
-    reportLegacyConversion(options, ReportingType.HTML_CHANGED_BY_ESCAPING);
-    return true;
-  }
-  return false;
-}
-
-/**
- * The type of the report
- */
-enum ReportingType {
-  // The type if the report signifies just that the legacy conversion was
-  // called.
-  HEARTBEAT = 'HEARTBEAT',
-
-  // The type if the report signifies that the legacy conversion code crashed.
-  CRASHED = 'CRASHED',
-
-  // The type if the report signifies that escaping the input changed it.
-  HTML_CHANGED_BY_ESCAPING = 'H_ESCAPE',
-
-}
-
-function reportLegacyConversion(
-    options: ReportingOptions, type: ReportingType) {
-  const sendReport = options.sendReport ||
-      navigator.sendBeacon.bind(navigator) || sendBeaconPolyfill;
-  sendReport(
-      'https://csp.withgoogle.com/csp/lcreport/' + options.reportingId,
-      JSON.stringify({
-        'host': window.location.hostname,
-        'type': type,
-      }));
-}
-
-/**
- * A very naive polyfill for navigator.sendBeacon for browsers that don't
- * support navigator.sendBeacon.
- */
-function sendBeaconPolyfill(url: string, body: string) {
-  const req = new XMLHttpRequest();
-  req.open('POST', url);
-  req.setRequestHeader('Content-Type', 'application/json');
-  req.send(body);
+  return createHtml(s);
 }
 
 /**
