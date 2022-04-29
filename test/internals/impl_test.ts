@@ -67,14 +67,6 @@ describe('safevalues implementation', () => {
         expect(value.toString()).toBe('');
       });
 
-      it('prevent indirect use of safe constructor', () => {
-        const value = impl.create('');
-        expect(() => value.constructor('danger')).toThrowError();
-        expect(() => value.constructor('danger', null)).toThrowError();
-        expect(() => value.constructor('danger', {})).toThrowError();
-        expect(() => value.constructor('danger', 'secret')).toThrowError();
-      });
-
       describe('guard', () => {
         it('returns true for correct safe type', () => {
           expect(impl.guard(impl.create('test'))).toBeTrue();
