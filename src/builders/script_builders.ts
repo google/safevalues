@@ -22,7 +22,7 @@ type Serializable =
  *
  * @param templateObj This contains the literal part of the template literal.
  */
-export function safeScript(templateObj: TemplateStringsArray): SafeScript {
+export function safeScript(templateObj: any): SafeScript {
   if (process.env.NODE_ENV !== 'production') {
     assertIsTemplateObject(
         templateObj, false,
@@ -72,7 +72,7 @@ export function scriptFromJson(value: Serializable): SafeScript {
  *     inline comments.
  */
 export function safeScriptWithArgs(
-    templateObj: TemplateStringsArray, ...emptyArgs: ReadonlyArray<''>):
+    templateObj: any, ...emptyArgs: ReadonlyArray<''>):
     (...argValues: Serializable[]) => SafeScript {
   if (process.env.NODE_ENV !== 'production') {
     if (emptyArgs.some(a => a !== '')) {
