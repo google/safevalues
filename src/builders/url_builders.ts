@@ -29,7 +29,8 @@ function isSafeMimeType(mimeType: string): boolean {
 }
 
 function isSafeImageMimeType(mimeType: string): boolean {
-  return /^image\/(?:bmp|gif|jpeg|jpg|png|tiff|webp|x-icon)$/i.test(mimeType);
+  return /^image\/(?:bmp|gif|jpeg|jpg|png|tiff|webp|x-icon|heic|heif)$/i.test(
+      mimeType);
 }
 
 function isSafeVideoMimeType(mimeType: string): boolean {

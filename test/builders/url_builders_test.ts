@@ -122,6 +122,8 @@ describe('url_builders', () => {
 
       expect(buildBlobWithType('image/jpg')).toMatch(goodBlob);
       expect(buildBlobWithType('image/png')).toMatch(goodBlob);
+      expect(buildBlobWithType('image/heic')).toMatch(goodBlob);
+      expect(buildBlobWithType('image/heif')).toMatch(goodBlob);
       expect(buildBlobWithType('audio/mp3')).toMatch(goodBlob);
 
       expect(buildBlobWithType('audio/mp3;foo=bar')).toMatch(goodBlob);
