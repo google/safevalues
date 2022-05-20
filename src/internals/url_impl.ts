@@ -53,7 +53,7 @@ export const ABOUT_BLANK: SafeUrl =
  * an unsafe input was sanitized.
  */
 export const INNOCUOUS_URL: SafeUrl =
-    /* #__PURE__ */ (() => createUrl('about:invalid#zTSz'))();
+    /* #__PURE__ */ (() => createUrl('about:invalid#zClosurez'))();
 
 /**
  * Checks if the given value is a `SafeUrl` instance.
