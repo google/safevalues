@@ -41,32 +41,37 @@ export const URL_TEST_VECTORS = [
   new UrlTestVector('p//ath?foo\u003Dbar#baz', 'p//ath?foo\u003Dbar#baz'),
   new UrlTestVector('#baz', '#baz'),
   new UrlTestVector('?:', '?:'),
-  new UrlTestVector('javascript:evil();', 'about:invalid#zTSz'),
+  new UrlTestVector('javascript:evil();', 'about:invalid#zClosurez'),
   new UrlTestVector(
-      'javascript:evil();//\u000Ahttp://good.com/', 'about:invalid#zTSz'),
-  new UrlTestVector('not-data:image/png;base64,z\u003D', 'about:invalid#zTSz'),
-  new UrlTestVector(' data:image/png;base64,z\u003D', 'about:invalid#zTSz'),
-  new UrlTestVector('tel:+1234567890', 'about:invalid#zTSz'),
-  new UrlTestVector('sms:+1234567890', 'about:invalid#zTSz'),
-  new UrlTestVector('callto:+1234567890', 'about:invalid#zTSz'),
-  new UrlTestVector('wtai://wp/mc;+1234567890', 'about:invalid#zTSz'),
-  new UrlTestVector('rtsp://example.org/', 'about:invalid#zTSz'),
-  new UrlTestVector('market://details?id\u003Dapp', 'about:invalid#zTSz'),
-  new UrlTestVector('itms://itunes.apple.com/us', 'about:invalid#zTSz'),
-  new UrlTestVector('itms-apps://itunes.apple.com/us', 'about:invalid#zTSz'),
-  new UrlTestVector('itms-appss://itunes.apple.com/us', 'about:invalid#zTSz'),
+      'javascript:evil();//\u000Ahttp://good.com/', 'about:invalid#zClosurez'),
+  new UrlTestVector(
+      'not-data:image/png;base64,z\u003D', 'about:invalid#zClosurez'),
+  new UrlTestVector(
+      ' data:image/png;base64,z\u003D', 'about:invalid#zClosurez'),
+  new UrlTestVector('tel:+1234567890', 'about:invalid#zClosurez'),
+  new UrlTestVector('sms:+1234567890', 'about:invalid#zClosurez'),
+  new UrlTestVector('callto:+1234567890', 'about:invalid#zClosurez'),
+  new UrlTestVector('wtai://wp/mc;+1234567890', 'about:invalid#zClosurez'),
+  new UrlTestVector('rtsp://example.org/', 'about:invalid#zClosurez'),
+  new UrlTestVector('market://details?id\u003Dapp', 'about:invalid#zClosurez'),
+  new UrlTestVector('itms://itunes.apple.com/us', 'about:invalid#zClosurez'),
+  new UrlTestVector(
+      'itms-apps://itunes.apple.com/us', 'about:invalid#zClosurez'),
+  new UrlTestVector(
+      'itms-appss://itunes.apple.com/us', 'about:invalid#zClosurez'),
   new UrlTestVector(
       'itms-services://?action\u003Ddownload-manifest\u0026url\u003Dfoo',
-      'about:invalid#zTSz'),
-  new UrlTestVector('geo:37.7,42.0', 'about:invalid#zTSz'),
-  new UrlTestVector('skype:chat?jid\u003Dfoo', 'about:invalid#zTSz'),
-  new UrlTestVector('whatsapp://send?text\u003DHello', 'about:invalid#zTSz'),
-  new UrlTestVector('ssh://cloud.google.com', 'about:invalid#zTSz'),
-  new UrlTestVector(':', 'about:invalid#zTSz'),
-  new UrlTestVector('\\:', 'about:invalid#zTSz'),
-  new UrlTestVector(':/:', 'about:invalid#zTSz'),
-  new UrlTestVector('path\u000A:', 'about:invalid#zTSz'),
-  new UrlTestVector('java\u0000script:evil();', 'about:invalid#zTSz'),
+      'about:invalid#zClosurez'),
+  new UrlTestVector('geo:37.7,42.0', 'about:invalid#zClosurez'),
+  new UrlTestVector('skype:chat?jid\u003Dfoo', 'about:invalid#zClosurez'),
+  new UrlTestVector(
+      'whatsapp://send?text\u003DHello', 'about:invalid#zClosurez'),
+  new UrlTestVector('ssh://cloud.google.com', 'about:invalid#zClosurez'),
+  new UrlTestVector(':', 'about:invalid#zClosurez'),
+  new UrlTestVector('\\:', 'about:invalid#zClosurez'),
+  new UrlTestVector(':/:', 'about:invalid#zClosurez'),
+  new UrlTestVector('path\u000A:', 'about:invalid#zClosurez'),
+  new UrlTestVector('java\u0000script:evil();', 'about:invalid#zClosurez'),
   new UrlTestVector(
       'http://www.f\u0000\u0000.com', 'http://www.f\u0000\u0000.com'),
   new UrlTestVector(
@@ -136,27 +141,27 @@ export const URL_TEST_VECTORS_WITH_SCHEME = [
         'TEL',
       ]),
   new UrlTestVectorOnDemandScheme(
-      ':', 'about:invalid#zTSz',
+      ':', 'about:invalid#zClosurez',
       [
         'TEL',
       ]),
   new UrlTestVectorOnDemandScheme(
-      'tell:', 'about:invalid#zTSz',
+      'tell:', 'about:invalid#zClosurez',
       [
         'TEL',
       ]),
   new UrlTestVectorOnDemandScheme(
-      'not-tel:+1', 'about:invalid#zTSz',
+      'not-tel:+1', 'about:invalid#zClosurez',
       [
         'TEL',
       ]),
   new UrlTestVectorOnDemandScheme(
-      ' tel:+1', 'about:invalid#zTSz',
+      ' tel:+1', 'about:invalid#zClosurez',
       [
         'TEL',
       ]),
   new UrlTestVectorOnDemandScheme(
-      'javascript:evil()', 'about:invalid#zTSz',
+      'javascript:evil()', 'about:invalid#zClosurez',
       [
         'TEL',
       ]),
@@ -182,22 +187,22 @@ export const URL_TEST_VECTORS_WITH_SCHEME = [
         'SSH',
       ]),
   new UrlTestVectorOnDemandScheme(
-      ':', 'about:invalid#zTSz',
+      ':', 'about:invalid#zClosurez',
       [
         'SSH',
       ]),
   new UrlTestVectorOnDemandScheme(
-      'ssh:cloud.google.com', 'about:invalid#zTSz',
+      'ssh:cloud.google.com', 'about:invalid#zClosurez',
       [
         'SSH',
       ]),
   new UrlTestVectorOnDemandScheme(
-      ' ssh://cloud.google.com', 'about:invalid#zTSz',
+      ' ssh://cloud.google.com', 'about:invalid#zClosurez',
       [
         'SSH',
       ]),
   new UrlTestVectorOnDemandScheme(
-      'javascript:evil()', 'about:invalid#zTSz',
+      'javascript:evil()', 'about:invalid#zClosurez',
       [
         'SSH',
       ]),
