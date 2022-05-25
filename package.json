@@ -16,7 +16,8 @@
     "/environment.*",
     "/restricted/*",
     "/internals/*",
-    "/builders/*"
+    "/builders/*",
+    "/dom/*"
   ],
   "scripts": {
     "build": "yarn && tsc",

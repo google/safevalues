@@ -4,7 +4,8 @@
  */
 
 import {htmlEscape} from 'safevalues';
-import {styleSheetSafeByReview} from 'safevalues/restricted/reviewed';
+import {safeElement} from 'safevalues/dom';
+import {htmlSafeByReview, styleSheetSafeByReview} from 'safevalues/restricted/reviewed';
 
 function doSomething() {
   const html = htmlEscape('hello <world>');
@@ -22,5 +23,13 @@ describe('doSomething', () => {
 describe('safevalues/restricted/reviewed', () => {
   it('can be referenced', () => {
     expect(styleSheetSafeByReview('hello', 'test').toString()).toEqual('hello');
+  });
+});
+
+describe('safevalues/dom', () => {
+  it('can be referenced', () => {
+    const e = document.createElement('div');
+    safeElement.setInnerHtml(e, htmlSafeByReview('<p>hello</p>', 'test'));
+    expect(e.innerHTML).toEqual('<p>hello</p>');
   });
 });
