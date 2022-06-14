@@ -20,7 +20,7 @@ export function setInnerHtml<T extends Element|ShadowRoot>(
   if (isElement(elOrRoot)) {
     throwIfScriptOrStyle(elOrRoot);
   }
-  elOrRoot.innerHTML = unwrapHtml(v) as string;
+  elOrRoot.innerHTML = unwrapHtml(v);
 }
 
 /**
@@ -31,7 +31,7 @@ export function setOuterHtml(e: Element, v: SafeHtml) {
   if (parent !== null) {
     throwIfScriptOrStyle(parent);
   }
-  e.outerHTML = unwrapHtml(v) as string;
+  e.outerHTML = unwrapHtml(v);
 }
 
 /**
@@ -53,7 +53,7 @@ export function insertAdjacentHtml<T extends Element>(
   if (tagContext !== null) {
     throwIfScriptOrStyle(tagContext);
   }
-  element.insertAdjacentHTML(position, unwrapHtml(v) as string);
+  element.insertAdjacentHTML(position, unwrapHtml(v));
 }
 
 /**

@@ -82,17 +82,43 @@ export function isScript(value: unknown): value is SafeScript {
  * has the correct type.
  *
  * Returns a native `TrustedScript` or a string if Trusted Types are disabled.
+ *
+ * The strange return type is to ensure the value can be used at sinks without a
+ * cast despite the TypeScript DOM lib not supporting Trusted Types.
+ * (https://github.com/microsoft/TypeScript/issues/30024)
+ *
+ * Note that while the return type is compatible with `string`, you shouldn't
+ * use any string functions on the result as that will fail in browsers
+ * supporting Trusted Types.
  */
-export function unwrapScript(value: SafeScript): TrustedScript|string {
+export function unwrapScript(value: SafeScript): TrustedScript&string {
   if (getTrustedTypes()?.isScript(value)) {
-    return value;
-  } else if (value instanceof ScriptImpl) {
-    return value.privateDoNotAccessOrElseWrappedScript;
+    return value as TrustedScript & string;
+  }
+  if (value instanceof ScriptImpl) {
+    const unwrapped = value.privateDoNotAccessOrElseWrappedScript;
+    return unwrapped as TrustedScript & string;
   } else {
     let message = '';
     if (process.env.NODE_ENV !== 'production') {
       message = 'Unexpected type when unwrapping SafeScript';
     }
     throw new Error(message);
+  }
+}
+
+/**
+ * Same as `unwrapScript`, but returns an actual string
+ *
+ * Also ensures to return the right string value for `TrustedScript` objects if
+ * the `toString function has been overwritten on the object.
+ */
+export function unwrapScriptAsString(value: SafeScript): string {
+  const unwrapped = unwrapScript(value);
+  if (getTrustedTypes()?.isScript(unwrapped)) {
+    // TODO: Remove once the spec freezes instances of `TrustedScript`.
+    return TrustedScript.prototype.toString.apply(unwrapped);
+  } else {
+    return unwrapped;
   }
 }

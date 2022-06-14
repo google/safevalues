@@ -5,7 +5,7 @@
 
 import '../environment/dev';
 
-import {TrustedResourceUrl, unwrapResourceUrl} from '../internals/resource_url_impl';
+import {TrustedResourceUrl, unwrapResourceUrlAsString} from '../internals/resource_url_impl';
 import {assertIsTemplateObject} from '../internals/string_literal';
 import {createUrl, INNOCUOUS_URL, SafeUrl} from '../internals/url_impl';
 
@@ -186,7 +186,7 @@ export function fromMediaSource(media: MediaSource): SafeUrl {
  * TrustedResourceUrl is more tightly restricted than SafeUrl.
  */
 export function fromTrustedResourceUrl(url: TrustedResourceUrl) {
-  return createUrl(unwrapResourceUrl(url).toString());
+  return createUrl(unwrapResourceUrlAsString(url));
 }
 
 /**

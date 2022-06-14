@@ -22,9 +22,7 @@ Below are all the builders we currently provide.
 Escaping all HTML entities will make sure that the result is always interpreted
 as text when used in an HTML context.
 
-Note: this type aliases the
-[TrustedHTML](https://developer.mozilla.org/en-US/docs/Web/API/TrustedHTML)
-trusted type.
+Note: this type aliases the [TrustedHTML](https://developer.mozilla.org/en-US/docs/Web/API/TrustedHTML) trusted type.
 
 ```typescript
 import {htmlEscape} from 'safevalues';
@@ -41,9 +39,7 @@ There can be a need to defer the evaluation of a piece of JavaScript. By
 preventing any interpolation in the script's value we ensure it can never
 contain user data.
 
-Note: this type aliases the
-[TrustedScript](https://developer.mozilla.org/en-US/docs/Web/API/TrustedScript)
-trusted type.
+Note: this type aliases the [TrustedScript](https://developer.mozilla.org/en-US/docs/Web/API/TrustedScript) trusted type.
 
 ```typescript
 import {safeScript} from 'safevalues';
@@ -66,9 +62,7 @@ full origin (either by fully specifying it or by using the current origin
 implicitly with a path absolute url) as well as the path (no relative URLs are
 allowed & all interpolations are passed to `encodeURIComponent`)
 
-Note: this type aliases the
-[TrustedScriptURL](https://developer.mozilla.org/en-US/docs/Web/API/TrustedScriptURL)
-trusted type.
+Note: this type aliases the [TrustedScriptURL](https://developer.mozilla.org/en-US/docs/Web/API/TrustedScriptURL) trusted type.
 
 ```typescript
 import {trustedResourceUrl} from 'safevalues';
@@ -146,11 +140,14 @@ before passing them to sinks in a way that tsec will understand.
 ```typescript
 import {unwrapScript} from 'safevalues';
 const script: TrustedScript = ...;
-eval(unwrapScript(script) as string); // works!
+eval(unwrapScript(script)); // works!
 ```
 
-The unwrap functions' return type is `string|Trusted*`, which allows the
-returned value to be cast to `string` without using `unknown`.
+The unwrap functions' return type is `string&Trusted*`, which ensures that the
+return value can be used without cases in places where strings are expected.
+(note that including the Trusted Type in the type does nothing except document
+that this function might not actually return a value that can be used as a
+string, i.e. string functions are not available)
 
 In Trusted Types enabled browsers, the unwrap functions behave like identity
 functions and just return their input.
@@ -197,7 +194,7 @@ import {legacyUnsafeResourceUrl} from 'safevalues/unsafe/legacy';
 import {unwrapResourceUrl} from 'safevalues';
 
 // TODO: move legacyConversion to caller
-script.src = unwrapResourceUrl(legacyUnsafeResourceUrl(url)) as string;
+script.src = unwrapResourceUrl(legacyUnsafeResourceUrl(url));
 ```
 
 ### Reviewed conversions
@@ -224,6 +221,6 @@ if (document.domain === '') {
         userInput,
         `Even though the input is user controller, the wrapping if statement
          ensures that this code is only ever run in a sandboxed origin`);
-    scriptEl.text = unwrapScript(scriptText) as string;
+    scriptEl.text = unwrapScript(scriptText);
 }
 ```

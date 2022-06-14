@@ -14,5 +14,5 @@ export function parseHtml(parser: DOMParser, html: SafeHtml): HTMLDocument {
 export function parseFromString(
     parser: DOMParser, content: SafeHtml,
     contentType: DOMParserSupportedType): Document {
-  return parser.parseFromString(unwrapHtml(content) as string, contentType);
+  return parser.parseFromString(unwrapHtml(content), contentType);
 }

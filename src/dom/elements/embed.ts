@@ -9,5 +9,5 @@ import {TrustedResourceUrl, unwrapResourceUrl} from '../../index';
  * Sets the Src attribute from the given SafeUrl.
  */
 export function setSrc(embedEl: HTMLEmbedElement, url: TrustedResourceUrl) {
-  embedEl.src = unwrapResourceUrl(url) as string;
+  embedEl.src = unwrapResourceUrl(url);
 }

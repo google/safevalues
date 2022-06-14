@@ -5,8 +5,8 @@
 
 import '../environment/dev';
 
-import {createResourceUrl, TrustedResourceUrl, unwrapResourceUrl} from '../internals/resource_url_impl';
-import {SafeScript, unwrapScript} from '../internals/script_impl';
+import {createResourceUrl, TrustedResourceUrl, unwrapResourceUrlAsString} from '../internals/resource_url_impl';
+import {SafeScript, unwrapScriptAsString} from '../internals/script_impl';
 import {assertIsTemplateObject} from '../internals/string_literal';
 
 /** Type that we know how to interpolate */
@@ -183,7 +183,7 @@ export function appendParams(
     trustedUrl: TrustedResourceUrl,
     params: Map<string, Primitive|null|Array<Primitive|null>>):
     TrustedResourceUrl {
-  let url = unwrapResourceUrl(trustedUrl).toString();
+  let url = unwrapResourceUrlAsString(trustedUrl);
   if (/#/.test(url)) {
     let message = '';
     if (process.env.NODE_ENV !== 'production') {
@@ -220,7 +220,7 @@ const BEFORE_FRAGMENT_REGEXP = /[^#]*/;
  */
 export function replaceFragment(
     trustedUrl: TrustedResourceUrl, fragment: string) {
-  const urlString = unwrapResourceUrl(trustedUrl).toString();
+  const urlString = unwrapResourceUrlAsString(trustedUrl);
   return createResourceUrl(
       BEFORE_FRAGMENT_REGEXP.exec(urlString)![0] + '#' + fragment);
 }
@@ -233,7 +233,7 @@ export function replaceFragment(
  * release the underlying `Blob`.
  */
 export function blobUrlFromScript(safeScript: SafeScript): TrustedResourceUrl {
-  const scriptContent = unwrapScript(safeScript).toString();
+  const scriptContent = unwrapScriptAsString(safeScript);
   const blob = new Blob([scriptContent], {type: 'text/javascript'});
   return createResourceUrl(URL.createObjectURL(blob));
 }
