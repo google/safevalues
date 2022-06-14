@@ -9,5 +9,5 @@ import {TrustedResourceUrl, unwrapResourceUrl} from '../../index';
 export function register(
     container: ServiceWorkerContainer, scriptURL: TrustedResourceUrl,
     options?: RegistrationOptions): Promise<ServiceWorkerRegistration> {
-  return container.register(unwrapResourceUrl(scriptURL), options);
+  return container.register(unwrapResourceUrl(scriptURL) as string, options);
 }

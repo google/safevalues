@@ -72,44 +72,18 @@ export function isResourceUrl(value: unknown): value is TrustedResourceUrl {
  *
  * Returns a native `TrustedScriptURL` or a string if Trusted Types are
  * disabled.
- *
- * The strange return type is to ensure the value can be used at sinks without a
- * cast despite the TypeScript DOM lib not supporting Trusted Types.
- * (https://github.com/microsoft/TypeScript/issues/30024)
- *
- * Note that while the return type is compatible with `string`, you shouldn't
- * use any string functions on the result as that will fail in browsers
- * supporting Trusted Types.
  */
-export function unwrapResourceUrl(value: TrustedResourceUrl): TrustedScriptURL&
+export function unwrapResourceUrl(value: TrustedResourceUrl): TrustedScriptURL|
     string {
   if (getTrustedTypes()?.isScriptURL(value)) {
-    return value as TrustedScriptURL & string;
-  }
-  if (value instanceof ResourceUrlImpl) {
-    const unwrapped = value.privateDoNotAccessOrElseWrappedResourceUrl;
-    return unwrapped as TrustedScriptURL & string;
+    return value;
+  } else if (value instanceof ResourceUrlImpl) {
+    return value.privateDoNotAccessOrElseWrappedResourceUrl;
   } else {
     let message = '';
     if (process.env.NODE_ENV !== 'production') {
       message = 'Unexpected type when unwrapping TrustedResourceUrl';
     }
     throw new Error(message);
-  }
-}
-
-/**
- * Same as `unwrapResourceUrl`, but returns an actual string
- *
- * Also ensures to return the right string value for `TrustedScriptURL` objects
- * if the `toString` function has been overwritten on the object.
- */
-export function unwrapResourceUrlAsString(value: TrustedResourceUrl): string {
-  const unwrapped = unwrapResourceUrl(value);
-  if (getTrustedTypes()?.isScriptURL(unwrapped)) {
-    // TODO: Remove once the spec freezes instances of `TrustedScriptURL`.
-    return TrustedScriptURL.prototype.toString.apply(unwrapped);
-  } else {
-    return unwrapped;
   }
 }

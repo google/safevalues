@@ -63,7 +63,7 @@ export function setHrefAndRel(
 export function setHrefAndRel(
     link: HTMLLinkElement, url: TrustedResourceUrl|SafeUrl, rel: string) {
   if (url instanceof TrustedResourceUrl) {
-    link.href = unwrapResourceUrl(url);
+    link.href = unwrapResourceUrl(url).toString();
   } else {
     if ((SAFE_URL_REL_VALUES as readonly string[]).indexOf(rel) === -1) {
       throw new Error(

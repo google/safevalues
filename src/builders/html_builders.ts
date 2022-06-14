@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {createHtml, SafeHtml, unwrapHtmlAsString} from '../internals/html_impl';
-import {TrustedResourceUrl, unwrapResourceUrlAsString} from '../internals/resource_url_impl';
-import {SafeScript, unwrapScriptAsString} from '../internals/script_impl';
+import {createHtml, SafeHtml, unwrapHtml} from '../internals/html_impl';
+import {TrustedResourceUrl, unwrapResourceUrl} from '../internals/resource_url_impl';
+import {SafeScript, unwrapScript} from '../internals/script_impl';
 
 /**
  * Returns HTML-escaped text as a `SafeHtml` object.
@@ -45,7 +45,7 @@ export function createScript(script: SafeScript, options: {
   nonce?: string,
   type?: string,
 } = {}): SafeHtml {
-  const unwrappedScript = unwrapScriptAsString(script);
+  const unwrappedScript = unwrapScript(script).toString();
   let stringTag = `<script`;
   if (options.id) {
     stringTag += ` id="${htmlEscapeToString(options.id)}"`;
@@ -66,7 +66,7 @@ export function createScript(script: SafeScript, options: {
  */
 export function createScriptSrc(
     src: TrustedResourceUrl, async?: boolean, nonce?: string): SafeHtml {
-  const unwrappedSrc = unwrapResourceUrlAsString(src);
+  const unwrappedSrc = unwrapResourceUrl(src).toString();
   let stringTag = `<script src="${htmlEscapeToString(unwrappedSrc)}"`;
   if (async) {
     stringTag += ' async';
@@ -92,5 +92,5 @@ function htmlEscapeToString(text: string): string {
 
 /** Creates a `SafeHtml` value by concatenating multiple `SafeHtml`s. */
 export function concatHtmls(htmls: readonly SafeHtml[]): SafeHtml {
-  return createHtml(htmls.map(unwrapHtmlAsString).join(''));
+  return createHtml(htmls.map(unwrapHtml).join(''));
 }

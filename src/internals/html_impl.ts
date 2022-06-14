@@ -80,43 +80,17 @@ export function isHtml(value: unknown): value is SafeHtml {
  * has the correct type.
  *
  * Returns a native `TrustedHTML` or a string if Trusted Types are disabled.
- *
- * The strange return type is to ensure the value can be used at sinks without a
- * cast despite the TypeScript DOM lib not supporting Trusted Types.
- * (https://github.com/microsoft/TypeScript/issues/30024)
- *
- * Note that while the return type is compatible with `string`, you shouldn't
- * use any string functions on the result as that will fail in browsers
- * supporting Trusted Types.
  */
-export function unwrapHtml(value: SafeHtml): TrustedHTML&string {
+export function unwrapHtml(value: SafeHtml): TrustedHTML|string {
   if (getTrustedTypes()?.isHTML(value)) {
-    return value as TrustedHTML & string;
-  }
-  if (value instanceof HtmlImpl) {
-    const unwrapped = value.privateDoNotAccessOrElseWrappedHtml;
-    return unwrapped as TrustedHTML & string;
+    return value;
+  } else if (value instanceof HtmlImpl) {
+    return value.privateDoNotAccessOrElseWrappedHtml;
   } else {
     let message = '';
     if (process.env.NODE_ENV !== 'production') {
       message = 'Unexpected type when unwrapping SafeHtml';
     }
     throw new Error(message);
-  }
-}
-
-/**
- * Same as `unwrapHtml`, but returns an actual string.
- *
- * Also ensures to return the right string value for `TrustedHTML` objects if
- * the `toString` function has been overwritten on the object.
- */
-export function unwrapHtmlAsString(value: SafeHtml): string {
-  const unwrapped = unwrapHtml(value);
-  if (getTrustedTypes()?.isHTML(unwrapped)) {
-    // TODO: Remove once the spec freezes instances of `TrustedHTML`.
-    return TrustedHTML.prototype.toString.apply(unwrapped);
-  } else {
-    return unwrapped;
   }
 }

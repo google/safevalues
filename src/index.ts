@@ -13,9 +13,9 @@ export {concatStyleSheets, safeStyleSheet} from './builders/style_sheet_builders
 export {fromBlob, fromMediaSource, fromTrustedResourceUrl, safeUrl, SanitizableUrlScheme, sanitizeUrl, Scheme, trySanitizeUrl} from './builders/url_builders';
 /** Types, constants and unwrappers */
 export {SafeAttributePrefix, unwrapAttributePrefix} from './internals/attribute_impl';
-export {EMPTY_HTML, isHtml, SafeHtml, unwrapHtml, unwrapHtmlAsString} from './internals/html_impl';
-export {isResourceUrl, TrustedResourceUrl, unwrapResourceUrl, unwrapResourceUrlAsString} from './internals/resource_url_impl';
-export {EMPTY_SCRIPT, isScript, SafeScript, unwrapScript, unwrapScriptAsString} from './internals/script_impl';
+export {EMPTY_HTML, isHtml, SafeHtml, unwrapHtml} from './internals/html_impl';
+export {isResourceUrl, TrustedResourceUrl, unwrapResourceUrl} from './internals/resource_url_impl';
+export {EMPTY_SCRIPT, isScript, SafeScript, unwrapScript} from './internals/script_impl';
 export {isStyle, SafeStyle, unwrapStyle} from './internals/style_impl';
 export {isStyleSheet, SafeStyleSheet, unwrapStyleSheet} from './internals/style_sheet_impl';
 export {ABOUT_BLANK, INNOCUOUS_URL, isUrl, SafeUrl, unwrapUrl} from './internals/url_impl';
