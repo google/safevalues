@@ -28,17 +28,17 @@ export interface ScopeWithImportScripts extends WindowOrWorkerGlobalScope {
  * The latter can result in loading untrusted code.
  */
 export function create(url: TrustedResourceUrl, options?: {}): Worker {
-  return new Worker(unwrapResourceUrl(url), options);
+  return new Worker(unwrapResourceUrl(url) as string, options);
 }
 
 /** Safely creates a shared Web Worker. */
 export function createShared(
     url: TrustedResourceUrl, options?: string|WorkerOptions): SharedWorker {
-  return new SharedWorker(unwrapResourceUrl(url), options);
+  return new SharedWorker(unwrapResourceUrl(url) as string, options);
 }
 
 /** Safely calls importScripts */
 export function importScripts(
     scope: ScopeWithImportScripts, ...urls: TrustedResourceUrl[]): void {
-  scope.importScripts(...urls.map(url => unwrapResourceUrl(url)));
+  scope.importScripts(...urls.map(url => unwrapResourceUrl(url) as string));
 }

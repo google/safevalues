@@ -14,7 +14,7 @@ import {SafeScript, unwrapScript} from '../../index';
 export function globalEval(
     win: Window|typeof globalThis, script: SafeScript): unknown {
   const trustedScript = unwrapScript(script);
-  let result = (win as typeof globalThis).eval(trustedScript);
+  let result = (win as typeof globalThis).eval(trustedScript as string);
   if (result === trustedScript) {
     // https://crbug.com/1024786 manifesting in workers.
     result = (win as typeof globalThis).eval(trustedScript.toString());

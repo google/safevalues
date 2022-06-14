@@ -10,7 +10,7 @@ import {SafeHtml, unwrapHtml} from '../../index';
  * the given {@link SafeHtml}.
  */
 export function write(doc: Document, text: SafeHtml) {
-  doc.write(unwrapHtml(text));
+  doc.write(unwrapHtml(text) as string);
 }
 
 type ValueType<Cmd extends string> =
@@ -25,7 +25,7 @@ export function execCommand<Cmd extends string>(
   const commandString = String(command);
   let valueArgument = value as string;
   if (commandString.toLowerCase() === 'inserthtml') {
-    valueArgument = unwrapHtml(value as SafeHtml);
+    valueArgument = unwrapHtml(value as SafeHtml) as string;
   }
   return doc.execCommand(commandString, /* showUi= */ false, valueArgument);
 }
@@ -35,5 +35,6 @@ export function execCommand<Cmd extends string>(
  * @deprecated Use safeDocument.execCommand.
  */
 export function execCommandInsertHtml(doc: Document, html: SafeHtml): boolean {
-  return doc.execCommand('insertHTML', /* showUi= */ false, unwrapHtml(html));
+  return doc.execCommand(
+      'insertHTML', /* showUi= */ false, unwrapHtml(html) as string);
 }

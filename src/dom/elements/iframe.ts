@@ -16,5 +16,5 @@ export function setSrc(iframe: HTMLIFrameElement, v: TrustedResourceUrl) {
 
 /** Sets the Srcdoc attribute using a SafeHtml */
 export function setSrcdoc(iframe: HTMLIFrameElement, v: SafeHtml) {
-  iframe.srcdoc = unwrapHtml(v);
+  iframe.srcdoc = unwrapHtml(v) as string;
 }

@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {createHtml, isHtml, unwrapHtmlAsString} from '../../src/internals/html_impl';
-import {createResourceUrl, isResourceUrl, unwrapResourceUrlAsString} from '../../src/internals/resource_url_impl';
-import {createScript, isScript, unwrapScriptAsString} from '../../src/internals/script_impl';
+import {createHtml, isHtml, unwrapHtml} from '../../src/internals/html_impl';
+import {createResourceUrl, isResourceUrl, unwrapResourceUrl} from '../../src/internals/resource_url_impl';
+import {createScript, isScript, unwrapScript} from '../../src/internals/script_impl';
 import {createStyle, isStyle, unwrapStyle} from '../../src/internals/style_impl';
 import {createStyleSheet, isStyleSheet, unwrapStyleSheet} from '../../src/internals/style_sheet_impl';
 import {createUrl, isUrl, unwrapUrl} from '../../src/internals/url_impl';
@@ -17,7 +17,7 @@ interface Impl {
   // Functions are contravariant in regards to their param types so unknown does
   // not work here.
   // tslint:disable-next-line:no-any
-  unwrap: (value: any) => string;
+  unwrap: (value: any) => unknown;
 }
 
 const IMPLEMENTATIONS: Impl[] = [
@@ -25,13 +25,13 @@ const IMPLEMENTATIONS: Impl[] = [
     name: 'SafeHtml',
     guard: isHtml,
     create: createHtml,
-    unwrap: unwrapHtmlAsString,
+    unwrap: unwrapHtml,
   },
   {
     name: 'SafeScript',
     guard: isScript,
     create: createScript,
-    unwrap: unwrapScriptAsString,
+    unwrap: unwrapScript,
   },
   {
     name: 'SafeUrl',
@@ -55,7 +55,7 @@ const IMPLEMENTATIONS: Impl[] = [
     name: 'TrustedResourceUrl',
     guard: isResourceUrl,
     create: createResourceUrl,
-    unwrap: unwrapResourceUrlAsString,
+    unwrap: unwrapResourceUrl,
   },
 ];
 
@@ -93,12 +93,6 @@ describe('safevalues implementation', () => {
             }
           };
           expect(() => impl.unwrap(fakeObj)).toThrowError();
-        });
-
-        it('is not affected if the `toString` method is overridden', () => {
-          const customToString = impl.create('');
-          customToString.toString = () => 'danger';
-          expect(impl.unwrap(customToString)).toBe('');
         });
 
         for (const impl2 of IMPLEMENTATIONS) {

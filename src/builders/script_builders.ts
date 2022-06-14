@@ -5,7 +5,7 @@
 
 import '../environment/dev';
 
-import {createScript, SafeScript, unwrapScriptAsString} from '../internals/script_impl';
+import {createScript, SafeScript, unwrapScript} from '../internals/script_impl';
 import {assertIsTemplateObject} from '../internals/string_literal';
 
 type Primitive = number|string|boolean|null;
@@ -35,7 +35,7 @@ export function safeScript(templateObj: TemplateStringsArray): SafeScript {
 
 /** Creates a `SafeScript` value by concatenating multiple `SafeScript`s. */
 export function concatScripts(scripts: readonly SafeScript[]): SafeScript {
-  return createScript(scripts.map(unwrapScriptAsString).join(''));
+  return createScript(scripts.map(unwrapScript).join(''));
 }
 
 /**
