@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {SafeUrl, unwrapUrl} from '../../index';
+import {SafeUrl, unwrapUrl} from '../../internals/url_impl';
 
 /**
  * open calls {@link Window.open} on the given {@link Window}, given a

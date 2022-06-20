@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import {trustedResourceUrl} from '../../../src/builders/resource_url_builders';
 import * as safeEmbedEl from '../../../src/dom/elements/embed';
-import {trustedResourceUrl} from '../../../src/index';
 
 describe('safeEmbedEl', () => {
   let embedEl: HTMLEmbedElement;

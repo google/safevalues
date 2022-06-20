@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {SafeScript, unwrapScript} from '../../index';
+import {SafeScript, unwrapScript} from '../../internals/script_impl';
 
 /**
  * Evaluates a SafeScript value in the given scope using eval.

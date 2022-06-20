@@ -3,8 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import {htmlEscape} from '../../../src/builders/html_builders';
 import * as safeDocument from '../../../src/dom/globals/document';
-import {htmlEscape, SafeHtml} from '../../../src/index';
+import {SafeHtml} from '../../../src/internals/html_impl';
 
 describe('safeDocument', () => {
   describe('execCommand', () => {

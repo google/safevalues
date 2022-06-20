@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {SafeUrl, unwrapUrl} from '../../index';
+import {SafeUrl, unwrapUrl} from '../../internals/url_impl';
 
 /**
  * setHref safely sets {@link Location.href} on the given {@link Location} with

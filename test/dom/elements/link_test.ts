@@ -3,8 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import {trustedResourceUrl} from '../../../src/builders/resource_url_builders';
+import {safeUrl} from '../../../src/builders/url_builders';
 import * as safeLinkEl from '../../../src/dom/elements/link';
-import {safeUrl, trustedResourceUrl} from '../../../src/index';
 
 describe('safeLink#setHrefAndRel', () => {
   let linkElem: HTMLLinkElement;

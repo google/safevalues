@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import {safeAttrPrefix} from '../../../src/builders/attribute_builders';
 import * as safeElement from '../../../src/dom/elements/element';
-import {safeAttrPrefix} from '../../../src/index';
 import {testonlyHtml} from '../../testing_conversions';
 
 describe('safeElement', () => {

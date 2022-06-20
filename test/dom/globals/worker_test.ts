@@ -4,7 +4,7 @@
  */
 
 import * as safeWorker from '../../../src/dom/globals/worker';
-import {TrustedResourceUrl} from '../../../src/index';
+import {TrustedResourceUrl} from '../../../src/internals/resource_url_impl';
 import {testonlyResourceUrl} from '../../testing_conversions';
 
 interface State {

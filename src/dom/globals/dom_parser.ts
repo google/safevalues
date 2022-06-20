@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {SafeHtml, unwrapHtml} from '../../index';
+import {SafeHtml, unwrapHtml} from '../../internals/html_impl';
 
 /** Safely parses a string using the HTML parser. */
 export function parseHtml(parser: DOMParser, html: SafeHtml): HTMLDocument {

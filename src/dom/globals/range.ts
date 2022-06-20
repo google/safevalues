@@ -4,7 +4,7 @@
  */
 
 
-import {SafeHtml, unwrapHtml} from '../../index';
+import {SafeHtml, unwrapHtml} from '../../internals/html_impl';
 
 /** Safely creates a contextualFragment. */
 export function createContextualFragment(

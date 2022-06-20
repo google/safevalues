@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {TrustedResourceUrl, unwrapResourceUrl} from '../../index';
+import {TrustedResourceUrl, unwrapResourceUrl} from '../../internals/resource_url_impl';
 
 // We can't depend on WorkerGlobalScope directly, as lib.webworker.d.ts alters
 // the global scope typing.

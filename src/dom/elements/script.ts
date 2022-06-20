@@ -3,7 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {SafeScript, TrustedResourceUrl, unwrapResourceUrl, unwrapScript} from '../../index';
+import {TrustedResourceUrl, unwrapResourceUrl} from '../../internals/resource_url_impl';
+import {SafeScript, unwrapScript} from '../../internals/script_impl';
 
 /** Returns CSP nonce, if set for any script tag. */
 function getScriptNonceFromWindow(win: Window): string {

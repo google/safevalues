@@ -3,9 +3,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import {trustedResourceUrl} from '../../../src/builders/resource_url_builders';
+import {safeScript} from '../../../src/builders/script_builders';
 import * as safeScriptEl from '../../../src/dom/elements/script';
 import {safeDocument} from '../../../src/dom/index';
-import {safeScript, trustedResourceUrl} from '../../../src/index';
 import {testonlyHtml} from '../../testing_conversions';
 
 describe('safeScriptEl', () => {
