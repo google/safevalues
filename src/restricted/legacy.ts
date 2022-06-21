@@ -12,8 +12,6 @@ import {createStyle, SafeStyle} from '../internals/style_impl';
 import {createStyleSheet, SafeStyleSheet} from '../internals/style_sheet_impl';
 import {createUrl, SafeUrl} from '../internals/url_impl';
 
-
-
 /*
  * Transitional utilities to unsafely trust random strings as
  * safe values. Intended for temporary use when upgrading a library that
