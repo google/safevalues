@@ -5,7 +5,7 @@
 
 import '../environment/dev';
 
-/* g3_import_pure */
+/* g3_import_pure from './pure' */
 import {ensureTokenIsValid, secretToken} from './secrets';
 
 /**
