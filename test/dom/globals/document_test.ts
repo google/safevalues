@@ -10,8 +10,12 @@ import {SafeHtml} from '../../../src/internals/html_impl';
 describe('safeDocument', () => {
   describe('execCommand', () => {
     it('accepts any argument for safe commands', () => {
-      safeDocument.execCommand(document, 'insertText', 'text');
-      safeDocument.execCommand(document, 'insertText', htmlEscape('text'));
+      expect(() => safeDocument.execCommand(document, 'insertText', 'text'))
+          .not.toThrow();
+      expect(
+          () => safeDocument.execCommand(
+              document, 'insertText', htmlEscape('text')))
+          .not.toThrow();
     });
     it('rejects string argument for insertHtml', () => {
       expect(
@@ -27,7 +31,8 @@ describe('safeDocument', () => {
     });
     it('accepts SafeHtml argument for insertHtml', () => {
       const cmd: string = 'insertHtml';
-      safeDocument.execCommand(document, cmd, htmlEscape('text'));
+      expect(() => safeDocument.execCommand(document, cmd, htmlEscape('text')))
+          .not.toThrow();
     });
   });
 });

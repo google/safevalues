@@ -32,5 +32,10 @@ module.exports = (config) => {
     autoWatch: true,
     browsers: ['Chrome', 'Firefox'],
     singleRun: false,
+    client: {
+      jasmine: {
+        failSpecWithNoExpectations: true,
+      },
+    },
   })
 }
