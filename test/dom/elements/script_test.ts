@@ -5,8 +5,8 @@
 
 import {trustedResourceUrl} from '../../../src/builders/resource_url_builders';
 import {safeScript} from '../../../src/builders/script_builders';
-import {safeDocument} from '../../../src/dom';
 import * as safeScriptEl from '../../../src/dom/elements/script';
+import {safeDocument} from '../../../src/dom/index';
 import {testonlyHtml} from '../../testing_conversions';
 
 describe('safeScriptEl', () => {
