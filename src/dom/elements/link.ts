@@ -63,14 +63,14 @@ export function setHrefAndRel(
 
 export function setHrefAndRel(
     link: HTMLLinkElement, url: TrustedResourceUrl|SafeUrl, rel: string) {
-  if (url instanceof TrustedResourceUrl) {
-    link.href = unwrapResourceUrl(url).toString();
-  } else {
+  if (url instanceof SafeUrl) {
     if ((SAFE_URL_REL_VALUES as readonly string[]).indexOf(rel) === -1) {
       throw new Error(
           `TrustedResourceUrl href attribute required with rel="${rel}"`);
     }
     link.href = unwrapUrl(url);
+  } else {
+    link.href = unwrapResourceUrl(url).toString();
   }
   link.rel = rel;
 }
