@@ -10,8 +10,6 @@
 
 import '../../environment/dev';
 
-import {SafeUrl, unwrapUrl} from '../../internals/url_impl';
-
 /**
  * An inert URL, used as an inert return value when an unsafe input was
  * sanitized.
@@ -46,11 +44,11 @@ export function sanitizeJavascriptUrl(url: string): string {
 /**
  * Type alias for URLs passed to DOM sink wrappers.
  */
-export type Url = string|SafeUrl;
+export type Url = string;
 
 /**
- * Adapter to support string and SafeUrl in DOM sink wrappers.
+ * Adapter to sanitize string URLs in DOM sink wrappers.
  */
 export function unwrapUrlOrSanitize(url: Url): string {
-  return url instanceof SafeUrl ? unwrapUrl(url) : sanitizeJavascriptUrl(url);
+  return sanitizeJavascriptUrl(url);
 }
