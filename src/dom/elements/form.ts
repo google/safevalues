@@ -3,11 +3,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {SafeUrl, unwrapUrl} from '../../internals/url_impl';
+import {unwrapUrlOrSanitize, Url} from '../safeurl/index';
 
 /**
- * Sets the Action attribute from the given SafeUrl.
+ * Sets the Action attribute from the given Url.
  */
-export function setAction(form: HTMLFormElement, url: SafeUrl) {
-  form.action = unwrapUrl(url);
+export function setAction(form: HTMLFormElement, url: Url) {
+  form.action = unwrapUrlOrSanitize(url);
 }

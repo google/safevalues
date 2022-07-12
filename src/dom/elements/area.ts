@@ -3,11 +3,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {SafeUrl, unwrapUrl} from '../../internals/url_impl';
+import {unwrapUrlOrSanitize, Url} from '../safeurl/index';
 
 /**
- * Sets the Href attribute from the given SafeUrl.
+ * Sets the Href attribute from the given Url.
  */
-export function setHref(area: HTMLAreaElement, url: SafeUrl) {
-  area.href = unwrapUrl(url);
+export function setHref(area: HTMLAreaElement, url: Url) {
+  area.href = unwrapUrlOrSanitize(url);
 }

@@ -4,7 +4,7 @@
  */
 
 import {TrustedResourceUrl, unwrapResourceUrl} from '../../internals/resource_url_impl';
-import {SafeUrl, unwrapUrl} from '../../internals/url_impl';
+import {unwrapUrlOrSanitize, Url} from '../safeurl/index';
 
 const SAFE_URL_REL_VALUES = [
   'alternate',
@@ -52,7 +52,7 @@ export function setHrefAndRel(
  * value.
  */
 export function setHrefAndRel(
-    link: HTMLLinkElement, url: SafeUrl, rel: SafeUrlRelTypes): void;
+    link: HTMLLinkElement, url: Url, rel: SafeUrlRelTypes): void;
 
 /**
  * Safely sets a link element's "href" property using an arbitrary "rel"
@@ -62,7 +62,7 @@ export function setHrefAndRel(
     link: HTMLLinkElement, url: TrustedResourceUrl, rel: string): void;
 
 export function setHrefAndRel(
-    link: HTMLLinkElement, url: TrustedResourceUrl|SafeUrl, rel: string) {
+    link: HTMLLinkElement, url: TrustedResourceUrl|Url, rel: string) {
   if (url instanceof TrustedResourceUrl) {
     link.href = unwrapResourceUrl(url).toString();
   } else {
@@ -70,7 +70,7 @@ export function setHrefAndRel(
       throw new Error(
           `TrustedResourceUrl href attribute required with rel="${rel}"`);
     }
-    link.href = unwrapUrl(url);
+    link.href = unwrapUrlOrSanitize(url);
   }
   link.rel = rel;
 }

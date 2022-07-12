@@ -3,18 +3,18 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {SafeUrl, unwrapUrl} from '../../internals/url_impl';
+import {unwrapUrlOrSanitize, Url} from '../safeurl/index';
 
 /**
- * Sets the Formaction attribute from the given SafeUrl.
+ * Sets the Formaction attribute from the given Url.
  */
-export function setFormaction(input: HTMLInputElement, url: SafeUrl) {
-  input.formAction = unwrapUrl(url);
+export function setFormaction(input: HTMLInputElement, url: Url) {
+  input.formAction = unwrapUrlOrSanitize(url);
 }
 
 /**
- * Sets the Src attribute from the given SafeUrl.
+ * Sets the Src attribute from the given Url.
  */
-export function setSrc(input: HTMLInputElement, url: SafeUrl) {
-  input.src = unwrapUrl(url);
+export function setSrc(input: HTMLInputElement, url: Url) {
+  input.src = unwrapUrlOrSanitize(url);
 }

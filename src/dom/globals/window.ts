@@ -3,14 +3,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {SafeUrl, unwrapUrl} from '../../internals/url_impl';
+import {unwrapUrlOrSanitize, Url} from '../safeurl/index';
 
 /**
  * open calls {@link Window.open} on the given {@link Window}, given a
- * target {@link SafeUrl}.
+ * target {@link Url}.
  */
 export function open(
-    win: Window, url: SafeUrl, target?: string, features?: string): Window|
-    null {
-  return win.open(unwrapUrl(url), target, features);
+    win: Window, url: Url, target?: string, features?: string): Window|null {
+  return win.open(unwrapUrlOrSanitize(url), target, features);
 }
