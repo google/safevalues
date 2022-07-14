@@ -3,10 +3,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {INNOCUOUS_URL, sanitizeJavascriptUrl} from '../../../src/dom/safeurl/index';
-import {URL_TEST_VECTORS} from '../../testvectors/javascript_url_sanitizer_test_vectors';
+import {INNOCUOUS_URL, sanitizeJavascriptUrl} from '../../src/builders/url_sanitizer';
+import {URL_TEST_VECTORS} from '../testvectors/javascript_url_sanitizer_test_vectors';
 
-describe('safeurl', () => {
+describe('url_sanitizer', () => {
   describe('sanitizeJavascriptUrl', () => {
     for (const v of URL_TEST_VECTORS) {
       it(`sanitizes javascript: URLs correctly`, () => {

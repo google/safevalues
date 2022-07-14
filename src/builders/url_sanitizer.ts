@@ -8,7 +8,7 @@
  * level.
  */
 
-import '../../environment/dev';
+import '../environment/dev';
 
 /**
  * An inert URL, used as an inert return value when an unsafe input was

@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {Url} from '../safeurl/index';
+import {Url} from '../../builders/url_sanitizer';
 
 /**
  * Sets the Src attribute from the given Url.
