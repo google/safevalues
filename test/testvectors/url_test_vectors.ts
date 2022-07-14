@@ -65,11 +65,7 @@ export const URL_TEST_VECTORS = [
   new UrlTestVector(
       'whatsapp://send?text\u003DHello', 'about:invalid#zClosurez'),
   new UrlTestVector('ssh://cloud.google.com', 'about:invalid#zClosurez'),
-  new UrlTestVector(':', 'about:invalid#zClosurez'),
-  new UrlTestVector('\\:', 'about:invalid#zClosurez'),
-  new UrlTestVector(':/:', 'about:invalid#zClosurez'),
   new UrlTestVector('path\u000A:', 'about:invalid#zClosurez'),
-  new UrlTestVector('java\u0000script:evil();', 'about:invalid#zClosurez'),
   new UrlTestVector(
       'http://www.f\u0000\u0000.com', 'http://www.f\u0000\u0000.com'),
   new UrlTestVector(
