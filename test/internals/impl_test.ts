@@ -8,7 +8,6 @@ import {createResourceUrl, isResourceUrl, unwrapResourceUrl} from '../../src/int
 import {createScript, isScript, unwrapScript} from '../../src/internals/script_impl';
 import {createStyle, isStyle, unwrapStyle} from '../../src/internals/style_impl';
 import {createStyleSheet, isStyleSheet, unwrapStyleSheet} from '../../src/internals/style_sheet_impl';
-import {createUrl, isUrl, unwrapUrl} from '../../src/internals/url_impl';
 
 interface Impl {
   name: string;
@@ -32,12 +31,6 @@ const IMPLEMENTATIONS: Impl[] = [
     guard: isScript,
     create: createScript,
     unwrap: unwrapScript,
-  },
-  {
-    name: 'SafeUrl',
-    guard: isUrl,
-    create: createUrl,
-    unwrap: unwrapUrl,
   },
   {
     name: 'SafeStyle',

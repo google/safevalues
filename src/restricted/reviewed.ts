@@ -10,7 +10,6 @@ import {createResourceUrl, TrustedResourceUrl} from '../internals/resource_url_i
 import {createScript, SafeScript} from '../internals/script_impl';
 import {createStyle, SafeStyle} from '../internals/style_impl';
 import {createStyleSheet, SafeStyleSheet} from '../internals/style_sheet_impl';
-import {createUrl, SafeUrl} from '../internals/url_impl';
 
 /**
  * Utilities to convert arbitrary strings to values of the various
@@ -94,22 +93,6 @@ export function resourceUrlSafeByReview(
     assertValidJustification(justification);
   }
   return createResourceUrl(url);
-}
-
-/**
- * Performs a "reviewed conversion" to SafeUrl from a plain string that is
- * known to satisfy the SafeUrl type contract.
- *
- * IMPORTANT: Uses of this method must be carefully security-reviewed to ensure
- * that the value of `url` satisfies the SafeUrl type contract in all
- * possible program states. An appropriate `justification` must be provided
- * explaining why this particular use of the function is safe.
- */
-export function urlSafeByReview(url: string, justification: string): SafeUrl {
-  if (process.env.NODE_ENV !== 'production') {
-    assertValidJustification(justification);
-  }
-  return createUrl(url);
 }
 
 /**

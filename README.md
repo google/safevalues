@@ -82,7 +82,7 @@ const url2 = trustedResourceUrl`/static/${env}/js/main.js?opt=${opt}`;
 // TrustedResourceURL{'/static/a%2Fb/js/main.js?opt=min%26test%3D1'}
 ```
 
-<!-- TODO: Add documentation for SafeUrl, SafeStyle and SafeStyleSheet. -->
+<!-- TODO: Add documentation for SafeStyle and SafeStyleSheet. -->
 
 ## Use with browsers that don't support Trusted Types
 

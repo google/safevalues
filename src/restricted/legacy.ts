@@ -10,7 +10,6 @@ import {createResourceUrl, TrustedResourceUrl} from '../internals/resource_url_i
 import {createScript, SafeScript} from '../internals/script_impl';
 import {createStyle, SafeStyle} from '../internals/style_impl';
 import {createStyleSheet, SafeStyleSheet} from '../internals/style_sheet_impl';
-import {createUrl, SafeUrl} from '../internals/url_impl';
 
 /*
  * Transitional utilities to unsafely trust random strings as
@@ -96,18 +95,6 @@ export function legacyUnsafeResourceUrl(s: string): TrustedResourceUrl {
     throw new Error('Expected a string');
   }
   return createResourceUrl(s);
-}
-
-/**
- * Turns a string into SafeUrl for legacy API purposes.
- *
- * Please read fileoverview documentation before using.
- */
-export function legacyUnsafeUrl(s: string): SafeUrl {
-  if (process.env.NODE_ENV !== 'production' && typeof s !== 'string') {
-    throw new Error('Expected a string');
-  }
-  return createUrl(s);
 }
 
 /**
