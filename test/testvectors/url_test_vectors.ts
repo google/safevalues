@@ -46,8 +46,6 @@ export const URL_TEST_VECTORS = [
       'javascript:evil();//\u000Ahttp://good.com/', 'about:invalid#zClosurez'),
   new UrlTestVector(
       'not-data:image/png;base64,z\u003D', 'about:invalid#zClosurez'),
-  new UrlTestVector(
-      ' data:image/png;base64,z\u003D', 'about:invalid#zClosurez'),
   new UrlTestVector('tel:+1234567890', 'about:invalid#zClosurez'),
   new UrlTestVector('sms:+1234567890', 'about:invalid#zClosurez'),
   new UrlTestVector('callto:+1234567890', 'about:invalid#zClosurez'),
