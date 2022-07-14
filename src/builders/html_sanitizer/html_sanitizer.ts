@@ -8,8 +8,7 @@ import '../../environment/dev';
 import {createHtml, SafeHtml} from '../../internals/html_impl';
 /* g3_import_pure from '../../internals/pure' */
 import {ensureTokenIsValid, secretToken} from '../../internals/secrets';
-import {unwrapUrl} from '../../internals/url_impl';
-import {sanitizeUrl} from '../url_builders';
+import {restrictivelySanitizeUrl} from '../url_sanitizer';
 
 import {createInertFragment} from './inert_fragment';
 import {getNodeName, isElement, isText} from './no_clobber';
@@ -144,7 +143,7 @@ export class HtmlSanitizerImpl implements HtmlSanitizer {
           newNode.setAttribute(name, value);
           break;
         case AttributePolicyAction.KEEP_AND_SANITIZE_URL:
-          const sanitizedAttrUrl = unwrapUrl(sanitizeUrl(value));
+          const sanitizedAttrUrl = restrictivelySanitizeUrl(value);
           if (sanitizedAttrUrl !== value) {
             this.recordChange(`Url in attribute ${
                 name} was modified during sanitization. Original url:"${
