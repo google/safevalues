@@ -21,16 +21,18 @@ describe('safeLink#setHrefAndRel', () => {
     });
   });
 
-  describe('with string for SafeUrl sinks', () => {
-    beforeEach(() => {
-      linkElem = document.createElement('link');
-    });
+  // BEGIN-EXTERNAL
+  // describe('with string for SafeUrl sinks', () => {
+  //   beforeEach(() => {
+  //     linkElem = document.createElement('link');
+  //   });
 
-    it('sets `href` and `rel` attribute as expected', () => {
-      const url = 'https://google.com/author.html';
-      safeLinkEl.setHrefAndRel(linkElem, url, 'author');
-      expect(linkElem.href).toBe('https://google.com/author.html');
-      expect(linkElem.rel).toBe('author');
-    });
-  });
+  //   it('sets `href` and `rel` attribute as expected', () => {
+  //     const url = 'https://google.com/author.html';
+  //     safeLinkEl.setHrefAndRel(linkElem, url, 'author');
+  //     expect(linkElem.href).toBe('https://google.com/author.html');
+  //     expect(linkElem.rel).toBe('author');
+  //   });
+  // });
+  // END-EXTERNAL
 });
