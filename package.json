@@ -13,7 +13,7 @@
   "sideEffects": false,
   "files": [
     "/index.*",
-    "/environment.*",
+    "/environment/*",
     "/restricted/*",
     "/internals/*",
     "/builders/*",
