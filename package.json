@@ -1,6 +1,6 @@
 {
   "name": "safevalues",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Safe builders for Trusted Types values",
   "repository": "https://github.com/google/safevalues",
   "author": "ISE Hardening",
