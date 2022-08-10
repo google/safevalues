@@ -18,6 +18,7 @@ export * as safeIframeEl from './elements/iframe';
 export * as safeImageEl from './elements/image';
 export * as safeInputEl from './elements/input';
 export * as safeLinkEl from './elements/link';
+export * as safeObjectEl from './elements/object';
 export * as safeScriptEl from './elements/script';
 export * as safeStyleEl from './elements/style';
 export * as safeDocument from './globals/document';
