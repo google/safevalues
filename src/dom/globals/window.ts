@@ -11,9 +11,5 @@ import {unwrapUrlOrSanitize, Url} from '../../builders/url_sanitizer';
  */
 export function open(
     win: Window, url: Url, target?: string, features?: string): Window|null {
-  const sanitizedUrl = unwrapUrlOrSanitize(url);
-  if (sanitizedUrl !== undefined) {
-    return win.open(sanitizedUrl, target, features);
-  }
-  return null;
+  return win.open(unwrapUrlOrSanitize(url), target, features);
 }

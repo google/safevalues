@@ -10,6 +10,12 @@
 
 import '../environment/dev';
 
+/**
+ * An inert URL, used as an inert return value when an unsafe input was
+ * sanitized.
+ */
+export const INNOCUOUS_URL: string = 'about:invalid';
+
 function extractScheme(url: string): string|undefined {
   let parsedUrl;
   try {
@@ -30,19 +36,18 @@ function extractScheme(url: string): string|undefined {
 const ALLOWED_SCHEMES = ['data:', 'http:', 'https:', 'mailto:', 'ftp:'];
 
 /**
- * Checks that the URL scheme is not javascript.
+ * Replaces javascript: URLs with an innocuous URL.
  * The URL parsing relies on the URL API in browsers that support it.
  * @param url The URL to sanitize for a SafeUrl sink.
- * @return undefined if url has a javascript: scheme, the original URL
- *     otherwise.
  */
-export function sanitizeJavascriptUrl(url: string): string|undefined {
+export function sanitizeJavascriptUrl(url: string): string {
   const parsedScheme = extractScheme(url);
   if (parsedScheme === 'javascript:') {
     if (process.env.NODE_ENV !== 'production') {
-      console.error(`A URL with content '${url}' was sanitized away.`);
+      throw new Error(`A URL with content '${
+          url}' was sanitized away. javascript: URLs can lead to XSS and is a CSP rollout blocker.`);
     }
-    return undefined;
+    return INNOCUOUS_URL;
   }
   return url;
 }
@@ -54,9 +59,8 @@ export type Url = string;
 
 /**
  * Adapter to sanitize string URLs in DOM sink wrappers.
- * @return undefined if the URL was sanitized.
  */
-export function unwrapUrlOrSanitize(url: Url): string|undefined {
+export function unwrapUrlOrSanitize(url: Url): string {
   return sanitizeJavascriptUrl(url);
 }
 

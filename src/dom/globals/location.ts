@@ -10,10 +10,7 @@ import {unwrapUrlOrSanitize, Url} from '../../builders/url_sanitizer';
  * given {@link Url}.
  */
 export function setHref(loc: Location, url: Url) {
-  const sanitizedUrl = unwrapUrlOrSanitize(url);
-  if (sanitizedUrl !== undefined) {
-    loc.href = sanitizedUrl;
-  }
+  loc.href = unwrapUrlOrSanitize(url);
 }
 
 /**
@@ -21,10 +18,7 @@ export function setHref(loc: Location, url: Url) {
  * with given {@link Url}.
  */
 export function replace(loc: Location, url: Url) {
-  const sanitizedUrl = unwrapUrlOrSanitize(url);
-  if (sanitizedUrl !== undefined) {
-    loc.replace(sanitizedUrl);
-  }
+  loc.replace(unwrapUrlOrSanitize(url));
 }
 
 /**
@@ -32,8 +26,5 @@ export function replace(loc: Location, url: Url) {
  * with given {@link Url}.
  */
 export function assign(loc: Location, url: Url) {
-  const sanitizedUrl = unwrapUrlOrSanitize(url);
-  if (sanitizedUrl !== undefined) {
-    loc.assign(sanitizedUrl);
-  }
+  loc.assign(unwrapUrlOrSanitize(url));
 }

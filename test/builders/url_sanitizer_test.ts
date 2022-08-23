@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import * as urls from '../../src/builders/url_sanitizer';
+import {INNOCUOUS_URL, restrictivelySanitizeUrl, sanitizeJavascriptUrl} from '../../src/builders/url_sanitizer';
 import {URL_TEST_VECTORS as JAVASCRIPT_URL_TEST_VECTORS} from '../testvectors/javascript_url_sanitizer_test_vectors';
 import {URL_TEST_VECTORS} from '../testvectors/url_test_vectors';
 
@@ -11,10 +11,15 @@ describe('url_sanitizer', () => {
   describe('sanitizeJavascriptUrl', () => {
     for (const v of JAVASCRIPT_URL_TEST_VECTORS) {
       it(`sanitizes javascript: URLs correctly`, () => {
+        // TODO(gweg): also test that the sanitization silently return an
+        // INNOCUOUS_URL when run in non process.env.NODE_ENV !== 'production'.
         if (v.expected === 'about:invalid#zClosurez') {
-          expect(urls.sanitizeJavascriptUrl(v.input)).toEqual(undefined);
+          expect(() => sanitizeJavascriptUrl(v.input))
+              .toThrowError(
+                  /was sanitized away[.] javascript: URLs can lead to XSS and is a CSP rollout blocker[.]/);
         } else {
-          expect(urls.sanitizeJavascriptUrl(v.input)).toEqual(v.expected);
+          expect(sanitizeJavascriptUrl(v.input))
+              .toEqual(replaceLegacyInnocuousUrlValue(v.expected));
         }
       });
     }
@@ -23,8 +28,13 @@ describe('url_sanitizer', () => {
   describe('restrictivelySanitizeUrl', () => {
     for (const v of URL_TEST_VECTORS) {
       it(`sanitizes URLs correctly`, () => {
-        expect(urls.restrictivelySanitizeUrl(v.input)).toEqual(v.expected);
+        expect(restrictivelySanitizeUrl(v.input)).toEqual(v.expected);
       });
     }
   });
 });
+
+function replaceLegacyInnocuousUrlValue(currentValue: string): string {
+  return currentValue === 'about:invalid#zClosurez' ? INNOCUOUS_URL :
+                                                      currentValue;
+}

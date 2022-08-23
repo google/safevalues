@@ -70,11 +70,7 @@ export function setHrefAndRel(
       throw new Error(
           `TrustedResourceUrl href attribute required with rel="${rel}"`);
     }
-    const sanitizedUrl = unwrapUrlOrSanitize(url);
-    if (sanitizedUrl === undefined) {
-      return;
-    }
-    link.href = sanitizedUrl;
+    link.href = unwrapUrlOrSanitize(url);
   }
   link.rel = rel;
 }
