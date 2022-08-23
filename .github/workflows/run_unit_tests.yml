@@ -1,0 +1,21 @@
+name: run-unit-tests
+on:
+  pull_request:
+    branches:
+    - main
+    paths:
+    - 'src/**'
+    - 'test/**'
+    - 'integration_test/**'
+jobs:
+  run_unit_tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - run: |
+          yarn install --frozen-lockfile
+          yarn test
