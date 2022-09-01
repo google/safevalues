@@ -232,7 +232,8 @@ export function replaceFragment(
  * Caller must call `URL.revokeObjectUrl()` on the stringified url to
  * release the underlying `Blob`.
  */
-export function blobUrlFromScript(safeScript: SafeScript): TrustedResourceUrl {
+export function objectUrlFromScript(safeScript: SafeScript):
+    TrustedResourceUrl {
   const scriptContent = unwrapScript(safeScript).toString();
   const blob = new Blob([scriptContent], {type: 'text/javascript'});
   return createResourceUrl(URL.createObjectURL(blob));
