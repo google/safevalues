@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {concatHtmls, createScript, createScriptSrc, htmlEscape} from '../../src/builders/html_builders';
-import {safeScript, scriptFromJson} from '../../src/builders/script_builders';
+import {concatHtmls, htmlEscape, scriptAsHtml, scriptSrcAsHtml} from '../../src/builders/html_builders';
+import {safeScript, valueAsScript} from '../../src/builders/script_builders';
 import {testonlyResourceUrl} from '../testing_conversions';
 
 describe('html_builders', () => {
@@ -86,18 +86,18 @@ describe('html_builders', () => {
     });
   });
 
-  describe('createScript', () => {
+  describe('scriptAsHtml', () => {
     it('builds the right tags', () => {
-      expect(createScript(safeScript`const a = b < c;`).toString())
+      expect(scriptAsHtml(safeScript`const a = b < c;`).toString())
           .toEqual('<script>const a = b < c;</script>');
       expect(
-          createScript(safeScript`const a = b < c;`, {id: 'myid'}).toString())
+          scriptAsHtml(safeScript`const a = b < c;`, {id: 'myid'}).toString())
           .toEqual('<script id="myid">const a = b < c;</script>');
-      expect(createScript(safeScript`const a = b < c;`, {
+      expect(scriptAsHtml(safeScript`const a = b < c;`, {
                nonce: 'mynonce'
              }).toString())
           .toEqual('<script nonce="mynonce">const a = b < c;</script>');
-      expect(createScript(safeScript`const a = b < c;`, {
+      expect(scriptAsHtml(safeScript`const a = b < c;`, {
                id: 'myid',
                nonce: 'mynonce'
              }).toString())
@@ -106,17 +106,17 @@ describe('html_builders', () => {
     });
 
     it('allows setting type', () => {
-      const json = scriptFromJson({
+      const json = valueAsScript({
         '@context': 'https://schema.org/',
         '@type': 'Test',
         'name': 'JSON Script',
       });
-      expect(createScript(json, {type: 'application/ld+json'}).toString())
+      expect(scriptAsHtml(json, {type: 'application/ld+json'}).toString())
           .toEqual(
               '<script type="application/ld+json">' +
               '{"@context":"https://schema.org/","@type":"Test","name":"JSON Script"}' +
               '</script>');
-      expect(createScript(safeScript`const a = b < c;`, {
+      expect(scriptAsHtml(safeScript`const a = b < c;`, {
                type: 'text/javascript'
              }).toString())
           .toEqual('<script type="text/javascript">const a = b < c;</script>');
@@ -124,32 +124,32 @@ describe('html_builders', () => {
 
     it('escapes attributes', () => {
       const createdSafeScript = safeScript`xyz;`;
-      expect(createScript(createdSafeScript, {id: '<">'}).toString())
+      expect(scriptAsHtml(createdSafeScript, {id: '<">'}).toString())
           .toEqual('<script id="&lt;&quot;&gt;">xyz;</script>');
-      expect(createScript(createdSafeScript, {nonce: '<">'}).toString())
+      expect(scriptAsHtml(createdSafeScript, {nonce: '<">'}).toString())
           .toEqual('<script nonce="&lt;&quot;&gt;">xyz;</script>');
     });
   });
 
-  describe('createScriptSrc', () => {
+  describe('scriptSrcAsHtml', () => {
     it('builds the right tags', () => {
-      expect(createScriptSrc(testonlyResourceUrl('//abc<')).toString())
+      expect(scriptSrcAsHtml(testonlyResourceUrl('//abc<')).toString())
           .toEqual('<script src="//abc&lt;"></script>');
-      expect(createScriptSrc(testonlyResourceUrl('//abc<'), true).toString())
+      expect(scriptSrcAsHtml(testonlyResourceUrl('//abc<'), true).toString())
           .toEqual('<script src="//abc&lt;" async></script>');
-      expect(createScriptSrc(testonlyResourceUrl('//abc<'), false).toString())
+      expect(scriptSrcAsHtml(testonlyResourceUrl('//abc<'), false).toString())
           .toEqual('<script src="//abc&lt;"></script>');
-      expect(createScriptSrc(testonlyResourceUrl('//abc<'), false, '123')
+      expect(scriptSrcAsHtml(testonlyResourceUrl('//abc<'), false, '123')
                  .toString())
           .toEqual('<script src="//abc&lt;" nonce="123"></script>');
-      expect(createScriptSrc(testonlyResourceUrl('//abc<<'), false, '123')
+      expect(scriptSrcAsHtml(testonlyResourceUrl('//abc<<'), false, '123')
                  .toString())
           .toEqual('<script src="//abc&lt;&lt;" nonce="123"></script>');
     });
 
     it('escapes attributes', () => {
       const url = testonlyResourceUrl('//a?b&c');
-      expect(createScriptSrc(url, false, `"'&`).toString())
+      expect(scriptSrcAsHtml(url, false, `"'&`).toString())
           .toEqual(
               '<script src="//a?b&amp;c" nonce="&quot;&apos;&amp;"></script>');
     });

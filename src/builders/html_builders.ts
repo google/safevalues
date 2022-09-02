@@ -40,7 +40,7 @@ export function htmlEscape(text: string, options: {
 /**
  * Creates a `SafeHtml` representing a script tag with inline script content.
  */
-export function createScript(script: SafeScript, options: {
+export function scriptAsHtml(script: SafeScript, options: {
   id?: string,
   nonce?: string,
   type?: string,
@@ -64,7 +64,7 @@ export function createScript(script: SafeScript, options: {
  * Creates a `SafeHtml` representing a script tag with the src attribute.
  * This also supports CSP nonces and async loading.
  */
-export function createScriptSrc(
+export function scriptSrcAsHtml(
     src: TrustedResourceUrl, async?: boolean, nonce?: string): SafeHtml {
   const unwrappedSrc = unwrapResourceUrl(src).toString();
   let stringTag = `<script src="${htmlEscapeToString(unwrappedSrc)}"`;

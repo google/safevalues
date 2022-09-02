@@ -44,7 +44,7 @@ export function concatScripts(scripts: readonly SafeScript[]): SafeScript {
  * "</script>" doesn't break out of the context.
  * @param value The value to serialize.
  */
-export function scriptFromJson(value: Serializable): SafeScript {
+export function valueAsScript(value: Serializable): SafeScript {
   return createScript(JSON.stringify(value).replace(/</g, '\\x3c'));
 }
 
@@ -87,7 +87,7 @@ export function safeScriptWithArgs(
             'For example, safeScriptWithArgs`foo`;');
   }
   return (...argValues: Serializable[]) => {
-    const values = argValues.map((v) => scriptFromJson(v).toString());
+    const values = argValues.map((v) => valueAsScript(v).toString());
     return createScript(`(${templateObj.join('')})(${values.join(',')})`);
   };
 }
