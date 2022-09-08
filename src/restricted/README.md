@@ -11,25 +11,25 @@ review, we highly recommend you only use them in conjunction with a tool like
 
 ## Legacy conversions
 
-When migrating from using string values to using Trusted Types, we often want to
-move the "sensitive" part of the code from where the value is used (`innerHTML`,
-`eval`, ect..) to where the value is constructed. This can be difficult as there
-is not always a direct path from creation to usage. Successfully changing the
-code might require updating many files at once.
+When migrating from using `string` values to using Trusted Types, we often want
+to move the sensitive part of the code from where the value is used
+(`innerHTML`, `eval`, etc..) to where the value is constructed. This can be
+difficult as there is not always a direct path from creation to usage.
+Successfully changing the code might require updating many files at once.
 
-To avoid this issue, we provide a conversion from string -> Trusted Type that is
-unsafe, but can be used to make the code compatible with Trusted Type where the
-value is used. This function can then be "moved up" closer to where the values
-are created in independent changes. Once the conversion is in a place where the
-context makes it possible to construct the value safely, it can be removed
-completely.
+To avoid this issue, we provide a conversion from `string` -> Trusted Type that
+is unsafe, but can be used to make the code compatible with Trusted Type where
+the value is used. This function can then be "moved up" closer to where the
+values are created in independent changes. Once the conversion is in a place
+where the context makes it possible to construct the value safely, it can be
+removed completely.
 
 ```typescript
 import {legacyUnsafeResourceUrl} from 'safevalues/restricted/legacy';
-import {unwrapResourceUrl} from 'safevalues';
+import {safeScriptEl} from 'safevalues/dom';
 
-// TODO: move legacyConversion to caller
-script.src = unwrapResourceUrl(legacyUnsafeResourceUrl(url));
+// TODO: move legacy conversion to caller
+safeScriptEl.setSrc(script,legacyUnsafeResourceUrl(url));
 ```
 
 ## Reviewed conversions
@@ -48,14 +48,14 @@ If you are using tsec however, you can directly use a reviewed conversion which
 will let you create a polyfilled value & force you to provide a justification.
 
 ```typescript
+import {safeScriptEl} from 'safevalues/dom';
 import {scriptSafeByReview} from 'safevalues/restricted/reviewed';
-import {unwrapScript} from 'safevalues';
 
 if (document.domain === '') {
     const scriptText = scriptSafeByReview(
         userInput,
         `Even though the input is user controller, the wrapping if statement
          ensures that this code is only ever run in a sandboxed origin`);
-    scriptEl.text = unwrapScript(scriptText);
+    safeScriptEl.setSrc(scriptEl, scriptText);
 }
 ```
