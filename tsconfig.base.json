@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "target": "es2017",
-    "module": "es2015",
     "lib": [
       "es2017",
       "dom",
@@ -13,21 +12,18 @@
       "trusted-types"
     ],
     "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-    "inlineSources": true,
-    "outDir": "dist/",
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
-    "noImplicitThis": true
+    "noImplicitThis": true,
+    "esModuleInterop": true
   },
   "include": [
-    "src/**/*.ts",
-    "test/**/*.ts"
+    "./src/**/*.ts",
+    "./test/**/*.ts"
   ],
   "exclude": [
     "dist/",

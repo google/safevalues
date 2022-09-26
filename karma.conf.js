@@ -14,7 +14,7 @@ module.exports = (config) => {
       'karma-spec-reporter',
     ],
     karmaTypescriptConfig: {
-      tsconfig: './tsconfig.json',
+      tsconfig: './tsconfig.esm.json',
       compilerOptions: {
         module: 'commonjs',
       },

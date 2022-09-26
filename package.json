@@ -10,6 +10,7 @@
   },
   "main": "index.js",
   "types": "index.d.ts",
+  "type": "commonjs",
   "sideEffects": false,
   "files": [
     "/index.*",
@@ -20,12 +21,13 @@
     "/dom/*"
   ],
   "scripts": {
-    "build": "yarn && tsc",
-    "ibuild": "yarn && tsc --watch",
+    "clean": "rm -rf ./dist",
+    "build": "yarn clean && yarn build:esm && yarn build:cjs",
+    "build:esm": "yarn && tsc -p ./tsconfig.esm.json",
+    "build:cjs": "yarn && tsc -p ./tsconfig.cjs.json",
+    "prepack": "yarn test && bash ./prepack.sh",
     "test": "yarn build && karma start --browsers ChromeHeadless,FirefoxHeadless --single-run",
-    "itest": "yarn build && karma start --browsers ChromeHeadless,FirefoxHeadless",
-    "prepack": "yarn test && mv dist/src/* .",
-    "postpack": "mv restricted internals builders environment index.* dist/src/"
+    "itest": "yarn build && karma start --browsers ChromeHeadless,FirefoxHeadless"
   },
   "devDependencies": {
     "@types/jasmine": "^3.6.2",
