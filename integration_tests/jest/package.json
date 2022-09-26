@@ -1,0 +1,34 @@
+{
+  "name": "safevalues-import",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danrevah/safevalues-import.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/danrevah/safevalues-import/issues"
+  },
+  "homepage": "https://github.com/danrevah/safevalues-import#readme",
+  "devDependencies": {
+    "@babel/plugin-transform-modules-commonjs": "^7.15.0",
+    "@types/node": "^16.7.1",
+    "@types/trusted-types": "^2.0.2",
+    "jest-environment-jsdom-fifteen": "^1.0.2",
+    "jest-environment-jsdom-sixteen": "^2.0.0"
+  },
+  "dependencies": {
+    "@types/jest": "^27.0.0",
+    "babel-jest": "^27.0.6",
+    "jest": "^27.0.0",
+    "safevalues": "^0.3.1",
+    "ts-jest": "^27.0.0",
+    "typescript": "^3.9.10"
+  }
+}
