@@ -1,7 +1,9 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "module": "CommonJS",
-    "outDir": "./dist/cjs"
+    "target": "es5",
+    "module": "commonjs",
+    "outDir": "./dist/cjs",
+    "downlevelIteration": true
   }
 }
