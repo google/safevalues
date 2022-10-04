@@ -4,7 +4,7 @@
  */
 
 import {concatHtmls, createScript, createScriptSrc, htmlEscape} from '../../src/builders/html_builders';
-import {safeScript, scriptFromJson} from '../../src/builders/script_builders';
+import {safeScript, valueAsScript} from '../../src/builders/script_builders';
 import {testonlyResourceUrl} from '../testing_conversions';
 
 describe('html_builders', () => {
@@ -106,7 +106,7 @@ describe('html_builders', () => {
     });
 
     it('allows setting type', () => {
-      const json = scriptFromJson({
+      const json = valueAsScript({
         '@context': 'https://schema.org/',
         '@type': 'Test',
         'name': 'JSON Script',

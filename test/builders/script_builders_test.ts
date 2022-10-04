@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {concatScripts, safeScript, safeScriptWithArgs, scriptFromJson} from '../../src/builders/script_builders';
+import {concatScripts, safeScript, safeScriptWithArgs, valueAsScript} from '../../src/builders/script_builders';
 import {SafeScript} from '../../src/internals/script_impl';
 
 describe('script_builders', () => {
@@ -27,15 +27,15 @@ describe('script_builders', () => {
     });
   });
 
-  describe('scriptFromJson', () => {
+  describe('valueAsScript', () => {
     it('should serialize as JSON', () => {
-      const json = scriptFromJson(
+      const json = valueAsScript(
           {'a': 1, 'b': (() => 'unserializable') as unknown as string});
       expect(json.toString()).toEqual('{"a":1}');
     });
 
     it('escapes < signs', () => {
-      const json = scriptFromJson('<script></script>');
+      const json = valueAsScript('<script></script>');
       expect(json.toString()).toEqual('"\\x3cscript>\\x3c/script>"');
     });
   });

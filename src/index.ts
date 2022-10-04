@@ -9,7 +9,7 @@ export {concatHtmls, createScript, createScriptSrc, htmlEscape} from './builders
 export {HtmlSanitizer, sanitizeHtml, sanitizeHtmlAssertUnchanged, sanitizeHtmlToFragment} from './builders/html_sanitizer/html_sanitizer';
 export {HtmlSanitizerBuilder} from './builders/html_sanitizer/html_sanitizer_builder';
 export {appendParams, blobUrlFromScript, replaceFragment, trustedResourceUrl} from './builders/resource_url_builders';
-export {concatScripts, safeScript, safeScriptWithArgs, scriptFromJson} from './builders/script_builders';
+export {concatScripts, safeScript, safeScriptWithArgs, valueAsScript} from './builders/script_builders';
 export {concatStyles, safeStyle} from './builders/style_builders';
 export {concatStyleSheets, safeStyleSheet} from './builders/style_sheet_builders';
 /** Types, constants and unwrappers */
