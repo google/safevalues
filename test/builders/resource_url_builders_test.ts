@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {appendParams, blobUrlFromScript, replaceFragment, trustedResourceUrl} from '../../src/builders/resource_url_builders';
+import {appendParams, objectUrlFromScript, replaceFragment, trustedResourceUrl} from '../../src/builders/resource_url_builders';
 import {safeScript} from '../../src/builders/script_builders';
 import {TrustedResourceUrl} from '../../src/internals/resource_url_impl';
 
@@ -213,20 +213,20 @@ describe('resource_url_builders', () => {
     });
   });
 
-  describe('blobUrlFromScript', () => {
+  describe('objectUrlFromScript', () => {
     it('wraps a blob url', () => {
-      const url = blobUrlFromScript(safeScript`console.log('hello world');`);
+      const url = objectUrlFromScript(safeScript`console.log('hello world');`);
       expect(url.toString().slice(0, 5)).toEqual('blob:');
     });
 
     it('returns the expected contents when fetched', async () => {
-      const url = blobUrlFromScript(safeScript`console.log('hello world');`);
+      const url = objectUrlFromScript(safeScript`console.log('hello world');`);
       const fetchedContent = await fetchScriptContent(url);
       expect(fetchedContent).toEqual(`console.log('hello world');`);
     });
 
     it('can be revoked using revokeObjectURL', async () => {
-      const url = blobUrlFromScript(safeScript`console.log('hello world');`);
+      const url = objectUrlFromScript(safeScript`console.log('hello world');`);
       URL.revokeObjectURL(url.toString());
       await expectAsync(fetchScriptContent(url)).toBeRejected();
     });
