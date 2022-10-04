@@ -5,7 +5,7 @@
 
 /** Safe builders */
 export {safeAttrPrefix} from './builders/attribute_builders';
-export {concatHtmls, createScript, createScriptSrc, htmlEscape} from './builders/html_builders';
+export {concatHtmls, htmlEscape, scriptToHtml, scriptUrlToHtml} from './builders/html_builders';
 export {HtmlSanitizer, sanitizeHtml, sanitizeHtmlAssertUnchanged, sanitizeHtmlToFragment} from './builders/html_sanitizer/html_sanitizer';
 export {HtmlSanitizerBuilder} from './builders/html_sanitizer/html_sanitizer_builder';
 export {appendParams, blobUrlFromScript, replaceFragment, trustedResourceUrl} from './builders/resource_url_builders';
