@@ -19,3 +19,8 @@ export {isResourceUrl, TrustedResourceUrl, unwrapResourceUrl} from './internals/
 export {EMPTY_SCRIPT, isScript, SafeScript, unwrapScript} from './internals/script_impl';
 export {isStyle, SafeStyle, unwrapStyle} from './internals/style_impl';
 export {isStyleSheet, SafeStyleSheet, unwrapStyleSheet} from './internals/style_sheet_impl';
+
+// BEGIN-INTERNAL
+goog.tsMigrationNamedExportsShim('safevalues');
+goog.tsMigrationExportsShimDeclareLegacyNamespace();
+// END-INTERNAL
