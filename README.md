@@ -58,6 +58,20 @@ to benefit from the runtime protection of Trusted Types. When Trusted Types is
 not available, `safevalues` transparently defines its own types and your app
 will continue to work.
 
+## Known issues
+
+### ReferenceError: Can't find variable: process
+
+When using a bundler that performs dead-code elimination, you must ensure that
+`process.env.NODE_ENV` is declared globally with either a value of `development`
+or `production`. This is done in Webpack by
+[specifying a mode](https://webpack.js.org/guides/production/#specify-the-mode),
+in Terser using the
+[--define flag](https://webpack.js.org/guides/production/#specify-the-mode) and
+in Rollup using the
+[rollup-plugin-define plugin](https://www.npmjs.com/package/rollup-plugin-define#usage).
+See ([#212](https://github.com/google/safevalues/issues/212)).
+
 --------------------------------------------------------------------------------
 
 [Read on](https://github.com/google/safevalues/tree/main/src) about for more
