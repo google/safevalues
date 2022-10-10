@@ -4,7 +4,7 @@
  */
 
 import * as safeRange from '../../../src/dom/globals/range';
-import {testonlyHtml} from '../../testing_conversions';
+import {testonlyHtml} from '../../conversions';
 
 describe('safeRange', () => {
   describe('with TS safe types', () => {

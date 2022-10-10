@@ -4,7 +4,7 @@
  */
 
 import * as safeGlobal from '../../../src/dom/globals/global';
-import {testonlyScript} from '../../testing_conversions';
+import {testonlyScript} from '../../conversions';
 
 describe('safeGlobal', () => {
   describe('with TS safe types', () => {

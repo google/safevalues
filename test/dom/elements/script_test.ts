@@ -7,7 +7,7 @@ import {trustedResourceUrl} from '../../../src/builders/resource_url_builders';
 import {safeScript} from '../../../src/builders/script_builders';
 import * as safeScriptEl from '../../../src/dom/elements/script';
 import {safeDocument} from '../../../src/dom/index';
-import {testonlyHtml} from '../../testing_conversions';
+import {testonlyHtml} from '../../conversions';
 
 describe('safeScriptEl', () => {
   const nonce = btoa(`Nonce12345`);
