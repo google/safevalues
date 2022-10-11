@@ -1,6 +1,7 @@
 
 // clang-format off
 import {legacyUnsafeHtml} from '../../src/restricted/legacy';
+
 // clang-format on
 
 describe('legacy conversions', () => {
