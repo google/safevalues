@@ -10,7 +10,13 @@
 
 import '../environment/dev';
 
-function extractScheme(url: string): string|undefined {
+/**
+ * Extracts the scheme from the given URL. If the URL is relative, https: is
+ * assumed.
+ * @param url The URL to extract the scheme from.
+ * @return the URL scheme.
+ */
+export function extractScheme(url: string): string|undefined {
   let parsedUrl;
   try {
     parsedUrl = new URL(url);
