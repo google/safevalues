@@ -20,4 +20,6 @@ export const SECURITY_SENSITIVE_ATTRIBUTES = [
   'cite',
   'poster',
   'icon',
+  'codebase',
+  'data',
 ] as const;
