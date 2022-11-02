@@ -27,5 +27,6 @@ export * as safeGlobal from './globals/global';
 export * as safeLocation from './globals/location';
 export * as safeRange from './globals/range';
 export * as safeServiceWorkerContainer from './globals/service_worker_container';
+export * as safeUrl from './globals/url';
 export * as safeWindow from './globals/window';
 export * as safeWorker from './globals/worker';
