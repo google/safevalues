@@ -56,7 +56,7 @@ export function scriptToHtml(script: SafeScript, options: {
   if (options.type) {
     stringTag += ` type="${htmlEscapeToString(options.type)}"`;
   }
-  stringTag += `>${unwrappedScript}\x3c/script>`;
+  stringTag += `>${unwrappedScript}\u003C/script>`;
   return createHtml(stringTag);
 }
 
@@ -76,7 +76,7 @@ export function scriptUrlToHtml(src: TrustedResourceUrl, options: {
   if (options.nonce) {
     stringTag += ` nonce="${htmlEscapeToString(options.nonce)}"`;
   }
-  stringTag += '>\x3c/script>';
+  stringTag += '>\u003C/script>';
   return createHtml(stringTag);
 }
 

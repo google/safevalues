@@ -36,7 +36,7 @@ describe('script_builders', () => {
 
     it('escapes < signs', () => {
       const json = valueAsScript('<script></script>');
-      expect(json.toString()).toEqual('"\\x3cscript>\\x3c/script>"');
+      expect(json.toString()).toEqual('"\\u003Cscript>\\u003C/script>"');
     });
   });
 
@@ -54,7 +54,7 @@ describe('script_builders', () => {
 
     it('escapes < signs', () => {
       expect(safeScriptWithArgs`alert`('</script</script').toString())
-          .toEqual(`(alert)("\\x3c/script\\x3c/script")`);
+          .toEqual(`(alert)("\\u003C/script\\u003C/script")`);
     });
 
     it('rejects any interpolation', () => {

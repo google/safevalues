@@ -45,7 +45,7 @@ export function concatScripts(scripts: readonly SafeScript[]): SafeScript {
  * @param value The value to serialize.
  */
 export function valueAsScript(value: Serializable): SafeScript {
-  return createScript(JSON.stringify(value).replace(/</g, '\\x3c'));
+  return createScript(JSON.stringify(value).replace(/</g, '\\u003C'));
 }
 
 /**
