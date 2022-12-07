@@ -10,6 +10,7 @@
 
 export * as safeAnchorEl from './elements/anchor';
 export * as safeAreaEl from './elements/area';
+export * as safeBaseEl from './elements/base';
 export * as safeButtonEl from './elements/button';
 export * as safeElement from './elements/element';
 export * as safeEmbedEl from './elements/embed';
