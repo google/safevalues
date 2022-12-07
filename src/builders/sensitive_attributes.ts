@@ -10,16 +10,16 @@
  * `setAttribute` or similar functions.
  */
 export const SECURITY_SENSITIVE_ATTRIBUTES = [
-  'href',
-  'rel',
   'src',
   'srcdoc',
+  'codebase',
+  'data',
+  'href',
+  'rel',
   'action',
   'formaction',
   'sandbox',
   'cite',
   'poster',
   'icon',
-  'codebase',
-  'data',
 ] as const;
