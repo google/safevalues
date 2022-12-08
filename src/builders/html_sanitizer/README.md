@@ -30,9 +30,9 @@ All sanitizer instances (default and custom built) expose 3 methods:
     sanitization as `sanitize`, but returns a `DocumentFragment`.
 
     This method should be preferred over `sanitize` when the result is assigned
-    to a Node DOM API like `Node.appendChild`. Doing so is more is more
-    efficient than assigning `SafeHtml` to `Element.innerHTML` as it saves an
-    HTML serialization/deserialization.
+    to a Node DOM API like `Node.appendChild`. Doing so is more efficient than
+    assigning `SafeHtml` to `Element.innerHTML` as it saves an HTML
+    serialization/deserialization.
 
 *   `sanitizeAssertUnchanged(html: string): SafeHtml` is similar to `sanitize`
     but throws if parts of the input is sanitized away.
@@ -72,7 +72,7 @@ A tag is allowed if and only if:
 An attribute is allowed if and only if:
 
 *   it's
-    [globaly allowed](https://github.com/google/safevalues/blob/main/src/builders/html_sanitizer/sanitizer_table/default_sanitizer_table.ts#L98)
+    [globally allowed](https://github.com/google/safevalues/blob/main/src/builders/html_sanitizer/sanitizer_table/default_sanitizer_table.ts#L98)
     or has a
     [global attribute policy](https://github.com/google/safevalues/blob/main/src/builders/html_sanitizer/sanitizer_table/default_sanitizer_table.ts#L199)
 
