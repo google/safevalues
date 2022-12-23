@@ -8,7 +8,9 @@ import '../../environment/dev';
 import {extractScheme} from '../../builders/url_sanitizer';
 
 /**
- * Sets the Href attribute from the given TrustedResourceUrl.
+ * Sets the Href attribute from the given URL.
+ * javascript: and data: URL are blocked as they can lead to XSS and the <use>
+ * element only loads resources same-origin.
  */
 export function setHref(useEl: SVGUseElement, url: string) {
   const scheme = extractScheme(url);
