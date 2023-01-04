@@ -67,7 +67,6 @@ import {createStyleSheet, SafeStyleSheet} from '../internals/style_sheet_impl';
  * Please read fileoverview documentation before using.
  */
 export function legacyUnsafeHtml(s: string): SafeHtml {
-  s = nullUndefinedToString(s);
   if (process.env.NODE_ENV !== 'production' && typeof s !== 'string') {
     throw new Error('Expected a string');
   }
@@ -80,7 +79,6 @@ export function legacyUnsafeHtml(s: string): SafeHtml {
  * Please read fileoverview documentation before using.
  */
 export function legacyUnsafeScript(s: string): SafeScript {
-  s = nullUndefinedToString(s);
   if (process.env.NODE_ENV !== 'production' && typeof s !== 'string') {
     throw new Error('Expected a string');
   }
@@ -93,7 +91,6 @@ export function legacyUnsafeScript(s: string): SafeScript {
  * Please read fileoverview documentation before using.
  */
 export function legacyUnsafeResourceUrl(s: string): TrustedResourceUrl {
-  s = nullUndefinedToString(s);
   if (process.env.NODE_ENV !== 'production' && typeof s !== 'string') {
     throw new Error('Expected a string');
   }
@@ -106,7 +103,6 @@ export function legacyUnsafeResourceUrl(s: string): TrustedResourceUrl {
  * Please read fileoverview documentation before using.
  */
 export function legacyUnsafeStyle(s: string): SafeStyle {
-  s = nullUndefinedToString(s);
   if (process.env.NODE_ENV !== 'production' && typeof s !== 'string') {
     throw new Error('Expected a string');
   }
@@ -119,7 +115,6 @@ export function legacyUnsafeStyle(s: string): SafeStyle {
  * Please read fileoverview documentation before using.
  */
 export function legacyUnsafeStyleSheet(s: string): SafeStyleSheet {
-  s = nullUndefinedToString(s);
   if (process.env.NODE_ENV !== 'production' && typeof s !== 'string') {
     throw new Error('Expected a string');
   }
