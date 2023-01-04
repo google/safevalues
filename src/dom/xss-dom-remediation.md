@@ -261,7 +261,7 @@ CSP does not block script execution.
 ```typescript {.good}
 import {safeScriptEl} from 'safevalues/dom'
 
-safeScriptEl.setTextContent(safeScriptValue);
+safeScriptEl.setTextContent(script, safeScriptValue);
 ```
 
 ### Calls to `eval`
