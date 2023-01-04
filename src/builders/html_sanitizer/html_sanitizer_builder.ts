@@ -121,12 +121,15 @@ export class HtmlSanitizerBuilder {
   allowStyleAttributes(): HtmlSanitizerBuilder {
     const globalAttributePolicies = new Map<string, AttributePolicy>(
         this.sanitizerTable.globalAttributePolicies);
-    globalAttributePolicies.set(
-        'style', {policyAction: AttributePolicyAction.KEEP_AND_SANITIZE_STYLE});
+    globalAttributePolicies.set('style', {
+      policyAction: AttributePolicyAction.KEEP_AND_SANITIZE_STYLE,
+    });
     this.sanitizerTable = new SanitizerTable(
         this.sanitizerTable.allowedElements,
         this.sanitizerTable.elementPolicies,
-        this.sanitizerTable.allowedGlobalAttributes, globalAttributePolicies);
+        this.sanitizerTable.allowedGlobalAttributes,
+        globalAttributePolicies,
+    );
     return this;
   }
 
@@ -136,14 +139,15 @@ export class HtmlSanitizerBuilder {
    * legitimate UI elements, which can lead to phishing.
    */
   allowClassAttributes(): HtmlSanitizerBuilder {
-    const globalAttributePolicies = new Map<string, AttributePolicy>(
-        this.sanitizerTable.globalAttributePolicies);
-    globalAttributePolicies.set(
-        'class', {policyAction: AttributePolicyAction.KEEP});
+    const allowedGlobalAttributes =
+        new Set<string>(this.sanitizerTable.allowedGlobalAttributes);
+    allowedGlobalAttributes.add('class');
     this.sanitizerTable = new SanitizerTable(
         this.sanitizerTable.allowedElements,
         this.sanitizerTable.elementPolicies,
-        this.sanitizerTable.allowedGlobalAttributes, globalAttributePolicies);
+        allowedGlobalAttributes,
+        this.sanitizerTable.globalAttributePolicies,
+    );
     return this;
   }
 
@@ -152,14 +156,15 @@ export class HtmlSanitizerBuilder {
    * element to override other elements with the same ID.
    */
   allowIdAttributes(): HtmlSanitizerBuilder {
-    const globalAttributePolicies = new Map<string, AttributePolicy>(
-        this.sanitizerTable.globalAttributePolicies);
-    globalAttributePolicies.set(
-        'id', {policyAction: AttributePolicyAction.KEEP});
+    const allowedGlobalAttributes =
+        new Set<string>(this.sanitizerTable.allowedGlobalAttributes);
+    allowedGlobalAttributes.add('id');
     this.sanitizerTable = new SanitizerTable(
         this.sanitizerTable.allowedElements,
         this.sanitizerTable.elementPolicies,
-        this.sanitizerTable.allowedGlobalAttributes, globalAttributePolicies);
+        allowedGlobalAttributes,
+        this.sanitizerTable.globalAttributePolicies,
+    );
     return this;
   }
 
