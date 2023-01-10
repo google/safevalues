@@ -168,6 +168,32 @@ export class HtmlSanitizerBuilder {
     return this;
   }
 
+  /**
+   * Preserves (some) attributes that reference existing ids. This carries a
+   * moderate security risk, because sanitized content can create semantic
+   * associations with existing elements in the page, regardless of the layout.
+   * This could be used to override the label associated with a form input by a
+   * screen reader, and facilitate phishing.
+   */
+  allowIdReferenceAttributes(): HtmlSanitizerBuilder {
+    const allowedGlobalAttributes =
+        new Set<string>(this.sanitizerTable.allowedGlobalAttributes);
+    // TODO(b/190693339): Generate this subtable from the contract.
+    allowedGlobalAttributes.add('aria-activedescendant')
+        .add('aria-controls')
+        .add('aria-labelledby')
+        .add('aria-owns')
+        .add('for')
+        .add('list');
+    this.sanitizerTable = new SanitizerTable(
+        this.sanitizerTable.allowedElements,
+        this.sanitizerTable.elementPolicies,
+        allowedGlobalAttributes,
+        this.sanitizerTable.globalAttributePolicies,
+    );
+    return this;
+  }
+
   build(): HtmlSanitizer {
     if (this.calledBuild) {
       throw new Error('this sanitizer has already called build');

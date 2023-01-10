@@ -215,4 +215,18 @@ describe('html sanitizer builder test', () => {
           .toContain(sanitizer.sanitize('<div id="my-id"></div>').toString());
     });
   });
+
+  describe('when calling allowIdReferenceAttributes():', () => {
+    it('allows idref attributes', () => {
+      const sanitizer =
+          new HtmlSanitizerBuilder().allowIdReferenceAttributes().build();
+
+      const expectedValues = [
+        '<div aria-labelledby="my-id"></div>', '<div aria-labelledby="my-id" />'
+      ];
+      expect(expectedValues)
+          .toContain(sanitizer.sanitize('<div aria-labelledby="my-id"></div>')
+                         .toString());
+    });
+  });
 });
