@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import '../environment/dev';
+
 /**
  * A secret token that must be passed to safe type constructors. It is only
  * accessible from within safevalues, ensuring that unrestricted safe type
@@ -16,7 +18,9 @@ export const secretToken = {};
  * exception is thrown if that is not the case.
  */
 export function ensureTokenIsValid(token: object) {
-  if (token !== secretToken) {
-    throw new Error('Bad secret');
+  if (process.env.NODE_ENV !== 'production') {
+    if (token !== secretToken) {
+      throw new Error('Bad secret');
+    }
   }
 }

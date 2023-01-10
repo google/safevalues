@@ -19,9 +19,7 @@ class AttributePrefixImpl extends SafeAttributePrefix {
 
   constructor(attrPrefix: string, token: object) {
     super();
-    if (process.env.NODE_ENV !== 'production') {
-      ensureTokenIsValid(token);
-    }
+    ensureTokenIsValid(token);
     this.privateDoNotAccessOrElseWrappedAttrPrefix = attrPrefix;
   }
 

@@ -22,9 +22,7 @@ class StyleSheetImpl extends SafeStyleSheet {
 
   constructor(styleSheet: string, token: object) {
     super();
-    if (process.env.NODE_ENV !== 'production') {
-      ensureTokenIsValid(token);
-    }
+    ensureTokenIsValid(token);
     this.privateDoNotAccessOrElseWrappedStyleSheet = styleSheet;
   }
 

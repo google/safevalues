@@ -17,9 +17,7 @@ class HtmlImpl {
   readonly privateDoNotAccessOrElseWrappedHtml: string;
 
   constructor(html: string, token: object) {
-    if (process.env.NODE_ENV !== 'production') {
-      ensureTokenIsValid(token);
-    }
+    ensureTokenIsValid(token);
     this.privateDoNotAccessOrElseWrappedHtml = html;
   }
 

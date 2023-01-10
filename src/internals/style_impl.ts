@@ -22,9 +22,7 @@ class StyleImpl extends SafeStyle {
 
   constructor(style: string, token: object) {
     super();
-    if (process.env.NODE_ENV !== 'production') {
-      ensureTokenIsValid(token);
-    }
+    ensureTokenIsValid(token);
     this.privateDoNotAccessOrElseWrappedStyle = style;
   }
 

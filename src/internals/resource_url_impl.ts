@@ -17,9 +17,7 @@ class ResourceUrlImpl {
   readonly privateDoNotAccessOrElseWrappedResourceUrl: string;
 
   constructor(url: string, token: object) {
-    if (process.env.NODE_ENV !== 'production') {
-      ensureTokenIsValid(token);
-    }
+    ensureTokenIsValid(token);
     this.privateDoNotAccessOrElseWrappedResourceUrl = url;
   }
 

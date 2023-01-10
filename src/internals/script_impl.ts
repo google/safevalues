@@ -18,9 +18,7 @@ class ScriptImpl {
   readonly privateDoNotAccessOrElseWrappedScript: string;
 
   constructor(script: string, token: object) {
-    if (process.env.NODE_ENV !== 'production') {
-      ensureTokenIsValid(token);
-    }
+    ensureTokenIsValid(token);
     this.privateDoNotAccessOrElseWrappedScript = script;
   }
 
