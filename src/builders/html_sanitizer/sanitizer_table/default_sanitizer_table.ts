@@ -5,6 +5,8 @@
 
 /* GENERATED CODE, DO NOT MODIFY */
 
+/* g3_import_pure from '../../../internals/pure' */
+
 import {AttributePolicy, AttributePolicyAction, ElementPolicy, SanitizerTable} from './sanitizer_table';
 
 const ALLOWED_ELEMENTS: readonly string[] = [
@@ -246,8 +248,8 @@ const GLOBAL_ATTRIBUTE_POLICIES: ReadonlyArray<[string, AttributePolicy]> = [
  *
  */
 export const defaultSanitizerTable = new SanitizerTable(
-    new Set<string>(ALLOWED_ELEMENTS),
-    new Map<string, ElementPolicy>(ELEMENT_POLICIES),
-    new Set<string>(ALLOWED_GLOBAL_ATTRIBUTES),
-    new Map<string, AttributePolicy>(GLOBAL_ATTRIBUTE_POLICIES),
+    new Set(ALLOWED_ELEMENTS),
+    new Map(ELEMENT_POLICIES),
+    new Set(ALLOWED_GLOBAL_ATTRIBUTES),
+    new Map(GLOBAL_ATTRIBUTE_POLICIES),
 );
