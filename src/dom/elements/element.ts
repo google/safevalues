@@ -9,6 +9,8 @@
  * that are not tied to elements (like location.href or Worker constructor).
  */
 
+import '../../environment/dev';
+
 import {SafeAttributePrefix, unwrapAttributePrefix} from '../../internals/attribute_impl';
 import {SafeHtml, unwrapHtml} from '../../internals/html_impl';
 import {SafeStyle, unwrapStyle} from '../../internals/style_impl';
@@ -89,7 +91,11 @@ export function setPrefixedAttribute(
     attrPrefixes: readonly SafeAttributePrefix[], e: Element, attr: string,
     value: string) {
   if (attrPrefixes.length === 0) {
-    throw new Error('No prefixes are provided');
+    let message = '';
+    if (process.env.NODE_ENV !== 'production') {
+      message = 'No prefixes are provided';
+    }
+    throw new Error(message);
   }
   const prefixes = attrPrefixes.map(s => unwrapAttributePrefix(s));
   const attrLower = attr.toLowerCase();
@@ -101,10 +107,17 @@ export function setPrefixedAttribute(
 }
 
 function throwIfScriptOrStyle(element: Element): void {
+  let message = '';
   if (element.tagName.toLowerCase() === 'script') {
-    throw new Error('Use setTextContent with a SafeScript.');
+    if (process.env.NODE_ENV !== 'production') {
+      message = 'Use safeScriptEl.setTextContent with a SafeScript.';
+    }
+    throw new Error(message);
   } else if (element.tagName.toLowerCase() === 'style') {
-    throw new Error('Use setTextContent with a SafeStyleSheet.');
+    if (process.env.NODE_ENV !== 'production') {
+      message = 'Use safeStyleEl.setTextContent with a SafeStyleSheet.';
+    }
+    throw new Error(message);
   }
 }
 

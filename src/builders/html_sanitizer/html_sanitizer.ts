@@ -100,7 +100,11 @@ export class HtmlSanitizerImpl implements HtmlSanitizer {
       } else if (isElement(currentNode)) {
         sanitizedNode = this.sanitizeElementNode(currentNode);
       } else {
-        throw new Error('Node is not of type text or element');
+        let message = '';
+        if (process.env.NODE_ENV !== 'production') {
+          message = 'Node is not of type text or element';
+        }
+        throw new Error(message);
       }
 
       sanitizedParent.appendChild(sanitizedNode);
@@ -164,8 +168,10 @@ export class HtmlSanitizerImpl implements HtmlSanitizer {
           this.recordChange(`Attribute: ${name} was dropped`);
           break;
         default:
-          checkExhaustive(
-              policy.policyAction, 'Unhandled AttributePolicyAction case');
+          if (process.env.NODE_ENV !== 'production') {
+            checkExhaustive(
+                policy.policyAction, 'Unhandled AttributePolicyAction case');
+          }
       }
     }
     return newNode;
