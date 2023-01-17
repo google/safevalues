@@ -198,47 +198,55 @@ const GLOBAL_ATTRIBUTE_POLICIES: ReadonlyArray<[string, AttributePolicy]> = [
   [
     'dir', {
       policyAction: AttributePolicyAction.KEEP_AND_NORMALIZE,
-      conditions: new Map<string, Set<string>>([[
-        'dir', new Set<string>([
-          'auto',
-          'ltr',
-          'rtl',
-        ])
-      ]])
+      conditions: /* #__PURE__ */ (()() => {
+        return new Map<string, Set<string>>([[
+          'dir', new Set<string>([
+            'auto',
+            'ltr',
+            'rtl',
+          ])
+        ]]);
+      })
     }
   ],
   [
     'async', {
       policyAction: AttributePolicyAction.KEEP_AND_NORMALIZE,
-      conditions: new Map<string, Set<string>>([[
-        'async', new Set<string>([
-          'async',
-        ])
-      ]])
+      conditions: /* #__PURE__ */ (()() => {
+        return new Map<string, Set<string>>([[
+          'async', new Set<string>([
+            'async',
+          ])
+        ]]);
+      })
     }
   ],
   ['cite', {policyAction: AttributePolicyAction.KEEP_AND_SANITIZE_URL}],
   [
     'loading', {
       policyAction: AttributePolicyAction.KEEP_AND_NORMALIZE,
-      conditions: new Map<string, Set<string>>([[
-        'loading', new Set<string>([
-          'eager',
-          'lazy',
-        ])
-      ]])
+      conditions: /* #__PURE__ */ (()() => {
+        return new Map<string, Set<string>>([[
+          'loading', new Set<string>([
+            'eager',
+            'lazy',
+          ])
+        ]]);
+      })
     }
   ],
   ['poster', {policyAction: AttributePolicyAction.KEEP_AND_SANITIZE_URL}],
   [
     'target', {
       policyAction: AttributePolicyAction.KEEP_AND_NORMALIZE,
-      conditions: new Map<string, Set<string>>([[
-        'target', new Set<string>([
-          '_self',
-          '_blank',
-        ])
-      ]])
+      conditions: /* #__PURE__ */ (()() => {
+        return new Map<string, Set<string>>([[
+          'target', new Set<string>([
+            '_self',
+            '_blank',
+          ])
+        ]]);
+      })
     }
   ],
 ];
