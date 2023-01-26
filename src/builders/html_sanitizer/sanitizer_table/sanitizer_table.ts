@@ -9,7 +9,8 @@ export class SanitizerTable {
       readonly allowedElements: ReadonlySet<string>,
       readonly elementPolicies: ReadonlyMap<string, ElementPolicy>,
       readonly allowedGlobalAttributes: ReadonlySet<string>,
-      readonly globalAttributePolicies: ReadonlyMap<string, AttributePolicy>) {}
+      readonly globalAttributePolicies: ReadonlyMap<string, AttributePolicy>,
+      readonly globallyAllowedAttributePrefixes?: ReadonlySet<string>) {}
 
 
   isAllowedElement(elementName: string): boolean {
@@ -36,7 +37,15 @@ export class SanitizerTable {
     }
 
     const globalPolicy = this.globalAttributePolicies.get(attributeName);
-    return globalPolicy || {policyAction: AttributePolicyAction.DROP};
+    if (globalPolicy) {
+      return globalPolicy;
+    }
+    if (this.globallyAllowedAttributePrefixes &&
+        [...this.globallyAllowedAttributePrefixes].some(
+            (prefix) => attributeName.indexOf(prefix) === 0)) {
+      return {policyAction: AttributePolicyAction.KEEP};
+    }
+    return {policyAction: AttributePolicyAction.DROP};
   }
 }
 
