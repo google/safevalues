@@ -180,6 +180,22 @@ import {safeScriptEl} from 'safevalues/dom';
 safeScriptEl.setSrc(scriptEl, trustedResourceUrl);
 ```
 
+### Assigning to `HTMLObjectElement#data` <!-- DO NOT DELETE: ban-object-data-assignments -->
+
+#### Risky code
+
+```typescript {.bad}
+objectEl.data = url;
+```
+
+#### Safe alternative
+
+```typescript {.good}
+import {safeObjectEl} from 'safevalues/dom';
+
+safeObjectEl.setData(objectEl, trustedResourceUrl);
+```
+
 ### Assigning to `HTMLIFrameElement#src` <!-- DO NOT DELETE: ban-iframe-src-assignments -->
 
 #### Risky code
