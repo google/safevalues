@@ -43,7 +43,7 @@ export type SafeHtml = TrustedHTML;
  * Also exports the constructor so that instanceof checks work.
  */
 export const SafeHtml =
-    (GlobalTrustedHTML ?? HtmlImpl) as unknown as typeof TrustedHTML;
+    (GlobalTrustedHTML ?? HtmlImpl) as unknown as TrustedHTML;
 
 /**
  * Builds a new `SafeHtml` from the given string, without enforcing safety
@@ -70,7 +70,7 @@ export const EMPTY_HTML: SafeHtml =
  * Checks if the given value is a `SafeHtml` instance.
  */
 export function isHtml(value: unknown): value is SafeHtml {
-  return value instanceof SafeHtml;
+  return getTrustedTypes()?.isHTML(value) || value instanceof HtmlImpl;
 }
 
 /**

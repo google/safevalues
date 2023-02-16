@@ -4,7 +4,7 @@
  */
 
 import {unwrapUrlOrSanitize, Url} from '../../builders/url_sanitizer';
-import {TrustedResourceUrl, unwrapResourceUrl} from '../../internals/resource_url_impl';
+import {isResourceUrl, TrustedResourceUrl, unwrapResourceUrl} from '../../internals/resource_url_impl';
 
 const SAFE_URL_REL_VALUES = [
   'alternate',
@@ -63,7 +63,7 @@ export function setHrefAndRel(
 
 export function setHrefAndRel(
     link: HTMLLinkElement, url: TrustedResourceUrl|Url, rel: string) {
-  if (url instanceof TrustedResourceUrl) {
+  if (isResourceUrl(url)) {
     link.href = unwrapResourceUrl(url).toString();
   } else {
     if ((SAFE_URL_REL_VALUES as readonly string[]).indexOf(rel) === -1) {

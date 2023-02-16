@@ -45,7 +45,7 @@ export type SafeScript = TrustedScript;
  * Also exports the constructor so that instanceof checks work.
  */
 export const SafeScript =
-    (GlobalTrustedScript ?? ScriptImpl) as unknown as typeof TrustedScript;
+    (GlobalTrustedScript ?? ScriptImpl) as unknown as TrustedScript;
 
 /**
  * Builds a new `SafeScript` from the given string, without enforcing
@@ -72,7 +72,7 @@ export const EMPTY_SCRIPT: SafeScript =
  * Checks if the given value is a `SafeScript` instance.
  */
 export function isScript(value: unknown): value is SafeScript {
-  return value instanceof SafeScript;
+  return getTrustedTypes()?.isScript(value) || value instanceof ScriptImpl;
 }
 
 /**

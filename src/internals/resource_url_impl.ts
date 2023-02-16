@@ -39,8 +39,8 @@ export type TrustedResourceUrl = TrustedScriptURL;
 /**
  * Also exports the constructor so that instanceof checks work.
  */
-export const TrustedResourceUrl = (GlobalTrustedScriptURL ?? ResourceUrlImpl) as
-    unknown as typeof TrustedScriptURL;
+export const TrustedResourceUrl =
+    (GlobalTrustedScriptURL ?? ResourceUrlImpl) as unknown as TrustedScriptURL;
 
 /**
  * Builds a new `TrustedResourceUrl` from the given string, without
@@ -61,7 +61,8 @@ export function createResourceUrl(url: string): TrustedResourceUrl {
  * Checks if the given value is a `TrustedResourceUrl` instance.
  */
 export function isResourceUrl(value: unknown): value is TrustedResourceUrl {
-  return value instanceof TrustedResourceUrl;
+  return getTrustedTypes()?.isScriptURL(value) ||
+      value instanceof ResourceUrlImpl;
 }
 
 /**
