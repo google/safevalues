@@ -44,7 +44,7 @@ export const URL_TEST_VECTORS = [
   new UrlTestVector(
       'not-data:image/png;base64,z\u003D', 'not-data:image/png;base64,z\u003D'),
   new UrlTestVector(
-      ' data:image/png;base64,z\u003D', ' data:image/png;base64,z\u003D'),
+      'data:image/png;base64,z\u003D', 'data:image/png;base64,z\u003D'),
   new UrlTestVector('tel:+1234567890', 'tel:+1234567890'),
   new UrlTestVector('sms:+1234567890', 'sms:+1234567890'),
   new UrlTestVector('callto:+1234567890', 'callto:+1234567890'),
