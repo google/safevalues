@@ -15,6 +15,44 @@ interface TestVector {
  */
 export const HTML_TEST_VECTORS: TestVector[] = [
   {
+    input: '<a href="javascript:alert(\'xss\');">foo</a>',
+    acceptable: [
+      '<a href="javascript:void(0);">foo</a>',
+      '<a href="about:invalid#zGoSafez">foo</a>',
+      '<a href="about:invalid#zCSafez">foo</a>',
+      '<a>foo</a>',
+      '<a href="unsafe:javascript:alert(\'xss\');">foo</a>',
+      '<a href="about:invalid#zClosurez">foo</a>',
+      '<a href="javascript:alert(\'xss\');" >foo</a>',
+    ],
+    name: 'a'
+  },
+  {
+    input: '<a href=javascript:alert(&quot;XSS&quot;)>foo</a>',
+    acceptable: [
+      '<a href="javascript:void(0);">foo</a>',
+      '<a href="about:invalid#zGoSafez">foo</a>',
+      '<a>foo</a>',
+      '<a href="about:invalid#zCSafez">foo</a>',
+      '<a href="unsafe:javascript:alert(&#34;XSS&#34;)">foo</a>',
+      '<a href="about:invalid#zClosurez">foo</a>',
+    ],
+    name: 'a_quot'
+  },
+  {
+    input: '<a href="jav&#x09;ascript:alert(\'xss\');">foo</a>',
+    acceptable: [
+      '<a href="javascript:void(0);">foo</a>',
+      '<a href="about:invalid#zGoSafez">foo</a>',
+      '<a href="about:invalid#zCSafez">foo</a>',
+      '<a>foo</a>',
+      '<a href="unsafe:jav&#9;ascript:alert(\'xss\');">foo</a>',
+      '<a href="about:invalid#zClosurez">foo</a>',
+      '<a href="jav&#9;ascript:alert(\'xss\');">foo</a>',
+    ],
+    name: 'a_tab'
+  },
+  {
     input: '<body onload=alert(\'xss\')>',
     acceptable: [
       '',
@@ -88,21 +126,6 @@ export const HTML_TEST_VECTORS: TestVector[] = [
     name: 'iframe_srcdoc'
   },
   {
-    input: '<img src="javascript:alert(\'xss\');">',
-    acceptable: [
-      '<img src="javascript:void(0);">',
-      '<img src="about:invalid#zGoSafez"/>',
-      '<img src="about:invalid#zCSafez" />',
-      '<img src="about:invalid#zCSafez">',
-      '<img>',
-      '<img />',
-      '<img src="unsafe:javascript:alert(\'xss\');">',
-      '<img src="about:invalid#zTSz" />',
-      '<img src="about:invalid#zClosurez" />',
-    ],
-    name: 'img'
-  },
-  {
     input: '<!--<img src="--><img src=x onerror=alert(\'xss\')//">',
     acceptable: [
       '<img />',
@@ -138,21 +161,6 @@ export const HTML_TEST_VECTORS: TestVector[] = [
     name: 'img_onerror'
   },
   {
-    input: '<img src=javascript:alert(&quot;XSS&quot;)>',
-    acceptable: [
-      '<img src="javascript:void(0);">',
-      '<img src="about:invalid#zGoSafez"/>',
-      '<img src="about:invalid#zCSafez">',
-      '<img>',
-      '<img />',
-      '<img src="about:invalid#zCSafez" />',
-      '<img src="unsafe:javascript:alert(&#34;XSS&#34;)">',
-      '<img src="about:invalid#zTSz" />',
-      '<img src="about:invalid#zClosurez" />',
-    ],
-    name: 'img_quot'
-  },
-  {
     input: '<style><img src="</style><img src=x onerror=alert(\'xss\')//">',
     acceptable: [
       '',
@@ -164,21 +172,6 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<img src="javascript:void(0);">',
     ],
     name: 'img_style'
-  },
-  {
-    input: '<img src="jav&#x09;ascript:alert(\'xss\');">',
-    acceptable: [
-      '<img src="javascript:void(0);">',
-      '<img src="about:invalid#zGoSafez"/>',
-      '<img src="about:invalid#zCSafez">',
-      '<img src="about:invalid#zCSafez" />',
-      '<img>',
-      '<img />',
-      '<img src="unsafe:jav&#9;ascript:alert(\'xss\');">',
-      '<img src="about:invalid#zTSz" />',
-      '<img src="about:invalid#zClosurez" />',
-    ],
-    name: 'img_tab'
   },
   {
     input: '<input type="image" src="javascript:alert(\'xss\');">',
@@ -356,17 +349,14 @@ export const HTML_TEST_VECTORS: TestVector[] = [
   },
   {
     input:
-        '<img src=&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;&#97;&#108;&#101;&#114;&#116;&#40;&#39;&#88;&#83;&#83;&#39;&#41;>',
+        '<a src=&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;&#97;&#108;&#101;&#114;&#116;&#40;&#39;&#88;&#83;&#83;&#39;&#41;>foo</a>',
     acceptable: [
-      '<img src="javascript:void(0);">',
-      '<img src="about:invalid#zGoSafez"/>',
-      '<img src="about:invalid#zCSafez">',
-      '<img>',
-      '<img />',
-      '<img src="about:invalid#zCSafez" />',
-      '<img src="unsafe:javascript:alert(\'XSS\')">',
-      '<img src="about:invalid#zTSz" />',
-      '<img src="about:invalid#zClosurez" />',
+      '<a src="javascript:void(0);">foo</a>',
+      '<a src="about:invalid#zGoSafez">foo</a>',
+      '<a src="about:invalid#zCSafez">foo</a>',
+      '<a src="unsafe:javascript:alert(\'XSS\')">foo</a>',
+      '<a src="about:invalid#zTSz" />foo</a>',
+      '<a>foo</a>',
     ],
     name: 'unicode'
   },
@@ -13931,26 +13921,6 @@ export const HTML_TEST_VECTORS: TestVector[] = [
     name: 'contract_source_scriptinside'
   },
   {
-    input: '<source src="javascript:xss">',
-    acceptable: [
-      '<source src="unsafe:javascript:xss"></source>',
-      '<source src="unsafe:javascript:xss">',
-      '<source src="unsafe:javascript:xss"/>',
-      '<source></source>',
-      '<source>',
-      '<source/>',
-      '<source />',
-      '<span></span>',
-      '<span />',
-      '',
-      '<source src="about:invalid#zClosurez"></source>',
-      '<source src="about:invalid#zClosurez">',
-      '<source src="about:invalid#zClosurez"/>',
-      '<source src="about:invalid#zClosurez" />',
-    ],
-    name: 'contract_source_src'
-  },
-  {
     input: '<source srcdoc="x">',
     acceptable: [
       '<source></source>',
@@ -14135,26 +14105,6 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><img><td></td></table>',
     ],
     name: 'contract_img_scriptinside'
-  },
-  {
-    input: '<img src="javascript:xss">',
-    acceptable: [
-      '<img src="unsafe:javascript:xss"></img>',
-      '<img src="unsafe:javascript:xss">',
-      '<img src="unsafe:javascript:xss"/>',
-      '<img></img>',
-      '<img>',
-      '<img/>',
-      '<img />',
-      '<span></span>',
-      '<span />',
-      '',
-      '<img src="about:invalid#zClosurez"></img>',
-      '<img src="about:invalid#zClosurez">',
-      '<img src="about:invalid#zClosurez"/>',
-      '<img src="about:invalid#zClosurez" />',
-    ],
-    name: 'contract_img_src'
   },
   {
     input: '<img srcdoc="x">',
@@ -15018,26 +14968,6 @@ export const HTML_TEST_VECTORS: TestVector[] = [
     name: 'contract_video_scriptinside'
   },
   {
-    input: '<video src="javascript:xss">',
-    acceptable: [
-      '<video src="unsafe:javascript:xss"></video>',
-      '<video src="unsafe:javascript:xss">',
-      '<video src="unsafe:javascript:xss"/>',
-      '<video></video>',
-      '<video>',
-      '<video/>',
-      '<video />',
-      '<span></span>',
-      '<span />',
-      '',
-      '<video src="about:invalid#zClosurez"></video>',
-      '<video src="about:invalid#zClosurez">',
-      '<video src="about:invalid#zClosurez"/>',
-      '<video src="about:invalid#zClosurez" />',
-    ],
-    name: 'contract_video_src'
-  },
-  {
     input: '<video srcdoc="x">',
     acceptable: [
       '<video></video>',
@@ -15222,26 +15152,6 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><td></td></table>',
     ],
     name: 'contract_audio_scriptinside'
-  },
-  {
-    input: '<audio src="javascript:xss">',
-    acceptable: [
-      '<audio src="unsafe:javascript:xss"></audio>',
-      '<audio src="unsafe:javascript:xss">',
-      '<audio src="unsafe:javascript:xss"/>',
-      '<audio></audio>',
-      '<audio>',
-      '<audio/>',
-      '<audio />',
-      '<span></span>',
-      '<span />',
-      '',
-      '<audio src="about:invalid#zClosurez"></audio>',
-      '<audio src="about:invalid#zClosurez">',
-      '<audio src="about:invalid#zClosurez"/>',
-      '<audio src="about:invalid#zClosurez" />',
-    ],
-    name: 'contract_audio_src'
   },
   {
     input: '<audio srcdoc="x">',

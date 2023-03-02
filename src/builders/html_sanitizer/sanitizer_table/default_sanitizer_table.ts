@@ -71,22 +71,22 @@ const ELEMENT_POLICIES: ReadonlyArray<[string, ElementPolicy]> = [
   ],
   [
     'SOURCE', new Map<string, AttributePolicy>([
-      ['src', {policyAction: AttributePolicyAction.KEEP_AND_SANITIZE_URL}],
+      ['src', {policyAction: AttributePolicyAction.KEEP}],
     ])
   ],
   [
     'IMG', new Map<string, AttributePolicy>([
-      ['src', {policyAction: AttributePolicyAction.KEEP_AND_SANITIZE_URL}],
+      ['src', {policyAction: AttributePolicyAction.KEEP}],
     ])
   ],
   [
     'VIDEO', new Map<string, AttributePolicy>([
-      ['src', {policyAction: AttributePolicyAction.KEEP_AND_SANITIZE_URL}],
+      ['src', {policyAction: AttributePolicyAction.KEEP}],
     ])
   ],
   [
     'AUDIO', new Map<string, AttributePolicy>([
-      ['src', {policyAction: AttributePolicyAction.KEEP_AND_SANITIZE_URL}],
+      ['src', {policyAction: AttributePolicyAction.KEEP}],
     ])
   ],
 
