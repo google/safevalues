@@ -226,6 +226,36 @@ export function replaceFragment(
 }
 
 /**
+ * Creates a new TrustedResourceUrl based on an existing one with a single
+ * subpath segment added to the end of the existing path and prior to any query
+ * parameters and/or fragments that already exist in the URL.
+ * @param pathSegment The singular sub path being added to the URL. Do not pass
+ *     a pre-encoded value as this will result in it being double encoded.
+ */
+export function appendPathSegment(
+    trustedUrl: TrustedResourceUrl, pathSegment: string): TrustedResourceUrl {
+  const originalUrl = unwrapResourceUrl(trustedUrl).toString();
+  const urlSegments = originalUrl.split(/\?|#/);
+
+  const basePath = urlSegments[0];
+  const paramVals = /\?/.test(originalUrl) ? urlSegments[1] : undefined;
+  const fragVal = /#/.test(originalUrl) ?
+      (paramVals ? urlSegments[2] : urlSegments[1]) :
+      undefined;
+
+  const pathSeparator = basePath.charAt(basePath.length - 1) === '/' ? '' : '/';
+  let url = basePath + pathSeparator + encodeURIComponent(pathSegment);
+
+  if (paramVals !== undefined) {
+    url += '?' + paramVals;
+  }
+  if (fragVal !== undefined) {
+    url += '#' + fragVal;
+  }
+  return createResourceUrl(url);
+}
+
+/**
  * Creates a `TrustedResourceUrl` by generating a `Blob` from a
  * `SafeScript` and then calling `URL.createObjectURL` with that `Blob`.
  *

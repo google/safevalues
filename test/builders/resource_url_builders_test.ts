@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {appendParams, objectUrlFromScript, replaceFragment, trustedResourceUrl} from '../../src/builders/resource_url_builders';
+import {appendParams, appendPathSegment, objectUrlFromScript, replaceFragment, trustedResourceUrl} from '../../src/builders/resource_url_builders';
 import {safeScript} from '../../src/builders/script_builders';
 import {TrustedResourceUrl} from '../../src/internals/resource_url_impl';
 
@@ -210,6 +210,58 @@ describe('resource_url_builders', () => {
       expect(replaceFragment(trustedResourceUrl`https://google.com/#abc`, 'def')
                  .toString())
           .toBe('https://google.com/#def');
+    });
+  });
+
+  describe('appendPathSegment', () => {
+    it('appends with trailing slash', () => {
+      expect(appendPathSegment(trustedResourceUrl`https://google.com/`, 'test')
+                 .toString())
+          .toBe('https://google.com/test');
+    });
+
+    it('appends without trailing slash', () => {
+      expect(appendPathSegment(trustedResourceUrl`https://google.com`, 'test')
+                 .toString())
+          .toBe('https://google.com/test');
+    });
+
+    it('encodes path before appending', () => {
+      expect(appendPathSegment(
+                 trustedResourceUrl`https://google.com/`, 'test/path')
+                 .toString())
+          .toBe('https://google.com/test%2Fpath');
+    });
+
+    it('handles empty strings', () => {
+      expect(appendPathSegment(trustedResourceUrl`https://google.com?`, 'test')
+                 .toString())
+          .toBe('https://google.com/test?');
+
+      expect(appendPathSegment(trustedResourceUrl`https://google.com#`, 'test')
+                 .toString())
+          .toBe('https://google.com/test#');
+    });
+
+    it('appends path while retaining param(s)', () => {
+      expect(
+          appendPathSegment(trustedResourceUrl`https://google.com/?abc`, 'test')
+              .toString())
+          .toBe('https://google.com/test?abc');
+    });
+
+    it('appends path while retaining fragment', () => {
+      expect(
+          appendPathSegment(trustedResourceUrl`https://google.com/#xyz`, 'test')
+              .toString())
+          .toBe('https://google.com/test#xyz');
+    });
+
+    it('appends path while retaining both param(s) and fragment', () => {
+      expect(appendPathSegment(
+                 trustedResourceUrl`https://google.com/?abc#xyz`, 'test')
+                 .toString())
+          .toBe('https://google.com/test?abc#xyz');
     });
   });
 
