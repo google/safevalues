@@ -1,8 +1,5 @@
 # safevalues
 
-WARNING: This library is still in development and we might make
-backward-incompatible changes at any moment.
-
 Safevalues is a library to help you prevent Cross-Site Scripting vulnerabilities
 in TypeScript (and JavaScript). It is meant to be used together with
 [tsec](https://github.com/googleinterns/tsec) to provide strong security
