@@ -21,6 +21,7 @@ export * as safeLinkEl from './elements/link';
 export * as safeObjectEl from './elements/object';
 export * as safeScriptEl from './elements/script';
 export * as safeStyleEl from './elements/style';
+export * as safeSvgEl from './elements/svg';
 export * as safeSvgUseEl from './elements/svg_use';
 export * as safeDocument from './globals/document';
 export * as safeDomParser from './globals/dom_parser';
