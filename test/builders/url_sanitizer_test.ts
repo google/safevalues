@@ -8,13 +8,13 @@ import {URL_TEST_VECTORS as JAVASCRIPT_URL_TEST_VECTORS} from '../testvectors/ja
 import {URL_TEST_VECTORS} from '../testvectors/url_test_vectors';
 
 describe('url_sanitizer', () => {
-  describe('sanitizeJavascriptUrl', () => {
+  describe('sanitizeJavaScriptUrl', () => {
     for (const v of JAVASCRIPT_URL_TEST_VECTORS) {
       it(`sanitizes javascript: URLs correctly`, () => {
         if (v.expected === 'about:invalid#zClosurez') {
-          expect(urls.sanitizeJavascriptUrl(v.input)).toEqual(undefined);
+          expect(urls.sanitizeJavaScriptUrl(v.input)).toEqual(undefined);
         } else {
-          expect(urls.sanitizeJavascriptUrl(v.input)).toEqual(v.expected);
+          expect(urls.sanitizeJavaScriptUrl(v.input)).toEqual(v.expected);
         }
       });
     }

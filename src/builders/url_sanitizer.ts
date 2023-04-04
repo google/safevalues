@@ -42,7 +42,7 @@ const ALLOWED_SCHEMES = ['data:', 'http:', 'https:', 'mailto:', 'ftp:'];
  * @return undefined if url has a javascript: scheme, the original URL
  *     otherwise.
  */
-export function sanitizeJavascriptUrl(url: string): string|undefined {
+export function sanitizeJavaScriptUrl(url: string): string|undefined {
   const parsedScheme = extractScheme(url);
   if (parsedScheme === 'javascript:') {
     if (process.env.NODE_ENV !== 'production') {
@@ -63,7 +63,7 @@ export type Url = string;
  * @return undefined if the URL was sanitized.
  */
 export function unwrapUrlOrSanitize(url: Url): string|undefined {
-  return sanitizeJavascriptUrl(url);
+  return sanitizeJavaScriptUrl(url);
 }
 
 /**
