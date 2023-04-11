@@ -5,8 +5,6 @@
 
 import {SafeScript, unwrapScript} from '../../internals/script_impl';
 
-export {fetchResourceUrl, SafeResponse} from './fetch';
-
 /**
  * Evaluates a SafeScript value in the given scope using eval.
  *
