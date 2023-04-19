@@ -5,7 +5,7 @@
 
 import * as safeWorker from '../../../src/dom/globals/worker';
 import {TrustedResourceUrl} from '../../../src/internals/resource_url_impl';
-import {testonlyResourceUrl} from '../../conversions';
+import {testonlyResourceUrl} from '../../testing/conversions';
 
 interface State {
   importedScripts: TrustedResourceUrl[];

@@ -6,7 +6,7 @@
 import {HtmlSanitizerImpl, sanitizeHtml, sanitizeHtmlAssertUnchanged} from '../../../src/builders/html_sanitizer/html_sanitizer';
 import {AttributePolicy, AttributePolicyAction, ElementPolicy, SanitizerTable} from '../../../src/builders/html_sanitizer/sanitizer_table/sanitizer_table';
 import {secretToken} from '../../../src/internals/secrets';
-import {HTML_TEST_VECTORS} from '../../testvectors/html_test_vectors';
+import {HTML_TEST_VECTORS} from '../../testing/testvectors/html_test_vectors';
 
 /**
  * Once we stop supporting IE 10 and 11, the set of acceptable outputs can be

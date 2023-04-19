@@ -5,7 +5,7 @@
 
 import {safeAttrPrefix} from '../../../src/builders/attribute_builders';
 import * as safeElement from '../../../src/dom/elements/element';
-import {testonlyHtml} from '../../conversions';
+import {testonlyHtml} from '../../testing/conversions';
 
 describe('safeElement', () => {
   let div: HTMLDivElement;

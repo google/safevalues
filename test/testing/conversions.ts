@@ -14,11 +14,11 @@
  * avoids, by design, non-contract complying instances from being created.
  */
 
-import {createHtml, SafeHtml} from '../src/internals/html_impl';
-import {createResourceUrl, TrustedResourceUrl} from '../src/internals/resource_url_impl';
-import {createScript, SafeScript} from '../src/internals/script_impl';
-import {createStyle, SafeStyle} from '../src/internals/style_impl';
-import {createStyleSheet, SafeStyleSheet} from '../src/internals/style_sheet_impl';
+import {createHtml, SafeHtml} from '../../src/internals/html_impl';
+import {createResourceUrl, TrustedResourceUrl} from '../../src/internals/resource_url_impl';
+import {createScript, SafeScript} from '../../src/internals/script_impl';
+import {createStyle, SafeStyle} from '../../src/internals/style_impl';
+import {createStyleSheet, SafeStyleSheet} from '../../src/internals/style_sheet_impl';
 
 /**
  * Turns a string into SafeHtml for testing purposes. This function is for use

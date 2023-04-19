@@ -4,8 +4,8 @@
  */
 
 import * as urls from '../../src/builders/url_sanitizer';
-import {URL_TEST_VECTORS as JAVASCRIPT_URL_TEST_VECTORS} from '../testvectors/javascript_url_sanitizer_test_vectors';
-import {URL_TEST_VECTORS} from '../testvectors/url_test_vectors';
+import {URL_TEST_VECTORS as JAVASCRIPT_URL_TEST_VECTORS} from '../testing/testvectors/javascript_url_sanitizer_test_vectors';
+import {URL_TEST_VECTORS} from '../testing/testvectors/url_test_vectors';
 
 describe('url_sanitizer', () => {
   describe('sanitizeJavaScriptUrl', () => {

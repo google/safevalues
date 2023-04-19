@@ -3,8 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {safeGlobal, safeRange, safeScriptEl} from 'safevalues/dom';
-
+import {setSrc, setTextContent} from '../../../src/dom/elements/script';
+import {globalEval} from '../../../src/dom/globals/global';
+import {createContextualFragment} from '../../../src/dom/globals/range';
 import {testonlyHtml, testonlyResourceUrl, testonlyScript} from '../conversions';
 
 import {XSSDetector} from './xss_detector';
@@ -12,7 +13,7 @@ import {XSSDetector} from './xss_detector';
 describe('XSSDetector', () => {
   it('triggers synchronously for eval ', async () => {
     const detector = new XSSDetector();
-    safeGlobal.globalEval(window, testonlyScript(detector.payload));
+    globalEval(window, testonlyScript(detector.payload));
     expect(detector.wasTriggered()).toBe(true);
   });
 
@@ -29,7 +30,7 @@ describe('XSSDetector', () => {
     const detector = new XSSDetector();
 
     const script = document.createElement('script');
-    safeScriptEl.setTextContent(script, testonlyScript(detector.payload));
+    setTextContent(script, testonlyScript(detector.payload));
     document.body.appendChild(script);
     document.body.removeChild(script);
 
@@ -41,7 +42,7 @@ describe('XSSDetector', () => {
 
     const script = document.createElement('script');
     const url = testonlyResourceUrl(`data:text/javascript,${detector.payload}`);
-    safeScriptEl.setSrc(script, url);
+    setSrc(script, url);
     document.body.appendChild(script);
     document.body.removeChild(script);
 
@@ -55,7 +56,7 @@ describe('XSSDetector', () => {
 
     const html = testonlyHtml(`<script>${detector.payload}<${'/'}script>`);
     const range = document.createRange();
-    const script = safeRange.createContextualFragment(range, html).firstChild!;
+    const script = createContextualFragment(range, html).firstChild!;
     document.body.appendChild(script);
     document.body.removeChild(script);
 
@@ -72,7 +73,7 @@ describe('XSSDetector', () => {
        const html =
            testonlyHtml(`<img src=bad-scheme:_ onerror="${detector.payload}">`);
        const range = document.createRange();
-       safeRange.createContextualFragment(range, html);
+       createContextualFragment(range, html);
 
        expect(detector.wasTriggered()).toBe(false);
 
@@ -93,9 +94,9 @@ describe('XSSDetector', () => {
     expect(detector2.wasTriggered()).toBe(false);
     expect(detector3.wasTriggered()).toBe(false);
 
-    safeGlobal.globalEval(window, testonlyScript(detector2.payload));
+    globalEval(window, testonlyScript(detector2.payload));
     setTimeout(() => {
-      safeGlobal.globalEval(window, testonlyScript(detector3.payload));
+      globalEval(window, testonlyScript(detector3.payload));
     }, 0);
 
     expect(detector1.wasTriggered()).toBe(false);

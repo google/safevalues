@@ -5,7 +5,7 @@
 
 import {concatHtmls, htmlEscape, scriptToHtml, scriptUrlToHtml} from '../../src/builders/html_builders';
 import {safeScript, valueAsScript} from '../../src/builders/script_builders';
-import {testonlyResourceUrl} from '../conversions';
+import {testonlyResourceUrl} from '../testing/conversions';
 
 describe('html_builders', () => {
   describe('htmlEscape', () => {
