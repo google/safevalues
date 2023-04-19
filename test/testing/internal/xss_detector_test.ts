@@ -3,8 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {safeGlobal, safeRange, safeScriptEl} from 'safevalues/dom';
-
+import {safeGlobal, safeRange, safeScriptEl} from '../../dom';
 import {testonlyHtml, testonlyResourceUrl, testonlyScript} from '../conversions';
 
 import {XSSDetector} from './xss_detector';
