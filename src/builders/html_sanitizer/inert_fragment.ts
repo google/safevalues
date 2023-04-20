@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {setInnerHtml} from '../../dom/elements/element';
+import {createContextualFragment} from '../../dom/globals/range';
 import {createHtml} from '../../internals/html_impl';
 
 /**
@@ -11,12 +11,12 @@ import {createHtml} from '../../internals/html_impl';
  * executing any of the potential payload.
  */
 export function createInertFragment(dirtyHtml: string): DocumentFragment {
-  const template = document.createElement('template');
+  // We create a new document to ensure the nodes stay detached
+  const range = document.implementation.createHTMLDocument('').createRange();
+
   // This call is only used to create an inert tree for the sanitizer to
   // further process and is never returned directly to the caller. We can't use
   // a reviewed conversion in order to avoid an import loop.
   const temporarySafeHtml = createHtml(dirtyHtml);
-
-  setInnerHtml(template, temporarySafeHtml);
-  return template.content;
+  return createContextualFragment(range, temporarySafeHtml);
 }
