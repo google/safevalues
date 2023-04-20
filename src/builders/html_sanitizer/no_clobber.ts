@@ -18,7 +18,7 @@ export function getNodeName(node: Node): string {
 /** Returns true if the object passed is a Text node. */
 export function isText(node: Node): node is Text {
   // The property cannot get clobbered on Text nodes.
-  return node.nodeType === Node.TEXT_NODE;
+  return node.nodeType === 3;  // Node.TEXT_NODE
 }
 
 /** Returns true if the object passed is an Element node. */
@@ -26,5 +26,6 @@ export function isElement(node: Node): node is Element {
   const nodeType = node.nodeType;
   // If the property is clobbered, we can assume it is an `HTMLFormElement`, and
   // thus an `Element`.
-  return (nodeType === Node.ELEMENT_NODE) || (typeof nodeType !== 'number');
+  return (nodeType === 1 /* Node.ELEMENT_NODE */) ||
+      (typeof nodeType !== 'number');
 }

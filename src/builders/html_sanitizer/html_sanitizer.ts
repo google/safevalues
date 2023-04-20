@@ -73,7 +73,7 @@ export class HtmlSanitizerImpl implements HtmlSanitizer {
 
     const treeWalker = document.createTreeWalker(
         dirtyFragment,
-        NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT,
+        5 /* NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT */,
         // IE10 and IE11 won't accept a proper `NodeFilter` interface, and
         // expect the filtering function to be passed directly. It seems that
         // other browsers also do not mind getting the function directly. see
@@ -144,7 +144,7 @@ export class HtmlSanitizerImpl implements HtmlSanitizer {
 
       switch (policy.policyAction) {
         case AttributePolicyAction.KEEP:
-          newNode.setAttribute(name, value);
+          setAttribute(newNode, name, value);
           break;
         case AttributePolicyAction.KEEP_AND_SANITIZE_URL:
           const sanitizedAttrUrl = restrictivelySanitizeUrl(value);
@@ -154,15 +154,15 @@ export class HtmlSanitizerImpl implements HtmlSanitizer {
                 value}" was sanitized to: "${sanitizedAttrUrl}"`);
           }
 
-          newNode.setAttribute(name, sanitizedAttrUrl);
+          setAttribute(newNode, name, sanitizedAttrUrl);
           break;
         case AttributePolicyAction.KEEP_AND_NORMALIZE:
           // We don't consider changing the case of an attribute value to be a
           // semantic change
-          newNode.setAttribute(name, value.toLowerCase());
+          setAttribute(newNode, name, value.toLowerCase());
           break;
         case AttributePolicyAction.KEEP_AND_SANITIZE_STYLE:
-          newNode.setAttribute(name, value);
+          setAttribute(newNode, name, value);
           break;
         case AttributePolicyAction.DROP:
           this.recordChange(`Attribute: ${name} was dropped`);
@@ -179,28 +179,28 @@ export class HtmlSanitizerImpl implements HtmlSanitizer {
 
   nodeFilter(node: Node): number {
     if (isText(node)) {
-      return NodeFilter.FILTER_ACCEPT;
+      return 1;  // NodeFilter.FILTER_ACCEPT
     } else if (!isElement(node)) {
       // Getting a node that is neither an `Element` or a `Text` node. This is
       // likely due to something that is not supposed to be an element in user
       // code but recognized as such by the TreeWalker (e.g. a polyfill for
       // other kind of nodes). Since we can't recognize it as an element, we
       // drop the node, but we don't record it as a meaningful change.
-      return NodeFilter.FILTER_REJECT;
+      return 2;  // NodeFilter.FILTER_REJECT
     }
 
     const nodeName = getNodeName(node);
     if (nodeName === null) {
       this.recordChange(`Node name was null for node: ${node}`);
-      return NodeFilter.FILTER_REJECT;
+      return 2;  // NodeFilter.FILTER_REJECT
     }
 
     if (this.sanitizerTable.isAllowedElement(nodeName)) {
-      return NodeFilter.FILTER_ACCEPT;
+      return 1;  // NodeFilter.FILTER_ACCEPT
     }
 
     this.recordChange(`Element: ${nodeName} was dropped`);
-    return NodeFilter.FILTER_REJECT;
+    return 2;  // NodeFilter.FILTER_REJECT
   }
 
   private recordChange(errorMessage: string) {
@@ -227,6 +227,11 @@ export class HtmlSanitizerImpl implements HtmlSanitizer {
 
     return true;
   }
+}
+
+/** @noinline Helper to save on codesize. */
+function setAttribute(el: Element, name: string, value: string) {
+  el.setAttribute(name, value);
 }
 
 const defaultHtmlSanitizer =
