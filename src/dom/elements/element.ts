@@ -108,19 +108,19 @@ export function setPrefixedAttribute(
 
 function throwIfScriptOrStyle(element: Element): void {
   let message = '';
-  if (element.tagName.toLowerCase() === 'script') {
+  const tagName = element.tagName;
+  if (tagName === 'SCRIPT' || tagName === 'STYLE') {
     if (process.env.NODE_ENV !== 'production') {
-      message = 'Use safeScriptEl.setTextContent with a SafeScript.';
-    }
-    throw new Error(message);
-  } else if (element.tagName.toLowerCase() === 'style') {
-    if (process.env.NODE_ENV !== 'production') {
-      message = 'Use safeStyleEl.setTextContent with a SafeStyleSheet.';
+      if (tagName === 'SCRIPT') {
+        message = 'Use safeScriptEl.setTextContent with a SafeScript.';
+      } else {
+        message = 'Use safeStyleEl.setTextContent with a SafeStyleSheet.';
+      }
     }
     throw new Error(message);
   }
 }
 
 function isElement(elOrRoot: Element|ShadowRoot): elOrRoot is Element {
-  return (elOrRoot as Element).tagName !== undefined;
+  return elOrRoot.nodeType === 1;  // Node.ELEMENT_NODE
 }

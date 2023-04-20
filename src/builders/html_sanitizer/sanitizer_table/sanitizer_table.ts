@@ -20,7 +20,7 @@ export class SanitizerTable {
     // shouldn't be put on every user of the sanitizer. Thoroughly review
     // b/210975025 and the CLs linked there before you start allowing form
     // elements.
-    return elementName.toLowerCase() !== 'form' &&
+    return elementName !== 'FORM' &&
         (this.allowedElements.has(elementName) ||
          this.elementPolicies.has(elementName));
   }
