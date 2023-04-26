@@ -161,12 +161,11 @@ export function trustedResourceUrl(
     }
   }
 
-  const urlParts = [templateObj[0]];
+  let url = templateObj[0];
   for (let i = 0; i < rest.length; i++) {
-    urlParts.push(encodeURIComponent(rest[i]));
-    urlParts.push(templateObj[i + 1]);
+    url += encodeURIComponent(rest[i]) + templateObj[i + 1];
   }
-  return createResourceUrl(urlParts.join(''));
+  return createResourceUrl(url);
 }
 
 /**
