@@ -24,11 +24,7 @@ type Serializable =
  */
 export function safeScript(templateObj: TemplateStringsArray): SafeScript {
   if (process.env.NODE_ENV !== 'production') {
-    assertIsTemplateObject(
-        templateObj, false,
-        'safeScript is a template literal tag function ' +
-            'that only accepts template literals without expressions. ' +
-            'For example, safeScript`foo`;');
+    assertIsTemplateObject(templateObj, 0);
   }
   return createScript(templateObj[0]);
 }
@@ -80,11 +76,7 @@ export function safeScriptWithArgs(
           'safeScriptWithArgs only allows empty string expressions ' +
           'to enable inline comments.');
     }
-    assertIsTemplateObject(
-        templateObj, true,
-        'safeScriptWithArgs is a template literal tag function ' +
-            'that only accepts template literals. ' +
-            'For example, safeScriptWithArgs`foo`;');
+    assertIsTemplateObject(templateObj, emptyArgs.length);
   }
   return (...argValues: Serializable[]) => {
     const values = argValues.map((v) => valueAsScript(v).toString());

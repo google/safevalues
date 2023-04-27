@@ -136,10 +136,7 @@ export function trustedResourceUrl(
     ...rest: Primitive[]): TrustedResourceUrl {
   // Check if templateObj is actually from a template literal.
   if (process.env.NODE_ENV !== 'production') {
-    assertIsTemplateObject(
-        templateObj, true,
-        'trustedResourceUrl is a template literal tag function and ' +
-            'can only be called as such (e.g. trustedResourceUrl`/somepath.js`)');
+    assertIsTemplateObject(templateObj, rest.length);
   }
 
   if (rest.length === 0) {

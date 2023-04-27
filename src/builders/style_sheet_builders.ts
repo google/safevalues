@@ -25,11 +25,7 @@ import {createStyleSheet, SafeStyleSheet, unwrapStyleSheet} from '../internals/s
 export function safeStyleSheet(templateObj: TemplateStringsArray):
     SafeStyleSheet {
   if (process.env.NODE_ENV !== 'production') {
-    assertIsTemplateObject(
-        templateObj, false,
-        'safeStyleSheet is a template literal tag ' +
-            'function that only accepts template literals without ' +
-            'expressions. For example, safeStyleSheet`foo`;');
+    assertIsTemplateObject(templateObj, 0);
   }
 
   const styleSheet = templateObj[0];

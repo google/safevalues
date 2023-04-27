@@ -31,11 +31,7 @@ import {createStyle, SafeStyle, unwrapStyle} from '../internals/style_impl';
  */
 export function safeStyle(templateObj: TemplateStringsArray): SafeStyle {
   if (process.env.NODE_ENV !== 'production') {
-    assertIsTemplateObject(
-        templateObj, false,
-        'safeStyle is a template literal tag function ' +
-            'that only accepts template literals without expressions. ' +
-            'For example, safeStyle`foo`;');
+    assertIsTemplateObject(templateObj, 0);
   }
 
   const style = templateObj[0];

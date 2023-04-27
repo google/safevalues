@@ -21,11 +21,7 @@ import {SECURITY_SENSITIVE_ATTRIBUTES} from './sensitive_attributes';
 export function safeAttrPrefix(templ: TemplateStringsArray):
     SafeAttributePrefix {
   if (process.env.NODE_ENV !== 'production') {
-    assertIsTemplateObject(
-        templ, true,
-        'safeAttr is a template literal tag function ' +
-            'and should be called using the tagged template syntax. ' +
-            'For example, safeAttr`foo`;');
+    assertIsTemplateObject(templ, 0);
   }
 
   const attrPrefix = templ[0].toLowerCase();
