@@ -2,9 +2,10 @@
 // clang-format off
 import {legacyUnsafeHtml} from '../../src/restricted/legacy';
 
-// clang-format on
+// clang-format on 
 
 describe('legacy conversions', () => {
+
   it('safe HTML conversion with no options', () => {
     expect(
         legacyUnsafeHtml('<html><script>alert(0)</script></html>').toString())
@@ -12,4 +13,5 @@ describe('legacy conversions', () => {
     expect(legacyUnsafeHtml('<anything>at>all').toString())
         .toEqual('<anything>at>all');
   });
+
 });
