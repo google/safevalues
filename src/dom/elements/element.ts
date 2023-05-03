@@ -13,7 +13,6 @@ import '../../environment/dev';
 
 import {SafeAttributePrefix, unwrapAttributePrefix} from '../../internals/attribute_impl';
 import {SafeHtml, unwrapHtml} from '../../internals/html_impl';
-import {SafeStyle, unwrapStyle} from '../../internals/style_impl';
 
 /**
  * Safely set {@link Element.innerHTML} on a given ShadowRoot or Element which
@@ -36,13 +35,6 @@ export function setOuterHtml(e: Element, v: SafeHtml) {
     throwIfScriptOrStyle(parent);
   }
   e.outerHTML = unwrapHtml(v) as string;
-}
-
-/**
- * Set `ElementCSSInlineStyle.cssText` for the given `ElementCSSInlineStyle`.
- */
-export function setCssText(e: ElementCSSInlineStyle, v: SafeStyle) {
-  e.style.cssText = unwrapStyle(v);
 }
 
 /**

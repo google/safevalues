@@ -6,7 +6,6 @@
 import {createHtml, isHtml, unwrapHtml} from '../../src/internals/html_impl';
 import {createResourceUrl, isResourceUrl, unwrapResourceUrl} from '../../src/internals/resource_url_impl';
 import {createScript, isScript, unwrapScript} from '../../src/internals/script_impl';
-import {createStyle, isStyle, unwrapStyle} from '../../src/internals/style_impl';
 import {createStyleSheet, isStyleSheet, unwrapStyleSheet} from '../../src/internals/style_sheet_impl';
 
 interface Impl {
@@ -31,12 +30,6 @@ const IMPLEMENTATIONS: Impl[] = [
     guard: isScript,
     create: createScript,
     unwrap: unwrapScript,
-  },
-  {
-    name: 'SafeStyle',
-    guard: isStyle,
-    create: createStyle,
-    unwrap: unwrapStyle,
   },
   {
     name: 'SafeStyleSheet',

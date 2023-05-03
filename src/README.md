@@ -88,23 +88,6 @@ const url2 = trustedResourceUrl`/static/${env}/js/main.js?opt=${opt}`;
 // TrustedResourceURL{'/static/a%2Fb/js/main.js?opt=min%26test%3D1'}
 ```
 
-### `SafeStyle`
-
-#### Building a style value from a literal value with some banned characters
-
-Note: This type doesn't wrap a Trusted Type.
-
-```typescript
-import {safeStyle, concatStyles} from 'safevalues';
-
-const style1 = safeStyle`color: navy;`;
-// SafeStyle{'color: navy;'}
-const style2 = safeStyle`background: red;`;
-
-concatStyles([style1, style2]);
-// SafeStyle{'color: navy;background: red;'}
-```
-
 ### `SafeStyleSheet`
 
 #### Building a style sheet from a literal value with some banned characters

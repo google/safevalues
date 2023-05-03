@@ -8,7 +8,6 @@ import '../environment/dev';
 import {createHtml, SafeHtml} from '../internals/html_impl';
 import {createResourceUrl, TrustedResourceUrl} from '../internals/resource_url_impl';
 import {createScript, SafeScript} from '../internals/script_impl';
-import {createStyle, SafeStyle} from '../internals/style_impl';
 import {createStyleSheet, SafeStyleSheet} from '../internals/style_sheet_impl';
 
 /**
@@ -93,23 +92,6 @@ export function resourceUrlSafeByReview(
     assertValidJustification(justification);
   }
   return createResourceUrl(url);
-}
-
-/**
- * Performs a "reviewed conversion" to SafeStyle from a plain string that is
- * known to satisfy the SafeStyle type contract.
- *
- * IMPORTANT: Uses of this method must be carefully security-reviewed to ensure
- * that the value of `style` satisfies the SafeStyle type contract in all
- * possible program states. An appropriate `justification` must be provided
- * explaining why this particular use of the function is safe.
- */
-export function styleSafeByReview(
-    style: string, justification: string): SafeStyle {
-  if (process.env.NODE_ENV !== 'production') {
-    assertValidJustification(justification);
-  }
-  return createStyle(style);
 }
 
 /**
