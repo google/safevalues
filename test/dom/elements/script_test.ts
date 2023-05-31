@@ -36,6 +36,15 @@ describe('safeScriptEl', () => {
       expect(blankScript.nonce).toEqual(nonce);
     });
 
+    it('omits nonces when setting script src as instructed by options', () => {
+      const blankScript = document.createElement('script');
+      const url = trustedResourceUrl`data:text/javascript,alert('hello');`;
+      safeScriptEl.setSrc(blankScript, url, {omitNonce: true});
+
+      expect(blankScript.src).toEqual(`data:text/javascript,alert('hello');`);
+      expect(blankScript.nonce).toEqual('');
+    });
+
     it('propagates nonces when setting textContent', () => {
       const content = safeScript`alert(1);`;
       const blankScript = document.createElement('script');
@@ -43,6 +52,15 @@ describe('safeScriptEl', () => {
 
       expect(blankScript.text).toEqual(`alert(1);`);
       expect(blankScript.nonce).toEqual(nonce);
+    });
+
+    it('omits nonces when setting textContent as instructed by options', () => {
+      const content = safeScript`alert(1);`;
+      const blankScript = document.createElement('script');
+      safeScriptEl.setTextContent(blankScript, content, {omitNonce: true});
+
+      expect(blankScript.text).toEqual(`alert(1);`);
+      expect(blankScript.nonce).toEqual('');
     });
 
     it('test nonce cache', () => {
