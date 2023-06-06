@@ -3,8 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {concatHtmls, htmlEscape, scriptToHtml, scriptUrlToHtml} from '../../src/builders/html_builders';
+import {concatHtmls, htmlEscape, safeHtmlLegacyCreate, scriptToHtml, scriptUrlToHtml} from '../../src/builders/html_builders';
 import {safeScript, valueAsScript} from '../../src/builders/script_builders';
+import {SafeHtml} from '../../src/internals/html_impl';
 import {testonlyResourceUrl} from '../testing/conversions';
 
 describe('html_builders', () => {
@@ -170,4 +171,127 @@ describe('html_builders', () => {
       expect(concatHtmls([html1, html2]).toString()).toEqual('ab');
     });
   });
+
+  describe('safeHtmlLegacyCreate', () => {
+    it('with the Closure test cases', () => {
+      const br = safeHtmlLegacyCreate('br');
+
+      expectSameHtml(br, '<br>');
+
+      expectSameHtml(
+          safeHtmlLegacyCreate('span', {'title': '"'}),
+          '<span title="&quot;"></span>');
+
+      expectSameHtml(
+          safeHtmlLegacyCreate('span', {}, '<'), '<span>&lt;</span>');
+
+      expectSameHtml(safeHtmlLegacyCreate('span', {}, br), '<span><br></span>');
+
+      expectSameHtml(safeHtmlLegacyCreate('span', {}, []), '<span></span>');
+
+      expectSameHtml(
+          safeHtmlLegacyCreate('span', {'title': null, 'class': undefined}),
+          '<span></span>');
+
+      expectSameHtml(
+          safeHtmlLegacyCreate('span', {}, ['x', br, 'y']),
+          '<span>x<br>y</span>');
+
+      expectSameHtml(
+          safeHtmlLegacyCreate('table', {'border': 0}),
+          '<table border="0"></table>');
+
+      const onclick = 'alert(/"/)';
+      expect(() => safeHtmlLegacyCreate('span', {'onclick': onclick}))
+          .toThrow();
+
+      const style = 'border: /* " */ 0;';
+      expectSameHtml(
+          safeHtmlLegacyCreate('hr', {'style': style}),
+          '<hr style="border: /* &quot; */ 0;">');
+
+      expect(() => {
+        safeHtmlLegacyCreate('script');
+      }).toThrow();
+
+      expect(() => {
+        safeHtmlLegacyCreate('br', {}, 'x');
+      }).toThrow();
+
+      expect(() => {
+        safeHtmlLegacyCreate('img', {'onerror': ''});
+      }).toThrow();
+
+      expect(() => {
+        safeHtmlLegacyCreate('img', {'OnError': ''});
+      }).toThrow();
+
+      expect(() => {
+        safeHtmlLegacyCreate('a href=""');
+      }).toThrow();
+
+      expect(() => {
+        safeHtmlLegacyCreate('a', {'title="" href': ''});
+      }).toThrow();
+
+      expect(() => {
+        safeHtmlLegacyCreate('applet');
+      }).toThrow();
+
+      expect(() => {
+        safeHtmlLegacyCreate('applet', {'code': 'kittens.class'});
+      }).toThrow();
+
+      expect(() => {
+        safeHtmlLegacyCreate('base');
+      }).toThrow();
+
+      expect(() => {
+        safeHtmlLegacyCreate('base', {'href': 'http://example.org'});
+      }).toThrow();
+
+      expect(() => {
+        safeHtmlLegacyCreate('math');
+      }).toThrow();
+
+      expect(() => {
+        safeHtmlLegacyCreate('meta');
+      }).toThrow();
+
+      expect(() => {
+        safeHtmlLegacyCreate('svg');
+      }).toThrow();
+    });
+
+    it('works with style attributes', () => {
+      const style = 'color:red;';
+      const expected = `<hr style="${style}">`;
+      expectSameHtml(safeHtmlLegacyCreate('hr', {'style': style}), expected);
+    });
+
+    it('works with url attributes', () => {
+      // string is allowed but escaped.
+      expectSameHtml(
+          safeHtmlLegacyCreate('a', {'href': 'http://google.com/safe"'}),
+          '<a href="http://google.com/safe&quot;"></a>');
+
+      // string is allowed but sanitized.
+      const badUrl = 'javascript:evil();';
+
+      expectSameHtml(
+          safeHtmlLegacyCreate('a', {'href': badUrl}),
+          `<a href="about:invalid#zClosurez"></a>`);
+
+      // attribute case is ignored for url attributes purposes
+      expectSameHtml(
+          safeHtmlLegacyCreate('a', {'hReF': badUrl}),
+          `<a hReF="about:invalid#zClosurez"></a>`,
+      );
+    });
+  });
 });
+
+
+function expectSameHtml(html: SafeHtml, expectedValue: string) {
+  expect(html.toString()).toEqual(expectedValue);
+}
