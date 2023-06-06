@@ -44,6 +44,7 @@ export function scriptToHtml(script: SafeScript, options: {
   id?: string,
   nonce?: string,
   type?: string,
+  defer?: boolean,
 } = {}): SafeHtml {
   const unwrappedScript = unwrapScript(script).toString();
   let stringTag = `<script`;
@@ -55,6 +56,9 @@ export function scriptToHtml(script: SafeScript, options: {
   }
   if (options.type) {
     stringTag += ` type="${htmlEscapeToString(options.type)}"`;
+  }
+  if (options.defer) {
+    stringTag += ` defer`;
   }
   stringTag += `>${unwrappedScript}\u003C/script>`;
   return createHtml(stringTag);

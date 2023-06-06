@@ -103,6 +103,9 @@ describe('html_builders', () => {
              }).toString())
           .toEqual(
               '<script id="myid" nonce="mynonce">const a = b < c;</script>');
+      expect(
+          scriptToHtml(safeScript`const a = b < c;`, {defer: true}).toString())
+          .toEqual('<script defer>const a = b < c;</script>');
     });
 
     it('allows setting type', () => {
