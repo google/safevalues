@@ -3,12 +3,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {createHtml, SafeHtml, unwrapHtml} from '../internals/html_impl';
+import {createHtml, isHtml, SafeHtml, unwrapHtml} from '../internals/html_impl';
 import {TrustedResourceUrl, unwrapResourceUrl} from '../internals/resource_url_impl';
 import {SafeScript, unwrapScript} from '../internals/script_impl';
 
 /**
- * Returns HTML-escaped text as a `SafeHtml` object.
+ * Returns HTML-escaped text as a `SafeHtml` object. No-op if value is already a
+ * SafeHtml instance.
  *
  * Available options:
  * - `preserveSpaces` turns every second consecutive space character into its
@@ -16,12 +17,15 @@ import {SafeScript, unwrapScript} from '../internals/script_impl';
  * - `preserveNewlines` turns newline characters into breaks (`<br>`).
  * - `preserveTabs` wraps tab characters in a span with style=white-space:pre.
  */
-export function htmlEscape(text: string, options: {
+export function htmlEscape(value: SafeHtml|string, options: {
   preserveNewlines?: boolean,
   preserveSpaces?: boolean,
   preserveTabs?: boolean
 } = {}): SafeHtml {
-  let htmlEscapedString = htmlEscapeToString(text);
+  if (isHtml(value)) {
+    return value;
+  }
+  let htmlEscapedString = htmlEscapeToString(value);
   if (options.preserveSpaces) {
     // Do this first to ensure we preserve spaces after newlines and tabs.
     htmlEscapedString =
@@ -97,6 +101,7 @@ function htmlEscapeToString(text: string): string {
 }
 
 /** Creates a `SafeHtml` value by concatenating multiple `SafeHtml`s. */
-export function concatHtmls(htmls: readonly SafeHtml[]): SafeHtml {
-  return createHtml(htmls.map(unwrapHtml).join(''));
+export function concatHtmls(htmls: ReadonlyArray<SafeHtml|string>): SafeHtml {
+  return createHtml(
+      htmls.map((value) => unwrapHtml(htmlEscape(value))).join(''));
 }

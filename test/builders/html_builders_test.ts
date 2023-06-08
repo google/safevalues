@@ -5,7 +5,7 @@
 
 import {concatHtmls, htmlEscape, scriptToHtml, scriptUrlToHtml} from '../../src/builders/html_builders';
 import {safeScript, valueAsScript} from '../../src/builders/script_builders';
-import {testonlyResourceUrl} from '../testing/conversions';
+import {testonlyHtml, testonlyResourceUrl} from '../testing/conversions';
 
 describe('html_builders', () => {
   describe('htmlEscape', () => {
@@ -83,6 +83,11 @@ describe('html_builders', () => {
                preserveTabs: true
              }).toString())
           .toEqual('<span style="white-space:pre">\t\t</span>&#160;a<br>b');
+    });
+
+    it('is a no-op for SafeHtml instances', () => {
+      expect(htmlEscape(testonlyHtml('<div>Grüezi</div>')).toString())
+          .toEqual('<div>Grüezi</div>');
     });
   });
 
@@ -171,6 +176,12 @@ describe('html_builders', () => {
       const html1 = htmlEscape('a');
       const html2 = htmlEscape('b');
       expect(concatHtmls([html1, html2]).toString()).toEqual('ab');
+    });
+
+    it('concatenates `SafeHtml` and string values', () => {
+      const html = testonlyHtml('<p>Bonjour</p>');
+      expect(concatHtmls([html, ' > le monde']).toString())
+          .toEqual('<p>Bonjour</p> &gt; le monde');
     });
   });
 });
