@@ -259,7 +259,7 @@ serviceWorkerContainer.register(url);
 ```typescript {.good}
 import {safeServiceWorkerContainer} from 'safevalues/dom';
 
-safeServiceWorkerContainer.importScripts(self, trustedResourceUrl);
+safeServiceWorkerContainer.register(self, trustedResourceUrl);
 ```
 
 ## SafeScript: Executable code snippets
