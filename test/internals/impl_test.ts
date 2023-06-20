@@ -3,10 +3,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {createHtml, isHtml, unwrapHtml} from '../../src/internals/html_impl';
-import {createResourceUrl, isResourceUrl, unwrapResourceUrl} from '../../src/internals/resource_url_impl';
-import {createScript, isScript, unwrapScript} from '../../src/internals/script_impl';
-import {createStyleSheet, isStyleSheet, unwrapStyleSheet} from '../../src/internals/style_sheet_impl';
+import {createHtmlInternal, isHtml, unwrapHtml} from '../../src/internals/html_impl';
+import {createResourceUrlInternal, isResourceUrl, unwrapResourceUrl} from '../../src/internals/resource_url_impl';
+import {createScriptInternal, isScript, unwrapScript} from '../../src/internals/script_impl';
+import {createStyleSheetInternal, isStyleSheet, unwrapStyleSheet} from '../../src/internals/style_sheet_impl';
 
 interface Impl {
   name: string;
@@ -22,25 +22,25 @@ const IMPLEMENTATIONS: Impl[] = [
   {
     name: 'SafeHtml',
     guard: isHtml,
-    create: createHtml,
+    create: createHtmlInternal,
     unwrap: unwrapHtml,
   },
   {
     name: 'SafeScript',
     guard: isScript,
-    create: createScript,
+    create: createScriptInternal,
     unwrap: unwrapScript,
   },
   {
     name: 'SafeStyleSheet',
     guard: isStyleSheet,
-    create: createStyleSheet,
+    create: createStyleSheetInternal,
     unwrap: unwrapStyleSheet,
   },
   {
     name: 'TrustedResourceUrl',
     guard: isResourceUrl,
-    create: createResourceUrl,
+    create: createResourceUrlInternal,
     unwrap: unwrapResourceUrl,
   },
 ];

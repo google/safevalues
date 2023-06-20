@@ -5,10 +5,10 @@
 
 import '../environment/dev';
 
-import {createHtml, SafeHtml} from '../internals/html_impl';
-import {createResourceUrl, TrustedResourceUrl} from '../internals/resource_url_impl';
-import {createScript, SafeScript} from '../internals/script_impl';
-import {createStyleSheet, SafeStyleSheet} from '../internals/style_sheet_impl';
+import {createHtmlInternal, SafeHtml} from '../internals/html_impl';
+import {createResourceUrlInternal, TrustedResourceUrl} from '../internals/resource_url_impl';
+import {createScriptInternal, SafeScript} from '../internals/script_impl';
+import {createStyleSheetInternal, SafeStyleSheet} from '../internals/style_sheet_impl';
 
 /*
  * Transitional utilities to unsafely trust random strings as
@@ -69,7 +69,7 @@ export function legacyUnsafeHtml(s: string): SafeHtml {
   if (process.env.NODE_ENV !== 'production' && typeof s !== 'string') {
     throw new Error('Expected a string');
   }
-  return createHtml(s);
+  return createHtmlInternal(s);
 }
 
 /**
@@ -81,7 +81,7 @@ export function legacyUnsafeScript(s: string): SafeScript {
   if (process.env.NODE_ENV !== 'production' && typeof s !== 'string') {
     throw new Error('Expected a string');
   }
-  return createScript(s);
+  return createScriptInternal(s);
 }
 
 /**
@@ -93,7 +93,7 @@ export function legacyUnsafeResourceUrl(s: string): TrustedResourceUrl {
   if (process.env.NODE_ENV !== 'production' && typeof s !== 'string') {
     throw new Error('Expected a string');
   }
-  return createResourceUrl(s);
+  return createResourceUrlInternal(s);
 }
 
 /**
@@ -105,5 +105,5 @@ export function legacyUnsafeStyleSheet(s: string): SafeStyleSheet {
   if (process.env.NODE_ENV !== 'production' && typeof s !== 'string') {
     throw new Error('Expected a string');
   }
-  return createStyleSheet(s);
+  return createStyleSheetInternal(s);
 }

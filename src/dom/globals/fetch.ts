@@ -9,10 +9,10 @@
  * interpreted as SafeHtml or SafeScript.
  */
 
-import {createHtml, SafeHtml} from '../../internals/html_impl';
+import {createHtmlInternal, SafeHtml} from '../../internals/html_impl';
 import {TrustedResourceUrl, unwrapResourceUrl} from '../../internals/resource_url_impl';
-import {createScript, SafeScript} from '../../internals/script_impl';
-import {createStyleSheet, SafeStyleSheet} from '../../internals/style_sheet_impl';
+import {createScriptInternal, SafeScript} from '../../internals/script_impl';
+import {createStyleSheetInternal, SafeStyleSheet} from '../../internals/style_sheet_impl';
 
 
 /**
@@ -56,14 +56,14 @@ export interface SafeResponse {
 
 
 /**
- * This causes the compiler to better optimize `createHtml` calls, where
+ * This causes the compiler to better optimize `createHtmlInternal` calls, where
  * previously it was building and including the whole module without
  * tree-shaking.
  *
  * TODO(b/254093954) find out why this is and remove this workaround.
  */
-function privateCreateHtml(html: string): SafeHtml {
-  return createHtml(html);
+function privatecreateHtmlInternal(html: string): SafeHtml {
+  return createHtmlInternal(html);
 }
 
 /**
@@ -87,7 +87,7 @@ export async function fetchResourceUrl(u: TrustedResourceUrl):
       }
 
       const text = await response.text();
-      return privateCreateHtml(text);
+      return privatecreateHtmlInternal(text);
     },
 
     async script(): Promise<SafeScript> {
@@ -100,7 +100,7 @@ export async function fetchResourceUrl(u: TrustedResourceUrl):
       }
 
       const text = await response.text();
-      return createScript(text);
+      return createScriptInternal(text);
     },
 
     async styleSheet(): Promise<SafeStyleSheet> {
@@ -110,7 +110,7 @@ export async function fetchResourceUrl(u: TrustedResourceUrl):
       }
 
       const text = await response.text();
-      return createStyleSheet(text);
+      return createStyleSheetInternal(text);
     }
   };
 }

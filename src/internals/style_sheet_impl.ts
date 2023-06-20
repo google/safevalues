@@ -36,7 +36,7 @@ class StyleSheetImpl extends SafeStyleSheet {
  * safety guarantees. This shouldn't be exposed to application developers, and
  * must only be used as a step towards safe builders or safe constants.
  */
-export function createStyleSheet(styleSheet: string): SafeStyleSheet {
+export function createStyleSheetInternal(styleSheet: string): SafeStyleSheet {
   return new StyleSheetImpl(styleSheet, secretToken);
 }
 

@@ -6,7 +6,7 @@
 import '../environment/dev';
 
 import {assertIsTemplateObject} from '../internals/string_literal';
-import {createStyleSheet, SafeStyleSheet, unwrapStyleSheet} from '../internals/style_sheet_impl';
+import {createStyleSheetInternal, SafeStyleSheet, unwrapStyleSheet} from '../internals/style_sheet_impl';
 
 /**
  * Creates a SafeStyleSheet object from a template literal (without any
@@ -36,7 +36,7 @@ export function safeStyleSheet(templateObj: TemplateStringsArray):
     }
   }
 
-  return createStyleSheet(styleSheet);
+  return createStyleSheetInternal(styleSheet);
 }
 
 /**
@@ -44,5 +44,5 @@ export function safeStyleSheet(templateObj: TemplateStringsArray):
  */
 export function concatStyleSheets(sheets: readonly SafeStyleSheet[]):
     SafeStyleSheet {
-  return createStyleSheet(sheets.map(unwrapStyleSheet).join(''));
+  return createStyleSheetInternal(sheets.map(unwrapStyleSheet).join(''));
 }

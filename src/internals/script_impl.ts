@@ -5,7 +5,6 @@
 
 import '../environment/dev';
 
-/* g3_import_pure from './pure' */
 import {ensureTokenIsValid, secretToken} from './secrets';
 import {getTrustedTypes, getTrustedTypesPolicy} from './trusted_types';
 
@@ -27,7 +26,7 @@ class ScriptImpl {
   }
 }
 
-function createScriptInternal(
+function createTrustedScriptOrPolyfill(
     script: string, trusted?: TrustedScript): SafeScript {
   return (trusted ?? new ScriptImpl(script, secretToken)) as SafeScript;
 }
@@ -53,10 +52,10 @@ export const SafeScript =
  * policy. This shouldn't be exposed to application developers, and must only be
  * used as a step towards safe builders or safe constants.
  */
-export function createScript(script: string): SafeScript {
+export function createScriptInternal(script: string): SafeScript {
   /** @noinline */
   const noinlineScript = script;
-  return createScriptInternal(
+  return createTrustedScriptOrPolyfill(
       noinlineScript, getTrustedTypesPolicy()?.createScript(noinlineScript));
 }
 
@@ -66,7 +65,8 @@ export function createScript(script: string): SafeScript {
  */
 export const EMPTY_SCRIPT: SafeScript =
     /* #__PURE__ */ (
-        () => createScriptInternal('', getTrustedTypes()?.emptyScript))();
+        () => createTrustedScriptOrPolyfill(
+            '', getTrustedTypes()?.emptyScript))();
 
 /**
  * Checks if the given value is a `SafeScript` instance.

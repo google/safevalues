@@ -5,10 +5,10 @@
 
 import '../environment/dev';
 
-import {createHtml, SafeHtml} from '../internals/html_impl';
-import {createResourceUrl, TrustedResourceUrl} from '../internals/resource_url_impl';
-import {createScript, SafeScript} from '../internals/script_impl';
-import {createStyleSheet, SafeStyleSheet} from '../internals/style_sheet_impl';
+import {createHtmlInternal, SafeHtml} from '../internals/html_impl';
+import {createResourceUrlInternal, TrustedResourceUrl} from '../internals/resource_url_impl';
+import {createScriptInternal, SafeScript} from '../internals/script_impl';
+import {createStyleSheetInternal, SafeStyleSheet} from '../internals/style_sheet_impl';
 
 /**
  * Utilities to convert arbitrary strings to values of the various
@@ -57,7 +57,7 @@ export function htmlSafeByReview(
   if (process.env.NODE_ENV !== 'production') {
     assertValidJustification(justification);
   }
-  return createHtml(html);
+  return createHtmlInternal(html);
 }
 
 /**
@@ -74,7 +74,7 @@ export function scriptSafeByReview(
   if (process.env.NODE_ENV !== 'production') {
     assertValidJustification(justification);
   }
-  return createScript(script);
+  return createScriptInternal(script);
 }
 
 /**
@@ -91,7 +91,7 @@ export function resourceUrlSafeByReview(
   if (process.env.NODE_ENV !== 'production') {
     assertValidJustification(justification);
   }
-  return createResourceUrl(url);
+  return createResourceUrlInternal(url);
 }
 
 /**
@@ -109,5 +109,5 @@ export function styleSheetSafeByReview(
   if (process.env.NODE_ENV !== 'production') {
     assertValidJustification(justification);
   }
-  return createStyleSheet(stylesheet);
+  return createStyleSheetInternal(stylesheet);
 }

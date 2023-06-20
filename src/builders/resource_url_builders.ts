@@ -5,7 +5,7 @@
 
 import '../environment/dev';
 
-import {createResourceUrl, TrustedResourceUrl, unwrapResourceUrl} from '../internals/resource_url_impl';
+import {createResourceUrlInternal, TrustedResourceUrl, unwrapResourceUrl} from '../internals/resource_url_impl';
 import {SafeScript, unwrapScript} from '../internals/script_impl';
 import {assertIsTemplateObject} from '../internals/string_literal';
 
@@ -140,7 +140,7 @@ export function trustedResourceUrl(
   }
 
   if (rest.length === 0) {
-    return createResourceUrl(templateObj[0]);
+    return createResourceUrlInternal(templateObj[0]);
   }
 
   const base = templateObj[0].toLowerCase();
@@ -162,7 +162,7 @@ export function trustedResourceUrl(
   for (let i = 0; i < rest.length; i++) {
     url += encodeURIComponent(rest[i]) + templateObj[i + 1];
   }
-  return createResourceUrl(url);
+  return createResourceUrlInternal(url);
 }
 
 /**
@@ -202,7 +202,7 @@ export function appendParams(
       separator = '&';
     }
   });
-  return createResourceUrl(url);
+  return createResourceUrlInternal(url);
 }
 
 const BEFORE_FRAGMENT_REGEXP = /[^#]*/;
@@ -217,7 +217,7 @@ const BEFORE_FRAGMENT_REGEXP = /[^#]*/;
 export function replaceFragment(
     trustedUrl: TrustedResourceUrl, fragment: string) {
   const urlString = unwrapResourceUrl(trustedUrl).toString();
-  return createResourceUrl(
+  return createResourceUrlInternal(
       BEFORE_FRAGMENT_REGEXP.exec(urlString)![0] + '#' + fragment);
 }
 
@@ -248,7 +248,7 @@ export function appendPathSegment(
   if (fragVal !== undefined) {
     url += '#' + fragVal;
   }
-  return createResourceUrl(url);
+  return createResourceUrlInternal(url);
 }
 
 /**
@@ -262,5 +262,5 @@ export function objectUrlFromScript(safeScript: SafeScript):
     TrustedResourceUrl {
   const scriptContent = unwrapScript(safeScript).toString();
   const blob = new Blob([scriptContent], {type: 'text/javascript'});
-  return createResourceUrl(URL.createObjectURL(blob));
+  return createResourceUrlInternal(URL.createObjectURL(blob));
 }

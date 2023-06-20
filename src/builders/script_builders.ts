@@ -5,7 +5,7 @@
 
 import '../environment/dev';
 
-import {createScript, SafeScript, unwrapScript} from '../internals/script_impl';
+import {createScriptInternal, SafeScript, unwrapScript} from '../internals/script_impl';
 import {assertIsTemplateObject} from '../internals/string_literal';
 
 type Primitive = number|string|boolean|null;
@@ -26,12 +26,12 @@ export function safeScript(templateObj: TemplateStringsArray): SafeScript {
   if (process.env.NODE_ENV !== 'production') {
     assertIsTemplateObject(templateObj, 0);
   }
-  return createScript(templateObj[0]);
+  return createScriptInternal(templateObj[0]);
 }
 
 /** Creates a `SafeScript` value by concatenating multiple `SafeScript`s. */
 export function concatScripts(scripts: readonly SafeScript[]): SafeScript {
-  return createScript(scripts.map(unwrapScript).join(''));
+  return createScriptInternal(scripts.map(unwrapScript).join(''));
 }
 
 /**
@@ -41,7 +41,7 @@ export function concatScripts(scripts: readonly SafeScript[]): SafeScript {
  * @param value The value to serialize.
  */
 export function valueAsScript(value: Serializable): SafeScript {
-  return createScript(JSON.stringify(value).replace(/</g, '\\u003C'));
+  return createScriptInternal(JSON.stringify(value).replace(/</g, '\\u003C'));
 }
 
 /**
@@ -80,6 +80,7 @@ export function safeScriptWithArgs(
   }
   return (...argValues: Serializable[]) => {
     const values = argValues.map((v) => valueAsScript(v).toString());
-    return createScript(`(${templateObj.join('')})(${values.join(',')})`);
+    return createScriptInternal(
+        `(${templateObj.join('')})(${values.join(',')})`);
   };
 }

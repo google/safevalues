@@ -33,7 +33,8 @@ class AttributePrefixImpl extends SafeAttributePrefix {
  * safety guarantees. This shouldn't be exposed to application developers, and
  * must only be used as a step towards safe builders or safe constants.
  */
-export function createAttributePrefix(attrPrefix: string): SafeAttributePrefix {
+export function createAttributePrefixInternal(attrPrefix: string):
+    SafeAttributePrefix {
   return new AttributePrefixImpl(attrPrefix, secretToken);
 }
 

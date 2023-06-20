@@ -5,7 +5,6 @@
 
 import '../environment/dev';
 
-/* g3_import_pure from './pure' */
 import {ensureTokenIsValid, secretToken} from './secrets';
 import {getTrustedTypes, getTrustedTypesPolicy} from './trusted_types';
 
@@ -26,7 +25,8 @@ class HtmlImpl {
   }
 }
 
-function createHtmlInternal(html: string, trusted?: TrustedHTML): SafeHtml {
+function createTrustedHtmlOrPolyfill(
+    html: string, trusted?: TrustedHTML): SafeHtml {
   return (trusted ?? new HtmlImpl(html, secretToken)) as SafeHtml;
 }
 
@@ -51,10 +51,10 @@ export const SafeHtml =
  * This shouldn't be exposed to application developers, and must only be used as
  * a step towards safe builders or safe constants.
  */
-export function createHtml(html: string): SafeHtml {
+export function createHtmlInternal(html: string): SafeHtml {
   /** @noinline */
   const noinlineHtml = html;
-  return createHtmlInternal(
+  return createTrustedHtmlOrPolyfill(
       noinlineHtml, getTrustedTypesPolicy()?.createHTML(noinlineHtml));
 }
 
@@ -64,7 +64,7 @@ export function createHtml(html: string): SafeHtml {
  */
 export const EMPTY_HTML: SafeHtml =
     /* #__PURE__ */ (
-        () => createHtmlInternal('', getTrustedTypes()?.emptyHTML))();
+        () => createTrustedHtmlOrPolyfill('', getTrustedTypes()?.emptyHTML))();
 
 /**
  * Checks if the given value is a `SafeHtml` instance.
