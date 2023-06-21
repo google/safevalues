@@ -4,7 +4,7 @@
  */
 
 import {createContextualFragment} from '../../dom/globals/range';
-import {createHtml} from '../../internals/html_impl';
+import {createHtmlInternal} from '../../internals/html_impl';
 
 /**
  * Returns a fragment that contains the parsed HTML for `dirtyHtml` without
@@ -17,6 +17,6 @@ export function createInertFragment(dirtyHtml: string): DocumentFragment {
   // This call is only used to create an inert tree for the sanitizer to
   // further process and is never returned directly to the caller. We can't use
   // a reviewed conversion in order to avoid an import loop.
-  const temporarySafeHtml = createHtml(dirtyHtml);
+  const temporarySafeHtml = createHtmlInternal(dirtyHtml);
   return createContextualFragment(range, temporarySafeHtml);
 }

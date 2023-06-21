@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {createHtml, isHtml, SafeHtml, unwrapHtml} from '../internals/html_impl';
+import {createHtmlInternal, isHtml, SafeHtml, unwrapHtml} from '../internals/html_impl';
 import {TrustedResourceUrl, unwrapResourceUrl} from '../internals/resource_url_impl';
 import {SafeScript, unwrapScript} from '../internals/script_impl';
 
@@ -38,7 +38,7 @@ export function htmlEscape(value: SafeHtml|string, options: {
     htmlEscapedString = htmlEscapedString.replace(
         /(\t+)/g, '<span style="white-space:pre">$1</span>');
   }
-  return createHtml(htmlEscapedString);
+  return createHtmlInternal(htmlEscapedString);
 }
 
 /**
@@ -65,7 +65,7 @@ export function scriptToHtml(script: SafeScript, options: {
     stringTag += ` defer`;
   }
   stringTag += `>${unwrappedScript}\u003C/script>`;
-  return createHtml(stringTag);
+  return createHtmlInternal(stringTag);
 }
 
 /**
@@ -85,7 +85,7 @@ export function scriptUrlToHtml(src: TrustedResourceUrl, options: {
     stringTag += ` nonce="${htmlEscapeToString(options.nonce)}"`;
   }
   stringTag += '>\u003C/script>';
-  return createHtml(stringTag);
+  return createHtmlInternal(stringTag);
 }
 
 /**
@@ -102,6 +102,6 @@ function htmlEscapeToString(text: string): string {
 
 /** Creates a `SafeHtml` value by concatenating multiple `SafeHtml`s. */
 export function concatHtmls(htmls: ReadonlyArray<SafeHtml|string>): SafeHtml {
-  return createHtml(
+  return createHtmlInternal(
       htmls.map((value) => unwrapHtml(htmlEscape(value))).join(''));
 }

@@ -6,12 +6,12 @@
 
 import * as safeFetch from '../../../src/dom/globals/fetch';
 import {unwrapHtml} from '../../../src/internals/html_impl';
-import {createResourceUrl} from '../../../src/internals/resource_url_impl';
+import {createResourceUrlInternal} from '../../../src/internals/resource_url_impl';
 import {unwrapScript} from '../../../src/internals/script_impl';
 import {unwrapStyleSheet} from '../../../src/internals/style_sheet_impl';
 
 function dummyResource(contentType: string, content: string) {
-  return createResourceUrl(
+  return createResourceUrlInternal(
       `data:${contentType},${encodeURIComponent(content)}`,
   );
 }

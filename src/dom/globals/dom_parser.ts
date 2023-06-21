@@ -5,7 +5,7 @@
 
 import '../../environment/dev';
 
-import {createHtml, SafeHtml, unwrapHtml} from '../../internals/html_impl';
+import {createHtmlInternal, SafeHtml, unwrapHtml} from '../../internals/html_impl';
 
 /** Safely parses a string using the HTML parser. */
 export function parseHtml(parser: DOMParser, html: SafeHtml): HTMLDocument {
@@ -18,7 +18,7 @@ export function parseHtml(parser: DOMParser, html: SafeHtml): HTMLDocument {
  * security reasons.
  */
 export function parseXml(parser: DOMParser, xml: string): XMLDocument {
-  const doc = parseFromString(parser, createHtml(xml), 'text/xml');
+  const doc = parseFromString(parser, createHtmlInternal(xml), 'text/xml');
 
   const iterator = document.createNodeIterator(
       doc,

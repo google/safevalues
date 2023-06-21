@@ -48,7 +48,7 @@ export const TrustedResourceUrl =
  * Types policy. This shouldn't be exposed to application developers, and must
  * only be used as a step towards safe builders or safe constants.
  */
-export function createResourceUrl(url: string): TrustedResourceUrl {
+export function createResourceUrlInternal(url: string): TrustedResourceUrl {
   /** @noinline */
   const noinlineUrl = url;
   const trustedScriptURL =

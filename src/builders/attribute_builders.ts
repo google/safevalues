@@ -5,7 +5,7 @@
 
 import '../environment/dev';
 
-import {createAttributePrefix, SafeAttributePrefix} from '../internals/attribute_impl';
+import {createAttributePrefixInternal, SafeAttributePrefix} from '../internals/attribute_impl';
 import {assertIsTemplateObject} from '../internals/string_literal';
 
 import {SECURITY_SENSITIVE_ATTRIBUTES} from './sensitive_attributes';
@@ -45,5 +45,5 @@ export function safeAttrPrefix(templ: TemplateStringsArray):
     });
   }
 
-  return createAttributePrefix(attrPrefix);
+  return createAttributePrefixInternal(attrPrefix);
 }

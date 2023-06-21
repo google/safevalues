@@ -5,7 +5,7 @@
 
 import '../../environment/dev';
 
-import {createHtml, SafeHtml} from '../../internals/html_impl';
+import {createHtmlInternal, SafeHtml} from '../../internals/html_impl';
 /* g3_import_pure from '../../internals/pure' */
 import {ensureTokenIsValid, secretToken} from '../../internals/secrets';
 import {restrictivelySanitizeUrl} from '../url_sanitizer';
@@ -65,7 +65,7 @@ export class HtmlSanitizerImpl implements HtmlSanitizer {
     serializedNewTree = serializedNewTree.slice(
         serializedNewTree.indexOf('>') + 1,
         serializedNewTree.lastIndexOf('</'));
-    return createHtml(serializedNewTree);
+    return createHtmlInternal(serializedNewTree);
   }
 
   sanitizeToFragment(html: string): DocumentFragment {
