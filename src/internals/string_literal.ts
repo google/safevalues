@@ -38,6 +38,11 @@ export function assertIsTemplateObject(
  */
 const isTranspiled = (() => ``).toString().indexOf('`') === -1;
 
+/** Checks if `templateObj` and its raw property are frozen. */
+function checkFrozen(templateObj: TemplateStringsArray): boolean {
+  return Object.isFrozen(templateObj) && Object.isFrozen(templateObj.raw);
+}
+
 /** Polyfill of https://github.com/tc39/proposal-array-is-template-object */
 function isTemplateObject(templateObj: TemplateStringsArray): boolean {
   /*
@@ -72,18 +77,12 @@ function isTemplateObject(templateObj: TemplateStringsArray): boolean {
     // array to be different.
     return false;
   }
-
   if ((!isTranspiled || checkFrozen``) && !checkFrozen(templateObj)) {
-    // Transpilers typically don't freeze `TemplateStringsArray` objects, but we
-    // expect that if they did, they would do it consistently, so we also
+    // Transpilers typically don't freeze `TemplateStringsArray` objects, but
+    // we expect that if they did, they would do it consistently, so we also
     // dynamically check if they do.
     return false;
   }
 
   return true;
-}
-
-/** Checks if `templateObj` and its raw property are frozen. */
-function checkFrozen(templateObj: TemplateStringsArray): boolean {
-  return Object.isFrozen(templateObj) && Object.isFrozen(templateObj.raw);
 }
