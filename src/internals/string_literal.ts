@@ -32,16 +32,37 @@ export function assertIsTemplateObject(
   }
 }
 
-/**
- * This check will tell us if the code is transpiled, in which case we don't
- * check certain things that transpilers typically don't support.
- */
-const isTranspiled = (() => ``).toString().indexOf('`') === -1;
-
 /** Checks if `templateObj` and its raw property are frozen. */
 function checkFrozen(templateObj: TemplateStringsArray): boolean {
   return Object.isFrozen(templateObj) && Object.isFrozen(templateObj.raw);
 }
+
+/**
+ * Examples of code that uses tagged template literals. We use this function
+ * below to both check if these examples are frozen and if the code is getting
+ * transpiled.
+ *
+ * We use multiple examples here in case the compiler transpiles sometimes but
+ * not all.
+ */
+function checkFrozenExamples() {
+  return checkFrozen`` && checkFrozen`\0` && checkFrozen`\n` &&
+      checkFrozen`\u0000`;
+}
+
+/**
+ * This value tells us if the code is transpiled, in which case we don't
+ * check certain things that transpilers typically don't support. The
+ * transpilation turns it into a function call that takes an array.
+ */
+const isTranspiled = checkFrozenExamples.toString().indexOf('[') !== -1 ||
+    (() => ``).toString().indexOf('`') === -1;
+
+/**
+ * This value tells us if `TemplateStringsArray` are typically frozen in the
+ * current environment.
+ */
+const frozenTSA = checkFrozenExamples();
 
 /** Polyfill of https://github.com/tc39/proposal-array-is-template-object */
 function isTemplateObject(templateObj: TemplateStringsArray): boolean {
@@ -77,9 +98,9 @@ function isTemplateObject(templateObj: TemplateStringsArray): boolean {
     // array to be different.
     return false;
   }
-  if ((!isTranspiled || checkFrozen``) && !checkFrozen(templateObj)) {
-    // Transpilers typically don't freeze `TemplateStringsArray` objects, but
-    // we expect that if they did, they would do it consistently, so we also
+  if ((!isTranspiled || frozenTSA) && !checkFrozen(templateObj)) {
+    // Transpilers typically don't freeze `TemplateStringsArray` objects, but we
+    // expect that if they did, they would do it consistently, so we also
     // dynamically check if they do.
     return false;
   }
