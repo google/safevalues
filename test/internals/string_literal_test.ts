@@ -67,9 +67,7 @@ describe('assertIsTemplateObject', () => {
         return tagFn(Object.freeze(Object.assign(arr, {raw: arr})));
       }).toThrowError(/##### ERROR #####/);
     } else {
-      // Skip this test if we are running transpiled code. Since we need an
-      // expectation, add a check that the code is indeed transpiled.
-      expect(isNative).toBeFalse();
+      pending('Skipping test as the code is transpiled');
     }
   });
 
@@ -81,7 +79,8 @@ describe('assertIsTemplateObject', () => {
         return tagFn(Object.assign([''], {raw: ['']}));
       }).toThrowError(/##### ERROR #####/);
     } else {
-      expect(Object.isFrozen``).toBeFalse();
+      pending(
+          'Skipping because Object.isFrozen`` is false and code is transpiled');
     }
   });
 
