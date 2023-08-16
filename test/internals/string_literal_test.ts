@@ -23,6 +23,14 @@ describe('assertIsTemplateObject', () => {
     expect(tagFn`valid string`).toEqual('valid string');
   });
 
+  it('accepts valid input containing escape sequences', () => {
+    const tagFn = getTagFunction();
+    expect(tagFn`\0`).toEqual('\0');
+    expect(tagFn`\n`).toEqual('\n');
+    expect(tagFn`\\`).toEqual('\\');
+    expect(tagFn`\u0000`).toEqual('\u0000');
+  });
+
   it('can support interpolation', () => {
     const tagFn = getTagFunction();
     expect(tagFn`hello ${'world'}`).toEqual('hello world');
