@@ -12,7 +12,9 @@ import {createHtmlInternal} from '../../internals/html_impl';
  */
 export function createInertFragment(dirtyHtml: string): DocumentFragment {
   // We create a new document to ensure the nodes stay detached
-  const range = document.implementation.createHTMLDocument('').createRange();
+  const doc = document.implementation.createHTMLDocument('');
+  const range = doc.createRange();
+  range.selectNode(doc.body);
 
   // This call is only used to create an inert tree for the sanitizer to
   // further process and is never returned directly to the caller. We can't use
