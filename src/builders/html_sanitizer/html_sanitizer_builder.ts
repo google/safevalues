@@ -7,7 +7,7 @@ import {secretToken} from '../../internals/secrets';
 
 import {HtmlSanitizer, HtmlSanitizerImpl} from './html_sanitizer';
 import {defaultSanitizerTable} from './sanitizer_table/default_sanitizer_table';
-import {AttributePolicy, AttributePolicyAction, ElementPolicy, SanitizerTable} from './sanitizer_table/sanitizer_table';
+import {AttributePolicy, AttributePolicyAction, ElementPolicy, isCustomElement, SanitizerTable} from './sanitizer_table/sanitizer_table';
 
 /** This class allows modifications to the default sanitizer configuration. */
 export class HtmlSanitizerBuilder {
@@ -37,6 +37,41 @@ export class HtmlSanitizerBuilder {
       } else {
         allowedElements.add(element);
       }
+    }
+
+    this.sanitizerTable = new SanitizerTable(
+        allowedElements, allowedElementPolicies,
+        this.sanitizerTable.allowedGlobalAttributes,
+        this.sanitizerTable.globalAttributePolicies);
+    return this;
+  }
+
+  /**
+   * Builder option to allow a set of custom elements. Must be called either
+   * without or after `onlyAllowElements` - will be overwritten otherwise.
+   * Custom elements must contain a dash.
+   */
+  allowCustomElement(element: string, allowedAttributes?: ReadonlySet<string>):
+      HtmlSanitizerBuilder {
+    const allowedElements =
+        new Set<string>(this.sanitizerTable.allowedElements);
+    const allowedElementPolicies =
+        new Map<string, ElementPolicy>(this.sanitizerTable.elementPolicies);
+
+    element = element.toUpperCase();
+    if (!isCustomElement(element)) {
+      throw new Error(`Element: ${element} is not a custom element`);
+    }
+
+    if (allowedAttributes) {
+      const elementPolicy = new Map<string, AttributePolicy>();
+      for (const attribute of allowedAttributes) {
+        elementPolicy.set(
+            attribute, {policyAction: AttributePolicyAction.KEEP});
+      }
+      allowedElementPolicies.set(element, elementPolicy);
+    } else {
+      allowedElements.add(element);
     }
 
     this.sanitizerTable = new SanitizerTable(

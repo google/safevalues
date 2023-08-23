@@ -47,7 +47,7 @@ describe('html sanitizer builder test', () => {
                             .onlyAllowElements(new Set<string>(['article']))
                             .build();
 
-      expect('<a></a>').toContain(sanitizer.sanitize('').toString());
+      expect('').toEqual(sanitizer.sanitize('<a></a>').toString());
     });
 
     it('throws an error when called with an element not allowed by default.', () => {
@@ -89,6 +89,95 @@ describe('html sanitizer builder test', () => {
        });
   });
 
+  describe('when calling allowCustomElements:', () => {
+    it('allows elements that its called with', () => {
+      const sanitizer =
+          new HtmlSanitizerBuilder().allowCustomElement('my-element').build();
+
+      const expectedValues = [
+        '<my-element></my-element>',
+        // ie11-win7
+        '<MY-ELEMENT />',
+      ];
+      expect(expectedValues)
+          .toContain(
+              sanitizer.sanitize('<my-element></my-element>').toString());
+    });
+
+    it('does not override onlyAllowElements', () => {
+      const sanitizer = new HtmlSanitizerBuilder()
+                            .onlyAllowElements(new Set<string>(['article']))
+                            .allowCustomElement('my-element')
+                            .build();
+
+      const expectedValues = [
+        '<article></article>',
+        '<article />',
+      ];
+      expect(expectedValues)
+          .toContain(sanitizer.sanitize('<article></article>').toString());
+    });
+
+    it('allows attributes on custom elements', () => {
+      const sanitizer = new HtmlSanitizerBuilder()
+                            .allowCustomElement(
+                                'my-element', new Set<string>(['my-attribute']))
+                            .build();
+
+      const expectedValues = [
+        '<my-element my-attribute="value"></my-element>',
+        // ie11-win7
+        '<MY-ELEMENT my-attribute="value" />',
+      ];
+      expect(expectedValues)
+          .toContain(
+              sanitizer
+                  .sanitize('<my-element my-attribute="value"></my-element>')
+                  .toString());
+    });
+
+    it('removes non-allowed attributes on custom elements', () => {
+      const sanitizer = new HtmlSanitizerBuilder()
+                            .allowCustomElement(
+                                'my-element', new Set<string>(['my-attribute']))
+                            .build();
+
+      const expectedValues = [
+        '<my-element></my-element>',
+        // ie11-win7
+        '<MY-ELEMENT />',
+      ];
+      expect(expectedValues)
+          .toContain(
+              sanitizer
+                  .sanitize(
+                      '<my-element my-other-attribute="value"></my-element>')
+                  .toString());
+    });
+
+    it('removes other custom elements', () => {
+      const sanitizer =
+          new HtmlSanitizerBuilder().allowCustomElement('my-element').build();
+
+      expect('').toEqual(
+          sanitizer.sanitize('<my-other-element></my-other-element>')
+              .toString());
+    });
+
+    it('throws an error when a non-custom-element name is provided', () => {
+      expect(() => new HtmlSanitizerBuilder().allowCustomElement('foo').build())
+          .toThrowError('Element: FOO is not a custom element');
+    });
+
+    it('throws an error when a reserved name is provided', () => {
+      expect(
+          () => new HtmlSanitizerBuilder()
+                    .allowCustomElement('font-face')
+                    .build())
+          .toThrowError('Element: FONT-FACE is not a custom element');
+    });
+  });
+
   describe('when calling onlyAllowAttributes:', () => {
     it('allows global attributes', () => {
       const sanitizer = new HtmlSanitizerBuilder()
@@ -116,6 +205,7 @@ describe('html sanitizer builder test', () => {
               sanitizer.sanitize('<a target="_self" media="something"></a>')
                   .toString());
     });
+
     it('doesn\'t reallow elements that were disallowed in onlyAllowElements',
        () => {
          const sanitizer = new HtmlSanitizerBuilder()

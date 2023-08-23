@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {AttributePolicyAction, SanitizerTable} from '../../../../src/builders/html_sanitizer/sanitizer_table/sanitizer_table';
+import {AttributePolicyAction, isCustomElement, SanitizerTable} from '../../../../src/builders/html_sanitizer/sanitizer_table/sanitizer_table';
 
 const sanitizerTable = new SanitizerTable(
     new Set<string>([]),
@@ -43,5 +43,19 @@ describe('sanitizer table test', () => {
         sanitizerTable.getAttributePolicy('nonexisten_attribute', 'A')
             .policyAction;
     expect(policy).toBe(AttributePolicyAction.DROP);
+  });
+
+  describe('isCustomElement', () => {
+    it('returns true for custom element', () => {
+      expect(isCustomElement('my-element')).toBeTrue();
+    });
+
+    it('returns false for standard element', () => {
+      expect(isCustomElement('h1')).toBeFalse();
+    });
+
+    it('returns false for reserved non-custom element', () => {
+      expect(isCustomElement('font-face')).toBeFalse();
+    });
   });
 });

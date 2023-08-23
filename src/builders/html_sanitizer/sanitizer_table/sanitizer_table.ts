@@ -76,3 +76,24 @@ export interface AttributePolicy {
   // the map) is equal to one of the values in the set.
   readonly conditions?: ReadonlyMap<string, Set<string>>;
 }
+
+// From the spec:
+// https://html.spec.whatwg.org/multipage/custom-elements.html#prod-potentialcustomelementname:~:text=name%20must%20not%20be%20any%20of%20the%20following%3A
+const FORBIDDEN_CUSTOM_ELEMENT_NAMES = new Set<string>([
+  'ANNOTATION-XML',
+  'COLOR-PROFILE',
+  'FONT-FACE',
+  'FONT-FACE-SRC',
+  'FONT-FACE-URI',
+  'FONT-FACE-FORMAT',
+  'FONT-FACE-NAME',
+  'MISSING-GLYPH',
+]);
+
+/**
+ * Helper for checking if an element tag is a custom element.
+ */
+export function isCustomElement(tag: string): boolean {
+  return !FORBIDDEN_CUSTOM_ELEMENT_NAMES.has(tag.toUpperCase()) &&
+      /^[a-z][-_.a-z0-9]*-[-_.a-z0-9]*$/i.test(tag);
+}
