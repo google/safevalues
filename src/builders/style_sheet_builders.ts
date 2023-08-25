@@ -40,7 +40,8 @@ export function safeStyleSheet(templateObj: TemplateStringsArray):
 }
 
 /**
- * Creates a `SafeStyleSheet` value by concatenating multiple `SafeStyleSheet`s.
+ * Creates a `SafeStyleSheet` value by concatenating multiple
+ * `SafeStyleSheet`s.
  */
 export function concatStyleSheets(sheets: readonly SafeStyleSheet[]):
     SafeStyleSheet {

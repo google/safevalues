@@ -5,6 +5,7 @@
 
 import {concatStyleSheets, safeStyleSheet} from '../../src/builders/style_sheet_builders';
 
+
 describe('style_sheet_builders', () => {
   describe('concatStyleSheets', () => {
     it('concatenates `SafeStyleSheet` values', () => {
