@@ -70,9 +70,9 @@ function privatecreateHtmlInternal(html: string): SafeHtml {
  * fetches a given {@link TrustedResourceUrl},
  * and returns a value which can be turned into a given safe type.
  */
-export async function fetchResourceUrl(u: TrustedResourceUrl):
-    Promise<SafeResponse> {
-  const response = await fetch(unwrapResourceUrl(u).toString());
+export async function fetchResourceUrl(
+    u: TrustedResourceUrl, init?: RequestInit): Promise<SafeResponse> {
+  const response = await fetch(unwrapResourceUrl(u).toString(), init);
   /**
    * the content type type of the response, excluding any MIME params
    */
