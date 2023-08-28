@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {concatHtmls, htmlEscape, scriptToHtml, scriptUrlToHtml} from '../../src/builders/html_builders';
+import {concatHtmls, htmlEscape, joinHtmls, scriptToHtml, scriptUrlToHtml} from '../../src/builders/html_builders';
 import {safeScript, valueAsScript} from '../../src/builders/script_builders';
 import {testonlyHtml, testonlyResourceUrl} from '../testing/conversions';
 
@@ -182,6 +182,28 @@ describe('html_builders', () => {
       const html = testonlyHtml('<p>Bonjour</p>');
       expect(concatHtmls([html, ' > le monde']).toString())
           .toEqual('<p>Bonjour</p> &gt; le monde');
+    });
+  });
+  describe('joinHtmls', () => {
+    it('joins 2 `SafeHtml` values', () => {
+      const html1 = htmlEscape('a');
+      const html2 = htmlEscape('b');
+      expect(joinHtmls(',', [html1, html2]).toString()).toEqual('a,b');
+    });
+    it('works with 1 SafeHtml value', () => {
+      const html = htmlEscape('a');
+      expect(joinHtmls(',', [html]).toString()).toEqual('a');
+    });
+    it('escapes string separators', () => {
+      const html1 = htmlEscape('a');
+      const html2 = htmlEscape('b');
+      expect(joinHtmls('<br>', [html1, html2]).toString())
+          .toEqual('a&lt;br&gt;b');
+    });
+    it('escapes string parts', () => {
+      const html1 = htmlEscape('a');
+      expect(joinHtmls(',', [html1, '<br>']).toString())
+          .toEqual('a,&lt;br&gt;');
     });
   });
 });

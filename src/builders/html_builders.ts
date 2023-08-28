@@ -102,6 +102,17 @@ function htmlEscapeToString(text: string): string {
 
 /** Creates a `SafeHtml` value by concatenating multiple `SafeHtml`s. */
 export function concatHtmls(htmls: ReadonlyArray<SafeHtml|string>): SafeHtml {
-  return createHtmlInternal(
-      htmls.map((value) => unwrapHtml(htmlEscape(value))).join(''));
+  return joinHtmls('', htmls);
+}
+
+/**
+ * Creates a `SafeHtml` value by concatenating multiple `SafeHtml`s interleaved
+ * with a separator.
+ */
+export function joinHtmls(
+    separator: SafeHtml|string,
+    htmls: ReadonlyArray<SafeHtml|string>): SafeHtml {
+  const separatorHtml = htmlEscape(separator);
+  return createHtmlInternal(htmls.map((value) => unwrapHtml(htmlEscape(value)))
+                                .join(unwrapHtml(separatorHtml).toString()));
 }
