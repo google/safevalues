@@ -30,9 +30,9 @@ export function safeStyleSheet(templateObj: TemplateStringsArray):
 
   const styleSheet = templateObj[0];
   if (process.env.NODE_ENV !== 'production') {
-    if (/[<>]/.test(styleSheet)) {
+    if (styleSheet.includes('<')) {
       throw new Error(
-          'Forbidden characters in styleSheet string: ' + styleSheet);
+          `'<' character is forbidden in styleSheet string: ${styleSheet}`);
     }
   }
 
