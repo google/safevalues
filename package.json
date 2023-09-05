@@ -1,6 +1,6 @@
 {
   "name": "safevalues",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Safe builders for Trusted Types values",
   "repository": "https://github.com/google/safevalues",
   "author": "ISE Hardening",
@@ -41,7 +41,8 @@
     "build:cjs": "yarn && tsc -p ./tsconfig-cjs.json",
     "build:fixup": "./fixup.sh",
     "test": "yarn build && karma start --browsers ChromeHeadless,FirefoxHeadless --single-run",
-    "itest": "yarn build && karma start --browsers ChromeHeadless,FirefoxHeadless"
+    "itest": "yarn build && karma start --browsers ChromeHeadless,FirefoxHeadless",
+    "prepack": "yarn test"
   },
   "devDependencies": {
     "@types/jasmine": "^3.6.2",
