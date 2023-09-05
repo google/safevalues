@@ -1,0 +1,7 @@
+{
+    "name": "restricted/legacy",
+    "description": "Restricted APIs, used to mark legacy usages of unsafe APIs",
+    "main": "../../dist/cjs/restricted/legacy.js",
+    "module": "../../dist/mjs/restricted/legacy.js",
+    "types": "../../dist/mjs/restricted/legacy.d.ts"
+}

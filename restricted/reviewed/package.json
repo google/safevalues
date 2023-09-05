@@ -1,0 +1,7 @@
+{
+    "name": "restricted/reviewed",
+    "description": "Restricted APIs, used to mark reviewed usages of unsafe APIs for which no safe equivalent exists.",
+    "main": "../../dist/cjs/restricted/reviewed.js",
+    "module": "../../dist/mjs/restricted/reviewed.js",
+    "types": "../../dist/mjs/restricted/reviewed.d.ts"
+}

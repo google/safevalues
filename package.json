@@ -1,6 +1,6 @@
 {
   "name": "safevalues",
-  "version": "0.4.3",
+  "version": "0.5.0",
   "description": "Safe builders for Trusted Types values",
   "repository": "https://github.com/google/safevalues",
   "author": "ISE Hardening",
@@ -8,41 +8,38 @@
   "publishConfig":{
     "registry":"https://wombat-dressing-room.appspot.com"
   },
-  "main": "index.js",
-  "module": "index.mjs",
-  "types": "index.d.ts",
+  "main": "dist/cjs/index.js",
+  "module": "dist/mjs/index.js",
+  "types": "dist/mjs/index.d.ts",
   "exports": {
-    ".": {
-      "require": "./index.js",
-      "import": "./index.mjs",
-      "types": "./index.d.ts"
-    },
-    "./restricted/*": {
-      "require": "./restricted/*.js",
-      "import": "./restricted/*.mjs",
-      "types": "./restricted/*.d.ts"
-    },
-    "./dom": {
-      "require": "./dom/index.js",
-      "import": "./dom/index.mjs",
-      "types": "./dom/index.d.ts"
-    }
+      ".": {
+          "import": "./dist/mjs/index.js",
+          "require": "./dist/cjs/index.js",
+          "types": "./dist/mjs/index.d.ts"
+      },
+      "./restricted/*": {
+        "import": "./dist/mjs/restricted/*.js",
+        "require": "./dist/cjs/restricted/*.js",
+        "types": "./dist/mjs/restricted/*.d.ts"
+      },
+      "./dom": {
+        "import": "./dist/mjs/dom/index.js",
+        "require": "./dist/cjs/dom/index.js",
+        "types": "./dist/mjs/dom/index.d.ts"
+      }
   },
   "sideEffects": false,
   "files": [
-    "/index.*",
-    "/environment/*",
-    "/restricted/*",
-    "/internals/*",
-    "/builders/*",
-    "/dom/*"
+    "dist/",
+    "dom/",
+    "restricted/"
   ],
   "scripts": {
-    "clean": "rm -rf ./dist",
-    "build": "yarn clean && yarn build:esm && yarn build:cjs",
-    "build:esm": "yarn && tsc -p ./tsconfig.esm.json",
-    "build:cjs": "yarn && tsc -p ./tsconfig.cjs.json",
-    "prepack": "yarn test && bash ./prepack.sh",
+    "clean": "rm -rf ./dist/*",
+    "build": "yarn clean && yarn build:esm && yarn build:cjs && yarn build:fixup",
+    "build:esm": "yarn && tsc -p ./tsconfig.json",
+    "build:cjs": "yarn && tsc -p ./tsconfig-cjs.json",
+    "build:fixup": "./fixup.sh",
     "test": "yarn build && karma start --browsers ChromeHeadless,FirefoxHeadless --single-run",
     "itest": "yarn build && karma start --browsers ChromeHeadless,FirefoxHeadless"
   },

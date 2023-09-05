@@ -3,6 +3,9 @@
 # Remove any stale version of safevalues from the cache
 yarn cache clean --all
 
+yarn
+yarn build
+yarn test
 # Packs safevalues using a local build
 yarn pack --filename safevalues.local.tgz
 

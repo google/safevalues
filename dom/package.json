@@ -1,0 +1,7 @@
+{
+    "name": "dom",
+    "description": "Safe DOM API wrappers",
+    "main": "../dist/cjs/dom/index.js",
+    "module": "../dist/mjs/dom/index.js",
+    "types": "../dist/mjs/dom/index.d.ts"
+}
