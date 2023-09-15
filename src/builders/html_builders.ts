@@ -25,7 +25,7 @@ export function htmlEscape(value: SafeHtml|string, options: {
   if (isHtml(value)) {
     return value;
   }
-  let htmlEscapedString = htmlEscapeToString(value);
+  let htmlEscapedString = htmlEscapeToString(String(value));
   if (options.preserveSpaces) {
     // Do this first to ensure we preserve spaces after newlines and tabs.
     htmlEscapedString =
