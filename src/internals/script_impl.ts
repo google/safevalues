@@ -32,7 +32,7 @@ function createTrustedScriptOrPolyfill(
 }
 
 const GlobalTrustedScript =
-    (typeof window !== undefined) ? window.TrustedScript : undefined;
+    (typeof window !== 'undefined') ? window.TrustedScript : undefined;
 
 /**
  * JavaScript code that is safe to evaluate and use as the content of an HTML

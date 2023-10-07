@@ -27,7 +27,7 @@ class ResourceUrlImpl {
 }
 
 const GlobalTrustedScriptURL =
-    (typeof window !== undefined) ? window.TrustedScriptURL : undefined;
+    (typeof window !== 'undefined') ? window.TrustedScriptURL : undefined;
 
 /**
  * String that is safe to use in all URL contexts in DOM APIs and HTML

@@ -31,7 +31,7 @@ function createTrustedHtmlOrPolyfill(
 }
 
 const GlobalTrustedHTML =
-    (typeof window !== undefined) ? window.TrustedHTML : undefined;
+    (typeof window !== 'undefined') ? window.TrustedHTML : undefined;
 
 /**
  * String that is safe to use in HTML contexts in DOM APIs and HTML
