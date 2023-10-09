@@ -5,45 +5,42 @@
 
 import '../environment/dev';
 
+/* g3_import_pure from './pure' */
 import {ensureTokenIsValid, secretToken} from './secrets';
 import {getTrustedTypes, getTrustedTypesPolicy} from './trusted_types';
 
 
 /**
- * Runtime implementation of `TrustedHTML` in browsers that don't support it.
+ * String that is safe to use in HTML contexts in DOM APIs and HTML documents.
+ * See
+ * https://github.com/google/safevalues/blob/main/src/README.md#trustedresourceurl
  */
-class HtmlImpl {
-  readonly privateDoNotAccessOrElseWrappedHtml: string;
+export abstract class SafeHtml {
+  // tslint:disable-next-line:no-unused-variable
+  // @ts-ignore
+  private readonly brand!: never;  // To prevent structural typing.
+}
 
-  constructor(html: string, token: object) {
-    ensureTokenIsValid(token);
+/** Implementation for `SafeHtml` */
+class HtmlImpl extends SafeHtml {
+  readonly privateDoNotAccessOrElseWrappedHtml: TrustedHTML|string;
+
+  constructor(html: TrustedHTML|string, token: object) {
+    super();
+    if (process.env.NODE_ENV !== 'production') {
+      ensureTokenIsValid(token);
+    }
     this.privateDoNotAccessOrElseWrappedHtml = html;
   }
 
-  toString(): string {
+  override toString(): string {
     return this.privateDoNotAccessOrElseWrappedHtml.toString();
   }
 }
 
-function createTrustedHtmlOrPolyfill(
-    html: string, trusted?: TrustedHTML): SafeHtml {
-  return (trusted ?? new HtmlImpl(html, secretToken)) as SafeHtml;
+function createHtmlInstance(html: string, trusted?: TrustedHTML): SafeHtml {
+  return new HtmlImpl(trusted ?? html, secretToken);
 }
-
-const GlobalTrustedHTML =
-    (typeof window !== undefined) ? window.TrustedHTML : undefined;
-
-/**
- * String that is safe to use in HTML contexts in DOM APIs and HTML
- documents.
- */
-export type SafeHtml = TrustedHTML;
-
-/**
- * Also exports the constructor so that instanceof checks work.
- */
-export const SafeHtml =
-    (GlobalTrustedHTML ?? HtmlImpl) as unknown as TrustedHTML;
 
 /**
  * Builds a new `SafeHtml` from the given string, without enforcing safety
@@ -54,7 +51,7 @@ export const SafeHtml =
 export function createHtmlInternal(html: string): SafeHtml {
   /** @noinline */
   const noinlineHtml = html;
-  return createTrustedHtmlOrPolyfill(
+  return createHtmlInstance(
       noinlineHtml, getTrustedTypesPolicy()?.createHTML(noinlineHtml));
 }
 
@@ -64,13 +61,13 @@ export function createHtmlInternal(html: string): SafeHtml {
  */
 export const EMPTY_HTML: SafeHtml =
     /* #__PURE__ */ (
-        () => createTrustedHtmlOrPolyfill('', getTrustedTypes()?.emptyHTML))();
+        () => createHtmlInstance('', getTrustedTypes()?.emptyHTML))();
 
 /**
  * Checks if the given value is a `SafeHtml` instance.
  */
 export function isHtml(value: unknown): value is SafeHtml {
-  return getTrustedTypes()?.isHTML(value) || value instanceof HtmlImpl;
+  return value instanceof HtmlImpl;
 }
 
 /**
@@ -78,12 +75,19 @@ export function isHtml(value: unknown): value is SafeHtml {
  * has the correct type.
  *
  * Returns a native `TrustedHTML` or a string if Trusted Types are disabled.
+ *
+ * The strange return type is to ensure the value can be used at sinks without a
+ * cast despite the TypeScript DOM lib not supporting Trusted Types.
+ * (https://github.com/microsoft/TypeScript/issues/30024)
+ *
+ * Note that while the return type is compatible with `string`, you shouldn't
+ * use any string functions on the result as that will fail in browsers
+ * supporting Trusted Types.
  */
-export function unwrapHtml(value: SafeHtml): TrustedHTML|string {
-  if (getTrustedTypes()?.isHTML(value)) {
-    return value;
-  } else if (value instanceof HtmlImpl) {
-    return value.privateDoNotAccessOrElseWrappedHtml;
+export function unwrapHtml(value: SafeHtml): TrustedHTML&string {
+  if (value instanceof HtmlImpl) {
+    const unwrapped = value.privateDoNotAccessOrElseWrappedHtml;
+    return unwrapped as TrustedHTML & string;
   } else {
     let message = '';
     if (process.env.NODE_ENV !== 'production') {

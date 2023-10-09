@@ -5,46 +5,45 @@
 
 import '../environment/dev';
 
+/* g3_import_pure from './pure' */
 import {ensureTokenIsValid, secretToken} from './secrets';
 import {getTrustedTypes, getTrustedTypesPolicy} from './trusted_types';
 
 
-/**
- * Runtime implementation of `TrustedScript` in browswers that don't support it.
- * script element.
- */
-class ScriptImpl {
-  readonly privateDoNotAccessOrElseWrappedScript: string;
-
-  constructor(script: string, token: object) {
-    ensureTokenIsValid(token);
-    this.privateDoNotAccessOrElseWrappedScript = script;
-  }
-
-  toString(): string {
-    return this.privateDoNotAccessOrElseWrappedScript.toString();
-  }
-}
-
-function createTrustedScriptOrPolyfill(
-    script: string, trusted?: TrustedScript): SafeScript {
-  return (trusted ?? new ScriptImpl(script, secretToken)) as SafeScript;
-}
-
-const GlobalTrustedScript =
-    (typeof window !== undefined) ? window.TrustedScript : undefined;
 
 /**
  * JavaScript code that is safe to evaluate and use as the content of an HTML
  * script element.
+ *
+ * See https://github.com/google/safevalues/blob/main/src/README.md#safescript
  */
-export type SafeScript = TrustedScript;
+export abstract class SafeScript {
+  // tslint:disable-next-line:no-unused-variable
+  // @ts-ignore
+  private readonly brand!: never;  // To prevent structural typing.
+}
 
-/**
- * Also exports the constructor so that instanceof checks work.
- */
-export const SafeScript =
-    (GlobalTrustedScript ?? ScriptImpl) as unknown as TrustedScript;
+/** Implementation for `SafeScript` */
+class ScriptImpl extends SafeScript {
+  readonly privateDoNotAccessOrElseWrappedScript: TrustedScript|string;
+
+  constructor(script: TrustedScript|string, token: object) {
+    super();
+    if (process.env.NODE_ENV !== 'production') {
+      ensureTokenIsValid(token);
+    }
+    this.privateDoNotAccessOrElseWrappedScript = script;
+  }
+
+  override toString(): string {
+    return this.privateDoNotAccessOrElseWrappedScript.toString();
+  }
+}
+
+function createScriptInstance(
+    script: string, trusted?: TrustedScript): SafeScript {
+  return new ScriptImpl(trusted ?? script, secretToken);
+}
 
 /**
  * Builds a new `SafeScript` from the given string, without enforcing
@@ -55,7 +54,7 @@ export const SafeScript =
 export function createScriptInternal(script: string): SafeScript {
   /** @noinline */
   const noinlineScript = script;
-  return createTrustedScriptOrPolyfill(
+  return createScriptInstance(
       noinlineScript, getTrustedTypesPolicy()?.createScript(noinlineScript));
 }
 
@@ -65,14 +64,13 @@ export function createScriptInternal(script: string): SafeScript {
  */
 export const EMPTY_SCRIPT: SafeScript =
     /* #__PURE__ */ (
-        () => createTrustedScriptOrPolyfill(
-            '', getTrustedTypes()?.emptyScript))();
+        () => createScriptInstance('', getTrustedTypes()?.emptyScript))();
 
 /**
  * Checks if the given value is a `SafeScript` instance.
  */
 export function isScript(value: unknown): value is SafeScript {
-  return getTrustedTypes()?.isScript(value) || value instanceof ScriptImpl;
+  return value instanceof ScriptImpl;
 }
 
 /**
@@ -80,12 +78,19 @@ export function isScript(value: unknown): value is SafeScript {
  * has the correct type.
  *
  * Returns a native `TrustedScript` or a string if Trusted Types are disabled.
+ *
+ * The strange return type is to ensure the value can be used at sinks without a
+ * cast despite the TypeScript DOM lib not supporting Trusted Types.
+ * (https://github.com/microsoft/TypeScript/issues/30024)
+ *
+ * Note that while the return type is compatible with `string`, you shouldn't
+ * use any string functions on the result as that will fail in browsers
+ * supporting Trusted Types.
  */
-export function unwrapScript(value: SafeScript): TrustedScript|string {
-  if (getTrustedTypes()?.isScript(value)) {
-    return value;
-  } else if (value instanceof ScriptImpl) {
-    return value.privateDoNotAccessOrElseWrappedScript;
+export function unwrapScript(value: SafeScript): TrustedScript&string {
+  if (value instanceof ScriptImpl) {
+    const unwrapped = value.privateDoNotAccessOrElseWrappedScript;
+    return unwrapped as TrustedScript & string;
   } else {
     let message = '';
     if (process.env.NODE_ENV !== 'production') {
