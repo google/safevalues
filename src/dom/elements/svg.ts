@@ -15,11 +15,12 @@ const UNSAFE_SVG_ATTRIBUTES = [
  * implications. If the attribute can potentially cause XSS, throw an error.
  */
 export function setAttribute(svg: SVGElement, attr: string, value: string) {
-  attr = attr.toLowerCase();
-  if (UNSAFE_SVG_ATTRIBUTES.indexOf(attr) !== -1 || attr.indexOf('on') === 0) {
+  const attrLower = attr.toLowerCase();
+  if (UNSAFE_SVG_ATTRIBUTES.indexOf(attrLower) !== -1 ||
+      attrLower.indexOf('on') === 0) {
     let msg = '';
     if (process.env.NODE_ENV !== 'production') {
-      msg = `Setting the '${attr}' attribute on SVG can cause XSS.`;
+      msg = `Setting the '${attrLower}' attribute on SVG can cause XSS.`;
     }
     throw new Error(msg);
   }
