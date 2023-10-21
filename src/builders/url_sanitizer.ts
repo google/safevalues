@@ -81,3 +81,12 @@ export function restrictivelySanitizeUrl(url: string): string {
   }
   return 'about:invalid#zClosurez';
 }
+
+/**
+ * A pattern that blocks javascript: URLs. Matches
+ * (a) Urls with no explicit scheme; or
+ * (b) Urls with an explicit scheme that is not javascript and that only has
+ *     alphanumeric or [.-+] characters.
+ */
+export const JAVASCRIPT_URL_SCHEME_PATTERN =
+    /^(?!javascript:)(?:[a-z0-9+.-]+:|[^&:\/?#]*(?:[\/?#]|$))/i;
