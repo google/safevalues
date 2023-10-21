@@ -10,7 +10,7 @@ export {HtmlSanitizer, sanitizeHtml, sanitizeHtmlAssertUnchanged, sanitizeHtmlTo
 export {HtmlSanitizerBuilder} from './builders/html_sanitizer/html_sanitizer_builder';
 export {appendParams, appendPathSegment, objectUrlFromScript, replaceFragment, trustedResourceUrl} from './builders/resource_url_builders';
 export {concatScripts, safeScript, safeScriptWithArgs, valueAsScript} from './builders/script_builders';
-export {concatStyleSheets, safeStyleSheet} from './builders/style_sheet_builders';
+export {concatStyleSheets, safeStyleRule, safeStyleSheet} from './builders/style_sheet_builders';
 /** Types, constants and unwrappers */
 export {SafeAttributePrefix, unwrapAttributePrefix} from './internals/attribute_impl';
 export {EMPTY_HTML, isHtml, SafeHtml, unwrapHtml} from './internals/html_impl';
