@@ -282,3 +282,15 @@ export function objectUrlFromScript(safeScript: SafeScript):
   const blob = new Blob([scriptContent], {type: 'text/javascript'});
   return createResourceUrlInternal(URL.createObjectURL(blob));
 }
+
+/**
+ * A function to safely retrieve the base URI from the Window object and set it
+ * at the beginning of a given path-relative (starts with "/") resource url.
+ *
+ * @param pathRelativeUrl The resource to which the origin shall be prepended.
+ */
+export function toAbsoluteResourceUrl(pathRelativeUrl: TrustedResourceUrl) {
+  const originalUrl = unwrapResourceUrl(pathRelativeUrl).toString();
+  const qualifiedUrl = new URL(originalUrl, window.document.baseURI);
+  return createResourceUrlInternal(qualifiedUrl.toString());
+}

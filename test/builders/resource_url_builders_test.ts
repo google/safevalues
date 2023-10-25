@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {appendParams, appendPathSegment, objectUrlFromScript, replaceFragment, trustedResourceUrl} from '../../src/builders/resource_url_builders';
+import {appendParams, appendPathSegment, objectUrlFromScript, replaceFragment, toAbsoluteResourceUrl, trustedResourceUrl} from '../../src/builders/resource_url_builders';
 import {safeScript} from '../../src/builders/script_builders';
 import {TrustedResourceUrl} from '../../src/internals/resource_url_impl';
 
@@ -304,6 +304,73 @@ describe('resource_url_builders', () => {
       await expectAsync(fetchScriptContent(url)).toBeRejected();
     });
   });
+
+  describe('toAbsoluteTrustedResourceUrl', () => {
+    let oldBaseURI: PropertyDescriptor;
+    beforeEach(() => {
+      oldBaseURI = Object.getOwnPropertyDescriptor(Node.prototype, 'baseURI')!;
+    });
+
+    afterEach(() => {
+      if (!isIE()) {
+        Object.defineProperty(Node.prototype, 'baseURI', oldBaseURI);
+      }
+    });
+
+    const tests = [
+      // Positive transformations.  baseURI + trusted === expected
+      {
+        trusted: trustedResourceUrl``,
+        baseURI: `https://www.google.com/`,
+        expected: trustedResourceUrl`https://www.google.com/`,
+      },
+      {
+        trusted: trustedResourceUrl`/`,
+        baseURI: `https://www.google.com/`,
+        expected: trustedResourceUrl`https://www.google.com/`,
+      },
+      {
+        trusted: trustedResourceUrl`/foo/bar/baz?a=b#c`,
+        baseURI: `https://localhost.corp.google.com:9443/`,
+        expected:
+            trustedResourceUrl`https://localhost.corp.google.com:9443/foo/bar/baz?a=b#c`,
+      },
+      {
+        trusted: trustedResourceUrl`/after/base`,
+        baseURI: `https://www.google.com/based`,
+        expected: trustedResourceUrl`https://www.google.com/after/base`,
+      },
+      {
+        trusted: trustedResourceUrl`//foo/bar/baz?a=b#c`,
+        baseURI: `https://localhost.corp.google.com:9443/`,
+        expected: trustedResourceUrl`https://foo/bar/baz?a=b#c`,
+      },
+      {
+        trusted: trustedResourceUrl`foo/bar/baz?a=b#c`,
+        baseURI: `https://www.google.com/based`,
+        expected: trustedResourceUrl`https://www.google.com/foo/bar/baz?a=b#c`,
+      },
+      // Ignored.  Expected to be equal to the input.
+      {
+        trusted: trustedResourceUrl`https://google.com/`,
+        baseURI: `https://www.google.com/based`,
+      },
+    ];
+    for (const test of tests) {
+      it(`appropriately prefixes the document base URI for ${
+             test.trusted.toString()}`,
+         () => {
+           if (isIE()) {
+             skipTest();
+             return;
+           }
+           Object.defineProperty(
+               Node.prototype, 'baseURI', {value: test.baseURI});
+           expect(toAbsoluteResourceUrl(test.trusted))
+               .toEqual(test.expected ?? test.trusted);
+         });
+    }
+  });
 });
 
 /**
@@ -332,4 +399,12 @@ async function fetchScriptContent(url: TrustedResourceUrl): Promise<string> {
       };
     });
   }
+}
+
+function isIE() {
+  return navigator.userAgent.indexOf('Trident/') > 0;
+}
+
+function skipTest() {
+  expect(true).toBeTrue();
 }
