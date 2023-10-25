@@ -88,6 +88,21 @@ function isValidPathStart(base: string): boolean {
 }
 
 /**
+ * Check whether the base url contains a valid relative path start at its
+ * beginning.
+ *
+ * A valid relative path start is a non empty string that has no ':', '/' nor
+ * '\', and that is followed by a '/'.
+ *
+ * @param base The base url.
+ */
+function isValidRelativePathStart(base: string): boolean {
+  // Using the RegExp syntax as the native JS RegExp syntax is not well handled
+  // by some downstream bundlers with this regex.
+  return new RegExp('^[^:\\\\/]+/').test(base);
+}
+
+/**
  * Builds TrustedResourceUrl from a template literal.
  *
  * This factory is a template literal tag function. It should be called with
@@ -105,6 +120,7 @@ function isValidPathStart(base: string): boolean {
  * - `https://<origin>/`
  * - `//<origin>/`
  * - `/<pathStart>`
+ * - `<relativePathStart>/`
  * - `about:blank`
  * - `data:`
  *
@@ -120,6 +136,8 @@ function isValidPathStart(base: string): boolean {
  * start with '/' or '\'.
  * In other words, `/<pathStart>` is either a '/' or a
  * '/' followed by at least one character that is not '/' or '\'.
+ *
+ * `<relativePathStart> is a non empty string that has no ':', '/' nor '\'.
  *
  * `data:` (data URL) does not allow embedded expressions in the template
  * literal input.
@@ -152,7 +170,7 @@ export function trustedResourceUrl(
     }
 
     if (!hasValidOrigin(base) && !isValidPathStart(base) &&
-        !isValidAboutUrl(base)) {
+        !isValidRelativePathStart(base) && !isValidAboutUrl(base)) {
       throw new Error(
           'Trying to interpolate expressions in an unsupported url format.');
     }

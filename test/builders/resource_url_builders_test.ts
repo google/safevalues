@@ -31,6 +31,9 @@ describe('resource_url_builders', () => {
       expect(trustedResourceUrl`/path/${foo}`.toString()).toBe('/path/foo');
       expect(trustedResourceUrl`/path#${foo}`.toString()).toBe('/path#foo');
       expect(trustedResourceUrl`/path?${foo}`.toString()).toBe('/path?foo');
+      // Path-relative.
+      expect(trustedResourceUrl`path/${foo}`.toString()).toBe('path/foo');
+      expect(trustedResourceUrl`path/to/${foo}`.toString()).toBe('path/to/foo');
       // Mixed case.
       expect(trustedResourceUrl`httpS://www.google.cOm/pAth/${foo}`.toString())
           .toBe('httpS://www.google.cOm/pAth/foo');
@@ -107,23 +110,41 @@ describe('resource_url_builders', () => {
       expect(() => {
         return trustedResourceUrl`//127.0.0.1:1337/${foo}`;
       }).toThrowError(/The top-level domain must start with a letter./);
+      // Constant origin bypass attempt
+      const bypassAttempt = '/evil.com';
+      expect(() => trustedResourceUrl`https:/${bypassAttempt}`)
+          .toThrowError(
+              /Trying to interpolate expressions in an unsupported url format./);
       // Odd cases.
       expect(() => {
         return trustedResourceUrl`//./${foo}`;
       }).toThrowError(/The top-level domain must start with a letter./);
+      expect(() => trustedResourceUrl`something:/${foo}`)
+          .toThrowError(
+              /Trying to interpolate expressions in an unsupported url format./);
+      expect(() => trustedResourceUrl`something:${foo}`)
+          .toThrowError(
+              /Trying to interpolate expressions in an unsupported url format./);
+      // Relative URL with a backslash in the first segment
+      expect(() => trustedResourceUrl`abc\\def/${foo}`)
+          .toThrowError(
+              /Trying to interpolate expressions in an unsupported url format./);
       // Two slashes. IE allowed (allows?) '\' instead of '/'.
       expect(() => {
         return trustedResourceUrl`/\\${foo}`;
       }).toThrowError(/The path start in the url is invalid./);
-      // Relative path.
-      expect(() => {
-        return trustedResourceUrl`abc${foo}`;
-      })
+      // Relative path with interpolation in the first segment
+      expect(() => trustedResourceUrl`abc${foo}`)
           .toThrowError(
               /Trying to interpolate expressions in an unsupported url format./);
-      expect(() => {
-        return trustedResourceUrl`about:blankX${foo}`;
-      }).toThrowError(/The about url is invalid./);
+      expect(() => trustedResourceUrl`${foo}bar`)
+          .toThrowError(
+              /Trying to interpolate expressions in an unsupported url format./);
+      expect(() => trustedResourceUrl`${foo}bar/`)
+          .toThrowError(
+              /Trying to interpolate expressions in an unsupported url format./);
+      expect(() => trustedResourceUrl`about:blankX${foo}`)
+          .toThrowError(/The about url is invalid./);
     });
 
     it('calls encodeURIComponent on interpolated values', () => {
