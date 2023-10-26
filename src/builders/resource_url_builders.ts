@@ -99,7 +99,7 @@ function isValidPathStart(base: string): boolean {
 function isValidRelativePathStart(base: string): boolean {
   // Using the RegExp syntax as the native JS RegExp syntax is not well handled
   // by some downstream bundlers with this regex.
-  return new RegExp('^[^:\\\\/]+/').test(base);
+  return new RegExp('^[^:\\s\\\\/]+/').test(base);
 }
 
 /**

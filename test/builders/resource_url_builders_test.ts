@@ -129,6 +129,10 @@ describe('resource_url_builders', () => {
       expect(() => trustedResourceUrl`abc\\def/${foo}`)
           .toThrowError(
               /Trying to interpolate expressions in an unsupported url format./);
+      // Relative URL with a space in the first segment
+      expect(() => trustedResourceUrl` abc/${foo}`)
+          .toThrowError(
+              /Trying to interpolate expressions in an unsupported url format./);
       // Two slashes. IE allowed (allows?) '\' instead of '/'.
       expect(() => {
         return trustedResourceUrl`/\\${foo}`;
@@ -347,6 +351,11 @@ describe('resource_url_builders', () => {
       },
       {
         trusted: trustedResourceUrl`foo/bar/baz?a=b#c`,
+        baseURI: `https://www.google.com/based`,
+        expected: trustedResourceUrl`https://www.google.com/foo/bar/baz?a=b#c`,
+      },
+      {
+        trusted: trustedResourceUrl` foo/bar/baz?a=b#c`,
         baseURI: `https://www.google.com/based`,
         expected: trustedResourceUrl`https://www.google.com/foo/bar/baz?a=b#c`,
       },
