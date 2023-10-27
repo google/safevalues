@@ -381,6 +381,47 @@ describe('HtmlSanitizer', () => {
        expect(expectedValues).toContain(sanitized);
      });
 
+  it('does not load external resources during sanitization', async () => {
+    const sanitizerTable = new SanitizerTable(
+        new Set(['IMG', 'AUDIO', 'VIDEO']),
+        new Map([
+          [
+            'IMG', new Map([
+              ['src', {policyAction: AttributePolicyAction.KEEP}],
+            ])
+          ],
+          [
+            'AUDIO', new Map([
+              ['src', {policyAction: AttributePolicyAction.KEEP}],
+            ])
+          ],
+          [
+            'VIDEO', new Map([
+              ['src', {policyAction: AttributePolicyAction.KEEP}],
+            ])
+          ]
+        ]),
+        new Set(),
+        new Map(),
+    );
+    const html = `
+      <img   src=ftp://not-load-subresources>
+      <audio src=ftp://not-load-subresources></audio>
+      <video src=ftp://not-load-subresources></video>`;
+
+    sanitize(sanitizerTable, html);
+
+    // Give the subresources a little time to load.
+    await new Promise(resolve => {
+      setTimeout(resolve, 300);
+    });
+
+    const entry = performance.getEntries().find(
+        entry => entry.name.startsWith('ftp://not-load-subresources'));
+
+    expect(entry).toBeUndefined();
+  });
+
   describe('sanitizeAssertUnchanged', () => {
     it('throws an error when an element is dropped', () => {
       const sanitizerTable = new SanitizerTable(

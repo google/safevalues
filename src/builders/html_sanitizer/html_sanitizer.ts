@@ -51,8 +51,9 @@ export class HtmlSanitizerImpl implements HtmlSanitizer {
   }
 
   sanitize(html: string): SafeHtml {
-    const fakeRoot = document.createElement('span');
-    fakeRoot.appendChild(this.sanitizeToFragment(html));
+    const inertDocument = document.implementation.createHTMLDocument('');
+    const fakeRoot = inertDocument.body;
+    fakeRoot.appendChild(this.sanitizeToFragmentInternal(html, inertDocument));
 
     // XML serialization is preferred over HTML serialization as it is
     // stricter and makes sure all attributes are properly escaped, avoiding
@@ -69,7 +70,13 @@ export class HtmlSanitizerImpl implements HtmlSanitizer {
   }
 
   sanitizeToFragment(html: string): DocumentFragment {
-    const dirtyFragment = createInertFragment(html);
+    const inertDocument = document.implementation.createHTMLDocument('');
+    return this.sanitizeToFragmentInternal(html, inertDocument);
+  }
+
+  private sanitizeToFragmentInternal(html: string, inertDocument: Document):
+      DocumentFragment {
+    const dirtyFragment = createInertFragment(html, inertDocument);
 
     const treeWalker = document.createTreeWalker(
         dirtyFragment,
@@ -89,7 +96,7 @@ export class HtmlSanitizerImpl implements HtmlSanitizer {
     // use div as it as a semantic-free, generic container and does not
     // represent anything. This is removed when we serialize the tree back
     // into a string.
-    const sanitizedFragment = document.createDocumentFragment();
+    const sanitizedFragment = inertDocument.createDocumentFragment();
     let sanitizedParent: Node = sanitizedFragment;
 
     while (currentNode !== null) {
@@ -98,7 +105,7 @@ export class HtmlSanitizerImpl implements HtmlSanitizer {
       if (isText(currentNode)) {
         sanitizedNode = this.sanitizeTextNode(currentNode);
       } else if (isElement(currentNode)) {
-        sanitizedNode = this.sanitizeElementNode(currentNode);
+        sanitizedNode = this.sanitizeElementNode(currentNode, inertDocument);
       } else {
         let message = '';
         if (process.env.NODE_ENV !== 'production') {
@@ -130,9 +137,10 @@ export class HtmlSanitizerImpl implements HtmlSanitizer {
     return document.createTextNode(textNode.data);
   }
 
-  private sanitizeElementNode(elementNode: Element): Element {
+  private sanitizeElementNode(elementNode: Element, inertDocument: Document):
+      Element {
     const elementName = getNodeName(elementNode);
-    const newNode = document.createElement(elementName);
+    const newNode = inertDocument.createElement(elementName);
     const dirtyAttributes = elementNode.attributes;
     for (const {name, value} of dirtyAttributes) {
       const policy = this.sanitizerTable.getAttributePolicy(name, elementName);
