@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {concatHtmls, htmlEscape, joinHtmls, scriptToHtml, scriptUrlToHtml} from '../../src/builders/html_builders';
+import {concatHtmls, doctypeHtml, htmlEscape, joinHtmls, scriptToHtml, scriptUrlToHtml} from '../../src/builders/html_builders';
 import {safeScript, valueAsScript} from '../../src/builders/script_builders';
 import {testonlyHtml, testonlyResourceUrl} from '../testing/conversions';
 
@@ -204,6 +204,11 @@ describe('html_builders', () => {
       const html1 = htmlEscape('a');
       expect(joinHtmls(',', [html1, '<br>']).toString())
           .toEqual('a,&lt;br&gt;');
+    });
+  });
+  describe('doctypeHtml', () => {
+    it('returns an expected DOCTYPE', () => {
+      expect(doctypeHtml().toString()).toEqual('<!DOCTYPE html>');
     });
   });
 });

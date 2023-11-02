@@ -116,3 +116,12 @@ export function joinHtmls(
   return createHtmlInternal(htmls.map((value) => unwrapHtml(htmlEscape(value)))
                                 .join(unwrapHtml(separatorHtml).toString()));
 }
+
+/**
+ * Returns a `SafeHtml` that contains `<!DOCTYPE html>`.
+ * This is defined as a function to prevent the definition of a Trusted Type
+ * policy when simply importing safevalues.
+ */
+export function doctypeHtml(): SafeHtml {
+  return createHtmlInternal('<!DOCTYPE html>');
+}
