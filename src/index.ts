@@ -5,6 +5,7 @@
 
 /** Safe builders */
 export {safeAttrPrefix} from './builders/attribute_builders';
+export {safeFragment} from './builders/document_fragment_builders';
 export {concatHtmls, doctypeHtml, htmlEscape, joinHtmls, scriptToHtml, scriptUrlToHtml} from './builders/html_builders';
 export {HtmlSanitizer, sanitizeHtml, sanitizeHtmlAssertUnchanged, sanitizeHtmlToFragment} from './builders/html_sanitizer/html_sanitizer';
 export {HtmlSanitizerBuilder} from './builders/html_sanitizer/html_sanitizer_builder';
