@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {unwrapUrlOrSanitize, Url} from '../../builders/url_sanitizer';
+import {unwrapUrlOrSanitize, Url} from '../../builders/url_builders';
 
 /**
  * Sets the Href attribute from the given Url.

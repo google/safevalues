@@ -8,7 +8,7 @@ import '../../environment/dev';
 import {createHtmlInternal, SafeHtml} from '../../internals/html_impl';
 /* g3_import_pure from '../../internals/pure' */
 import {ensureTokenIsValid, secretToken} from '../../internals/secrets';
-import {restrictivelySanitizeUrl} from '../url_sanitizer';
+import {restrictivelySanitizeUrl} from '../url_builders';
 
 import {createInertFragment} from './inert_fragment';
 import {getNodeName, isElement, isText} from './no_clobber';

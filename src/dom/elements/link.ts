@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {unwrapUrlOrSanitize, Url} from '../../builders/url_sanitizer';
+import {unwrapUrlOrSanitize, Url} from '../../builders/url_builders';
 import {isResourceUrl, TrustedResourceUrl, unwrapResourceUrl} from '../../internals/resource_url_impl';
 
 const SAFE_URL_REL_VALUES = [

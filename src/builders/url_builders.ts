@@ -3,11 +3,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-/**
- * @fileoverview Provides functions to enforce the SafeUrl contract at the sink
- * level.
- */
-
 import '../environment/dev';
 
 /**
@@ -69,9 +64,9 @@ export function unwrapUrlOrSanitize(url: Url): string|undefined {
 /**
  * Sanitizes a URL restrictively.
  * This sanitizer protects against XSS and potentially other uncommon and
- * undesirable schemes that an attacker could use for e.g. phishing (tel:,
- * callto: ssh: etc schemes). This sanitizer is primarily meant to be used by
- * the HTML sanitizer.
+ * undesirable schemes that an attacker could use e.g. phishing (tel:, callto:
+ * ssh: etc schemes). This sanitizer is primarily meant to be used by the HTML
+ * sanitizer.
  */
 export function restrictivelySanitizeUrl(url: string): string {
   const parsedScheme = extractScheme(url);

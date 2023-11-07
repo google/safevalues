@@ -5,7 +5,7 @@
 
 import '../../environment/dev';
 
-import {extractScheme} from '../../builders/url_sanitizer';
+import {extractScheme} from '../../builders/url_builders';
 
 /**
  * Sets the Href attribute from the given URL.
