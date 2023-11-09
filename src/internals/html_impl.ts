@@ -8,7 +8,6 @@ import '../environment/dev';
 import {ensureTokenIsValid, secretToken} from './secrets';
 import {getTrustedTypes, getTrustedTypesPolicy} from './trusted_types';
 
-
 /**
  * Runtime implementation of `TrustedHTML` in browsers that don't support it.
  */
@@ -26,12 +25,14 @@ class HtmlImpl {
 }
 
 function createTrustedHtmlOrPolyfill(
-    html: string, trusted?: TrustedHTML): SafeHtml {
+  html: string,
+  trusted?: TrustedHTML,
+): SafeHtml {
   return (trusted ?? new HtmlImpl(html, secretToken)) as SafeHtml;
 }
 
 const GlobalTrustedHTML =
-    (typeof window !== 'undefined') ? window.TrustedHTML : undefined;
+  typeof window !== 'undefined' ? window.TrustedHTML : undefined;
 
 /**
  * String that is safe to use in HTML contexts in DOM APIs and HTML
@@ -42,8 +43,8 @@ export type SafeHtml = TrustedHTML;
 /**
  * Also exports the constructor so that instanceof checks work.
  */
-export const SafeHtml =
-    (GlobalTrustedHTML ?? HtmlImpl) as unknown as TrustedHTML;
+export const SafeHtml = (GlobalTrustedHTML ??
+  HtmlImpl) as unknown as TrustedHTML;
 
 /**
  * Builds a new `SafeHtml` from the given string, without enforcing safety
@@ -55,16 +56,17 @@ export function createHtmlInternal(html: string): SafeHtml {
   /** @noinline */
   const noinlineHtml = html;
   return createTrustedHtmlOrPolyfill(
-      noinlineHtml, getTrustedTypesPolicy()?.createHTML(noinlineHtml));
+    noinlineHtml,
+    getTrustedTypesPolicy()?.createHTML(noinlineHtml),
+  );
 }
 
 /**
  * An empty `SafeHtml` constant.
  * Unlike the function above, using this will not create a policy.
  */
-export const EMPTY_HTML: SafeHtml =
-    /* #__PURE__ */ (
-        () => createTrustedHtmlOrPolyfill('', getTrustedTypes()?.emptyHTML))();
+export const EMPTY_HTML: SafeHtml = /* #__PURE__ */ (() =>
+  createTrustedHtmlOrPolyfill('', getTrustedTypes()?.emptyHTML))();
 
 /**
  * Checks if the given value is a `SafeHtml` instance.
@@ -79,7 +81,7 @@ export function isHtml(value: unknown): value is SafeHtml {
  *
  * Returns a native `TrustedHTML` or a string if Trusted Types are disabled.
  */
-export function unwrapHtml(value: SafeHtml): TrustedHTML|string {
+export function unwrapHtml(value: SafeHtml): TrustedHTML | string {
   if (getTrustedTypes()?.isHTML(value)) {
     return value;
   } else if (value instanceof HtmlImpl) {

@@ -15,7 +15,8 @@ describe('reviewed conversions', () => {
       htmlSafeByReview('aaa', '   ');
     }).toThrowError(/A justification must be provided/);
 
-    expect(htmlSafeByReview('aaa', 'This is just a test').toString())
-        .toEqual('aaa');
+    expect(htmlSafeByReview('aaa', 'This is just a test').toString()).toEqual(
+      'aaa',
+    );
   });
 });

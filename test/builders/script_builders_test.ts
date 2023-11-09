@@ -3,8 +3,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {concatScripts, safeScript, safeScriptWithArgs, valueAsScript} from '../../src/builders/script_builders';
 import {SafeScript} from '../../src/internals/script_impl';
+
+import {
+  concatScripts,
+  safeScript,
+  safeScriptWithArgs,
+  valueAsScript,
+} from '../../src/builders/script_builders';
 
 describe('script_builders', () => {
   describe('safeScript', () => {
@@ -13,8 +19,10 @@ describe('script_builders', () => {
     });
 
     it('rejects any interpolation', () => {
-      const castSafeScript =
-          safeScript as (arr: TemplateStringsArray, str: string) => SafeScript;
+      const castSafeScript = safeScript as (
+        arr: TemplateStringsArray,
+        str: string,
+      ) => SafeScript;
       expect(() => castSafeScript`return ${'this'};`).toThrowError();
     });
   });
@@ -29,8 +37,10 @@ describe('script_builders', () => {
 
   describe('valueAsScript', () => {
     it('should serialize as JSON', () => {
-      const json = valueAsScript(
-          {'a': 1, 'b': (() => 'unserializable') as unknown as string});
+      const json = valueAsScript({
+        'a': 1,
+        'b': (() => 'unserializable') as unknown as string,
+      });
       expect(json.toString()).toEqual('{"a":1}');
     });
 
@@ -41,35 +51,38 @@ describe('script_builders', () => {
   });
 
   describe('safeScriptWithArgs', () => {
-    it('can build a simple script with arguments',
-       () => {
-         expect(safeScriptWithArgs`function (a, b, c) {
+    it('can build a simple script with arguments', () => {
+      expect(
+        safeScriptWithArgs`function (a, b, c) {
   console.log(a, b, c);
-}`(['hello', 123, null], 'test',
-   {'key': 'value'}).toString())
-             .toEqual(`(function (a, b, c) {
+}`(['hello', 123, null], 'test', {'key': 'value'}).toString(),
+      ).toEqual(`(function (a, b, c) {
   console.log(a, b, c);
 })(["hello",123,null],"test",{"key":"value"})`);
-       });
+    });
 
     it('escapes < signs', () => {
-      expect(safeScriptWithArgs`alert`('</script</script').toString())
-          .toEqual(`(alert)("\\u003C/script\\u003C/script")`);
+      expect(safeScriptWithArgs`alert`('</script</script').toString()).toEqual(
+        `(alert)("\\u003C/script\\u003C/script")`,
+      );
     });
 
     it('rejects any interpolation', () => {
-      const castSafeScriptWithArgs =
-          safeScriptWithArgs as (arr: TemplateStringsArray, str: string) =>
-              (arg: string) => SafeScript;
-      expect(() => castSafeScriptWithArgs`${'console.log'}`('test'))
-          .toThrowError();
+      const castSafeScriptWithArgs = safeScriptWithArgs as (
+        arr: TemplateStringsArray,
+        str: string,
+      ) => (arg: string) => SafeScript;
+      expect(() =>
+        castSafeScriptWithArgs`${'console.log'}`('test'),
+      ).toThrowError();
     });
 
     it('allows inline comments', () => {
-      expect(safeScriptWithArgs`function (a) {${/* Just a simple comment */ ''}
+      expect(
+        safeScriptWithArgs`function (a) {${/* Just a simple comment */ ''}
   console.log(a);
-}`('arg').toString())
-          .toEqual(`(function (a) {
+}`('arg').toString(),
+      ).toEqual(`(function (a) {
   console.log(a);
 })("arg")`);
     });

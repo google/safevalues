@@ -7,90 +7,186 @@
 
 /* g3_import_pure from '../../../internals/pure' */
 
-import {AttributePolicy, AttributePolicyAction, ElementPolicy, SanitizerTable} from './sanitizer_table';
+import {
+  AttributePolicy,
+  AttributePolicyAction,
+  ElementPolicy,
+  SanitizerTable,
+} from './sanitizer_table';
 
 const ALLOWED_ELEMENTS: readonly string[] = [
-  'ARTICLE',  'SECTION',    'NAV',      'ASIDE',    'H1',         'H2',
-  'H3',       'H4',         'H5',       'H6',       'HEADER',     'FOOTER',
-  'ADDRESS',  'P',          'HR',       'PRE',      'BLOCKQUOTE', 'OL',
-  'UL',       'LH',         'LI',       'DL',       'DT',         'DD',
-  'FIGURE',   'FIGCAPTION', 'MAIN',     'DIV',      'EM',         'STRONG',
-  'SMALL',    'S',          'CITE',     'Q',        'DFN',        'ABBR',
-  'RUBY',     'RB',         'RT',       'RTC',      'RP',         'DATA',
-  'TIME',     'CODE',       'VAR',      'SAMP',     'KBD',        'SUB',
-  'SUP',      'I',          'B',        'U',        'MARK',       'BDI',
-  'BDO',      'SPAN',       'BR',       'WBR',      'INS',        'DEL',
-  'PICTURE',  'PARAM',      'TRACK',    'MAP',      'TABLE',      'CAPTION',
-  'COLGROUP', 'COL',        'TBODY',    'THEAD',    'TFOOT',      'TR',
-  'TD',       'TH',         'SELECT',   'DATALIST', 'OPTGROUP',   'OPTION',
-  'OUTPUT',   'PROGRESS',   'METER',    'FIELDSET', 'LEGEND',     'DETAILS',
-  'SUMMARY',  'MENU',       'DIALOG',   'SLOT',     'CANVAS',     'FONT',
-  'CENTER',   'ACRONYM',    'BASEFONT', 'BIG',      'DIR',        'HGROUP',
-  'STRIKE',   'TT',
+  'ARTICLE',
+  'SECTION',
+  'NAV',
+  'ASIDE',
+  'H1',
+  'H2',
+  'H3',
+  'H4',
+  'H5',
+  'H6',
+  'HEADER',
+  'FOOTER',
+  'ADDRESS',
+  'P',
+  'HR',
+  'PRE',
+  'BLOCKQUOTE',
+  'OL',
+  'UL',
+  'LH',
+  'LI',
+  'DL',
+  'DT',
+  'DD',
+  'FIGURE',
+  'FIGCAPTION',
+  'MAIN',
+  'DIV',
+  'EM',
+  'STRONG',
+  'SMALL',
+  'S',
+  'CITE',
+  'Q',
+  'DFN',
+  'ABBR',
+  'RUBY',
+  'RB',
+  'RT',
+  'RTC',
+  'RP',
+  'DATA',
+  'TIME',
+  'CODE',
+  'VAR',
+  'SAMP',
+  'KBD',
+  'SUB',
+  'SUP',
+  'I',
+  'B',
+  'U',
+  'MARK',
+  'BDI',
+  'BDO',
+  'SPAN',
+  'BR',
+  'WBR',
+  'INS',
+  'DEL',
+  'PICTURE',
+  'PARAM',
+  'TRACK',
+  'MAP',
+  'TABLE',
+  'CAPTION',
+  'COLGROUP',
+  'COL',
+  'TBODY',
+  'THEAD',
+  'TFOOT',
+  'TR',
+  'TD',
+  'TH',
+  'SELECT',
+  'DATALIST',
+  'OPTGROUP',
+  'OPTION',
+  'OUTPUT',
+  'PROGRESS',
+  'METER',
+  'FIELDSET',
+  'LEGEND',
+  'DETAILS',
+  'SUMMARY',
+  'MENU',
+  'DIALOG',
+  'SLOT',
+  'CANVAS',
+  'FONT',
+  'CENTER',
+  'ACRONYM',
+  'BASEFONT',
+  'BIG',
+  'DIR',
+  'HGROUP',
+  'STRIKE',
+  'TT',
 ];
 
 const ELEMENT_POLICIES: ReadonlyArray<[string, ElementPolicy]> = [
   [
-    'A', new Map<string, AttributePolicy>([
+    'A',
+    new Map<string, AttributePolicy>([
       ['href', {policyAction: AttributePolicyAction.KEEP_AND_SANITIZE_URL}],
-    ])
+    ]),
   ],
   [
-    'AREA', new Map<string, AttributePolicy>([
+    'AREA',
+    new Map<string, AttributePolicy>([
       ['href', {policyAction: AttributePolicyAction.KEEP_AND_SANITIZE_URL}],
-    ])
+    ]),
   ],
   [
-    'LINK', new Map<string, AttributePolicy>([
+    'LINK',
+    new Map<string, AttributePolicy>([
       [
-        'href', {
+        'href',
+        {
           policyAction: AttributePolicyAction.KEEP_AND_SANITIZE_URL,
-          conditions: new Map<string, Set<string>>([[
-            'rel', new Set<string>([
-              'alternate',
-              'author',
-              'bookmark',
-              'canonical',
-              'cite',
-              'help',
-              'icon',
-              'license',
-              'next',
-              'prefetch',
-              'dns-prefetch',
-              'prerender',
-              'preconnect',
-              'preload',
-              'prev',
-              'search',
-              'subresource',
-            ])
-          ]])
-        }
+          conditions: new Map<string, Set<string>>([
+            [
+              'rel',
+              new Set<string>([
+                'alternate',
+                'author',
+                'bookmark',
+                'canonical',
+                'cite',
+                'help',
+                'icon',
+                'license',
+                'next',
+                'prefetch',
+                'dns-prefetch',
+                'prerender',
+                'preconnect',
+                'preload',
+                'prev',
+                'search',
+                'subresource',
+              ]),
+            ],
+          ]),
+        },
       ],
-    ])
+    ]),
   ],
   [
-    'SOURCE', new Map<string, AttributePolicy>([
+    'SOURCE',
+    new Map<string, AttributePolicy>([
       ['src', {policyAction: AttributePolicyAction.KEEP}],
-    ])
+    ]),
   ],
   [
-    'IMG', new Map<string, AttributePolicy>([
+    'IMG',
+    new Map<string, AttributePolicy>([
       ['src', {policyAction: AttributePolicyAction.KEEP}],
-    ])
+    ]),
   ],
   [
-    'VIDEO', new Map<string, AttributePolicy>([
+    'VIDEO',
+    new Map<string, AttributePolicy>([
       ['src', {policyAction: AttributePolicyAction.KEEP}],
-    ])
+    ]),
   ],
   [
-    'AUDIO', new Map<string, AttributePolicy>([
+    'AUDIO',
+    new Map<string, AttributePolicy>([
       ['src', {policyAction: AttributePolicyAction.KEEP}],
-    ])
+    ]),
   ],
-
 ];
 
 const ALLOWED_GLOBAL_ATTRIBUTES: readonly string[] = [
@@ -197,58 +293,50 @@ const ALLOWED_GLOBAL_ATTRIBUTES: readonly string[] = [
 
 const GLOBAL_ATTRIBUTE_POLICIES: ReadonlyArray<[string, AttributePolicy]> = [
   [
-    'dir', {
+    'dir',
+    {
       policyAction: AttributePolicyAction.KEEP_AND_NORMALIZE,
       conditions: /* #__PURE__ */ (() => {
-        return new Map<string, Set<string>>([[
-          'dir', new Set<string>([
-            'auto',
-            'ltr',
-            'rtl',
-          ])
-        ]]);
-      })()
-    }
+        return new Map<string, Set<string>>([
+          ['dir', new Set<string>(['auto', 'ltr', 'rtl'])],
+        ]);
+      })(),
+    },
   ],
   [
-    'async', {
+    'async',
+    {
       policyAction: AttributePolicyAction.KEEP_AND_NORMALIZE,
       conditions: /* #__PURE__ */ (() => {
-        return new Map<string, Set<string>>([[
-          'async', new Set<string>([
-            'async',
-          ])
-        ]]);
-      })()
-    }
+        return new Map<string, Set<string>>([
+          ['async', new Set<string>(['async'])],
+        ]);
+      })(),
+    },
   ],
   ['cite', {policyAction: AttributePolicyAction.KEEP_AND_SANITIZE_URL}],
   [
-    'loading', {
+    'loading',
+    {
       policyAction: AttributePolicyAction.KEEP_AND_NORMALIZE,
       conditions: /* #__PURE__ */ (() => {
-        return new Map<string, Set<string>>([[
-          'loading', new Set<string>([
-            'eager',
-            'lazy',
-          ])
-        ]]);
-      })()
-    }
+        return new Map<string, Set<string>>([
+          ['loading', new Set<string>(['eager', 'lazy'])],
+        ]);
+      })(),
+    },
   ],
   ['poster', {policyAction: AttributePolicyAction.KEEP_AND_SANITIZE_URL}],
   [
-    'target', {
+    'target',
+    {
       policyAction: AttributePolicyAction.KEEP_AND_NORMALIZE,
       conditions: /* #__PURE__ */ (() => {
-        return new Map<string, Set<string>>([[
-          'target', new Set<string>([
-            '_self',
-            '_blank',
-          ])
-        ]]);
-      })()
-    }
+        return new Map<string, Set<string>>([
+          ['target', new Set<string>(['_self', '_blank'])],
+        ]);
+      })(),
+    },
   ],
 ];
 
@@ -257,8 +345,8 @@ const GLOBAL_ATTRIBUTE_POLICIES: ReadonlyArray<[string, AttributePolicy]> = [
  *
  */
 export const defaultSanitizerTable = new SanitizerTable(
-    new Set(ALLOWED_ELEMENTS),
-    new Map(ELEMENT_POLICIES),
-    new Set(ALLOWED_GLOBAL_ATTRIBUTES),
-    new Map(GLOBAL_ATTRIBUTE_POLICIES),
+  new Set(ALLOWED_ELEMENTS),
+  new Map(ELEMENT_POLICIES),
+  new Set(ALLOWED_GLOBAL_ATTRIBUTES),
+  new Map(GLOBAL_ATTRIBUTE_POLICIES),
 );

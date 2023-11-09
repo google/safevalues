@@ -3,9 +3,17 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {appendParams, appendPathSegment, objectUrlFromScript, replaceFragment, toAbsoluteResourceUrl, trustedResourceUrl} from '../../src/builders/resource_url_builders';
-import {safeScript} from '../../src/builders/script_builders';
 import {TrustedResourceUrl} from '../../src/internals/resource_url_impl';
+
+import {
+  appendParams,
+  appendPathSegment,
+  objectUrlFromScript,
+  replaceFragment,
+  toAbsoluteResourceUrl,
+  trustedResourceUrl,
+} from '../../src/builders/resource_url_builders';
+import {safeScript} from '../../src/builders/script_builders';
 
 describe('resource_url_builders', () => {
   describe('trustedResourceUrl', () => {
@@ -16,16 +24,20 @@ describe('resource_url_builders', () => {
 
     it('supports the right formats', () => {
       const foo = 'foo';
-      expect(trustedResourceUrl`httpS://www.gOOgle.com/${foo}`.toString())
-          .toBe('httpS://www.gOOgle.com/foo');
+      expect(trustedResourceUrl`httpS://www.gOOgle.com/${foo}`.toString()).toBe(
+        'httpS://www.gOOgle.com/foo',
+      );
       // Scheme-relative.
-      expect(trustedResourceUrl`//www.google.com/${foo}`.toString())
-          .toBe('//www.google.com/foo');
+      expect(trustedResourceUrl`//www.google.com/${foo}`.toString()).toBe(
+        '//www.google.com/foo',
+      );
       // Origin with hyphen and port.
-      expect(trustedResourceUrl`//ww-w.google.com:1000/path/${foo}`.toString())
-          .toBe('//ww-w.google.com:1000/path/foo');
-      expect(trustedResourceUrl`//localhost:1000/path/${foo}`.toString())
-          .toBe('//localhost:1000/path/foo');
+      expect(
+        trustedResourceUrl`//ww-w.google.com:1000/path/${foo}`.toString(),
+      ).toBe('//ww-w.google.com:1000/path/foo');
+      expect(trustedResourceUrl`//localhost:1000/path/${foo}`.toString()).toBe(
+        '//localhost:1000/path/foo',
+      );
       // Path-absolute.
       expect(trustedResourceUrl`/${foo}`.toString()).toBe('/foo');
       expect(trustedResourceUrl`/path/${foo}`.toString()).toBe('/path/foo');
@@ -35,28 +47,31 @@ describe('resource_url_builders', () => {
       expect(trustedResourceUrl`path/${foo}`.toString()).toBe('path/foo');
       expect(trustedResourceUrl`path/to/${foo}`.toString()).toBe('path/to/foo');
       // Mixed case.
-      expect(trustedResourceUrl`httpS://www.google.cOm/pAth/${foo}`.toString())
-          .toBe('httpS://www.google.cOm/pAth/foo');
-      expect(trustedResourceUrl`about:blank#${foo}`.toString())
-          .toBe('about:blank#foo');
+      expect(
+        trustedResourceUrl`httpS://www.google.cOm/pAth/${foo}`.toString(),
+      ).toBe('httpS://www.google.cOm/pAth/foo');
+      expect(trustedResourceUrl`about:blank#${foo}`.toString()).toBe(
+        'about:blank#foo',
+      );
       // Numeric and international domains.
-      expect(trustedResourceUrl`https://9.xn--3ds443g/${foo}`.toString())
-          .toBe('https://9.xn--3ds443g/foo');
+      expect(trustedResourceUrl`https://9.xn--3ds443g/${foo}`.toString()).toBe(
+        'https://9.xn--3ds443g/foo',
+      );
     });
 
     it('rejects invalid formats', () => {
       const foo = 'foo';
       expect(() => {
         return trustedResourceUrl`ftp://${foo}`;
-      })
-          .toThrowError(
-              /Trying to interpolate expressions in an unsupported url format./);
+      }).toThrowError(
+        /Trying to interpolate expressions in an unsupported url format./,
+      );
       // Missing origin.
       expect(() => {
         return trustedResourceUrl`https://${foo}`;
       }).toThrowError(/Can't interpolate data in a url's origin/);
       expect(() => {
-        return trustedResourceUrl`https:///${foo}`;  // NOTYPO
+        return trustedResourceUrl`https:///${foo}`; // NOTYPO
       }).toThrowError(/Can't interpolate data in a url's origin/);
       expect(() => {
         return trustedResourceUrl`//${foo}`;
@@ -112,63 +127,66 @@ describe('resource_url_builders', () => {
       }).toThrowError(/The top-level domain must start with a letter./);
       // Constant origin bypass attempt
       const bypassAttempt = '/evil.com';
-      expect(() => trustedResourceUrl`https:/${bypassAttempt}`)
-          .toThrowError(
-              /Trying to interpolate expressions in an unsupported url format./);
+      expect(() => trustedResourceUrl`https:/${bypassAttempt}`).toThrowError(
+        /Trying to interpolate expressions in an unsupported url format./,
+      );
       // Odd cases.
       expect(() => {
         return trustedResourceUrl`//./${foo}`;
       }).toThrowError(/The top-level domain must start with a letter./);
-      expect(() => trustedResourceUrl`something:/${foo}`)
-          .toThrowError(
-              /Trying to interpolate expressions in an unsupported url format./);
-      expect(() => trustedResourceUrl`something:${foo}`)
-          .toThrowError(
-              /Trying to interpolate expressions in an unsupported url format./);
+      expect(() => trustedResourceUrl`something:/${foo}`).toThrowError(
+        /Trying to interpolate expressions in an unsupported url format./,
+      );
+      expect(() => trustedResourceUrl`something:${foo}`).toThrowError(
+        /Trying to interpolate expressions in an unsupported url format./,
+      );
       // Relative URL with a backslash in the first segment
-      expect(() => trustedResourceUrl`abc\\def/${foo}`)
-          .toThrowError(
-              /Trying to interpolate expressions in an unsupported url format./);
+      expect(() => trustedResourceUrl`abc\\def/${foo}`).toThrowError(
+        /Trying to interpolate expressions in an unsupported url format./,
+      );
       // Relative URL with a space in the first segment
-      expect(() => trustedResourceUrl` abc/${foo}`)
-          .toThrowError(
-              /Trying to interpolate expressions in an unsupported url format./);
+      expect(() => trustedResourceUrl` abc/${foo}`).toThrowError(
+        /Trying to interpolate expressions in an unsupported url format./,
+      );
       // Two slashes. IE allowed (allows?) '\' instead of '/'.
       expect(() => {
         return trustedResourceUrl`/\\${foo}`;
       }).toThrowError(/The path start in the url is invalid./);
       // Relative path with interpolation in the first segment
-      expect(() => trustedResourceUrl`abc${foo}`)
-          .toThrowError(
-              /Trying to interpolate expressions in an unsupported url format./);
-      expect(() => trustedResourceUrl`${foo}bar`)
-          .toThrowError(
-              /Trying to interpolate expressions in an unsupported url format./);
-      expect(() => trustedResourceUrl`${foo}bar/`)
-          .toThrowError(
-              /Trying to interpolate expressions in an unsupported url format./);
-      expect(() => trustedResourceUrl`about:blankX${foo}`)
-          .toThrowError(/The about url is invalid./);
+      expect(() => trustedResourceUrl`abc${foo}`).toThrowError(
+        /Trying to interpolate expressions in an unsupported url format./,
+      );
+      expect(() => trustedResourceUrl`${foo}bar`).toThrowError(
+        /Trying to interpolate expressions in an unsupported url format./,
+      );
+      expect(() => trustedResourceUrl`${foo}bar/`).toThrowError(
+        /Trying to interpolate expressions in an unsupported url format./,
+      );
+      expect(() => trustedResourceUrl`about:blankX${foo}`).toThrowError(
+        /The about url is invalid./,
+      );
     });
 
     it('calls encodeURIComponent on interpolated values', () => {
       const dir1 = 'd%/?#=';
       const dir2 = '2';
-      expect(trustedResourceUrl`/path/${dir1}/${dir2}?n1=v1`.toString())
-          .toEqual('/path/d%25%2F%3F%23%3D/2?n1=v1');
+      expect(
+        trustedResourceUrl`/path/${dir1}/${dir2}?n1=v1`.toString(),
+      ).toEqual('/path/d%25%2F%3F%23%3D/2?n1=v1');
     });
 
     it('allows empty strings', () => {
       const arg1 = '';
-      expect(trustedResourceUrl`https://www.google.com/path/${arg1}`.toString())
-          .toEqual('https://www.google.com/path/');
+      expect(
+        trustedResourceUrl`https://www.google.com/path/${arg1}`.toString(),
+      ).toEqual('https://www.google.com/path/');
     });
 
     it('can interpolate numbers and booleans', () => {
-      const url =
-          trustedResourceUrl`https://www.google.com/path?foo=${3}&bar=${true}`;
-      expect(url.toString())
-          .toEqual('https://www.google.com/path?foo=3&bar=true');
+      const url = trustedResourceUrl`https://www.google.com/path?foo=${3}&bar=${true}`;
+      expect(url.toString()).toEqual(
+        'https://www.google.com/path?foo=3&bar=true',
+      );
     });
 
     it('rejects embedded expressions with data URL', () => {
@@ -184,109 +202,140 @@ describe('resource_url_builders', () => {
     const urlWithSearch = trustedResourceUrl`https://google.com/?abc`;
 
     it('appends simple cases as expected', () => {
-      expect(appendParams(urlWithoutSearch, new Map([['x', 'y']])).toString())
-          .toBe('https://google.com/?x=y');
-      expect(appendParams(urlWithSearch, new Map([['x', 'y']])).toString())
-          .toBe('https://google.com/?abc&x=y');
+      expect(
+        appendParams(urlWithoutSearch, new Map([['x', 'y']])).toString(),
+      ).toBe('https://google.com/?x=y');
+      expect(
+        appendParams(urlWithSearch, new Map([['x', 'y']])).toString(),
+      ).toBe('https://google.com/?abc&x=y');
     });
 
     it('alls encodeURIComponent on all param names and values', () => {
       expect(
-          appendParams(urlWithoutSearch, new Map([['&x/', '&y/']])).toString())
-          .toBe('https://google.com/?%26x%2F=%26y%2F');
-      expect(appendParams(urlWithSearch, new Map([['&x/', '&y/']])).toString())
-          .toBe('https://google.com/?abc&%26x%2F=%26y%2F');
+        appendParams(urlWithoutSearch, new Map([['&x/', '&y/']])).toString(),
+      ).toBe('https://google.com/?%26x%2F=%26y%2F');
+      expect(
+        appendParams(urlWithSearch, new Map([['&x/', '&y/']])).toString(),
+      ).toBe('https://google.com/?abc&%26x%2F=%26y%2F');
     });
 
     it('does not support urls with fragments', () => {
       expect(() => {
         appendParams(
-            trustedResourceUrl`https://google.com/#`,
-            new Map([['&x/', '&y/']]));
+          trustedResourceUrl`https://google.com/#`,
+          new Map([['&x/', '&y/']]),
+        );
       }).toThrowError(/Found a hash/);
     });
 
     it('can interpolate params with multiple values', () => {
-      const params1 = new Map<string, string|string[]>([
+      const params1 = new Map<string, string | string[]>([
         ['fruit', ['apple', 'tomato']],
         ['non-fruit', 'potato'],
       ]);
-      expect(appendParams(urlWithoutSearch, params1).toString())
-          .toBe(
-              'https://google.com/?fruit=apple&fruit=tomato&non-fruit=potato');
+      expect(appendParams(urlWithoutSearch, params1).toString()).toBe(
+        'https://google.com/?fruit=apple&fruit=tomato&non-fruit=potato',
+      );
 
-      const params2 = new Map<string, string|string[]>([
+      const params2 = new Map<string, string | string[]>([
         ['&', 'ampersand'],
         ['#', ['hash', 'mesh']],
       ]);
-      expect(appendParams(urlWithoutSearch, params2).toString())
-          .toBe('https://google.com/?%26=ampersand&%23=hash&%23=mesh');
+      expect(appendParams(urlWithoutSearch, params2).toString()).toBe(
+        'https://google.com/?%26=ampersand&%23=hash&%23=mesh',
+      );
     });
   });
 
   describe('replaceFragment', () => {
     it('appends when there is no existing fragment', () => {
-      expect(replaceFragment(trustedResourceUrl`https://google.com/`, 'def')
-                 .toString())
-          .toBe('https://google.com/#def');
+      expect(
+        replaceFragment(
+          trustedResourceUrl`https://google.com/`,
+          'def',
+        ).toString(),
+      ).toBe('https://google.com/#def');
     });
 
     it('overwrites an existing fragment', () => {
-      expect(replaceFragment(trustedResourceUrl`https://google.com/#abc`, 'def')
-                 .toString())
-          .toBe('https://google.com/#def');
+      expect(
+        replaceFragment(
+          trustedResourceUrl`https://google.com/#abc`,
+          'def',
+        ).toString(),
+      ).toBe('https://google.com/#def');
     });
   });
 
   describe('appendPathSegment', () => {
     it('appends with trailing slash', () => {
-      expect(appendPathSegment(trustedResourceUrl`https://google.com/`, 'test')
-                 .toString())
-          .toBe('https://google.com/test');
+      expect(
+        appendPathSegment(
+          trustedResourceUrl`https://google.com/`,
+          'test',
+        ).toString(),
+      ).toBe('https://google.com/test');
     });
 
     it('appends without trailing slash', () => {
-      expect(appendPathSegment(trustedResourceUrl`https://google.com`, 'test')
-                 .toString())
-          .toBe('https://google.com/test');
+      expect(
+        appendPathSegment(
+          trustedResourceUrl`https://google.com`,
+          'test',
+        ).toString(),
+      ).toBe('https://google.com/test');
     });
 
     it('encodes path before appending', () => {
-      expect(appendPathSegment(
-                 trustedResourceUrl`https://google.com/`, 'test/path')
-                 .toString())
-          .toBe('https://google.com/test%2Fpath');
+      expect(
+        appendPathSegment(
+          trustedResourceUrl`https://google.com/`,
+          'test/path',
+        ).toString(),
+      ).toBe('https://google.com/test%2Fpath');
     });
 
     it('handles empty strings', () => {
-      expect(appendPathSegment(trustedResourceUrl`https://google.com?`, 'test')
-                 .toString())
-          .toBe('https://google.com/test?');
+      expect(
+        appendPathSegment(
+          trustedResourceUrl`https://google.com?`,
+          'test',
+        ).toString(),
+      ).toBe('https://google.com/test?');
 
-      expect(appendPathSegment(trustedResourceUrl`https://google.com#`, 'test')
-                 .toString())
-          .toBe('https://google.com/test#');
+      expect(
+        appendPathSegment(
+          trustedResourceUrl`https://google.com#`,
+          'test',
+        ).toString(),
+      ).toBe('https://google.com/test#');
     });
 
     it('appends path while retaining param(s)', () => {
       expect(
-          appendPathSegment(trustedResourceUrl`https://google.com/?abc`, 'test')
-              .toString())
-          .toBe('https://google.com/test?abc');
+        appendPathSegment(
+          trustedResourceUrl`https://google.com/?abc`,
+          'test',
+        ).toString(),
+      ).toBe('https://google.com/test?abc');
     });
 
     it('appends path while retaining fragment', () => {
       expect(
-          appendPathSegment(trustedResourceUrl`https://google.com/#xyz`, 'test')
-              .toString())
-          .toBe('https://google.com/test#xyz');
+        appendPathSegment(
+          trustedResourceUrl`https://google.com/#xyz`,
+          'test',
+        ).toString(),
+      ).toBe('https://google.com/test#xyz');
     });
 
     it('appends path while retaining both param(s) and fragment', () => {
-      expect(appendPathSegment(
-                 trustedResourceUrl`https://google.com/?abc#xyz`, 'test')
-                 .toString())
-          .toBe('https://google.com/test?abc#xyz');
+      expect(
+        appendPathSegment(
+          trustedResourceUrl`https://google.com/?abc#xyz`,
+          'test',
+        ).toString(),
+      ).toBe('https://google.com/test?abc#xyz');
     });
   });
 
@@ -336,8 +385,7 @@ describe('resource_url_builders', () => {
       {
         trusted: trustedResourceUrl`/foo/bar/baz?a=b#c`,
         baseURI: `https://localhost.corp.google.com:9443/`,
-        expected:
-            trustedResourceUrl`https://localhost.corp.google.com:9443/foo/bar/baz?a=b#c`,
+        expected: trustedResourceUrl`https://localhost.corp.google.com:9443/foo/bar/baz?a=b#c`,
       },
       {
         trusted: trustedResourceUrl`/after/base`,
@@ -366,18 +414,16 @@ describe('resource_url_builders', () => {
       },
     ];
     for (const test of tests) {
-      it(`appropriately prefixes the document base URI for ${
-             test.trusted.toString()}`,
-         () => {
-           if (isIE()) {
-             skipTest();
-             return;
-           }
-           Object.defineProperty(
-               Node.prototype, 'baseURI', {value: test.baseURI});
-           expect(toAbsoluteResourceUrl(test.trusted))
-               .toEqual(test.expected ?? test.trusted);
-         });
+      it(`appropriately prefixes the document base URI for ${test.trusted.toString()}`, () => {
+        if (isIE()) {
+          skipTest();
+          return;
+        }
+        Object.defineProperty(Node.prototype, 'baseURI', {value: test.baseURI});
+        expect(toAbsoluteResourceUrl(test.trusted)).toEqual(
+          test.expected ?? test.trusted,
+        );
+      });
     }
   });
 });

@@ -11,7 +11,7 @@ import '../environment/dev';
  * @param url The URL to extract the scheme from.
  * @return the URL scheme.
  */
-export function extractScheme(url: string): string|undefined {
+export function extractScheme(url: string): string | undefined {
   let parsedUrl;
   try {
     parsedUrl = new URL(url);
@@ -37,7 +37,7 @@ const ALLOWED_SCHEMES = ['data:', 'http:', 'https:', 'mailto:', 'ftp:'];
  * @return undefined if url has a javascript: scheme, the original URL
  *     otherwise.
  */
-export function sanitizeJavaScriptUrl(url: string): string|undefined {
+export function sanitizeJavaScriptUrl(url: string): string | undefined {
   const parsedScheme = extractScheme(url);
   if (parsedScheme === 'javascript:') {
     if (process.env.NODE_ENV !== 'production') {
@@ -57,7 +57,7 @@ export type Url = string;
  * Adapter to sanitize string URLs in DOM sink wrappers.
  * @return undefined if the URL was sanitized.
  */
-export function unwrapUrlOrSanitize(url: Url): string|undefined {
+export function unwrapUrlOrSanitize(url: Url): string | undefined {
   return sanitizeJavaScriptUrl(url);
 }
 
@@ -70,8 +70,10 @@ export function unwrapUrlOrSanitize(url: Url): string|undefined {
  */
 export function restrictivelySanitizeUrl(url: string): string {
   const parsedScheme = extractScheme(url);
-  if (parsedScheme !== undefined &&
-      ALLOWED_SCHEMES.indexOf(parsedScheme.toLowerCase()) !== -1) {
+  if (
+    parsedScheme !== undefined &&
+    ALLOWED_SCHEMES.indexOf(parsedScheme.toLowerCase()) !== -1
+  ) {
     return url;
   }
   return 'about:invalid#zClosurez';

@@ -5,7 +5,7 @@
 
 import {SafeScript, unwrapScript} from '../../internals/script_impl';
 
-export {fetchResourceUrl, SafeResponse} from './fetch';
+export {SafeResponse, fetchResourceUrl} from './fetch';
 
 /**
  * Evaluates a SafeScript value in the given scope using eval.
@@ -14,7 +14,9 @@ export {fetchResourceUrl, SafeResponse} from './fetch';
  * benefit from compiler optimizations.
  */
 export function globalEval(
-    win: Window|typeof globalThis, script: SafeScript): unknown {
+  win: Window | typeof globalThis,
+  script: SafeScript,
+): unknown {
   const trustedScript = unwrapScript(script);
   let result = (win as typeof globalThis).eval(trustedScript as string);
   if (result === trustedScript) {

@@ -4,11 +4,16 @@
  */
 
 import '../environment/dev';
-
 import {createHtmlInternal, SafeHtml} from '../internals/html_impl';
-import {createResourceUrlInternal, TrustedResourceUrl} from '../internals/resource_url_impl';
+import {
+  createResourceUrlInternal,
+  TrustedResourceUrl,
+} from '../internals/resource_url_impl';
 import {createScriptInternal, SafeScript} from '../internals/script_impl';
-import {createStyleSheetInternal, SafeStyleSheet} from '../internals/style_sheet_impl';
+import {
+  createStyleSheetInternal,
+  SafeStyleSheet,
+} from '../internals/style_sheet_impl';
 
 /*
  * Transitional utilities to unsafely trust random strings as
@@ -58,7 +63,6 @@ import {createStyleSheetInternal, SafeStyleSheet} from '../internals/style_sheet
  * Generally, this is code where safety from XSS is either hopeless or
  * unimportant.
  */
-
 
 /**
  * Turns a string into SafeHtml for legacy API purposes.

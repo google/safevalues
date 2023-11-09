@@ -4,6 +4,7 @@
  */
 
 import {trustedResourceUrl} from '../../../src/builders/resource_url_builders';
+
 import * as safeLinkEl from '../../../src/dom/elements/link';
 
 describe('safeLink#setHrefAndRel', () => {

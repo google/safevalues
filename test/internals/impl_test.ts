@@ -3,10 +3,26 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {createHtmlInternal, isHtml, unwrapHtml} from '../../src/internals/html_impl';
-import {createResourceUrlInternal, isResourceUrl, unwrapResourceUrl} from '../../src/internals/resource_url_impl';
-import {createScriptInternal, isScript, unwrapScript} from '../../src/internals/script_impl';
-import {createStyleSheetInternal, isStyleSheet, unwrapStyleSheet} from '../../src/internals/style_sheet_impl';
+import {
+  createHtmlInternal,
+  isHtml,
+  unwrapHtml,
+} from '../../src/internals/html_impl';
+import {
+  createResourceUrlInternal,
+  isResourceUrl,
+  unwrapResourceUrl,
+} from '../../src/internals/resource_url_impl';
+import {
+  createScriptInternal,
+  isScript,
+  unwrapScript,
+} from '../../src/internals/script_impl';
+import {
+  createStyleSheetInternal,
+  isStyleSheet,
+  unwrapStyleSheet,
+} from '../../src/internals/style_sheet_impl';
 
 interface Impl {
   name: string;
@@ -76,7 +92,7 @@ describe('safevalues implementation', () => {
           const fakeObj = {
             toString() {
               return 'danger';
-            }
+            },
           };
           expect(() => impl.unwrap(fakeObj)).toThrowError();
         });

@@ -3,8 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {createInertFragment} from '../../../src/builders/html_sanitizer/inert_fragment';
 import {XSSDetector} from '../../testing/internal/xss_detector';
+
+import {createInertFragment} from '../../../src/builders/html_sanitizer/inert_fragment';
 
 describe('createInertFragment', () => {
   it('fails if non-inert document is passed', async () => {
@@ -14,8 +15,10 @@ describe('createInertFragment', () => {
   it('returns script nodes without evaluating them', async () => {
     const detector = new XSSDetector();
     const doc = document.implementation.createHTMLDocument('');
-    const fragment =
-        createInertFragment(`<script>${detector.payload}</script>`, doc);
+    const fragment = createInertFragment(
+      `<script>${detector.payload}</script>`,
+      doc,
+    );
 
     expect(fragment.childNodes.length).toBe(1);
     expect(fragment.firstChild!.nodeName).toBe('SCRIPT');
@@ -30,7 +33,9 @@ describe('createInertFragment', () => {
     // would trigger before the detector's timeout.
     const doc = document.implementation.createHTMLDocument('');
     const fragment = createInertFragment(
-        `<img src=bad-scheme:_ onerror=${detector.payload}()>`, doc);
+      `<img src=bad-scheme:_ onerror=${detector.payload}()>`,
+      doc,
+    );
 
     expect(fragment.childNodes.length).toBe(1);
     expect(fragment.firstChild!.nodeName).toBe('IMG');

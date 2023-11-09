@@ -30,6 +30,7 @@ describe('safeSvgEl', () => {
       safeSvgEl.setAttribute(svgEl, 'href', url);
     };
     expect(setHerf).toThrow(
-        new Error(`Setting the 'href' attribute on SVG can cause XSS.`));
+      new Error(`Setting the 'href' attribute on SVG can cause XSS.`),
+    );
   });
 });

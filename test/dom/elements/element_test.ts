@@ -4,8 +4,9 @@
  */
 
 import {safeAttrPrefix} from '../../../src/builders/attribute_builders';
-import * as safeElement from '../../../src/dom/elements/element';
 import {testonlyHtml} from '../../testing/conversions';
+
+import * as safeElement from '../../../src/dom/elements/element';
 
 describe('safeElement', () => {
   let div: HTMLDivElement;
@@ -40,7 +41,9 @@ describe('safeElement', () => {
       const anyElement = document.createElement('div');
 
       const setAriaAttribute = safeElement.buildPrefixedAttributeSetter(
-          safeAttrPrefix`aria-`, safeAttrPrefix`role`);
+        safeAttrPrefix`aria-`,
+        safeAttrPrefix`role`,
+      );
       setAriaAttribute(anyElement, 'aria-hidden', 'abc');
       setAriaAttribute(anyElement, 'aria-label', 'xyz');
       setAriaAttribute(anyElement, 'ROLE', 'button');
@@ -52,9 +55,9 @@ describe('safeElement', () => {
       const tryBypassAttrCheck = () => {
         setAriaAttribute(anyElement, 'unknown', '');
       };
-      expect(tryBypassAttrCheck)
-          .toThrowError(
-              `Attribute "unknown" does not match any of the allowed prefixes.`);
+      expect(tryBypassAttrCheck).toThrowError(
+        `Attribute "unknown" does not match any of the allowed prefixes.`,
+      );
     });
 
     it('can insert adjacent HTML safely', () => {
@@ -67,7 +70,10 @@ describe('safeElement', () => {
       const style = document.createElement('style') as HTMLElement;
       expect(() => {
         safeElement.insertAdjacentHtml(
-            style, 'afterbegin', testonlyHtml('bad'));
+          style,
+          'afterbegin',
+          testonlyHtml('bad'),
+        );
       }).toThrow();
     });
 

@@ -6,12 +6,12 @@
 /** Class for holding element and attribute policies used for sanitization. */
 export class SanitizerTable {
   constructor(
-      readonly allowedElements: ReadonlySet<string>,
-      readonly elementPolicies: ReadonlyMap<string, ElementPolicy>,
-      readonly allowedGlobalAttributes: ReadonlySet<string>,
-      readonly globalAttributePolicies: ReadonlyMap<string, AttributePolicy>,
-      readonly globallyAllowedAttributePrefixes?: ReadonlySet<string>) {}
-
+    readonly allowedElements: ReadonlySet<string>,
+    readonly elementPolicies: ReadonlyMap<string, ElementPolicy>,
+    readonly allowedGlobalAttributes: ReadonlySet<string>,
+    readonly globalAttributePolicies: ReadonlyMap<string, AttributePolicy>,
+    readonly globallyAllowedAttributePrefixes?: ReadonlySet<string>,
+  ) {}
 
   isAllowedElement(elementName: string): boolean {
     // Note: `HTMLFormElement`s are always dropped, supporting them is very
@@ -20,13 +20,17 @@ export class SanitizerTable {
     // shouldn't be put on every user of the sanitizer. Thoroughly review
     // b/210975025 and the CLs linked there before you start allowing form
     // elements.
-    return elementName !== 'FORM' &&
-        (this.allowedElements.has(elementName) ||
-         this.elementPolicies.has(elementName));
+    return (
+      elementName !== 'FORM' &&
+      (this.allowedElements.has(elementName) ||
+        this.elementPolicies.has(elementName))
+    );
   }
 
-  getAttributePolicy(attributeName: string, elementName: string):
-      AttributePolicy {
+  getAttributePolicy(
+    attributeName: string,
+    elementName: string,
+  ): AttributePolicy {
     const elementPolicy = this.elementPolicies.get(elementName);
     if (elementPolicy?.has(attributeName)) {
       return elementPolicy.get(attributeName)!;
@@ -40,9 +44,12 @@ export class SanitizerTable {
     if (globalPolicy) {
       return globalPolicy;
     }
-    if (this.globallyAllowedAttributePrefixes &&
-        [...this.globallyAllowedAttributePrefixes].some(
-            (prefix) => attributeName.indexOf(prefix) === 0)) {
+    if (
+      this.globallyAllowedAttributePrefixes &&
+      [...this.globallyAllowedAttributePrefixes].some(
+        (prefix) => attributeName.indexOf(prefix) === 0,
+      )
+    ) {
       return {policyAction: AttributePolicyAction.KEEP};
     }
     return {policyAction: AttributePolicyAction.DROP};
@@ -94,6 +101,8 @@ const FORBIDDEN_CUSTOM_ELEMENT_NAMES = new Set<string>([
  * Helper for checking if an element tag is a custom element.
  */
 export function isCustomElement(tag: string): boolean {
-  return !FORBIDDEN_CUSTOM_ELEMENT_NAMES.has(tag.toUpperCase()) &&
-      /^[a-z][-_.a-z0-9]*-[-_.a-z0-9]*$/i.test(tag);
+  return (
+    !FORBIDDEN_CUSTOM_ELEMENT_NAMES.has(tag.toUpperCase()) &&
+    /^[a-z][-_.a-z0-9]*-[-_.a-z0-9]*$/i.test(tag)
+  );
 }

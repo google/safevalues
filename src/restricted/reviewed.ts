@@ -4,11 +4,16 @@
  */
 
 import '../environment/dev';
-
 import {createHtmlInternal, SafeHtml} from '../internals/html_impl';
-import {createResourceUrlInternal, TrustedResourceUrl} from '../internals/resource_url_impl';
+import {
+  createResourceUrlInternal,
+  TrustedResourceUrl,
+} from '../internals/resource_url_impl';
 import {createScriptInternal, SafeScript} from '../internals/script_impl';
-import {createStyleSheetInternal, SafeStyleSheet} from '../internals/style_sheet_impl';
+import {
+  createStyleSheetInternal,
+  SafeStyleSheet,
+} from '../internals/style_sheet_impl';
 
 /**
  * Utilities to convert arbitrary strings to values of the various
@@ -28,7 +33,6 @@ import {createStyleSheetInternal, SafeStyleSheet} from '../internals/style_sheet
  * (or, at the most, the enclosing file).
  */
 
-
 /**
  * Asserts that the provided justification is valid (non-empty). Throws an
  * exception if that is not the case.
@@ -36,9 +40,10 @@ import {createStyleSheetInternal, SafeStyleSheet} from '../internals/style_sheet
 function assertValidJustification(justification: string) {
   if (typeof justification !== 'string' || justification.trim() === '') {
     let errMsg =
-        'Calls to uncheckedconversion functions must go through security review.';
-    errMsg += ' A justification must be provided to capture what security' +
-        ' assumptions are being made.';
+      'Calls to uncheckedconversion functions must go through security review.';
+    errMsg +=
+      ' A justification must be provided to capture what security' +
+      ' assumptions are being made.';
     throw new Error(errMsg);
   }
 }
@@ -53,7 +58,9 @@ function assertValidJustification(justification: string) {
  * explaining why this particular use of the function is safe.
  */
 export function htmlSafeByReview(
-    html: string, justification: string): SafeHtml {
+  html: string,
+  justification: string,
+): SafeHtml {
   if (process.env.NODE_ENV !== 'production') {
     assertValidJustification(justification);
   }
@@ -70,7 +77,9 @@ export function htmlSafeByReview(
  * explaining why this particular use of the function is safe.
  */
 export function scriptSafeByReview(
-    script: string, justification: string): SafeScript {
+  script: string,
+  justification: string,
+): SafeScript {
   if (process.env.NODE_ENV !== 'production') {
     assertValidJustification(justification);
   }
@@ -87,7 +96,9 @@ export function scriptSafeByReview(
  * be provided explaining why this particular use of the function is safe.
  */
 export function resourceUrlSafeByReview(
-    url: string, justification: string): TrustedResourceUrl {
+  url: string,
+  justification: string,
+): TrustedResourceUrl {
   if (process.env.NODE_ENV !== 'production') {
     assertValidJustification(justification);
   }
@@ -105,7 +116,9 @@ export function resourceUrlSafeByReview(
  * may include a security review ticket number.
  */
 export function styleSheetSafeByReview(
-    stylesheet: string, justification: string): SafeStyleSheet {
+  stylesheet: string,
+  justification: string,
+): SafeStyleSheet {
   if (process.env.NODE_ENV !== 'production') {
     assertValidJustification(justification);
   }

@@ -61,8 +61,10 @@ describe('assertIsTemplateObject', () => {
     const tagFn = getTagFunction() as Function;
     expect(() => {
       return tagFn(
-          Object.freeze(Object.assign([''], {raw: Object.freeze([])})) as
-          unknown as TemplateStringsArray);
+        Object.freeze(
+          Object.assign([''], {raw: Object.freeze([])}),
+        ) as unknown as TemplateStringsArray,
+      );
     }).toThrowError(/##### ERROR #####/);
   });
 
@@ -88,14 +90,15 @@ describe('assertIsTemplateObject', () => {
       }).toThrowError(/##### ERROR #####/);
     } else {
       pending(
-          'Skipping because Object.isFrozen`` is false and code is transpiled');
+        'Skipping because Object.isFrozen`` is false and code is transpiled',
+      );
     }
   });
 
   it('rejects invalid input 6: Wrong number of arguments', () => {
     const tagFn = getTagFunction() as Function;
     const tagFnOneArg = (s: TemplateStringsArray, ...args: string[]) =>
-        tagFn(s, args[0]);
+      tagFn(s, args[0]);
     expect(() => {
       return tagFnOneArg`${'one'}, ${'two'}`;
     }).toThrowError(/##### ERROR #####/);

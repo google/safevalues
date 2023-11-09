@@ -13,7 +13,7 @@ import {ensureTokenIsValid, secretToken} from './secrets';
  */
 export abstract class SafeStyleSheet {
   // @ts-ignore: error TS6133: 'brand' is declared but its value is never read.
-  private readonly brand!: never;  // To prevent structural typing.
+  private readonly brand!: never; // To prevent structural typing.
 }
 
 /** Implementation for `SafeStyleSheet` */

@@ -12,8 +12,10 @@
  * @param numExprs The number of embedded expressions
  */
 export function assertIsTemplateObject(
-    templateObj: TemplateStringsArray, numExprs: number): void {
-  if (!isTemplateObject(templateObj) || (numExprs + 1) !== templateObj.length) {
+  templateObj: TemplateStringsArray,
+  numExprs: number,
+): void {
+  if (!isTemplateObject(templateObj) || numExprs + 1 !== templateObj.length) {
     throw new TypeError(`
     ############################## ERROR ##############################
 
@@ -51,16 +53,18 @@ function checkTranspiled(fn: (tag: TagFn) => TemplateStringsArray): boolean {
  * check certain things that transpilers typically don't support. The
  * transpilation turns it into a function call that takes an array.
  */
-const isTranspiled = checkTranspiled(tag => tag``) ||
-    checkTranspiled(tag => tag`\0`) || checkTranspiled(tag => tag`\n`) ||
-    checkTranspiled(tag => tag`\u0000`);
+const isTranspiled =
+  checkTranspiled((tag) => tag``) ||
+  checkTranspiled((tag) => tag`\0`) ||
+  checkTranspiled((tag) => tag`\n`) ||
+  checkTranspiled((tag) => tag`\u0000`);
 
 /**
  * This value tells us if `TemplateStringsArray` are typically frozen in the
  * current environment.
  */
 const frozenTSA =
-    checkFrozen`` && checkFrozen`\0` && checkFrozen`\n` && checkFrozen`\u0000`;
+  checkFrozen`` && checkFrozen`\0` && checkFrozen`\n` && checkFrozen`\u0000`;
 
 /** Polyfill of https://github.com/tc39/proposal-array-is-template-object */
 function isTemplateObject(templateObj: TemplateStringsArray): boolean {

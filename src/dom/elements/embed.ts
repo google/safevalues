@@ -3,7 +3,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {TrustedResourceUrl, unwrapResourceUrl} from '../../internals/resource_url_impl';
+import {
+  TrustedResourceUrl,
+  unwrapResourceUrl,
+} from '../../internals/resource_url_impl';
 
 /**
  * Sets the Src attribute from the given SafeUrl.

@@ -4,6 +4,7 @@
  */
 
 import {trustedResourceUrl} from '../../../src/builders/resource_url_builders';
+
 import * as safeEmbedEl from '../../../src/dom/elements/embed';
 
 describe('safeEmbedEl', () => {

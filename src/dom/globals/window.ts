@@ -10,7 +10,11 @@ import {unwrapUrlOrSanitize, Url} from '../../builders/url_builders';
  * target {@link Url}.
  */
 export function open(
-    win: Window, url: Url, target?: string, features?: string): Window|null {
+  win: Window,
+  url: Url,
+  target?: string,
+  features?: string,
+): Window | null {
   const sanitizedUrl = unwrapUrlOrSanitize(url);
   if (sanitizedUrl !== undefined) {
     return win.open(sanitizedUrl, target, features);

@@ -4,7 +4,6 @@
  */
 
 import '../environment/dev';
-
 import {createHtmlInternal, unwrapHtml} from '../internals/html_impl';
 import {assertIsTemplateObject} from '../internals/string_literal';
 
@@ -18,12 +17,14 @@ import {assertIsTemplateObject} from '../internals/string_literal';
  *
  * @param templateObj This contains the literal part of the template literal.
  */
-export function safeFragment(templateObj: TemplateStringsArray):
-    DocumentFragment {
+export function safeFragment(
+  templateObj: TemplateStringsArray,
+): DocumentFragment {
   if (process.env.NODE_ENV !== 'production') {
     assertIsTemplateObject(templateObj, 0);
   }
   const range = document.createRange();
   return range.createContextualFragment(
-      unwrapHtml(createHtmlInternal(templateObj[0])) as string);
+    unwrapHtml(createHtmlInternal(templateObj[0])) as string,
+  );
 }

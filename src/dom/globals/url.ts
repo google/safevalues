@@ -17,24 +17,30 @@
  */
 function isSafeMimeType(mimeType: string): boolean {
   const match = mimeType.match(/^([^;]+)(?:;\w+=(?:\w+|"[\w;,= ]+"))*$/i);
-  return match?.length === 2 &&
-      (isSafeImageMimeType(match[1]) || isSafeVideoMimeType(match[1]) ||
-       isSafeAudioMimeType(match[1]));
+  return (
+    match?.length === 2 &&
+    (isSafeImageMimeType(match[1]) ||
+      isSafeVideoMimeType(match[1]) ||
+      isSafeAudioMimeType(match[1]))
+  );
 }
 
 function isSafeImageMimeType(mimeType: string): boolean {
   return /^image\/(?:bmp|gif|jpeg|jpg|png|tiff|webp|x-icon|heic|heif)$/i.test(
-      mimeType);
+    mimeType,
+  );
 }
 
 function isSafeVideoMimeType(mimeType: string): boolean {
   return /^video\/(?:mpeg|mp4|ogg|webm|x-matroska|quicktime|x-ms-wmv)$/i.test(
-      mimeType);
+    mimeType,
+  );
 }
 
 function isSafeAudioMimeType(mimeType: string): boolean {
-  return /^audio\/(?:3gpp2|3gpp|aac|L16|midi|mp3|mp4|mpeg|oga|ogg|opus|x-m4a|x-matroska|x-wav|wav|webm)$/i
-      .test(mimeType);
+  return /^audio\/(?:3gpp2|3gpp|aac|L16|midi|mp3|mp4|mpeg|oga|ogg|opus|x-m4a|x-matroska|x-wav|wav|webm)$/i.test(
+    mimeType,
+  );
 }
 
 /**
@@ -43,7 +49,7 @@ function isSafeAudioMimeType(mimeType: string): boolean {
  * throws if that's not the case. URL.revokeObjectURL should be called on the
  * returned URL to free the resources.
  */
-export function objectUrlFromSafeSource(source: Blob|MediaSource): string {
+export function objectUrlFromSafeSource(source: Blob | MediaSource): string {
   // MediaSource support in Safari is limited
   // https://developer.mozilla.org/en-US/docs/Web/API/MediaSource#browser_compatibility
   if (typeof MediaSource !== 'undefined' && source instanceof MediaSource) {

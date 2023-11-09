@@ -5,7 +5,10 @@
 
 import {htmlEscape} from 'safevalues';
 import {safeElement} from 'safevalues/dom';
-import {htmlSafeByReview, styleSheetSafeByReview} from 'safevalues/restricted/reviewed';
+import {
+  htmlSafeByReview,
+  styleSheetSafeByReview,
+} from 'safevalues/restricted/reviewed';
 
 function doSomething() {
   const html = htmlEscape('hello <world>');

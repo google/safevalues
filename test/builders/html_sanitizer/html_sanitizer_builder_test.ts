@@ -10,289 +10,285 @@ describe('html sanitizer builder test', () => {
     const sanitizerBuilder = new HtmlSanitizerBuilder();
     sanitizerBuilder.build();
 
-    expect(() => sanitizerBuilder.build())
-        .toThrowError('this sanitizer has already called build');
+    expect(() => sanitizerBuilder.build()).toThrowError(
+      'this sanitizer has already called build',
+    );
   });
 
   describe('when calling onlyAllowElements:', () => {
     it('allows elements that its called with', () => {
       const sanitizer = new HtmlSanitizerBuilder()
-                            .onlyAllowElements(new Set<string>(['article']))
-                            .build();
+        .onlyAllowElements(new Set<string>(['article']))
+        .build();
 
-      const expectedValues = [
-        '<article></article>',
-        '<article />',
-      ];
-      expect(expectedValues)
-          .toContain(sanitizer.sanitize('<article></article>').toString());
+      const expectedValues = ['<article></article>', '<article />'];
+      expect(expectedValues).toContain(
+        sanitizer.sanitize('<article></article>').toString(),
+      );
     });
 
     it('allows elements that have attribute policies', () => {
       const sanitizer = new HtmlSanitizerBuilder()
-                            .onlyAllowElements(new Set<string>(['a']))
-                            .build();
+        .onlyAllowElements(new Set<string>(['a']))
+        .build();
 
       const expectedValues = [
         '<a href="https://www.google.com"></a>',
         '<a href="https://www.google.com" />',
       ];
-      expect(expectedValues)
-          .toContain(sanitizer.sanitize('<a href="https://www.google.com"></a>')
-                         .toString());
+      expect(expectedValues).toContain(
+        sanitizer.sanitize('<a href="https://www.google.com"></a>').toString(),
+      );
     });
 
     it('removes elements that were not set', () => {
       const sanitizer = new HtmlSanitizerBuilder()
-                            .onlyAllowElements(new Set<string>(['article']))
-                            .build();
+        .onlyAllowElements(new Set<string>(['article']))
+        .build();
 
       expect('').toEqual(sanitizer.sanitize('<a></a>').toString());
     });
 
     it('throws an error when called with an element not allowed by default.', () => {
-      expect(
-          () => new HtmlSanitizerBuilder().onlyAllowElements(
-              new Set<string>(['madeupelement'])))
-          .toThrowError(
-              'Element: MADEUPELEMENT, is not allowed by html5_contract.textpb');
+      expect(() =>
+        new HtmlSanitizerBuilder().onlyAllowElements(
+          new Set<string>(['madeupelement']),
+        ),
+      ).toThrowError(
+        'Element: MADEUPELEMENT, is not allowed by html5_contract.textpb',
+      );
     });
 
-    it('becomes more restrictive with successive calls rather than replacing the previous set',
-       () => {
-         const sanitizerBuilder = new HtmlSanitizerBuilder().onlyAllowElements(
-             new Set<string>(['a']));
+    it('becomes more restrictive with successive calls rather than replacing the previous set', () => {
+      const sanitizerBuilder = new HtmlSanitizerBuilder().onlyAllowElements(
+        new Set<string>(['a']),
+      );
 
-         expect(
-             () => sanitizerBuilder.onlyAllowElements(
-                 new Set<string>(['article'])))
-             .toThrowError(
-                 'Element: ARTICLE, is not allowed by html5_contract.textpb');
-       });
+      expect(() =>
+        sanitizerBuilder.onlyAllowElements(new Set<string>(['article'])),
+      ).toThrowError(
+        'Element: ARTICLE, is not allowed by html5_contract.textpb',
+      );
+    });
 
-    it('doesn\'t reallow attributes that were disallowed in onlyAllowAttributes',
-       () => {
-         const sanitizer = new HtmlSanitizerBuilder()
-                               .onlyAllowAttributes(new Set<string>(['href']))
-                               .onlyAllowElements(new Set<string>(['area']))
-                               .build();
-         const expectedValues = [
-           '<area href="https://google.com" ></area>',
-           '<area href="https://google.com" />',
-         ];
-         expect(expectedValues)
-             .toContain(
-                 sanitizer
-                     .sanitize(
-                         '<a href="https://google.com" ></a><area href="https://google.com" ></area>')
-                     .toString());
-       });
+    it("doesn't reallow attributes that were disallowed in onlyAllowAttributes", () => {
+      const sanitizer = new HtmlSanitizerBuilder()
+        .onlyAllowAttributes(new Set<string>(['href']))
+        .onlyAllowElements(new Set<string>(['area']))
+        .build();
+      const expectedValues = [
+        '<area href="https://google.com" ></area>',
+        '<area href="https://google.com" />',
+      ];
+      expect(expectedValues).toContain(
+        sanitizer
+          .sanitize(
+            '<a href="https://google.com" ></a><area href="https://google.com" ></area>',
+          )
+          .toString(),
+      );
+    });
   });
 
   describe('when calling allowCustomElements:', () => {
     it('allows elements that its called with', () => {
-      const sanitizer =
-          new HtmlSanitizerBuilder().allowCustomElement('my-element').build();
+      const sanitizer = new HtmlSanitizerBuilder()
+        .allowCustomElement('my-element')
+        .build();
 
       const expectedValues = [
         '<my-element></my-element>',
         // ie11-win7
         '<MY-ELEMENT />',
       ];
-      expect(expectedValues)
-          .toContain(
-              sanitizer.sanitize('<my-element></my-element>').toString());
+      expect(expectedValues).toContain(
+        sanitizer.sanitize('<my-element></my-element>').toString(),
+      );
     });
 
     it('does not override onlyAllowElements', () => {
       const sanitizer = new HtmlSanitizerBuilder()
-                            .onlyAllowElements(new Set<string>(['article']))
-                            .allowCustomElement('my-element')
-                            .build();
+        .onlyAllowElements(new Set<string>(['article']))
+        .allowCustomElement('my-element')
+        .build();
 
-      const expectedValues = [
-        '<article></article>',
-        '<article />',
-      ];
-      expect(expectedValues)
-          .toContain(sanitizer.sanitize('<article></article>').toString());
+      const expectedValues = ['<article></article>', '<article />'];
+      expect(expectedValues).toContain(
+        sanitizer.sanitize('<article></article>').toString(),
+      );
     });
 
     it('allows attributes on custom elements', () => {
       const sanitizer = new HtmlSanitizerBuilder()
-                            .allowCustomElement(
-                                'my-element', new Set<string>(['my-attribute']))
-                            .build();
+        .allowCustomElement('my-element', new Set<string>(['my-attribute']))
+        .build();
 
       const expectedValues = [
         '<my-element my-attribute="value"></my-element>',
         // ie11-win7
         '<MY-ELEMENT my-attribute="value" />',
       ];
-      expect(expectedValues)
-          .toContain(
-              sanitizer
-                  .sanitize('<my-element my-attribute="value"></my-element>')
-                  .toString());
+      expect(expectedValues).toContain(
+        sanitizer
+          .sanitize('<my-element my-attribute="value"></my-element>')
+          .toString(),
+      );
     });
 
     it('removes non-allowed attributes on custom elements', () => {
       const sanitizer = new HtmlSanitizerBuilder()
-                            .allowCustomElement(
-                                'my-element', new Set<string>(['my-attribute']))
-                            .build();
+        .allowCustomElement('my-element', new Set<string>(['my-attribute']))
+        .build();
 
       const expectedValues = [
         '<my-element></my-element>',
         // ie11-win7
         '<MY-ELEMENT />',
       ];
-      expect(expectedValues)
-          .toContain(
-              sanitizer
-                  .sanitize(
-                      '<my-element my-other-attribute="value"></my-element>')
-                  .toString());
+      expect(expectedValues).toContain(
+        sanitizer
+          .sanitize('<my-element my-other-attribute="value"></my-element>')
+          .toString(),
+      );
     });
 
     it('removes other custom elements', () => {
-      const sanitizer =
-          new HtmlSanitizerBuilder().allowCustomElement('my-element').build();
+      const sanitizer = new HtmlSanitizerBuilder()
+        .allowCustomElement('my-element')
+        .build();
 
       expect('').toEqual(
-          sanitizer.sanitize('<my-other-element></my-other-element>')
-              .toString());
+        sanitizer.sanitize('<my-other-element></my-other-element>').toString(),
+      );
     });
 
     it('throws an error when a non-custom-element name is provided', () => {
-      expect(() => new HtmlSanitizerBuilder().allowCustomElement('foo').build())
-          .toThrowError('Element: FOO is not a custom element');
+      expect(() =>
+        new HtmlSanitizerBuilder().allowCustomElement('foo').build(),
+      ).toThrowError('Element: FOO is not a custom element');
     });
 
     it('throws an error when a reserved name is provided', () => {
-      expect(
-          () => new HtmlSanitizerBuilder()
-                    .allowCustomElement('font-face')
-                    .build())
-          .toThrowError('Element: FONT-FACE is not a custom element');
+      expect(() =>
+        new HtmlSanitizerBuilder().allowCustomElement('font-face').build(),
+      ).toThrowError('Element: FONT-FACE is not a custom element');
     });
   });
 
   describe('when calling onlyAllowAttributes:', () => {
     it('allows global attributes', () => {
       const sanitizer = new HtmlSanitizerBuilder()
-                            .onlyAllowAttributes(new Set<string>(['width']))
-                            .build();
-      const expectedValues = [
-        '<img width="500"></img>',
-        '<img width="500" />',
-      ];
-      expect(expectedValues)
-          .toContain(sanitizer.sanitize('<img width="500" height="600"></img>')
-                         .toString());
+        .onlyAllowAttributes(new Set<string>(['width']))
+        .build();
+      const expectedValues = ['<img width="500"></img>', '<img width="500" />'];
+      expect(expectedValues).toContain(
+        sanitizer.sanitize('<img width="500" height="600"></img>').toString(),
+      );
     });
 
     it('allows global attributes with policies', () => {
       const sanitizer = new HtmlSanitizerBuilder()
-                            .onlyAllowAttributes(new Set<string>(['target']))
-                            .build();
-      const expectedValues = [
-        '<a target="_self"></a>',
-        '<a target="_self" />',
-      ];
-      expect(expectedValues)
-          .toContain(
-              sanitizer.sanitize('<a target="_self" media="something"></a>')
-                  .toString());
+        .onlyAllowAttributes(new Set<string>(['target']))
+        .build();
+      const expectedValues = ['<a target="_self"></a>', '<a target="_self" />'];
+      expect(expectedValues).toContain(
+        sanitizer
+          .sanitize('<a target="_self" media="something"></a>')
+          .toString(),
+      );
     });
 
-    it('doesn\'t reallow elements that were disallowed in onlyAllowElements',
-       () => {
-         const sanitizer = new HtmlSanitizerBuilder()
-                               .onlyAllowElements(new Set<string>(['area']))
-                               .onlyAllowAttributes(new Set<string>(['href']))
-                               .build();
-         const expectedValues = [
-           '<area href="https://google.com" ></area>',
-           '<area href="https://google.com" />',
-         ];
-         expect(expectedValues)
-             .toContain(
-                 sanitizer
-                     .sanitize(
-                         '<a href="https://google.com" ></a><area href="https://google.com" ></area>')
-                     .toString());
-       });
+    it("doesn't reallow elements that were disallowed in onlyAllowElements", () => {
+      const sanitizer = new HtmlSanitizerBuilder()
+        .onlyAllowElements(new Set<string>(['area']))
+        .onlyAllowAttributes(new Set<string>(['href']))
+        .build();
+      const expectedValues = [
+        '<area href="https://google.com" ></area>',
+        '<area href="https://google.com" />',
+      ];
+      expect(expectedValues).toContain(
+        sanitizer
+          .sanitize(
+            '<a href="https://google.com" ></a><area href="https://google.com" ></area>',
+          )
+          .toString(),
+      );
+    });
   });
 
   describe('when calling allowDataAttributes:', () => {
     it('allows data attributes', () => {
-      const sanitizer =
-          new HtmlSanitizerBuilder().allowDataAttributes(['data-foo']).build();
+      const sanitizer = new HtmlSanitizerBuilder()
+        .allowDataAttributes(['data-foo'])
+        .build();
 
       const expectedValues = [
         '<article data-foo="hello"></article>',
         '<article data-foo="hello" />',
       ];
-      expect(expectedValues)
-          .toContain(sanitizer.sanitize('<article data-foo="hello"></article>')
-                         .toString());
+      expect(expectedValues).toContain(
+        sanitizer.sanitize('<article data-foo="hello"></article>').toString(),
+      );
     });
 
-    it('throws an error when the attribute name is not prefixed with data',
-       () => {
-         expect(
-             () => new HtmlSanitizerBuilder()
-                       .allowDataAttributes(['foo'])
-                       .build())
-             .toThrowError(
-                 'data attribute: foo does not begin with the prefix "data-"');
-       });
+    it('throws an error when the attribute name is not prefixed with data', () => {
+      expect(() =>
+        new HtmlSanitizerBuilder().allowDataAttributes(['foo']).build(),
+      ).toThrowError(
+        'data attribute: foo does not begin with the prefix "data-"',
+      );
+    });
 
     it('allows data attributes when called with onlyAllowAttributes', () => {
       const sanitizer = new HtmlSanitizerBuilder()
-                            .onlyAllowAttributes(new Set<string>(['src']))
-                            .allowDataAttributes(['data-foo'])
-                            .build();
+        .onlyAllowAttributes(new Set<string>(['src']))
+        .allowDataAttributes(['data-foo'])
+        .build();
       const expectedValues = [
         '<article data-foo="hello"></article>',
         '<article data-foo="hello" />',
       ];
 
-      expect(expectedValues)
-          .toContain(sanitizer.sanitize('<article data-foo="hello" ></article>')
-                         .toString());
+      expect(expectedValues).toContain(
+        sanitizer.sanitize('<article data-foo="hello" ></article>').toString(),
+      );
     });
   });
 
   describe('when calling allowStyleAttributes:', () => {
     it('allows style attributes', () => {
-      const sanitizer =
-          new HtmlSanitizerBuilder().allowStyleAttributes().build();
+      const sanitizer = new HtmlSanitizerBuilder()
+        .allowStyleAttributes()
+        .build();
 
       const expectedValues = [
         '<div style="background-image: url(&quot;http://www.example.com/image3.jpg&quot;);" />',
-        '<div style="background-image: url(http://www.example.com/image3.jpg);"></div>'
+        '<div style="background-image: url(http://www.example.com/image3.jpg);"></div>',
       ];
-      expect(expectedValues)
-          .toContain(
-              sanitizer
-                  .sanitize(
-                      '<div style="background-image: url(http://www.example.com/image3.jpg);"></div>')
-                  .toString());
+      expect(expectedValues).toContain(
+        sanitizer
+          .sanitize(
+            '<div style="background-image: url(http://www.example.com/image3.jpg);"></div>',
+          )
+          .toString(),
+      );
     });
   });
 
   describe('when calling allowClassAttributes():', () => {
     it('allows class attributes', () => {
-      const sanitizer =
-          new HtmlSanitizerBuilder().allowClassAttributes().build();
+      const sanitizer = new HtmlSanitizerBuilder()
+        .allowClassAttributes()
+        .build();
 
-      const expectedValues =
-          ['<div class="my-class"></div>', '<div class="my-class" />'];
-      expect(expectedValues)
-          .toContain(
-              sanitizer.sanitize('<div class="my-class"></div>').toString());
+      const expectedValues = [
+        '<div class="my-class"></div>',
+        '<div class="my-class" />',
+      ];
+      expect(expectedValues).toContain(
+        sanitizer.sanitize('<div class="my-class"></div>').toString(),
+      );
     });
   });
 
@@ -301,22 +297,25 @@ describe('html sanitizer builder test', () => {
       const sanitizer = new HtmlSanitizerBuilder().allowIdAttributes().build();
 
       const expectedValues = ['<div id="my-id"></div>', '<div id="my-id" />'];
-      expect(expectedValues)
-          .toContain(sanitizer.sanitize('<div id="my-id"></div>').toString());
+      expect(expectedValues).toContain(
+        sanitizer.sanitize('<div id="my-id"></div>').toString(),
+      );
     });
   });
 
   describe('when calling allowIdReferenceAttributes():', () => {
     it('allows idref attributes', () => {
-      const sanitizer =
-          new HtmlSanitizerBuilder().allowIdReferenceAttributes().build();
+      const sanitizer = new HtmlSanitizerBuilder()
+        .allowIdReferenceAttributes()
+        .build();
 
       const expectedValues = [
-        '<div aria-labelledby="my-id"></div>', '<div aria-labelledby="my-id" />'
+        '<div aria-labelledby="my-id"></div>',
+        '<div aria-labelledby="my-id" />',
       ];
-      expect(expectedValues)
-          .toContain(sanitizer.sanitize('<div aria-labelledby="my-id"></div>')
-                         .toString());
+      expect(expectedValues).toContain(
+        sanitizer.sanitize('<div aria-labelledby="my-id"></div>').toString(),
+      );
     });
   });
 });

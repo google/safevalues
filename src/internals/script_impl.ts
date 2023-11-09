@@ -8,7 +8,6 @@ import '../environment/dev';
 import {ensureTokenIsValid, secretToken} from './secrets';
 import {getTrustedTypes, getTrustedTypesPolicy} from './trusted_types';
 
-
 /**
  * Runtime implementation of `TrustedScript` in browswers that don't support it.
  * script element.
@@ -27,12 +26,14 @@ class ScriptImpl {
 }
 
 function createTrustedScriptOrPolyfill(
-    script: string, trusted?: TrustedScript): SafeScript {
+  script: string,
+  trusted?: TrustedScript,
+): SafeScript {
   return (trusted ?? new ScriptImpl(script, secretToken)) as SafeScript;
 }
 
 const GlobalTrustedScript =
-    (typeof window !== 'undefined') ? window.TrustedScript : undefined;
+  typeof window !== 'undefined' ? window.TrustedScript : undefined;
 
 /**
  * JavaScript code that is safe to evaluate and use as the content of an HTML
@@ -43,8 +44,8 @@ export type SafeScript = TrustedScript;
 /**
  * Also exports the constructor so that instanceof checks work.
  */
-export const SafeScript =
-    (GlobalTrustedScript ?? ScriptImpl) as unknown as TrustedScript;
+export const SafeScript = (GlobalTrustedScript ??
+  ScriptImpl) as unknown as TrustedScript;
 
 /**
  * Builds a new `SafeScript` from the given string, without enforcing
@@ -56,17 +57,17 @@ export function createScriptInternal(script: string): SafeScript {
   /** @noinline */
   const noinlineScript = script;
   return createTrustedScriptOrPolyfill(
-      noinlineScript, getTrustedTypesPolicy()?.createScript(noinlineScript));
+    noinlineScript,
+    getTrustedTypesPolicy()?.createScript(noinlineScript),
+  );
 }
 
 /**
  * An empty `SafeScript` constant.
  * Unlike the functions above, using this will not create a policy.
  */
-export const EMPTY_SCRIPT: SafeScript =
-    /* #__PURE__ */ (
-        () => createTrustedScriptOrPolyfill(
-            '', getTrustedTypes()?.emptyScript))();
+export const EMPTY_SCRIPT: SafeScript = /* #__PURE__ */ (() =>
+  createTrustedScriptOrPolyfill('', getTrustedTypes()?.emptyScript))();
 
 /**
  * Checks if the given value is a `SafeScript` instance.
@@ -81,7 +82,7 @@ export function isScript(value: unknown): value is SafeScript {
  *
  * Returns a native `TrustedScript` or a string if Trusted Types are disabled.
  */
-export function unwrapScript(value: SafeScript): TrustedScript|string {
+export function unwrapScript(value: SafeScript): TrustedScript | string {
   if (getTrustedTypes()?.isScript(value)) {
     return value;
   } else if (value instanceof ScriptImpl) {

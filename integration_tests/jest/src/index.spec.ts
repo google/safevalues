@@ -1,4 +1,7 @@
-import {foo} from './index'
+import {foo} from './index';
 
-describe(
-    '#Foo', () => {it('Bar', () => {expect(foo().toString()).toEqual('')})})
+describe('#Foo', () => {
+  it('Bar', () => {
+    expect(foo().toString()).toEqual('');
+  });
+});

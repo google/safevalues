@@ -10,10 +10,15 @@
  */
 
 import {createHtmlInternal, SafeHtml} from '../../internals/html_impl';
-import {TrustedResourceUrl, unwrapResourceUrl} from '../../internals/resource_url_impl';
+import {
+  TrustedResourceUrl,
+  unwrapResourceUrl,
+} from '../../internals/resource_url_impl';
 import {createScriptInternal, SafeScript} from '../../internals/script_impl';
-import {createStyleSheetInternal, SafeStyleSheet} from '../../internals/style_sheet_impl';
-
+import {
+  createStyleSheetInternal,
+  SafeStyleSheet,
+} from '../../internals/style_sheet_impl';
 
 /**
  * IncorrectTypeError represents an error that can occur with {@link
@@ -22,15 +27,15 @@ import {createStyleSheetInternal, SafeStyleSheet} from '../../internals/style_sh
  */
 export class IncorrectContentTypeError extends Error {
   constructor(
-      readonly url: string, readonly typeName: string,
-      readonly contentType: string) {
-    super(`${url} was requested as a ${
-        typeName}, but the response Content-Type, "${
-        contentType} is not appropriate for this type of content.`);
+    readonly url: string,
+    readonly typeName: string,
+    readonly contentType: string,
+  ) {
+    super(
+      `${url} was requested as a ${typeName}, but the response Content-Type, "${contentType} is not appropriate for this type of content.`,
+    );
   }
 }
-
-
 
 /**
  * A SafeResponse is the response value of a {@link fetchResourceUrl} call.
@@ -54,7 +59,6 @@ export interface SafeResponse {
   styleSheet(): Promise<SafeStyleSheet>;
 }
 
-
 /**
  * This causes the compiler to better optimize `createHtmlInternal` calls, where
  * previously it was building and including the whole module without
@@ -71,19 +75,26 @@ function privatecreateHtmlInternal(html: string): SafeHtml {
  * and returns a value which can be turned into a given safe type.
  */
 export async function fetchResourceUrl(
-    u: TrustedResourceUrl, init?: RequestInit): Promise<SafeResponse> {
+  u: TrustedResourceUrl,
+  init?: RequestInit,
+): Promise<SafeResponse> {
   const response = await fetch(unwrapResourceUrl(u).toString(), init);
   /**
    * the content type type of the response, excluding any MIME params
    */
-  const mimeType =
-      response.headers.get('Content-Type')?.split(';', 2)?.[0]?.toLowerCase();
+  const mimeType = response.headers
+    .get('Content-Type')
+    ?.split(';', 2)?.[0]
+    ?.toLowerCase();
 
   return {
     async html(): Promise<SafeHtml> {
       if (mimeType !== 'text/html') {
         throw new IncorrectContentTypeError(
-            response.url, 'SafeHtml', 'text/html');
+          response.url,
+          'SafeHtml',
+          'text/html',
+        );
       }
 
       const text = await response.text();
@@ -93,10 +104,15 @@ export async function fetchResourceUrl(
     async script(): Promise<SafeScript> {
       // see:
       // https://html.spec.whatwg.org/multipage/scripting.html#scriptingLanguages
-      if (mimeType !== 'text/javascript' &&
-          mimeType !== 'application/javascript') {
+      if (
+        mimeType !== 'text/javascript' &&
+        mimeType !== 'application/javascript'
+      ) {
         throw new IncorrectContentTypeError(
-            response.url, 'SafeScript', 'text/javascript');
+          response.url,
+          'SafeScript',
+          'text/javascript',
+        );
       }
 
       const text = await response.text();
@@ -106,11 +122,14 @@ export async function fetchResourceUrl(
     async styleSheet(): Promise<SafeStyleSheet> {
       if (mimeType !== 'text/css') {
         throw new IncorrectContentTypeError(
-            response.url, 'SafeStyleSheet', 'text/css');
+          response.url,
+          'SafeStyleSheet',
+          'text/css',
+        );
       }
 
       const text = await response.text();
       return createStyleSheetInternal(text);
-    }
+    },
   };
 }

@@ -3,9 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import '../../environment/dev';
-
 import {extractScheme} from '../../builders/url_builders';
+import '../../environment/dev';
 
 /**
  * Sets the Href attribute from the given URL.

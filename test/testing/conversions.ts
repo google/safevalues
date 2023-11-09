@@ -15,9 +15,18 @@
  */
 
 import {createHtmlInternal, SafeHtml} from '../../src/internals/html_impl';
-import {createResourceUrlInternal, TrustedResourceUrl} from '../../src/internals/resource_url_impl';
-import {createScriptInternal, SafeScript} from '../../src/internals/script_impl';
-import {createStyleSheetInternal, SafeStyleSheet} from '../../src/internals/style_sheet_impl';
+import {
+  createResourceUrlInternal,
+  TrustedResourceUrl,
+} from '../../src/internals/resource_url_impl';
+import {
+  createScriptInternal,
+  SafeScript,
+} from '../../src/internals/script_impl';
+import {
+  createStyleSheetInternal,
+  SafeStyleSheet,
+} from '../../src/internals/style_sheet_impl';
 
 /**
  * Turns a string into SafeHtml for testing purposes. This function is for use

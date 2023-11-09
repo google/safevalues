@@ -4,13 +4,16 @@
  */
 
 import '../environment/dev';
-
-import {createResourceUrlInternal, TrustedResourceUrl, unwrapResourceUrl} from '../internals/resource_url_impl';
+import {
+  createResourceUrlInternal,
+  TrustedResourceUrl,
+  unwrapResourceUrl,
+} from '../internals/resource_url_impl';
 import {SafeScript, unwrapScript} from '../internals/script_impl';
 import {assertIsTemplateObject} from '../internals/string_literal';
 
 /** Type that we know how to interpolate */
-type Primitive = string|number|boolean;
+type Primitive = string | number | boolean;
 
 /**
  * Check whether the base url contains a valid origin,
@@ -33,8 +36,9 @@ function hasValidOrigin(base: string): boolean {
   // missing.
   if (originEnd <= originStart) {
     throw new Error(
-        `Can't interpolate data in a url's origin, ` +
-        `Please make sure to fully specify the origin, terminated with '/'.`);
+      `Can't interpolate data in a url's origin, ` +
+        `Please make sure to fully specify the origin, terminated with '/'.`,
+    );
   }
 
   const origin = base.substring(originStart, originEnd);
@@ -80,8 +84,10 @@ function isValidPathStart(base: string): boolean {
   if (!/^\//.test(base)) {
     return false;
   }
-  if ((base === '/') ||
-      (base.length > 1 && base[1] !== '/' && base[1] !== '\\')) {
+  if (
+    base === '/' ||
+    (base.length > 1 && base[1] !== '/' && base[1] !== '\\')
+  ) {
     return true;
   }
   throw new Error('The path start in the url is invalid.');
@@ -150,8 +156,9 @@ function isValidRelativePathStart(base: string): boolean {
  * @param rest This represents the template's embedded expressions.
  */
 export function trustedResourceUrl(
-    templateObj: TemplateStringsArray,
-    ...rest: Primitive[]): TrustedResourceUrl {
+  templateObj: TemplateStringsArray,
+  ...rest: Primitive[]
+): TrustedResourceUrl {
   // Check if templateObj is actually from a template literal.
   if (process.env.NODE_ENV !== 'production') {
     assertIsTemplateObject(templateObj, rest.length);
@@ -166,13 +173,19 @@ export function trustedResourceUrl(
   if (process.env.NODE_ENV !== 'production') {
     if (/^data:/.test(base)) {
       throw new Error(
-          'Data URLs cannot have expressions in the template literal input.');
+        'Data URLs cannot have expressions in the template literal input.',
+      );
     }
 
-    if (!hasValidOrigin(base) && !isValidPathStart(base) &&
-        !isValidRelativePathStart(base) && !isValidAboutUrl(base)) {
+    if (
+      !hasValidOrigin(base) &&
+      !isValidPathStart(base) &&
+      !isValidRelativePathStart(base) &&
+      !isValidAboutUrl(base)
+    ) {
       throw new Error(
-          'Trying to interpolate expressions in an unsupported url format.');
+        'Trying to interpolate expressions in an unsupported url format.',
+      );
     }
   }
 
@@ -194,9 +207,9 @@ export function trustedResourceUrl(
  * array.
  */
 export function appendParams(
-    trustedUrl: TrustedResourceUrl,
-    params: Map<string, Primitive|null|Array<Primitive|null>>):
-    TrustedResourceUrl {
+  trustedUrl: TrustedResourceUrl,
+  params: Map<string, Primitive | null | Array<Primitive | null>>,
+): TrustedResourceUrl {
   let url = unwrapResourceUrl(trustedUrl).toString();
   if (/#/.test(url)) {
     let message = '';
@@ -208,18 +221,23 @@ export function appendParams(
   let separator = /\?/.test(url) ? '&' : '?';
   // for-of has a big polyfill.
   // tslint:disable-next-line:ban-iterable-foreach
-  params.forEach((value: Primitive|null|Array<Primitive|null>, key: string) => {
-    const values = (value instanceof Array) ? value : [value];
-    for (let i = 0; i < values.length; i++) {
-      const v = values[i];
-      if (v === null || v === undefined) {
-        continue;
-      }
-      url += separator + encodeURIComponent(key) + '=' +
+  params.forEach(
+    (value: Primitive | null | Array<Primitive | null>, key: string) => {
+      const values = value instanceof Array ? value : [value];
+      for (let i = 0; i < values.length; i++) {
+        const v = values[i];
+        if (v === null || v === undefined) {
+          continue;
+        }
+        url +=
+          separator +
+          encodeURIComponent(key) +
+          '=' +
           encodeURIComponent(String(v));
-      separator = '&';
-    }
-  });
+        separator = '&';
+      }
+    },
+  );
   return createResourceUrlInternal(url);
 }
 
@@ -233,10 +251,13 @@ const BEFORE_FRAGMENT_REGEXP = /[^#]*/;
  * `#`. No additional escaping is applied.
  */
 export function replaceFragment(
-    trustedUrl: TrustedResourceUrl, fragment: string) {
+  trustedUrl: TrustedResourceUrl,
+  fragment: string,
+) {
   const urlString = unwrapResourceUrl(trustedUrl).toString();
   return createResourceUrlInternal(
-      BEFORE_FRAGMENT_REGEXP.exec(urlString)![0] + '#' + fragment);
+    BEFORE_FRAGMENT_REGEXP.exec(urlString)![0] + '#' + fragment,
+  );
 }
 
 /**
@@ -247,15 +268,19 @@ export function replaceFragment(
  *     a pre-encoded value as this will result in it being double encoded.
  */
 export function appendPathSegment(
-    trustedUrl: TrustedResourceUrl, pathSegment: string): TrustedResourceUrl {
+  trustedUrl: TrustedResourceUrl,
+  pathSegment: string,
+): TrustedResourceUrl {
   const originalUrl = unwrapResourceUrl(trustedUrl).toString();
   const urlSegments = originalUrl.split(/\?|#/);
 
   const basePath = urlSegments[0];
   const paramVals = /\?/.test(originalUrl) ? urlSegments[1] : undefined;
-  const fragVal = /#/.test(originalUrl) ?
-      (paramVals ? urlSegments[2] : urlSegments[1]) :
-      undefined;
+  const fragVal = /#/.test(originalUrl)
+    ? paramVals
+      ? urlSegments[2]
+      : urlSegments[1]
+    : undefined;
 
   const pathSeparator = basePath.charAt(basePath.length - 1) === '/' ? '' : '/';
   let url = basePath + pathSeparator + encodeURIComponent(pathSegment);
@@ -276,8 +301,9 @@ export function appendPathSegment(
  * Caller must call `URL.revokeObjectUrl()` on the stringified url to
  * release the underlying `Blob`.
  */
-export function objectUrlFromScript(safeScript: SafeScript):
-    TrustedResourceUrl {
+export function objectUrlFromScript(
+  safeScript: SafeScript,
+): TrustedResourceUrl {
   const scriptContent = unwrapScript(safeScript).toString();
   const blob = new Blob([scriptContent], {type: 'text/javascript'});
   return createResourceUrlInternal(URL.createObjectURL(blob));

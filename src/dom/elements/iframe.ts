@@ -8,7 +8,10 @@
  */
 
 import {SafeHtml, unwrapHtml} from '../../internals/html_impl';
-import {TrustedResourceUrl, unwrapResourceUrl} from '../../internals/resource_url_impl';
+import {
+  TrustedResourceUrl,
+  unwrapResourceUrl,
+} from '../../internals/resource_url_impl';
 
 /** Sets the Src attribute using a TrustedResourceUrl */
 export function setSrc(iframe: HTMLIFrameElement, v: TrustedResourceUrl) {

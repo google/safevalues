@@ -9,6 +9,10 @@
  */
 /*#__PURE__*/ (() => {
   if (typeof process === 'undefined') {
-    (window.process as unknown) = {env: {NODE_ENV: 'development'}};
+    (window.process as unknown) = {
+      env: {
+        NODE_ENV: 'development',
+      },
+    };
   }
 })();

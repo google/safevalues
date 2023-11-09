@@ -3,7 +3,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {TrustedResourceUrl, unwrapResourceUrl} from '../../internals/resource_url_impl';
+import {
+  TrustedResourceUrl,
+  unwrapResourceUrl,
+} from '../../internals/resource_url_impl';
 
 // We can't depend on WorkerGlobalScope directly, as lib.webworker.d.ts alters
 // the global scope typing.
@@ -33,12 +36,16 @@ export function create(url: TrustedResourceUrl, options?: {}): Worker {
 
 /** Safely creates a shared Web Worker. */
 export function createShared(
-    url: TrustedResourceUrl, options?: string|WorkerOptions): SharedWorker {
+  url: TrustedResourceUrl,
+  options?: string | WorkerOptions,
+): SharedWorker {
   return new SharedWorker(unwrapResourceUrl(url) as string, options);
 }
 
 /** Safely calls importScripts */
 export function importScripts(
-    scope: ScopeWithImportScripts, ...urls: TrustedResourceUrl[]): void {
-  scope.importScripts(...urls.map(url => unwrapResourceUrl(url) as string));
+  scope: ScopeWithImportScripts,
+  ...urls: TrustedResourceUrl[]
+): void {
+  scope.importScripts(...urls.map((url) => unwrapResourceUrl(url) as string));
 }

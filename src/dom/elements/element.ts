@@ -10,16 +10,20 @@
  */
 
 import '../../environment/dev';
-
-import {SafeAttributePrefix, unwrapAttributePrefix} from '../../internals/attribute_impl';
+import {
+  SafeAttributePrefix,
+  unwrapAttributePrefix,
+} from '../../internals/attribute_impl';
 import {SafeHtml, unwrapHtml} from '../../internals/html_impl';
 
 /**
  * Safely set {@link Element.innerHTML} on a given ShadowRoot or Element which
  * may not be a `<script>` element or a `<style>` element.
  */
-export function setInnerHtml<T extends Element|ShadowRoot>(
-    elOrRoot: Exclude<T, HTMLScriptElement|HTMLStyleElement>, v: SafeHtml) {
+export function setInnerHtml<T extends Element | ShadowRoot>(
+  elOrRoot: Exclude<T, HTMLScriptElement | HTMLStyleElement>,
+  v: SafeHtml,
+) {
   if (isElement(elOrRoot)) {
     throwIfScriptOrStyle(elOrRoot);
   }
@@ -41,11 +45,14 @@ export function setOuterHtml(e: Element, v: SafeHtml) {
  * Safely call {@link Element.insertAdjacentHTML} for the given Element.
  */
 export function insertAdjacentHtml<T extends Element>(
-    element: Exclude<T, HTMLScriptElement|HTMLStyleElement>,
-    position: 'afterbegin'|'afterend'|'beforebegin'|'beforeend', v: SafeHtml) {
-  const tagContext = (position === 'beforebegin' || position === 'afterend') ?
-      element.parentElement :
-      element;
+  element: Exclude<T, HTMLScriptElement | HTMLStyleElement>,
+  position: 'afterbegin' | 'afterend' | 'beforebegin' | 'beforeend',
+  v: SafeHtml,
+) {
+  const tagContext =
+    position === 'beforebegin' || position === 'afterend'
+      ? element.parentElement
+      : element;
   if (tagContext !== null) {
     throwIfScriptOrStyle(tagContext);
   }
@@ -64,8 +71,9 @@ export function insertAdjacentHtml<T extends Element>(
  * corresponding DOM property.
  */
 export function buildPrefixedAttributeSetter(
-    prefix: SafeAttributePrefix,
-    ...otherPrefixes: readonly SafeAttributePrefix[]) {
+  prefix: SafeAttributePrefix,
+  ...otherPrefixes: readonly SafeAttributePrefix[]
+) {
   const prefixes = [prefix, ...otherPrefixes];
 
   return (e: Element, attr: string, value: string) => {
@@ -80,8 +88,11 @@ export function buildPrefixedAttributeSetter(
  * an Error.
  */
 export function setPrefixedAttribute(
-    attrPrefixes: readonly SafeAttributePrefix[], e: Element, attr: string,
-    value: string) {
+  attrPrefixes: readonly SafeAttributePrefix[],
+  e: Element,
+  attr: string,
+  value: string,
+) {
   if (attrPrefixes.length === 0) {
     let message = '';
     if (process.env.NODE_ENV !== 'production') {
@@ -89,11 +100,12 @@ export function setPrefixedAttribute(
     }
     throw new Error(message);
   }
-  const prefixes = attrPrefixes.map(s => unwrapAttributePrefix(s));
+  const prefixes = attrPrefixes.map((s) => unwrapAttributePrefix(s));
   const attrLower = attr.toLowerCase();
-  if (prefixes.every(p => attrLower.indexOf(p) !== 0)) {
+  if (prefixes.every((p) => attrLower.indexOf(p) !== 0)) {
     throw new Error(
-        `Attribute "${attr}" does not match any of the allowed prefixes.`);
+      `Attribute "${attr}" does not match any of the allowed prefixes.`,
+    );
   }
   e.setAttribute(attr, value);
 }
@@ -113,6 +125,6 @@ function throwIfScriptOrStyle(element: Element): void {
   }
 }
 
-function isElement(elOrRoot: Element|ShadowRoot): elOrRoot is Element {
-  return elOrRoot.nodeType === 1;  // Node.ELEMENT_NODE
+function isElement(elOrRoot: Element | ShadowRoot): elOrRoot is Element {
+  return elOrRoot.nodeType === 1; // Node.ELEMENT_NODE
 }
