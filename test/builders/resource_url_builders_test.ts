@@ -200,6 +200,8 @@ describe('resource_url_builders', () => {
   describe('appendParams', () => {
     const urlWithoutSearch = trustedResourceUrl`https://google.com/`;
     const urlWithSearch = trustedResourceUrl`https://google.com/?abc`;
+    const urlWithFragment = trustedResourceUrl`https://google.com/#foo`;
+    const urlWithSearchAndFragment = trustedResourceUrl`https://google.com/?abc#foo`;
 
     it('appends simple cases as expected', () => {
       expect(
@@ -219,13 +221,16 @@ describe('resource_url_builders', () => {
       ).toBe('https://google.com/?abc&%26x%2F=%26y%2F');
     });
 
-    it('does not support urls with fragments', () => {
-      expect(() => {
+    it('supports urls with fragments', () => {
+      expect(
+        appendParams(urlWithFragment, new Map([['x', 'y']])).toString(),
+      ).toBe('https://google.com/?x=y#foo');
+      expect(
         appendParams(
-          trustedResourceUrl`https://google.com/#`,
-          new Map([['&x/', '&y/']]),
-        );
-      }).toThrowError(/Found a hash/);
+          urlWithSearchAndFragment,
+          new Map([['x', 'y']]),
+        ).toString(),
+      ).toBe('https://google.com/?abc&x=y#foo');
     });
 
     it('can interpolate params with multiple values', () => {

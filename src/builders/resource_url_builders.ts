@@ -109,6 +109,27 @@ function isValidRelativePathStart(base: string): boolean {
 }
 
 /**
+ * Splits an url into segments using '?' and '#' delimiters.
+ *
+ * The URL can later be put back together by concatenating the returned segments
+ * like: path + params + hash. Note that the delimiters '?' and '#' will
+ * already be included in 'params' and 'hash' values respectively when these are
+ * not empty.
+ *
+ * @param url The url to split.
+ */
+function getUrlSegments(url: string): {
+  path: string;
+  params: string;
+  hash: string;
+} {
+  const segments = url.split(/\?|#/);
+  const params = /\?/.test(url) ? '?' + segments[1] : '';
+  const hash = /#/.test(url) ? '#' + (params ? segments[2] : segments[1]) : '';
+  return {path: segments[0], params, hash};
+}
+
+/**
  * Builds TrustedResourceUrl from a template literal.
  *
  * This factory is a template literal tag function. It should be called with
@@ -210,15 +231,10 @@ export function appendParams(
   trustedUrl: TrustedResourceUrl,
   params: Map<string, Primitive | null | Array<Primitive | null>>,
 ): TrustedResourceUrl {
-  let url = unwrapResourceUrl(trustedUrl).toString();
-  if (/#/.test(url)) {
-    let message = '';
-    if (process.env.NODE_ENV !== 'production') {
-      message = `Found a hash in url (${url}), appending not supported`;
-    }
-    throw new Error(message);
-  }
-  let separator = /\?/.test(url) ? '&' : '?';
+  const urlSegments = getUrlSegments(unwrapResourceUrl(trustedUrl).toString());
+
+  let urlParams = urlSegments.params;
+  let separator = urlParams.length ? '&' : '?';
   // for-of has a big polyfill.
   // tslint:disable-next-line:ban-iterable-foreach
   params.forEach(
@@ -229,7 +245,7 @@ export function appendParams(
         if (v === null || v === undefined) {
           continue;
         }
-        url +=
+        urlParams +=
           separator +
           encodeURIComponent(key) +
           '=' +
@@ -238,7 +254,9 @@ export function appendParams(
       }
     },
   );
-  return createResourceUrlInternal(url);
+  return createResourceUrlInternal(
+    urlSegments.path + urlParams + urlSegments.hash,
+  );
 }
 
 const BEFORE_FRAGMENT_REGEXP = /[^#]*/;
@@ -271,27 +289,15 @@ export function appendPathSegment(
   trustedUrl: TrustedResourceUrl,
   pathSegment: string,
 ): TrustedResourceUrl {
-  const originalUrl = unwrapResourceUrl(trustedUrl).toString();
-  const urlSegments = originalUrl.split(/\?|#/);
+  const urlSegments = getUrlSegments(unwrapResourceUrl(trustedUrl).toString());
 
-  const basePath = urlSegments[0];
-  const paramVals = /\?/.test(originalUrl) ? urlSegments[1] : undefined;
-  const fragVal = /#/.test(originalUrl)
-    ? paramVals
-      ? urlSegments[2]
-      : urlSegments[1]
-    : undefined;
+  const separator = urlSegments.path.slice(-1) === '/' ? '' : '/';
+  const newPath =
+    urlSegments.path + separator + encodeURIComponent(pathSegment);
 
-  const pathSeparator = basePath.charAt(basePath.length - 1) === '/' ? '' : '/';
-  let url = basePath + pathSeparator + encodeURIComponent(pathSegment);
-
-  if (paramVals !== undefined) {
-    url += '?' + paramVals;
-  }
-  if (fragVal !== undefined) {
-    url += '#' + fragVal;
-  }
-  return createResourceUrlInternal(url);
+  return createResourceUrlInternal(
+    newPath + urlSegments.params + urlSegments.hash,
+  );
 }
 
 /**
