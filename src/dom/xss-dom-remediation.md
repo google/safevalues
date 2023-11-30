@@ -266,7 +266,7 @@ safeServiceWorkerContainer.register(self, trustedResourceUrl);
 
 The `safeScriptValue` variable in the following examples is a `SafeScript`
 instance. To learn how to build a `SafeScript` instance, see the
-[`SafeScript` documentation](../README.md#safescript).
+[`SafeScript` documentation](http://go/safehtmltypes?polyglot=typescript#safescript).
 
 Only use the `safevalues/dom` API `safeScriptEl.setTextContent` to set the text
 content of a \<script\> tag, instead of DOM APIs like `text`, `textContent`,
