@@ -25,6 +25,16 @@ describe('script_builders', () => {
       ) => SafeScript;
       expect(() => castSafeScript`return ${'this'};`).toThrowError();
     });
+
+    it('allows inline comments', () => {
+      expect(
+        safeScript`window.onload = () => {${/* Just a simple comment */ ''}
+          console.log('hi');
+      }`.toString(),
+      ).toEqual(`window.onload = () => {
+          console.log('hi');
+      }`);
+    });
   });
 
   describe('concatScripts', () => {

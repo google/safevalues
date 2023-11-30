@@ -26,12 +26,23 @@ type Serializable =
  *                           safeScript`foo`;
  *
  * @param templateObj This contains the literal part of the template literal.
+ * @param emptyArgs Expressions that evaluate to the empty string to enable
+ *     inline comments.
  */
-export function safeScript(templateObj: TemplateStringsArray): SafeScript {
+export function safeScript(
+  templateObj: TemplateStringsArray,
+  ...emptyArgs: ReadonlyArray<''>
+): SafeScript {
   if (process.env.NODE_ENV !== 'production') {
-    assertIsTemplateObject(templateObj, 0);
+    if (emptyArgs.some((a) => a !== '')) {
+      throw new Error(
+        'safeScript only allows empty string expressions ' +
+          'to enable inline comments.',
+      );
+    }
+    assertIsTemplateObject(templateObj, emptyArgs.length);
   }
-  return createScriptInternal(templateObj[0]);
+  return createScriptInternal(templateObj.join(''));
 }
 
 /** Creates a `SafeScript` value by concatenating multiple `SafeScript`s. */
