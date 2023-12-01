@@ -62,10 +62,10 @@ export function htmlEscape(
 export function scriptToHtml(
   script: SafeScript,
   options: {
+    defer?: boolean;
     id?: string;
     nonce?: string;
     type?: string;
-    defer?: boolean;
   } = {},
 ): SafeHtml {
   const unwrappedScript = unwrapScript(script).toString();
@@ -94,7 +94,11 @@ export function scriptUrlToHtml(
   src: TrustedResourceUrl,
   options: {
     async?: boolean;
+    customElement?: string;
+    defer?: boolean;
+    id?: string;
     nonce?: string;
+    type?: string;
   } = {},
 ): SafeHtml {
   const unwrappedSrc = unwrapResourceUrl(src).toString();
@@ -102,8 +106,22 @@ export function scriptUrlToHtml(
   if (options.async) {
     stringTag += ' async';
   }
+  if (options.customElement) {
+    stringTag += ` custom-element="${htmlEscapeToString(
+      options.customElement,
+    )}"`;
+  }
+  if (options.defer) {
+    stringTag += ` defer`;
+  }
+  if (options.id) {
+    stringTag += ` id="${htmlEscapeToString(options.id)}"`;
+  }
   if (options.nonce) {
     stringTag += ` nonce="${htmlEscapeToString(options.nonce)}"`;
+  }
+  if (options.type) {
+    stringTag += ` type="${htmlEscapeToString(options.type)}"`;
   }
   stringTag += '>\u003C/script>';
   return createHtmlInternal(stringTag);

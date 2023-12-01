@@ -203,6 +203,18 @@ describe('html_builders', () => {
           nonce: '123',
         }).toString(),
       ).toEqual('<script src="//abc&lt;&lt;" nonce="123"></script>');
+      expect(
+        scriptUrlToHtml(testonlyResourceUrl('//abc<<'), {
+          async: true,
+          nonce: '123',
+          customElement: 'my-element',
+          defer: true,
+          id: 'myScript',
+          type: 'module',
+        }).toString(),
+      ).toEqual(
+        '<script src="//abc&lt;&lt;" async custom-element="my-element" defer id="myScript" nonce="123" type="module"></script>',
+      );
     });
 
     it('escapes attributes', () => {
