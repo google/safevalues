@@ -270,4 +270,205 @@ describe('html_builders', () => {
       expect(doctypeHtml().toString()).toEqual('<!DOCTYPE html>');
     });
   });
+
+  describe('createHtml', () => {
+    it('throws when passing tags that start with a -', () => {
+      expect(() => createHtml('-div')).toThrow();
+    });
+    it('supports custom elements', () => {
+      expect(String(createHtml('my-div'))).toEqual('<my-div></my-div>');
+    });
+    it('works with numbers', () => {
+      expect(String(createHtml('div', {}, ['hello', 4, 'world']))).toEqual(
+        '<div>hello4world</div>',
+      );
+    });
+    it('drops attributes that have undefined or null values', () => {
+      expect(
+        String(
+          createHtml('div', {
+            'foo': undefined,
+            'bar': null as unknown as undefined,
+          }),
+        ),
+      ).toEqual('<div></div>');
+    });
+
+    it('with the Closure test cases', () => {
+      const br = createHtml('br');
+      expect(String(br)).toEqual('<br>');
+
+      expect(String(createHtml('span', {'title': '"'}))).toEqual(
+        '<span title="&quot;"></span>',
+      );
+
+      expect(String(createHtml('span', {}, '<'))).toEqual('<span>&lt;</span>');
+
+      expect(String(createHtml('span', {}, br))).toEqual('<span><br></span>');
+
+      expect(String(createHtml('span', {}, []))).toEqual('<span></span>');
+
+      expect(String(createHtml('span', {}, ['x', br, 'y']))).toEqual(
+        '<span>x<br>y</span>',
+      );
+
+      expect(String(createHtml('table', {'border': 0}))).toEqual(
+        '<table border="0"></table>',
+      );
+
+      const onclick = 'alert(/"/)';
+      expect(() => createHtml('span', {'onclick': onclick})).toThrow();
+
+      const href = testonlyUrl('?a&b');
+      expect(String(createHtml('a', {'href': href}))).toEqual(
+        '<a href="?a&amp;b"></a>',
+      );
+      expect(
+        String(createHtml('hr', {'style': safeStyle`border: /* " */ 0;`})),
+      ).toEqual('<hr style="border: /* &quot; */ 0;">');
+
+      const style = 'border: /* " */ 0;';
+      expect(String(createHtml('hr', {'style': style}))).toEqual(
+        '<hr style="border: /* &quot; */ 0;">',
+      );
+
+      expect(() => {
+        createHtml('script');
+      }).toThrow();
+
+      expect(() => {
+        createHtml('br', {}, 'x');
+      }).toThrow();
+
+      expect(() => {
+        createHtml('img', {'onerror': ''});
+      }).toThrow();
+
+      expect(() => {
+        createHtml('img', {'OnError': ''});
+      }).toThrow();
+
+      expect(() => {
+        createHtml('a href=""');
+      }).toThrow();
+
+      expect(() => {
+        createHtml('a', {'title="" href': ''});
+      }).toThrow();
+
+      expect(() => {
+        createHtml('applet');
+      }).toThrow();
+
+      expect(() => {
+        createHtml('applet', {'code': 'kittens.class'});
+      }).toThrow();
+
+      expect(() => {
+        createHtml('base');
+      }).toThrow();
+
+      expect(() => {
+        createHtml('base', {'href': 'http://example.org'});
+      }).toThrow();
+
+      expect(() => {
+        createHtml('math');
+      }).toThrow();
+
+      expect(() => {
+        createHtml('meta');
+      }).toThrow();
+
+      expect(() => {
+        createHtml('svg');
+      }).toThrow();
+    });
+
+    it('works with style attributes', () => {
+      const style = 'color:red;';
+      expect(String(createHtml('hr', {'style': style}))).toEqual(
+        '<hr style="color:red;">',
+      );
+    });
+
+    it('works with url attributes', () => {
+      // SafeUrl is allowed.
+      const url = safeUrl`https://google.com/safe`;
+      expect(String(createHtml('imG', {'src': url}))).toEqual(
+        '<imG src="https://google.com/safe">',
+      );
+      // string is allowed but escaped.
+      expect(
+        String(createHtml('a', {'href': 'http://google.com/safe"'})),
+      ).toEqual('<a href="http://google.com/safe&quot;"></a>');
+
+      // string is allowed but sanitized.
+      const badUrl = 'javascript:evil();';
+
+      expect(String(createHtml('a', {'href': badUrl}))).toEqual(
+        `<a href="about:invalid#zClosurez"></a>`,
+      );
+
+      // attribute case is ignored for url attributes purposes
+      expect(String(createHtml('a', {'hReF': badUrl}))).toEqual(
+        `<a hReF="about:invalid#zClosurez"></a>`,
+      );
+    });
+  });
+
+  describe('styleSheetToHtml', () => {
+    it('creates a style element with a single rule', () => {
+      const styleSheet = safeStyleSheet`P.special { color:"red" ; }`;
+      expect(String(styleSheetToHtml(styleSheet))).toEqual(
+        `<style  type="text/css">P.special { color:"red" ; }</style>`,
+      );
+    });
+
+    it('creates a style element with a several SafeStyleSheets', () => {
+      const styleSheets = [
+        safeStyleSheet`P.special { color:"red" ; }`,
+        safeStyleSheet`Q.special { color:"blue" ; }`,
+      ];
+      expect(String(styleSheetToHtml(styleSheets))).toEqual(
+        `<style  type="text/css">P.special { color:"red" ; }Q.special { color:"blue" ; }</style>`,
+      );
+    });
+
+    it('supports a custom attributes', () => {
+      const styleSheet = safeStyleSheet`P.special { color:"red" ; }`;
+      const style = styleSheetToHtml(styleSheet, {'id': 'test'});
+      const testEl = document.createElement('div');
+      safeElement.setInnerHtml(testEl, style);
+      expect(testEl.firstElementChild!.getAttribute('id')).toEqual('test');
+      expect(testEl.firstElementChild!.getAttribute('type')).toEqual(
+        'text/css',
+      );
+    });
+
+    it('does not set an attribute that has an undefined value', () => {
+      const styleSheet = safeStyleSheet`P.special { color:"red" ; }`;
+      const style = styleSheetToHtml(styleSheet, {'id': undefined});
+      expect(style.toString()).not.toContain('id');
+    });
+
+    it('throws on invalid attribute names', () => {
+      expect(() =>
+        styleSheetToHtml(safeStyleSheet``, {'invalid.': 'foo'}),
+      ).toThrow();
+    });
+
+    it('throws on invalid attribute names', () => {
+      expect(() =>
+        styleSheetToHtml(safeStyleSheet``, {'invalid.': 'foo'}),
+      ).toThrow();
+    });
+
+    it('throws when trying to override the type attribute', () => {
+      expect(() =>
+        styleSheetToHtml(safeStyleSheet``, {'Type': 'foo'}),
+      ).toThrow();
+    });
+  });
+  // END-INTERNAL
 });
