@@ -54,8 +54,8 @@ import {scriptSafeByReview} from 'safevalues/restricted/reviewed';
 if (document.domain === '') {
     const scriptText = scriptSafeByReview(
         userInput,
-        `Even though the input is user controller, the wrapping if statement
-         ensures that this code is only ever run in a sandboxed origin`);
+        {justification: `Even though the input is user controller, the wrapping if statement
+         ensures that this code is only ever run in a sandboxed origin`});
     safeScriptEl.setSrc(scriptEl, scriptText);
 }
 ```
