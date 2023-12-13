@@ -5,7 +5,11 @@
 
 /** Safe builders */
 export {safeAttrPrefix} from './builders/attribute_builders';
-export {safeFragment} from './builders/document_fragment_builders';
+export {
+  htmlFragment,
+  safeFragment,
+  svgFragment,
+} from './builders/document_fragment_builders';
 export {
   concatHtmls,
   doctypeHtml,
