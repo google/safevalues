@@ -59,10 +59,10 @@ function assertValidJustification(justification: string) {
  */
 export function htmlSafeByReview(
   html: string,
-  justification: string,
+  options: {justification: string},
 ): SafeHtml {
   if (process.env.NODE_ENV !== 'production') {
-    assertValidJustification(justification);
+    assertValidJustification(options.justification);
   }
   return createHtmlInternal(html);
 }
@@ -78,10 +78,10 @@ export function htmlSafeByReview(
  */
 export function scriptSafeByReview(
   script: string,
-  justification: string,
+  options: {justification: string},
 ): SafeScript {
   if (process.env.NODE_ENV !== 'production') {
-    assertValidJustification(justification);
+    assertValidJustification(options.justification);
   }
   return createScriptInternal(script);
 }
@@ -97,10 +97,10 @@ export function scriptSafeByReview(
  */
 export function resourceUrlSafeByReview(
   url: string,
-  justification: string,
+  options: {justification: string},
 ): TrustedResourceUrl {
   if (process.env.NODE_ENV !== 'production') {
-    assertValidJustification(justification);
+    assertValidJustification(options.justification);
   }
   return createResourceUrlInternal(url);
 }
@@ -117,10 +117,10 @@ export function resourceUrlSafeByReview(
  */
 export function styleSheetSafeByReview(
   stylesheet: string,
-  justification: string,
+  options: {justification: string},
 ): SafeStyleSheet {
   if (process.env.NODE_ENV !== 'production') {
-    assertValidJustification(justification);
+    assertValidJustification(options.justification);
   }
   return createStyleSheetInternal(stylesheet);
 }
