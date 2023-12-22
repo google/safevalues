@@ -15,6 +15,8 @@ import {
 } from '../internals/resource_url_impl';
 import {SafeScript, unwrapScript} from '../internals/script_impl';
 
+import {concatStyleSheets} from './style_sheet_builders';
+
 /**
  * Returns HTML-escaped text as a `SafeHtml` object. No-op if value is already a
  * SafeHtml instance.
