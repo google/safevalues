@@ -19,6 +19,7 @@ const SAFE_URL_REL_VALUES = [
   'help',
   'icon',
   'license',
+  'modulepreload',
   'next',
   'prefetch',
   'dns-prefetch',
