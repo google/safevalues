@@ -15,10 +15,10 @@ export {
   scriptUrlToHtml,
 } from './builders/html_builders';
 export {
-  HtmlSanitizer,
   sanitizeHtml,
   sanitizeHtmlAssertUnchanged,
   sanitizeHtmlToFragment,
+  type HtmlSanitizer,
 } from './builders/html_sanitizer/html_sanitizer';
 export {HtmlSanitizerBuilder} from './builders/html_sanitizer/html_sanitizer_builder';
 export {
