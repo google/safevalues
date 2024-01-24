@@ -53,7 +53,7 @@ export function concatScripts(scripts: readonly SafeScript[]): SafeScript {
 /**
  * Converts a serializable value into JSON that is safe to interpolate into a
  * script context. In particular it escapes < characters so that a value of
- * "&lt/script>" doesn't break out of the context.
+ * "</script>" doesn't break out of the context.
  * @param value The value to serialize.
  */
 export function valueAsScript(value: Serializable): SafeScript {
