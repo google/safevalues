@@ -32,7 +32,10 @@ export interface HtmlSanitizer {
 /** Implementation for `HtmlSanitizer` */
 export class HtmlSanitizerImpl implements HtmlSanitizer {
   private changes: string[] = [];
-  constructor(private readonly sanitizerTable: SanitizerTable, token: object) {
+  constructor(
+    private readonly sanitizerTable: SanitizerTable,
+    token: object,
+  ) {
     ensureTokenIsValid(token);
   }
 
