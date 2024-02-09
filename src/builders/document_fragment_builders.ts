@@ -4,7 +4,7 @@
  */
 
 import '../environment/dev';
-import {createHtmlInternal, unwrapHtml} from '../internals/html_impl';
+import {createHtmlInternal, SafeHtml, unwrapHtml} from '../internals/html_impl';
 import {assertIsTemplateObject} from '../internals/string_literal';
 
 /**
@@ -54,4 +54,10 @@ export function svgFragment(
   return range.createContextualFragment(
     unwrapHtml(createHtmlInternal(templateObj[0])) as string,
   );
+}
+
+/** Converts HTML markup into a node. */
+export function htmlToNode(html: SafeHtml): Node {
+  const range = document.createRange();
+  return range.createContextualFragment(unwrapHtml(html) as string);
 }

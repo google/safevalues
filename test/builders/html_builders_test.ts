@@ -10,6 +10,7 @@ import {
   doctypeHtml,
   htmlEscape,
   joinHtmls,
+  nodeToHtml,
   scriptToHtml,
   scriptUrlToHtml,
 } from '../../src/builders/html_builders';
@@ -268,6 +269,31 @@ describe('html_builders', () => {
   describe('doctypeHtml', () => {
     it('returns an expected DOCTYPE', () => {
       expect(doctypeHtml().toString()).toEqual('<!DOCTYPE html>');
+    });
+  });
+
+  describe('nodeToHtml', () => {
+    it('uses XML serialization', () => {
+      const node = document.createElement('p');
+      node.title = '<foo>';
+      node.innerText = 'foo &';
+      expect(nodeToHtml(node).toString()).toEqual(
+        '<p title="&lt;foo&gt;">foo &amp;</p>',
+      );
+    });
+
+    it('works with DocumentFragment nodes', () => {
+      const node = document.createDocumentFragment();
+      const span = document.createElement('span');
+      span.textContent = 'foo';
+      const div = document.createElement('div');
+      div.textContent = 'bar';
+      node.appendChild(span);
+      node.appendChild(div);
+
+      expect(nodeToHtml(node).toString()).toEqual(
+        '<span>foo</span><div>bar</div>',
+      );
     });
   });
 });

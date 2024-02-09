@@ -4,9 +4,10 @@
  */
 
 import '../../environment/dev';
-import {createHtmlInternal, SafeHtml} from '../../internals/html_impl';
+import {SafeHtml} from '../../internals/html_impl';
 /* g3_import_pure from '../../internals/pure' */
 import {ensureTokenIsValid, secretToken} from '../../internals/secrets';
+import {nodeToHtmlInternal} from '../html_builders';
 import {restrictivelySanitizeUrl} from '../url_builders';
 
 import {createInertFragment} from './inert_fragment';
@@ -57,22 +58,11 @@ export class HtmlSanitizerImpl implements HtmlSanitizer {
 
   sanitize(html: string): SafeHtml {
     const inertDocument = document.implementation.createHTMLDocument('');
-    const fakeRoot = inertDocument.body;
-    fakeRoot.appendChild(this.sanitizeToFragmentInternal(html, inertDocument));
 
-    // XML serialization is preferred over HTML serialization as it is
-    // stricter and makes sure all attributes are properly escaped, avoiding
-    // cases where the tree might mutate when parsed again later due to the
-    // complexities of the HTML parsing algorithm
-    let serializedNewTree = new XMLSerializer().serializeToString(fakeRoot);
-    // We remove the outer most element as this is the span node created as
-    // the root for the sanitized tree and contains a spurious xmlns attribute
-    // from the XML serialization step.
-    serializedNewTree = serializedNewTree.slice(
-      serializedNewTree.indexOf('>') + 1,
-      serializedNewTree.lastIndexOf('</'),
+    return nodeToHtmlInternal(
+      this.sanitizeToFragmentInternal(html, inertDocument),
+      inertDocument.body,
     );
-    return createHtmlInternal(serializedNewTree);
   }
 
   sanitizeToFragment(html: string): DocumentFragment {

@@ -3,8 +3,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import {testonlyHtml} from '../testing/conversions';
+
 import {
   htmlFragment,
+  htmlToNode,
   svgFragment,
 } from '../../src/builders/document_fragment_builders';
 
@@ -61,6 +64,20 @@ describe('document_fragment_builders', () => {
         str: string,
       ) => DocumentFragment;
       expect(() => castSafeFragment`<div>${'this'}</div>;`).toThrowError();
+    });
+  });
+
+  describe('htmlToNode', () => {
+    it('can parse html with a single node', () => {
+      const node = htmlToNode(testonlyHtml('<div>hi</div>'));
+      expect((node.firstChild! as Element).outerHTML).toEqual('<div>hi</div>');
+    });
+
+    it('can parse html with multiple nodes', () => {
+      const node = htmlToNode(testonlyHtml('<p>foo</p><div>bar</div>'));
+      expect(node.childNodes.length).toEqual(2);
+      expect((node.firstChild! as Element).outerHTML).toEqual('<p>foo</p>');
+      expect((node.lastChild! as Element).outerHTML).toEqual('<div>bar</div>');
     });
   });
 });

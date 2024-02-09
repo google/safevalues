@@ -169,3 +169,39 @@ export function joinHtmls(
 export function doctypeHtml(): SafeHtml {
   return createHtmlInternal('<!DOCTYPE html>');
 }
+
+/**
+ * Non-exported version of `nodeToHtml`, with an explicit temporary root to
+ * accomodate for the sanitizer's user case.
+ */
+export function nodeToHtmlInternal(
+  node: Node,
+  temporaryRoot: Element,
+): SafeHtml {
+  temporaryRoot.appendChild(node);
+
+  // XML serialization is preferred over HTML serialization as it is
+  // stricter and makes sure all attributes are properly escaped, avoiding
+  // cases where the tree might mutate when parsed again later due to the
+  // complexities of the HTML parsing algorithm
+  let serializedNewTree = new XMLSerializer().serializeToString(temporaryRoot);
+  // We remove the outer most element as this is the span node created as
+  // the root for the sanitized tree and contains a spurious xmlns attribute
+  // from the XML serialization step.
+  serializedNewTree = serializedNewTree.slice(
+    serializedNewTree.indexOf('>') + 1,
+    serializedNewTree.lastIndexOf('</'),
+  );
+  return createHtmlInternal(serializedNewTree);
+}
+
+/**
+ * Serializes a Node into it's HTML representation.
+ *
+ * Note: this method uses strict XML serialization to mitigate mutation issues
+ * when the html is then re-parsed by the browser.
+ */
+export function nodeToHtml(node: Node): SafeHtml {
+  const tempRoot = document.createElement('span');
+  return nodeToHtmlInternal(node, tempRoot);
+}
