@@ -31,6 +31,21 @@ export function extractScheme(url: string): string | undefined {
 const ALLOWED_SCHEMES = ['data:', 'http:', 'https:', 'mailto:', 'ftp:'];
 
 /**
+ * A pattern that blocks javascript: URLs. Matches
+ * (a) Urls with an explicit scheme that is not javascript and that only has
+ *     alphanumeric or [.-+] characters; or
+ * (b) Urls with no explicit scheme. The pattern allows the first colon
+ *     (`:`) character to appear after one of  the `/` `?` or `#` characters,
+ *     which means the colon appears in path, query or fragment part of the URL.
+ */
+export const IS_NOT_JAVASCRIPT_URL_PATTERN =
+  /^\s*(?!javascript:)(?:[a-z0-9+.-]+:|[^:\/?#]*(?:[\/?#]|$))/i;
+
+function hasJavascriptUrlScheme(url: string): boolean {
+  return !IS_NOT_JAVASCRIPT_URL_PATTERN.test(url);
+}
+
+/**
  * Checks that the URL scheme is not javascript.
  * The URL parsing relies on the URL API in browsers that support it.
  * @param url The URL to sanitize for a SafeUrl sink.
@@ -38,8 +53,7 @@ const ALLOWED_SCHEMES = ['data:', 'http:', 'https:', 'mailto:', 'ftp:'];
  *     otherwise.
  */
 export function sanitizeJavaScriptUrl(url: string): string | undefined {
-  const parsedScheme = extractScheme(url);
-  if (parsedScheme === 'javascript:') {
+  if (hasJavascriptUrlScheme(url)) {
     if (process.env.NODE_ENV !== 'production') {
       console.error(`A URL with content '${url}' was sanitized away.`);
     }
