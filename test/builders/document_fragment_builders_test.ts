@@ -68,16 +68,18 @@ describe('document_fragment_builders', () => {
   });
 
   describe('htmlToNode', () => {
-    it('can parse html with a single node', () => {
-      const node = htmlToNode(testonlyHtml('<div>hi</div>'));
-      expect((node.firstChild! as Element).outerHTML).toEqual('<div>hi</div>');
-    });
-
     it('can parse html with multiple nodes', () => {
       const node = htmlToNode(testonlyHtml('<p>foo</p><div>bar</div>'));
+      expect(node).toBeInstanceOf(DocumentFragment);
       expect(node.childNodes.length).toEqual(2);
       expect((node.firstChild! as Element).outerHTML).toEqual('<p>foo</p>');
       expect((node.lastChild! as Element).outerHTML).toEqual('<div>bar</div>');
+    });
+
+    it('unwraps the fragment for a single node', () => {
+      const node = htmlToNode(testonlyHtml('<div>hi</div>'));
+      expect(node).toBeInstanceOf(HTMLDivElement);
+      expect((node as HTMLDivElement).outerHTML).toEqual('<div>hi</div>');
     });
   });
 });

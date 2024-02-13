@@ -59,5 +59,6 @@ export function svgFragment(
 /** Converts HTML markup into a node. */
 export function htmlToNode(html: SafeHtml): Node {
   const range = document.createRange();
-  return range.createContextualFragment(unwrapHtml(html) as string);
+  const fragment = range.createContextualFragment(unwrapHtml(html) as string);
+  return fragment.childNodes.length === 1 ? fragment.childNodes[0] : fragment;
 }
