@@ -25,14 +25,19 @@ describe('doSomething', () => {
 
 describe('safevalues/restricted/reviewed', () => {
   it('can be referenced', () => {
-    expect(styleSheetSafeByReview('hello', 'test').toString()).toEqual('hello');
+    expect(
+      styleSheetSafeByReview('hello', {justification: 'test'}).toString(),
+    ).toEqual('hello');
   });
 });
 
 describe('safevalues/dom', () => {
   it('can be referenced', () => {
     const e = document.createElement('div');
-    safeElement.setInnerHtml(e, htmlSafeByReview('<p>hello</p>', 'test'));
+    safeElement.setInnerHtml(
+      e,
+      htmlSafeByReview('<p>hello</p>', {justification: 'test'}),
+    );
     expect(e.innerHTML).toEqual('<p>hello</p>');
   });
 });
