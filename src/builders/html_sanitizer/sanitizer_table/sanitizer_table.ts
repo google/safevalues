@@ -71,6 +71,7 @@ export enum AttributePolicyAction {
   KEEP,
   KEEP_AND_SANITIZE_URL,
   KEEP_AND_NORMALIZE,
+  // This action is currently equivalent to KEEP as there is no style sanitizer.
   KEEP_AND_SANITIZE_STYLE,
 }
 
