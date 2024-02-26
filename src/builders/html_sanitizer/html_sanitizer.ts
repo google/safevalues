@@ -41,17 +41,16 @@ export class HtmlSanitizerImpl implements HtmlSanitizer {
   }
 
   sanitizeAssertUnchanged(html: string): SafeHtml {
-    this.changes = [];
+    if (process.env.NODE_ENV !== 'production') {
+      this.changes = [];
+    }
     const sanitizedHtml = this.sanitize(html);
-    if (this.changes.length !== 0) {
-      let message = '';
-      if (process.env.NODE_ENV !== 'production') {
-        message =
-          `Unexpected change to HTML value as a result of sanitization. ` +
+    if (process.env.NODE_ENV !== 'production' && this.changes.length !== 0) {
+      throw new Error(
+        `Unexpected change to HTML value as a result of sanitization. ` +
           `Input: "${html}", sanitized output: "${sanitizedHtml}"\n` +
-          `List of changes:${this.changes.join('\n')}`;
-      }
-      throw new Error(message);
+          `List of changes:${this.changes.join('\n')}`,
+      );
     }
     return sanitizedHtml;
   }
@@ -217,8 +216,6 @@ export class HtmlSanitizerImpl implements HtmlSanitizer {
   private recordChange(errorMessage: string) {
     if (process.env.NODE_ENV !== 'production') {
       this.changes.push(errorMessage);
-    } else if (this.changes.length === 0) {
-      this.changes.push('');
     }
   }
 
