@@ -216,6 +216,11 @@ describe('html_builders', () => {
       ).toEqual(
         '<script src="//abc&lt;&lt;" async custom-element="my-element" defer id="myScript" nonce="123" type="module"></script>',
       );
+      expect(
+        scriptUrlToHtml(testonlyResourceUrl('//abc<'), {
+          crossorigin: 'anonymous',
+        }).toString(),
+      ).toEqual('<script src="//abc&lt;" crossorigin="anonymous"></script>');
     });
 
     it('escapes attributes', () => {

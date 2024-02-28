@@ -99,6 +99,7 @@ export function scriptUrlToHtml(
     id?: string;
     nonce?: string;
     type?: string;
+    crossorigin?: 'anonymous' | 'use-credentials';
   } = {},
 ): SafeHtml {
   const unwrappedSrc = unwrapResourceUrl(src).toString();
@@ -122,6 +123,9 @@ export function scriptUrlToHtml(
   }
   if (options.type) {
     stringTag += ` type="${htmlEscapeToString(options.type)}"`;
+  }
+  if (options.crossorigin) {
+    stringTag += ` crossorigin="${htmlEscapeToString(options.crossorigin)}"`;
   }
   stringTag += '>\u003C/script>';
   return createHtmlInternal(stringTag);
