@@ -304,7 +304,7 @@ export function appendPathSegment(
  * Creates a `TrustedResourceUrl` by generating a `Blob` from a
  * `SafeScript` and then calling `URL.createObjectURL` with that `Blob`.
  *
- * Caller must call `URL.revokeObjectUrl()` on the stringified url to
+ * Caller must call `URL.revokeObjectURL()` on the stringified url to
  * release the underlying `Blob`.
  */
 export function objectUrlFromScript(
