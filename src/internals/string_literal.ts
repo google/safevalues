@@ -72,7 +72,7 @@ function isTemplateObject(templateObj: TemplateStringsArray): boolean {
    * ############################## WARNING ##############################
    *
    * If you are reading this code to understand how to create a value
-   * that satifsies this check, STOP and read this paragraph.
+   * that satisfies this check, STOP and read this paragraph.
    *
    * This function is there to ensure that our tagged template functions are
    * always called using the tag syntax fn`...`, rather than the normal
