@@ -33,13 +33,13 @@ const ALLOWED_SCHEMES = ['data:', 'http:', 'https:', 'mailto:', 'ftp:'];
 /**
  * A pattern that blocks javascript: URLs. Matches
  * (a) Urls with an explicit scheme that is not javascript and that only has
- *     alphanumeric or [.-+] characters; or
+ *     alphanumeric or [.-+_] characters; or
  * (b) Urls with no explicit scheme. The pattern allows the first colon
  *     (`:`) character to appear after one of  the `/` `?` or `#` characters,
  *     which means the colon appears in path, query or fragment part of the URL.
  */
 export const IS_NOT_JAVASCRIPT_URL_PATTERN =
-  /^\s*(?!javascript:)(?:[a-z0-9+.-]+:|[^:\/?#]*(?:[\/?#]|$))/i;
+  /^\s*(?!javascript:)(?:[\w+.-]+:|[^:/?#]*(?:[/?#]|$))/i;
 
 function hasJavascriptUrlScheme(url: string): boolean {
   return !IS_NOT_JAVASCRIPT_URL_PATTERN.test(url);
