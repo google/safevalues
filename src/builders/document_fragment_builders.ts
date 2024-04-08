@@ -59,5 +59,9 @@ export function svgFragment(templateObj: TemplateStringsArray):
 export function htmlToNode(html: SafeHtml): Node {
   const range = document.createRange();
   const fragment = range.createContextualFragment(unwrapHtml(html) as string);
-  return (fragment.childNodes.length === 1) ? fragment.childNodes[0] : fragment;
+  if (fragment.childNodes.length === 1) {
+    return fragment.childNodes[0];
+  } else {
+    return fragment;
+  }
 }
