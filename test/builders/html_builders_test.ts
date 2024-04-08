@@ -5,9 +5,10 @@
 
 // g3-format-clang
 
-import {concatHtmls, doctypeHtml, htmlEscape, joinHtmls, nodeToHtml, scriptToHtml, scriptUrlToHtml} from '../../src/builders/html_builders';
-import {safeScript, valueAsScript} from '../../src/builders/script_builders';
 import {testonlyHtml, testonlyResourceUrl} from '../testing/conversions';
+
+import {concatHtmls, doctypeHtml, htmlEscape, joinHtmls, nodeToHtml, scriptToHtml, scriptUrlToHtml} from './html_builders';
+import {safeScript, valueAsScript} from './script_builders';
 
 describe('html_builders', () => {
   describe('htmlEscape', () => {

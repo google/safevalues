@@ -5,7 +5,7 @@
 
 // g3-format-clang
 
-import {concatStyleSheets, safeStyleSheet} from '../../src/builders/style_sheet_builders';
+import {concatStyleSheets, safeStyleSheet} from './style_sheet_builders';
 
 
 describe('style_sheet_builders', () => {

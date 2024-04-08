@@ -5,10 +5,10 @@
 
 // g3-format-clang
 
-import {createHtmlInternal, isHtml, unwrapHtml} from '../../src/internals/html_impl';
-import {createResourceUrlInternal, isResourceUrl, unwrapResourceUrl} from '../../src/internals/resource_url_impl';
-import {createScriptInternal, isScript, unwrapScript} from '../../src/internals/script_impl';
-import {createStyleSheetInternal, isStyleSheet, unwrapStyleSheet} from '../../src/internals/style_sheet_impl';
+import {createHtmlInternal, isHtml, unwrapHtml} from './html_impl';
+import {createResourceUrlInternal, isResourceUrl, unwrapResourceUrl} from './resource_url_impl';
+import {createScriptInternal, isScript, unwrapScript} from './script_impl';
+import {createStyleSheetInternal, isStyleSheet, unwrapStyleSheet} from './style_sheet_impl';
 
 interface Impl {
   name: string;
