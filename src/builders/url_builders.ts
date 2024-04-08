@@ -43,8 +43,19 @@ const ALLOWED_SCHEMES = ['data:', 'http:', 'https:', 'mailto:', 'ftp:'];
 export const IS_NOT_JAVASCRIPT_URL_PATTERN =
     /^\s*(?!javascript:)(?:[\w+.-]+:|[^:/?#]*(?:[/?#]|$))/i;
 
-function hasJavascriptUrlScheme(url: string): boolean {
-  return !IS_NOT_JAVASCRIPT_URL_PATTERN.test(url);
+/**
+ * Checks whether a urls has a `javascript:` scheme.
+ * If the url has a `javascript:` scheme, reports it and returns true.
+ * Otherwise, returns false.
+ */
+export function reportJavaScriptUrl(url: string): boolean {
+  const hasJavascriptUrlScheme = !IS_NOT_JAVASCRIPT_URL_PATTERN.test(url);
+  if (hasJavascriptUrlScheme) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.error(`A URL with content '${url}' was sanitized away.`);
+    }
+  }
+  return hasJavascriptUrlScheme;
 }
 
 /**
@@ -55,10 +66,7 @@ function hasJavascriptUrlScheme(url: string): boolean {
  *     otherwise.
  */
 export function sanitizeJavaScriptUrl(url: string): string|undefined {
-  if (hasJavascriptUrlScheme(url)) {
-    if (process.env.NODE_ENV !== 'production') {
-      console.error(`A URL with content '${url}' was sanitized away.`);
-    }
+  if (reportJavaScriptUrl(url)) {
     return undefined;
   }
   return url;
