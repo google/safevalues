@@ -6,10 +6,10 @@
 // g3-format-clang
 
 import * as safeFetch from '../../../src/dom/globals/fetch';
-import {unwrapHtml} from '../../../src/internals/html_impl';
-import {createResourceUrlInternal} from '../../../src/internals/resource_url_impl';
-import {unwrapScript} from '../../../src/internals/script_impl';
 import {unwrapStyleSheet} from '../../../src/internals/style_sheet_impl';
+import {unwrapHtml} from '../../internals/html_impl';
+import {createResourceUrlInternal} from '../../internals/resource_url_impl';
+import {unwrapScript} from '../../internals/script_impl';
 
 function dummyResource(contentType: string, content: string) {
   return createResourceUrlInternal(

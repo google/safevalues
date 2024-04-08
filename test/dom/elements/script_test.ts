@@ -5,10 +5,10 @@
 
 // g3-format-clang
 
-import {trustedResourceUrl} from '../../../src/builders/resource_url_builders';
-import {safeScript} from '../../../src/builders/script_builders';
 import * as safeScriptEl from '../../../src/dom/elements/script';
 import {safeDocument} from '../../../src/dom/index';
+import {trustedResourceUrl} from '../../builders/resource_url_builders';
+import {safeScript} from '../../builders/script_builders';
 import {testonlyHtml} from '../../testing/conversions';
 
 describe('safeScriptEl', () => {

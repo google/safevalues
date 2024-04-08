@@ -5,8 +5,8 @@
 
 // g3-format-clang
 
-import {trustedResourceUrl} from '../../../src/builders/resource_url_builders';
 import * as safeLinkEl from '../../../src/dom/elements/link';
+import {trustedResourceUrl} from '../../builders/resource_url_builders';
 
 describe('safeLink#setHrefAndRel', () => {
   let linkElem: HTMLLinkElement;

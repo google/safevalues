@@ -5,13 +5,14 @@
 
 // g3-format-clang
 
-import {htmlEscape} from '../../src/builders/html_builders';
-import {trustedResourceUrl} from '../../src/builders/resource_url_builders';
 import {safeScript} from '../../src/builders/script_builders';
-import {unwrapHtml} from '../../src/internals/html_impl';
-import {unwrapResourceUrl} from '../../src/internals/resource_url_impl';
-import {unwrapScript} from '../../src/internals/script_impl';
 import {TEST_ONLY} from '../../src/internals/trusted_types';
+import {htmlEscape} from '../builders/html_builders';
+import {trustedResourceUrl} from '../builders/resource_url_builders';
+
+import {unwrapHtml} from './html_impl';
+import {unwrapResourceUrl} from './resource_url_impl';
+import {unwrapScript} from './script_impl';
 
 /** A mock TrustedHTML type */
 class MockTrustedHTML {

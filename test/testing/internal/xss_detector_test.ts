@@ -5,9 +5,9 @@
 
 // g3-format-clang
 
-import {setSrc, setTextContent} from '../../../src/dom/elements/script';
-import {globalEval} from '../../../src/dom/globals/global';
 import {createContextualFragment} from '../../../src/dom/globals/range';
+import {setSrc, setTextContent} from '../../dom/elements/script';
+import {globalEval} from '../../dom/globals/global';
 import {testonlyHtml, testonlyResourceUrl, testonlyScript} from '../conversions';
 
 import {XSSDetector} from './xss_detector';

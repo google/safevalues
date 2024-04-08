@@ -5,8 +5,8 @@
 
 // g3-format-clang
 
-import {safeAttrPrefix} from '../../../src/builders/attribute_builders';
 import * as safeElement from '../../../src/dom/elements/element';
+import {safeAttrPrefix} from '../../builders/attribute_builders';
 import {testonlyHtml} from '../../testing/conversions';
 
 describe('safeElement', () => {

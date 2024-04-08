@@ -6,7 +6,7 @@
 // g3-format-clang
 
 import * as safeWorker from '../../../src/dom/globals/worker';
-import {TrustedResourceUrl} from '../../../src/internals/resource_url_impl';
+import {TrustedResourceUrl} from '../../internals/resource_url_impl';
 import {testonlyResourceUrl} from '../../testing/conversions';
 
 interface State {

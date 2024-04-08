@@ -5,9 +5,9 @@
 
 // g3-format-clang
 
-import {htmlEscape} from '../../../src/builders/html_builders';
 import * as safeDocument from '../../../src/dom/globals/document';
 import {SafeHtml} from '../../../src/internals/html_impl';
+import {htmlEscape} from '../../builders/html_builders';
 
 describe('safeDocument', () => {
   describe('execCommand', () => {

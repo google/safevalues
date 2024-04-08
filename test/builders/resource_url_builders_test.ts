@@ -5,9 +5,10 @@
 
 // g3-format-clang
 
-import {appendParams, appendPathSegment, objectUrlFromScript, replaceFragment, toAbsoluteResourceUrl, trustedResourceUrl} from '../../src/builders/resource_url_builders';
 import {safeScript} from '../../src/builders/script_builders';
 import {TrustedResourceUrl} from '../../src/internals/resource_url_impl';
+
+import {appendParams, appendPathSegment, objectUrlFromScript, replaceFragment, toAbsoluteResourceUrl, trustedResourceUrl} from './resource_url_builders';
 
 describe('resource_url_builders', () => {
   describe('trustedResourceUrl', () => {
