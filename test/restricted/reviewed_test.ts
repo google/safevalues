@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+// g3-format-clang
+
 import {htmlSafeByReview} from '../../src/restricted/reviewed';
 
 describe('reviewed conversions', () => {
@@ -19,10 +21,9 @@ describe('reviewed conversions', () => {
       htmlSafeByReview('aaa', {justification: undefined as unknown as string});
     }).toThrowError(/A justification must be provided/);
 
-    expect(
-      htmlSafeByReview('aaa', {
-        justification: 'This is just a test',
-      }).toString(),
-    ).toEqual('aaa');
+    expect(htmlSafeByReview('aaa', {
+             justification: 'This is just a test'
+           }).toString())
+        .toEqual('aaa');
   });
 });

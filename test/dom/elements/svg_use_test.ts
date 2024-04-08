@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+// g3-format-clang
+
 import * as svgUseEl from '../../../src/dom/elements/svg_use';
 
 describe('svgUseEl', () => {

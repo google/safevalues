@@ -3,17 +3,16 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+// g3-format-clang
+
 import '../environment/dev';
-import {
-  createResourceUrlInternal,
-  TrustedResourceUrl,
-  unwrapResourceUrl,
-} from '../internals/resource_url_impl';
+
+import {createResourceUrlInternal, TrustedResourceUrl, unwrapResourceUrl} from '../internals/resource_url_impl';
 import {SafeScript, unwrapScript} from '../internals/script_impl';
 import {assertIsTemplateObject} from '../internals/string_literal';
 
 /** Type that we know how to interpolate */
-type Primitive = string | number | boolean;
+type Primitive = string|number|boolean;
 
 /**
  * Check whether the base url contains a valid origin,
@@ -36,9 +35,8 @@ function hasValidOrigin(base: string): boolean {
   // missing.
   if (originEnd <= originStart) {
     throw new Error(
-      `Can't interpolate data in a url's origin, ` +
-        `Please make sure to fully specify the origin, terminated with '/'.`,
-    );
+        `Can't interpolate data in a url's origin, ` +
+        `Please make sure to fully specify the origin, terminated with '/'.`);
   }
 
   const origin = base.substring(originStart, originEnd);
@@ -84,10 +82,8 @@ function isValidPathStart(base: string): boolean {
   if (!/^\//.test(base)) {
     return false;
   }
-  if (
-    base === '/' ||
-    (base.length > 1 && base[1] !== '/' && base[1] !== '\\')
-  ) {
+  if ((base === '/') ||
+      (base.length > 1 && base[1] !== '/' && base[1] !== '\\')) {
     return true;
   }
   throw new Error('The path start in the url is invalid.');
@@ -118,11 +114,8 @@ function isValidRelativePathStart(base: string): boolean {
  *
  * @param url The url to split.
  */
-function getUrlSegments(url: string): {
-  path: string;
-  params: string;
-  hash: string;
-} {
+function getUrlSegments(url: string):
+    {path: string, params: string, hash: string} {
   const segments = url.split(/\?|#/);
   const params = /\?/.test(url) ? '?' + segments[1] : '';
   const hash = /#/.test(url) ? '#' + (params ? segments[2] : segments[1]) : '';
@@ -177,9 +170,8 @@ function getUrlSegments(url: string): {
  * @param rest This represents the template's embedded expressions.
  */
 export function trustedResourceUrl(
-  templateObj: TemplateStringsArray,
-  ...rest: Primitive[]
-): TrustedResourceUrl {
+    templateObj: TemplateStringsArray,
+    ...rest: Primitive[]): TrustedResourceUrl {
   // Check if templateObj is actually from a template literal.
   if (process.env.NODE_ENV !== 'production') {
     assertIsTemplateObject(templateObj, rest.length);
@@ -194,19 +186,13 @@ export function trustedResourceUrl(
   if (process.env.NODE_ENV !== 'production') {
     if (/^data:/.test(base)) {
       throw new Error(
-        'Data URLs cannot have expressions in the template literal input.',
-      );
+          'Data URLs cannot have expressions in the template literal input.');
     }
 
-    if (
-      !hasValidOrigin(base) &&
-      !isValidPathStart(base) &&
-      !isValidRelativePathStart(base) &&
-      !isValidAboutUrl(base)
-    ) {
+    if (!hasValidOrigin(base) && !isValidPathStart(base) &&
+        !isValidRelativePathStart(base) && !isValidAboutUrl(base)) {
       throw new Error(
-        'Trying to interpolate expressions in an unsupported url format.',
-      );
+          'Trying to interpolate expressions in an unsupported url format.');
     }
   }
 
@@ -228,35 +214,29 @@ export function trustedResourceUrl(
  * array.
  */
 export function appendParams(
-  trustedUrl: TrustedResourceUrl,
-  params: Map<string, Primitive | null | Array<Primitive | null>>,
-): TrustedResourceUrl {
+    trustedUrl: TrustedResourceUrl,
+    params: Map<string, Primitive|null|Array<Primitive|null>>):
+    TrustedResourceUrl {
   const urlSegments = getUrlSegments(unwrapResourceUrl(trustedUrl).toString());
 
   let urlParams = urlSegments.params;
   let separator = urlParams.length ? '&' : '?';
   // for-of has a big polyfill.
   // tslint:disable-next-line:ban-iterable-foreach
-  params.forEach(
-    (value: Primitive | null | Array<Primitive | null>, key: string) => {
-      const values = value instanceof Array ? value : [value];
-      for (let i = 0; i < values.length; i++) {
-        const v = values[i];
-        if (v === null || v === undefined) {
-          continue;
-        }
-        urlParams +=
-          separator +
-          encodeURIComponent(key) +
-          '=' +
-          encodeURIComponent(String(v));
-        separator = '&';
+  params.forEach((value: Primitive|null|Array<Primitive|null>, key: string) => {
+    const values = (value instanceof Array) ? value : [value];
+    for (let i = 0; i < values.length; i++) {
+      const v = values[i];
+      if (v === null || v === undefined) {
+        continue;
       }
-    },
-  );
+      urlParams += separator + encodeURIComponent(key) + '=' +
+          encodeURIComponent(String(v));
+      separator = '&';
+    }
+  });
   return createResourceUrlInternal(
-    urlSegments.path + urlParams + urlSegments.hash,
-  );
+      urlSegments.path + urlParams + urlSegments.hash);
 }
 
 const BEFORE_FRAGMENT_REGEXP = /[^#]*/;
@@ -269,13 +249,10 @@ const BEFORE_FRAGMENT_REGEXP = /[^#]*/;
  * `#`. No additional escaping is applied.
  */
 export function replaceFragment(
-  trustedUrl: TrustedResourceUrl,
-  fragment: string,
-) {
+    trustedUrl: TrustedResourceUrl, fragment: string) {
   const urlString = unwrapResourceUrl(trustedUrl).toString();
   return createResourceUrlInternal(
-    BEFORE_FRAGMENT_REGEXP.exec(urlString)![0] + '#' + fragment,
-  );
+      BEFORE_FRAGMENT_REGEXP.exec(urlString)![0] + '#' + fragment);
 }
 
 /**
@@ -286,18 +263,15 @@ export function replaceFragment(
  *     a pre-encoded value as this will result in it being double encoded.
  */
 export function appendPathSegment(
-  trustedUrl: TrustedResourceUrl,
-  pathSegment: string,
-): TrustedResourceUrl {
+    trustedUrl: TrustedResourceUrl, pathSegment: string): TrustedResourceUrl {
   const urlSegments = getUrlSegments(unwrapResourceUrl(trustedUrl).toString());
 
   const separator = urlSegments.path.slice(-1) === '/' ? '' : '/';
   const newPath =
-    urlSegments.path + separator + encodeURIComponent(pathSegment);
+      urlSegments.path + separator + encodeURIComponent(pathSegment);
 
   return createResourceUrlInternal(
-    newPath + urlSegments.params + urlSegments.hash,
-  );
+      newPath + urlSegments.params + urlSegments.hash);
 }
 
 /**
@@ -307,9 +281,8 @@ export function appendPathSegment(
  * Caller must call `URL.revokeObjectURL()` on the stringified url to
  * release the underlying `Blob`.
  */
-export function objectUrlFromScript(
-  safeScript: SafeScript,
-): TrustedResourceUrl {
+export function objectUrlFromScript(safeScript: SafeScript):
+    TrustedResourceUrl {
   const scriptContent = unwrapScript(safeScript).toString();
   const blob = new Blob([scriptContent], {type: 'text/javascript'});
   return createResourceUrlInternal(URL.createObjectURL(blob));

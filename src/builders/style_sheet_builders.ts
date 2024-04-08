@@ -3,13 +3,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+// g3-format-clang
+
 import '../environment/dev';
+
 import {assertIsTemplateObject} from '../internals/string_literal';
-import {
-  createStyleSheetInternal,
-  SafeStyleSheet,
-  unwrapStyleSheet,
-} from '../internals/style_sheet_impl';
+import {createStyleSheetInternal, SafeStyleSheet, unwrapStyleSheet} from '../internals/style_sheet_impl';
 
 /**
  * Creates a SafeStyleSheet object from a template literal (without any
@@ -25,9 +24,8 @@ import {
  *
  * @param templateObj This contains the literal part of the template literal.
  */
-export function safeStyleSheet(
-  templateObj: TemplateStringsArray,
-): SafeStyleSheet {
+export function safeStyleSheet(templateObj: TemplateStringsArray):
+    SafeStyleSheet {
   if (process.env.NODE_ENV !== 'production') {
     assertIsTemplateObject(templateObj, 0);
   }
@@ -36,8 +34,7 @@ export function safeStyleSheet(
   if (process.env.NODE_ENV !== 'production') {
     if (/</.test(styleSheet)) {
       throw new Error(
-        `'<' character is forbidden in styleSheet string: ${styleSheet}`,
-      );
+          `'<' character is forbidden in styleSheet string: ${styleSheet}`);
     }
   }
 
@@ -48,8 +45,7 @@ export function safeStyleSheet(
  * Creates a `SafeStyleSheet` value by concatenating multiple
  * `SafeStyleSheet`s.
  */
-export function concatStyleSheets(
-  sheets: readonly SafeStyleSheet[],
-): SafeStyleSheet {
+export function concatStyleSheets(sheets: readonly SafeStyleSheet[]):
+    SafeStyleSheet {
   return createStyleSheetInternal(sheets.map(unwrapStyleSheet).join(''));
 }

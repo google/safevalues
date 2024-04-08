@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+// g3-format-clang
+
 import '../environment/dev';
 
 /**

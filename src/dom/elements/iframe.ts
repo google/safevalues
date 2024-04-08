@@ -7,6 +7,8 @@
  * @fileoverview Safe iframe helpers and go/intents-for-iframes-for-closure
  */
 
+// g3-format-clang
+
 import {SafeHtml, unwrapHtml} from '../../internals/html_impl';
 import {
   TrustedResourceUrl,

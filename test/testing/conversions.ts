@@ -14,6 +14,8 @@
  * avoids, by design, non-contract complying instances from being created.
  */
 
+// g3-format-clang
+
 import {createHtmlInternal, SafeHtml} from '../../src/internals/html_impl';
 import {
   createResourceUrlInternal,

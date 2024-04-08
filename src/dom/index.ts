@@ -8,6 +8,8 @@
  * a clearly defined interface.
  */
 
+// g3-format-clang
+
 export * as safeAnchorEl from './elements/anchor';
 export * as safeAreaEl from './elements/area';
 export * as safeBaseEl from './elements/base';

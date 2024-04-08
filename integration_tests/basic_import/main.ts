@@ -3,12 +3,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+// g3-format-clang
+
 import {htmlEscape} from 'safevalues';
 import {safeElement} from 'safevalues/dom';
-import {
-  htmlSafeByReview,
-  styleSheetSafeByReview,
-} from 'safevalues/restricted/reviewed';
+import {htmlSafeByReview, styleSheetSafeByReview} from 'safevalues/restricted/reviewed';
 
 function doSomething() {
   const html = htmlEscape('hello <world>');
@@ -25,9 +24,8 @@ describe('doSomething', () => {
 
 describe('safevalues/restricted/reviewed', () => {
   it('can be referenced', () => {
-    expect(
-      styleSheetSafeByReview('hello', {justification: 'test'}).toString(),
-    ).toEqual('hello');
+    expect(styleSheetSafeByReview('hello', {justification: 'test'}).toString())
+        .toEqual('hello');
   });
 });
 
@@ -35,9 +33,7 @@ describe('safevalues/dom', () => {
   it('can be referenced', () => {
     const e = document.createElement('div');
     safeElement.setInnerHtml(
-      e,
-      htmlSafeByReview('<p>hello</p>', {justification: 'test'}),
-    );
+        e, htmlSafeByReview('<p>hello</p>', {justification: 'test'}));
     expect(e.innerHTML).toEqual('<p>hello</p>');
   });
 });

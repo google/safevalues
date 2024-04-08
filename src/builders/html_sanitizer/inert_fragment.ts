@@ -3,8 +3,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {createContextualFragment} from '../../dom/globals/range';
+// g3-format-clang
+
 import '../../environment/dev';
+
+import {createContextualFragment} from '../../dom/globals/range';
 import {createHtmlInternal} from '../../internals/html_impl';
 
 /**
@@ -12,9 +15,7 @@ import {createHtmlInternal} from '../../internals/html_impl';
  * executing any of the potential payload.
  */
 export function createInertFragment(
-  dirtyHtml: string,
-  inertDocument: Document,
-): DocumentFragment {
+    dirtyHtml: string, inertDocument: Document): DocumentFragment {
   if (process.env.NODE_ENV !== 'production') {
     // We are checking if the function was accidentally called with non-inert
     // document. One observable difference between live and inert documents

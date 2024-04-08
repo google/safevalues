@@ -3,17 +3,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+// g3-format-clang
+
 import {secretToken} from '../../internals/secrets';
 
 import {HtmlSanitizer, HtmlSanitizerImpl} from './html_sanitizer';
 import {defaultSanitizerTable} from './sanitizer_table/default_sanitizer_table';
-import {
-  AttributePolicy,
-  AttributePolicyAction,
-  ElementPolicy,
-  SanitizerTable,
-  isCustomElement,
-} from './sanitizer_table/sanitizer_table';
+import {AttributePolicy, AttributePolicyAction, ElementPolicy, isCustomElement, SanitizerTable} from './sanitizer_table/sanitizer_table';
 
 /** This class allows modifications to the default sanitizer configuration. */
 export class HtmlSanitizerBuilder {
@@ -34,8 +30,7 @@ export class HtmlSanitizerBuilder {
       element = element.toUpperCase();
       if (!this.sanitizerTable.isAllowedElement(element)) {
         throw new Error(
-          `Element: ${element}, is not allowed by html5_contract.textpb`,
-        );
+            `Element: ${element}, is not allowed by html5_contract.textpb`);
       }
 
       const elementPolicy = this.sanitizerTable.elementPolicies.get(element);
@@ -47,11 +42,9 @@ export class HtmlSanitizerBuilder {
     }
 
     this.sanitizerTable = new SanitizerTable(
-      allowedElements,
-      allowedElementPolicies,
-      this.sanitizerTable.allowedGlobalAttributes,
-      this.sanitizerTable.globalAttributePolicies,
-    );
+        allowedElements, allowedElementPolicies,
+        this.sanitizerTable.allowedGlobalAttributes,
+        this.sanitizerTable.globalAttributePolicies);
     return this;
   }
 
@@ -60,16 +53,12 @@ export class HtmlSanitizerBuilder {
    * without or after `onlyAllowElements` - will be overwritten otherwise.
    * Custom elements must contain a dash.
    */
-  allowCustomElement(
-    element: string,
-    allowedAttributes?: ReadonlySet<string>,
-  ): HtmlSanitizerBuilder {
-    const allowedElements = new Set<string>(
-      this.sanitizerTable.allowedElements,
-    );
-    const allowedElementPolicies = new Map<string, ElementPolicy>(
-      this.sanitizerTable.elementPolicies,
-    );
+  allowCustomElement(element: string, allowedAttributes?: ReadonlySet<string>):
+      HtmlSanitizerBuilder {
+    const allowedElements =
+        new Set<string>(this.sanitizerTable.allowedElements);
+    const allowedElementPolicies =
+        new Map<string, ElementPolicy>(this.sanitizerTable.elementPolicies);
 
     element = element.toUpperCase();
     if (!isCustomElement(element)) {
@@ -79,9 +68,8 @@ export class HtmlSanitizerBuilder {
     if (allowedAttributes) {
       const elementPolicy = new Map<string, AttributePolicy>();
       for (const attribute of allowedAttributes) {
-        elementPolicy.set(attribute, {
-          policyAction: AttributePolicyAction.KEEP,
-        });
+        elementPolicy.set(
+            attribute, {policyAction: AttributePolicyAction.KEEP});
       }
       allowedElementPolicies.set(element, elementPolicy);
     } else {
@@ -89,11 +77,9 @@ export class HtmlSanitizerBuilder {
     }
 
     this.sanitizerTable = new SanitizerTable(
-      allowedElements,
-      allowedElementPolicies,
-      this.sanitizerTable.allowedGlobalAttributes,
-      this.sanitizerTable.globalAttributePolicies,
-    );
+        allowedElements, allowedElementPolicies,
+        this.sanitizerTable.allowedGlobalAttributes,
+        this.sanitizerTable.globalAttributePolicies);
     return this;
   }
 
@@ -113,22 +99,17 @@ export class HtmlSanitizerBuilder {
       }
       if (this.sanitizerTable.globalAttributePolicies.has(attribute)) {
         globalAttributePolicies.set(
-          attribute,
-          this.sanitizerTable.globalAttributePolicies.get(attribute)!,
-        );
+            attribute,
+            this.sanitizerTable.globalAttributePolicies.get(attribute)!);
       }
     }
 
-    for (const [
-      elementName,
-      originalElementPolicy,
-    ] of this.sanitizerTable.elementPolicies.entries()) {
+    for (const [elementName, originalElementPolicy] of this.sanitizerTable
+             .elementPolicies.entries()) {
       const newElementPolicy = new Map<string, AttributePolicy>();
 
-      for (const [
-        attribute,
-        attributePolicy,
-      ] of originalElementPolicy.entries()) {
+      for (const [attribute, attributePolicy] of originalElementPolicy
+               .entries()) {
         if (attributeSet.has(attribute)) {
           newElementPolicy.set(attribute, attributePolicy);
         }
@@ -137,11 +118,8 @@ export class HtmlSanitizerBuilder {
     }
 
     this.sanitizerTable = new SanitizerTable(
-      this.sanitizerTable.allowedElements,
-      elementPolicies,
-      allowedGlobalAttributes,
-      globalAttributePolicies,
-    );
+        this.sanitizerTable.allowedElements, elementPolicies,
+        allowedGlobalAttributes, globalAttributePolicies);
     return this;
   }
 
@@ -154,23 +132,19 @@ export class HtmlSanitizerBuilder {
    * be called first.
    */
   allowDataAttributes(attributes: string[]): HtmlSanitizerBuilder {
-    const allowedGlobalAttributes = new Set<string>(
-      this.sanitizerTable.allowedGlobalAttributes,
-    );
+    const allowedGlobalAttributes =
+        new Set<string>(this.sanitizerTable.allowedGlobalAttributes);
     for (const attribute of attributes) {
       if (attribute.indexOf('data-') !== 0) {
-        throw new Error(
-          `data attribute: ${attribute} does not begin with the prefix "data-"`,
-        );
+        throw new Error(`data attribute: ${
+            attribute} does not begin with the prefix "data-"`);
       }
       allowedGlobalAttributes.add(attribute);
     }
     this.sanitizerTable = new SanitizerTable(
-      this.sanitizerTable.allowedElements,
-      this.sanitizerTable.elementPolicies,
-      allowedGlobalAttributes,
-      this.sanitizerTable.globalAttributePolicies,
-    );
+        this.sanitizerTable.allowedElements,
+        this.sanitizerTable.elementPolicies, allowedGlobalAttributes,
+        this.sanitizerTable.globalAttributePolicies);
     return this;
   }
 
@@ -183,16 +157,15 @@ export class HtmlSanitizerBuilder {
    */
   allowStyleAttributes(): HtmlSanitizerBuilder {
     const globalAttributePolicies = new Map<string, AttributePolicy>(
-      this.sanitizerTable.globalAttributePolicies,
-    );
+        this.sanitizerTable.globalAttributePolicies);
     globalAttributePolicies.set('style', {
       policyAction: AttributePolicyAction.KEEP_AND_SANITIZE_STYLE,
     });
     this.sanitizerTable = new SanitizerTable(
-      this.sanitizerTable.allowedElements,
-      this.sanitizerTable.elementPolicies,
-      this.sanitizerTable.allowedGlobalAttributes,
-      globalAttributePolicies,
+        this.sanitizerTable.allowedElements,
+        this.sanitizerTable.elementPolicies,
+        this.sanitizerTable.allowedGlobalAttributes,
+        globalAttributePolicies,
     );
     return this;
   }
@@ -203,15 +176,14 @@ export class HtmlSanitizerBuilder {
    * legitimate UI elements, which can lead to phishing.
    */
   allowClassAttributes(): HtmlSanitizerBuilder {
-    const allowedGlobalAttributes = new Set<string>(
-      this.sanitizerTable.allowedGlobalAttributes,
-    );
+    const allowedGlobalAttributes =
+        new Set<string>(this.sanitizerTable.allowedGlobalAttributes);
     allowedGlobalAttributes.add('class');
     this.sanitizerTable = new SanitizerTable(
-      this.sanitizerTable.allowedElements,
-      this.sanitizerTable.elementPolicies,
-      allowedGlobalAttributes,
-      this.sanitizerTable.globalAttributePolicies,
+        this.sanitizerTable.allowedElements,
+        this.sanitizerTable.elementPolicies,
+        allowedGlobalAttributes,
+        this.sanitizerTable.globalAttributePolicies,
     );
     return this;
   }
@@ -221,15 +193,14 @@ export class HtmlSanitizerBuilder {
    * element to override other elements with the same ID.
    */
   allowIdAttributes(): HtmlSanitizerBuilder {
-    const allowedGlobalAttributes = new Set<string>(
-      this.sanitizerTable.allowedGlobalAttributes,
-    );
+    const allowedGlobalAttributes =
+        new Set<string>(this.sanitizerTable.allowedGlobalAttributes);
     allowedGlobalAttributes.add('id');
     this.sanitizerTable = new SanitizerTable(
-      this.sanitizerTable.allowedElements,
-      this.sanitizerTable.elementPolicies,
-      allowedGlobalAttributes,
-      this.sanitizerTable.globalAttributePolicies,
+        this.sanitizerTable.allowedElements,
+        this.sanitizerTable.elementPolicies,
+        allowedGlobalAttributes,
+        this.sanitizerTable.globalAttributePolicies,
     );
     return this;
   }
@@ -242,22 +213,20 @@ export class HtmlSanitizerBuilder {
    * screen reader, and facilitate phishing.
    */
   allowIdReferenceAttributes(): HtmlSanitizerBuilder {
-    const allowedGlobalAttributes = new Set<string>(
-      this.sanitizerTable.allowedGlobalAttributes,
-    );
+    const allowedGlobalAttributes =
+        new Set<string>(this.sanitizerTable.allowedGlobalAttributes);
     // TODO(b/190693339): Generate this subtable from the contract.
-    allowedGlobalAttributes
-      .add('aria-activedescendant')
-      .add('aria-controls')
-      .add('aria-labelledby')
-      .add('aria-owns')
-      .add('for')
-      .add('list');
+    allowedGlobalAttributes.add('aria-activedescendant')
+        .add('aria-controls')
+        .add('aria-labelledby')
+        .add('aria-owns')
+        .add('for')
+        .add('list');
     this.sanitizerTable = new SanitizerTable(
-      this.sanitizerTable.allowedElements,
-      this.sanitizerTable.elementPolicies,
-      allowedGlobalAttributes,
-      this.sanitizerTable.globalAttributePolicies,
+        this.sanitizerTable.allowedElements,
+        this.sanitizerTable.elementPolicies,
+        allowedGlobalAttributes,
+        this.sanitizerTable.globalAttributePolicies,
     );
     return this;
   }

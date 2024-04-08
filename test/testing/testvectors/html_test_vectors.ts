@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+// g3-format-clang
+
 interface TestVector {
   readonly input: string;
   readonly acceptable: string[];
@@ -25,7 +27,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<a href="about:invalid#zClosurez">foo</a>',
       '<a href="javascript:alert(\'xss\');" >foo</a>',
     ],
-    name: 'a',
+    name: 'a'
   },
   {
     input: '<a href=javascript:alert(&quot;XSS&quot;)>foo</a>',
@@ -37,7 +39,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<a href="unsafe:javascript:alert(&#34;XSS&#34;)">foo</a>',
       '<a href="about:invalid#zClosurez">foo</a>',
     ],
-    name: 'a_quot',
+    name: 'a_quot'
   },
   {
     input: '<a href="jav&#x09;ascript:alert(\'xss\');">foo</a>',
@@ -50,32 +52,49 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<a href="about:invalid#zClosurez">foo</a>',
       '<a href="jav&#9;ascript:alert(\'xss\');">foo</a>',
     ],
-    name: 'a_tab',
+    name: 'a_tab'
   },
   {
-    input: "<body onload=alert('xss')>",
-    acceptable: [''],
-    name: 'body_onload',
+    input: '<body onload=alert(\'xss\')>',
+    acceptable: [
+      '',
+    ],
+    name: 'body_onload'
   },
   {
     input: '<form><input name="children"></form>',
-    acceptable: ['', '<form><input></form>', '<form><input /></form>'],
-    name: 'clobbering_children',
+    acceptable: [
+      '',
+      '<form><input></form>',
+      '<form><input /></form>',
+    ],
+    name: 'clobbering_children'
   },
   {
     input: '<form><input name="firstChild"></form>',
-    acceptable: ['', '<form><input></form>', '<form><input /></form>'],
-    name: 'clobbering_firstchild',
+    acceptable: [
+      '',
+      '<form><input></form>',
+      '<form><input /></form>',
+    ],
+    name: 'clobbering_firstchild'
   },
   {
     input: '<form><input name="__proto__"></form>',
-    acceptable: ['', '<form><input></form>', '<form><input /></form>'],
-    name: 'clobbering_proto',
+    acceptable: [
+      '',
+      '<form><input></form>',
+      '<form><input /></form>',
+    ],
+    name: 'clobbering_proto'
   },
   {
     input: '<form><input name="tagName"></form>',
-    acceptable: ['', '<form><input /></form>'],
-    name: 'clobbering_tagname',
+    acceptable: [
+      '',
+      '<form><input /></form>',
+    ],
+    name: 'clobbering_tagname'
   },
   {
     input: '<details open ontoggle="alert(\'xss\')">',
@@ -87,23 +106,35 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<DETAILS open="" />',
       '<DETAILS open=""></DETAILS>',
     ],
-    name: 'details',
+    name: 'details'
   },
   {
     input: '<iframe src="javascript:alert(\'xss\')">',
-    acceptable: ['', '<iframe></iframe>', '<iframe />'],
-    name: 'iframe_src',
+    acceptable: [
+      '',
+      '<iframe></iframe>',
+      '<iframe />',
+    ],
+    name: 'iframe_src'
   },
   {
     input: '<iframe src="https://evil.com">',
-    acceptable: ['', '<iframe></iframe>', '<iframe />'],
-    name: 'iframe_src_https',
+    acceptable: [
+      '',
+      '<iframe></iframe>',
+      '<iframe />',
+    ],
+    name: 'iframe_src_https'
   },
   {
     input:
-      '<iframe srcdoc="&lt;img src&equals;x:x onerror&equals;alert&lpar;xss&rpar;&gt;" />',
-    acceptable: ['', '<iframe></iframe>', '<iframe />'],
-    name: 'iframe_srcdoc',
+        '<iframe srcdoc="&lt;img src&equals;x:x onerror&equals;alert&lpar;xss&rpar;&gt;" />',
+    acceptable: [
+      '',
+      '<iframe></iframe>',
+      '<iframe />',
+    ],
+    name: 'iframe_srcdoc'
   },
   {
     input: '<!--<img src="--><img src=x onerror=alert(\'xss\')//">',
@@ -115,7 +146,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<img src="x" />',
       '<img src="javascript:void(0);">',
     ],
-    name: 'img_comment',
+    name: 'img_comment'
   },
   {
     input: '<img """><script>alert(\'xss\')</script>">',
@@ -126,7 +157,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<img />"&gt;',
       '<img>&#34;&gt;',
     ],
-    name: 'img_malformed',
+    name: 'img_malformed'
   },
   {
     input: '<img src=x onerror="alert(\'xxs\')">',
@@ -138,7 +169,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<img src="javascript:void(0);">',
       '<img />',
     ],
-    name: 'img_onerror',
+    name: 'img_onerror'
   },
   {
     input: '<style><img src="</style><img src=x onerror=alert(\'xss\')//">',
@@ -151,7 +182,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<img src="x">',
       '<img src="javascript:void(0);">',
     ],
-    name: 'img_style',
+    name: 'img_style'
   },
   {
     input: '<input type="image" src="javascript:alert(\'xss\');">',
@@ -163,7 +194,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<input type="image" src="about:invalid#zCSafez" />',
       '<input src="about:invalid#zCSafez" />',
     ],
-    name: 'input',
+    name: 'input'
   },
   {
     input: '<a><a<a>a><a style="<a><a<a>a><a"<a><a<a>a><a >',
@@ -175,7 +206,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<a>a&gt;</a><a>a&gt;</a><a></a>',
       '<a /><a /><a />',
     ],
-    name: 'mess_of_anchors',
+    name: 'mess_of_anchors'
   },
   {
     input: '"><noscript><p title="</noscript><img src=x onerror=alert(1)>">',
@@ -193,42 +224,55 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '"&gt;',
       '&#34;&gt;<p title="&lt;/noscript&gt;&lt;img src=x onerror=alert(1)&gt;"></p>',
     ],
-    name: 'mxss_noscript',
+    name: 'mxss_noscript'
   },
   {
     input: '<a><a></a></a>',
-    acceptable: ['<a><a></a></a>', '<a></a><a></a>', '<a /><a />'],
-    name: 'nested_anchors',
+    acceptable: [
+      '<a><a></a></a>',
+      '<a></a><a></a>',
+      '<a /><a />',
+    ],
+    name: 'nested_anchors'
   },
   {
     input:
-      '<object data="data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg=="></object>',
-    acceptable: [''],
-    name: 'object',
+        '<object data="data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg=="></object>',
+    acceptable: [
+      '',
+    ],
+    name: 'object'
   },
   {
     input:
-      "javascript:/*--></title></style></textarea></script></xmp><svg/onload='+/\"/+/onmouseover=1/+/[*/[]/+alert(xss)//'>",
-    acceptable: ['javascript:/*--&gt;'],
-    name: 'polygot',
+        'javascript:/*--></title></style></textarea></script></xmp><svg/onload=\'+/"/+/onmouseover=1/+/[*/[]/+alert(xss)//\'>',
+    acceptable: [
+      'javascript:/*--&gt;',
+    ],
+    name: 'polygot'
   },
   {
     input:
-      'javascript:x//*/javascript:javascript:"/*\'/*`/*--></noscript></title></textarea></style></template></noembed></script><html " onmouseover=/*&lt;svg/*/onload=xonload=x//><svg onload=x><svg onload=x>*/</style><script>x</script><style>',
+        'javascript:x//*/javascript:javascript:"/*\'/*`/*--></noscript></title></textarea></style></template></noembed></script><html " onmouseover=/*&lt;svg/*/onload=xonload=x//><svg onload=x><svg onload=x>*/</style><script>x</script><style>',
     acceptable: [
       'javascript:x//*/javascript:javascript:&quot;/*&#39;/*`/*--&gt;',
       'javascript:x//*/javascript:javascript:&#34;/*&#39;/*`/*--&gt;',
       'javascript:x//*/javascript:javascript:&quot;/*&#39;/*`/*--&gt;*/',
       'javascript:x//*/javascript:javascript:"/*\'/*`/*--&gt;',
       'javascript:x//*/javascript:javascript:"/*\'/*`/*--&gt;*/',
-      "javascript:x//*/javascript:javascript:&#34;/*'/*`/*--&gt;*/",
+      'javascript:x//*/javascript:javascript:&#34;/*\'/*`/*--&gt;*/',
     ],
-    name: 'polygot_inquisition',
+    name: 'polygot_inquisition'
   },
   {
     input: '\'"',
-    acceptable: ['\'"', '&#39;&quot;', '&#39;&#34;', "'&#34;"],
-    name: 'quotes',
+    acceptable: [
+      '\'"',
+      '&#39;&quot;',
+      '&#39;&#34;',
+      '\'&#34;',
+    ],
+    name: 'quotes'
   },
   {
     input: '<LINK REL="stylesheet" HREF="javascript:alert(\'xss\')">',
@@ -239,27 +283,35 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<link rel="stylesheet">',
       '<link rel="stylesheet" />',
     ],
-    name: 'remote_stylesheet',
+    name: 'remote_stylesheet'
   },
   {
-    input: "<STYLE>@import'javascript:alert('xss')';</STYLE>",
-    acceptable: [''],
-    name: 'remote_stylesheet2',
+    input: '<STYLE>@import\'javascript:alert(\'xss\')\';</STYLE>',
+    acceptable: [
+      '',
+    ],
+    name: 'remote_stylesheet2'
   },
   {
-    input: "<script>alert('xss')</script>",
-    acceptable: [''],
-    name: 'script_alert',
+    input: '<script>alert(\'xss\')</script>',
+    acceptable: [
+      '',
+    ],
+    name: 'script_alert'
   },
   {
-    input: "<scrIpt>alert('xss')</scrIpt>",
-    acceptable: [''],
-    name: 'script_case',
+    input: '<scrIpt>alert(\'xss\')</scrIpt>',
+    acceptable: [
+      '',
+    ],
+    name: 'script_case'
   },
   {
-    input: "<<script>alert('xss');//<</script>",
-    acceptable: ['&lt;'],
-    name: 'script_extra',
+    input: '<<script>alert(\'xss\');//<</script>',
+    acceptable: [
+      '&lt;',
+    ],
+    name: 'script_extra'
   },
   {
     input: '<<s<script>script>alert()<</script>/script>',
@@ -268,37 +320,47 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '&lt;script&gt;alert()&lt;/script&gt;',
       '&lt;<span>script&gt;alert()&lt;/script&gt;</span>',
     ],
-    name: 'script_inception',
+    name: 'script_inception'
   },
   {
     input: '<script/xss src="/xss.js"><\\/script>',
-    acceptable: [''],
-    name: 'script_nondigit',
+    acceptable: [
+      '',
+    ],
+    name: 'script_nondigit'
   },
   {
     input: '<script src="/xss.js"< b >',
-    acceptable: [''],
-    name: 'script_open',
+    acceptable: [
+      '',
+    ],
+    name: 'script_open'
   },
   {
     input: '<script src="/xss.js"></script>',
-    acceptable: [''],
-    name: 'script_src',
+    acceptable: [
+      '',
+    ],
+    name: 'script_src'
   },
   {
-    input: "</title><script>alert('xss');</script>",
-    acceptable: [''],
-    name: 'script_title',
+    input: '</title><script>alert(\'xss\');</script>',
+    acceptable: [
+      '',
+    ],
+    name: 'script_title'
   },
   {
     input:
-      '<svg onload="javascript:alert(\'xss\')" xmlns="http://www.google.com"></svg>',
-    acceptable: [''],
-    name: 'svg',
+        '<svg onload="javascript:alert(\'xss\')" xmlns="http://www.google.com"></svg>',
+    acceptable: [
+      '',
+    ],
+    name: 'svg'
   },
   {
     input:
-      '<a src=&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;&#97;&#108;&#101;&#114;&#116;&#40;&#39;&#88;&#83;&#83;&#39;&#41;>foo</a>',
+        '<a src=&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;&#97;&#108;&#101;&#114;&#116;&#40;&#39;&#88;&#83;&#83;&#39;&#41;>foo</a>',
     acceptable: [
       '<a src="javascript:void(0);">foo</a>',
       '<a src="about:invalid#zGoSafez">foo</a>',
@@ -307,17 +369,25 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<a src="about:invalid#zTSz" />foo</a>',
       '<a>foo</a>',
     ],
-    name: 'unicode',
+    name: 'unicode'
   },
   {
     input: '<html></html>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_html_plain',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_html_plain'
   },
   {
     input: '<html><script>alert()</script></html>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_html_scriptinside',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_html_scriptinside'
   },
   {
     input: '<html srcdoc="x">',
@@ -334,7 +404,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_html_srcdoc',
+    name: 'contract_html_srcdoc'
   },
   {
     input: '<html action="x">',
@@ -351,7 +421,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_html_action',
+    name: 'contract_html_action'
   },
   {
     input: '<html method="x">',
@@ -368,7 +438,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_html_method',
+    name: 'contract_html_method'
   },
   {
     input: '<html formaction="x">',
@@ -385,7 +455,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_html_formaction',
+    name: 'contract_html_formaction'
   },
   {
     input: '<html formmethod="x">',
@@ -402,7 +472,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_html_formmethod',
+    name: 'contract_html_formmethod'
   },
   {
     input: '<html pattern="x">',
@@ -419,7 +489,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_html_pattern',
+    name: 'contract_html_pattern'
   },
   {
     input: '<html readonly="x">',
@@ -436,7 +506,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_html_readonly',
+    name: 'contract_html_readonly'
   },
   {
     input: '<html accept="x">',
@@ -453,7 +523,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_html_accept',
+    name: 'contract_html_accept'
   },
   {
     input: '<html defer="x">',
@@ -470,17 +540,25 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_html_defer',
+    name: 'contract_html_defer'
   },
   {
     input: '<head></head>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_head_plain',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_head_plain'
   },
   {
     input: '<head><script>alert()</script></head>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_head_scriptinside',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_head_scriptinside'
   },
   {
     input: '<head srcdoc="x">',
@@ -497,7 +575,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_head_srcdoc',
+    name: 'contract_head_srcdoc'
   },
   {
     input: '<head action="x">',
@@ -514,7 +592,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_head_action',
+    name: 'contract_head_action'
   },
   {
     input: '<head method="x">',
@@ -531,7 +609,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_head_method',
+    name: 'contract_head_method'
   },
   {
     input: '<head formaction="x">',
@@ -548,7 +626,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_head_formaction',
+    name: 'contract_head_formaction'
   },
   {
     input: '<head formmethod="x">',
@@ -565,7 +643,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_head_formmethod',
+    name: 'contract_head_formmethod'
   },
   {
     input: '<head pattern="x">',
@@ -582,7 +660,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_head_pattern',
+    name: 'contract_head_pattern'
   },
   {
     input: '<head readonly="x">',
@@ -599,7 +677,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_head_readonly',
+    name: 'contract_head_readonly'
   },
   {
     input: '<head accept="x">',
@@ -616,7 +694,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_head_accept',
+    name: 'contract_head_accept'
   },
   {
     input: '<head defer="x">',
@@ -633,17 +711,25 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_head_defer',
+    name: 'contract_head_defer'
   },
   {
     input: '<title></title>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_title_plain',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_title_plain'
   },
   {
     input: '<title><script>alert()</script></title>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_title_scriptinside',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_title_scriptinside'
   },
   {
     input: '<title srcdoc="x">',
@@ -660,7 +746,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_title_srcdoc',
+    name: 'contract_title_srcdoc'
   },
   {
     input: '<title action="x">',
@@ -677,7 +763,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_title_action',
+    name: 'contract_title_action'
   },
   {
     input: '<title method="x">',
@@ -694,7 +780,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_title_method',
+    name: 'contract_title_method'
   },
   {
     input: '<title formaction="x">',
@@ -711,7 +797,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_title_formaction',
+    name: 'contract_title_formaction'
   },
   {
     input: '<title formmethod="x">',
@@ -728,7 +814,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_title_formmethod',
+    name: 'contract_title_formmethod'
   },
   {
     input: '<title pattern="x">',
@@ -745,7 +831,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_title_pattern',
+    name: 'contract_title_pattern'
   },
   {
     input: '<title readonly="x">',
@@ -762,7 +848,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_title_readonly',
+    name: 'contract_title_readonly'
   },
   {
     input: '<title accept="x">',
@@ -779,7 +865,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_title_accept',
+    name: 'contract_title_accept'
   },
   {
     input: '<title defer="x">',
@@ -796,17 +882,25 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_title_defer',
+    name: 'contract_title_defer'
   },
   {
     input: '<base></base>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_base_plain',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_base_plain'
   },
   {
     input: '<base><script>alert()</script></base>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_base_scriptinside',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_base_scriptinside'
   },
   {
     input: '<base srcdoc="x">',
@@ -823,7 +917,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_base_srcdoc',
+    name: 'contract_base_srcdoc'
   },
   {
     input: '<base action="x">',
@@ -840,7 +934,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_base_action',
+    name: 'contract_base_action'
   },
   {
     input: '<base method="x">',
@@ -857,7 +951,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_base_method',
+    name: 'contract_base_method'
   },
   {
     input: '<base formaction="x">',
@@ -874,7 +968,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_base_formaction',
+    name: 'contract_base_formaction'
   },
   {
     input: '<base formmethod="x">',
@@ -891,7 +985,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_base_formmethod',
+    name: 'contract_base_formmethod'
   },
   {
     input: '<base pattern="x">',
@@ -908,7 +1002,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_base_pattern',
+    name: 'contract_base_pattern'
   },
   {
     input: '<base readonly="x">',
@@ -925,7 +1019,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_base_readonly',
+    name: 'contract_base_readonly'
   },
   {
     input: '<base accept="x">',
@@ -942,7 +1036,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_base_accept',
+    name: 'contract_base_accept'
   },
   {
     input: '<base defer="x">',
@@ -959,17 +1053,25 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_base_defer',
+    name: 'contract_base_defer'
   },
   {
     input: '<meta></meta>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_meta_plain',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_meta_plain'
   },
   {
     input: '<meta><script>alert()</script></meta>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_meta_scriptinside',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_meta_scriptinside'
   },
   {
     input: '<meta srcdoc="x">',
@@ -986,7 +1088,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_meta_srcdoc',
+    name: 'contract_meta_srcdoc'
   },
   {
     input: '<meta action="x">',
@@ -1003,7 +1105,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_meta_action',
+    name: 'contract_meta_action'
   },
   {
     input: '<meta method="x">',
@@ -1020,7 +1122,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_meta_method',
+    name: 'contract_meta_method'
   },
   {
     input: '<meta formaction="x">',
@@ -1037,7 +1139,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_meta_formaction',
+    name: 'contract_meta_formaction'
   },
   {
     input: '<meta formmethod="x">',
@@ -1054,7 +1156,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_meta_formmethod',
+    name: 'contract_meta_formmethod'
   },
   {
     input: '<meta pattern="x">',
@@ -1071,7 +1173,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_meta_pattern',
+    name: 'contract_meta_pattern'
   },
   {
     input: '<meta readonly="x">',
@@ -1088,7 +1190,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_meta_readonly',
+    name: 'contract_meta_readonly'
   },
   {
     input: '<meta accept="x">',
@@ -1105,7 +1207,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_meta_accept',
+    name: 'contract_meta_accept'
   },
   {
     input: '<meta defer="x">',
@@ -1122,17 +1224,25 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_meta_defer',
+    name: 'contract_meta_defer'
   },
   {
     input: '<style></style>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_style_plain',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_style_plain'
   },
   {
     input: '<style><script>alert()</script></style>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_style_scriptinside',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_style_scriptinside'
   },
   {
     input: '<style srcdoc="x">',
@@ -1149,7 +1259,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_style_srcdoc',
+    name: 'contract_style_srcdoc'
   },
   {
     input: '<style action="x">',
@@ -1166,7 +1276,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_style_action',
+    name: 'contract_style_action'
   },
   {
     input: '<style method="x">',
@@ -1183,7 +1293,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_style_method',
+    name: 'contract_style_method'
   },
   {
     input: '<style formaction="x">',
@@ -1200,7 +1310,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_style_formaction',
+    name: 'contract_style_formaction'
   },
   {
     input: '<style formmethod="x">',
@@ -1217,7 +1327,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_style_formmethod',
+    name: 'contract_style_formmethod'
   },
   {
     input: '<style pattern="x">',
@@ -1234,7 +1344,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_style_pattern',
+    name: 'contract_style_pattern'
   },
   {
     input: '<style readonly="x">',
@@ -1251,7 +1361,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_style_readonly',
+    name: 'contract_style_readonly'
   },
   {
     input: '<style accept="x">',
@@ -1268,7 +1378,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_style_accept',
+    name: 'contract_style_accept'
   },
   {
     input: '<style defer="x">',
@@ -1285,17 +1395,25 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_style_defer',
+    name: 'contract_style_defer'
   },
   {
     input: '<body></body>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_body_plain',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_body_plain'
   },
   {
     input: '<body><script>alert()</script></body>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_body_scriptinside',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_body_scriptinside'
   },
   {
     input: '<body srcdoc="x">',
@@ -1312,7 +1430,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_body_srcdoc',
+    name: 'contract_body_srcdoc'
   },
   {
     input: '<body action="x">',
@@ -1329,7 +1447,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_body_action',
+    name: 'contract_body_action'
   },
   {
     input: '<body method="x">',
@@ -1346,7 +1464,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_body_method',
+    name: 'contract_body_method'
   },
   {
     input: '<body formaction="x">',
@@ -1363,7 +1481,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_body_formaction',
+    name: 'contract_body_formaction'
   },
   {
     input: '<body formmethod="x">',
@@ -1380,7 +1498,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_body_formmethod',
+    name: 'contract_body_formmethod'
   },
   {
     input: '<body pattern="x">',
@@ -1397,7 +1515,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_body_pattern',
+    name: 'contract_body_pattern'
   },
   {
     input: '<body readonly="x">',
@@ -1414,7 +1532,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_body_readonly',
+    name: 'contract_body_readonly'
   },
   {
     input: '<body accept="x">',
@@ -1431,7 +1549,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_body_accept',
+    name: 'contract_body_accept'
   },
   {
     input: '<body defer="x">',
@@ -1448,7 +1566,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_body_defer',
+    name: 'contract_body_defer'
   },
   {
     input: '<article></article>',
@@ -1463,7 +1581,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_article_plain',
+    name: 'contract_article_plain'
   },
   {
     input: '<article><script>alert()</script></article>',
@@ -1481,7 +1599,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><article></article><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_article_scriptinside',
+    name: 'contract_article_scriptinside'
   },
   {
     input: '<article srcdoc="x">',
@@ -1498,7 +1616,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_article_srcdoc',
+    name: 'contract_article_srcdoc'
   },
   {
     input: '<article action="x">',
@@ -1515,7 +1633,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_article_action',
+    name: 'contract_article_action'
   },
   {
     input: '<article method="x">',
@@ -1532,7 +1650,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_article_method',
+    name: 'contract_article_method'
   },
   {
     input: '<article formaction="x">',
@@ -1549,7 +1667,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_article_formaction',
+    name: 'contract_article_formaction'
   },
   {
     input: '<article formmethod="x">',
@@ -1566,7 +1684,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_article_formmethod',
+    name: 'contract_article_formmethod'
   },
   {
     input: '<article pattern="x">',
@@ -1583,7 +1701,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_article_pattern',
+    name: 'contract_article_pattern'
   },
   {
     input: '<article readonly="x">',
@@ -1600,7 +1718,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_article_readonly',
+    name: 'contract_article_readonly'
   },
   {
     input: '<article accept="x">',
@@ -1617,7 +1735,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_article_accept',
+    name: 'contract_article_accept'
   },
   {
     input: '<article defer="x">',
@@ -1634,7 +1752,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_article_defer',
+    name: 'contract_article_defer'
   },
   {
     input: '<section></section>',
@@ -1649,7 +1767,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_section_plain',
+    name: 'contract_section_plain'
   },
   {
     input: '<section><script>alert()</script></section>',
@@ -1667,7 +1785,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><section></section><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_section_scriptinside',
+    name: 'contract_section_scriptinside'
   },
   {
     input: '<section srcdoc="x">',
@@ -1684,7 +1802,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_section_srcdoc',
+    name: 'contract_section_srcdoc'
   },
   {
     input: '<section action="x">',
@@ -1701,7 +1819,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_section_action',
+    name: 'contract_section_action'
   },
   {
     input: '<section method="x">',
@@ -1718,7 +1836,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_section_method',
+    name: 'contract_section_method'
   },
   {
     input: '<section formaction="x">',
@@ -1735,7 +1853,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_section_formaction',
+    name: 'contract_section_formaction'
   },
   {
     input: '<section formmethod="x">',
@@ -1752,7 +1870,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_section_formmethod',
+    name: 'contract_section_formmethod'
   },
   {
     input: '<section pattern="x">',
@@ -1769,7 +1887,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_section_pattern',
+    name: 'contract_section_pattern'
   },
   {
     input: '<section readonly="x">',
@@ -1786,7 +1904,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_section_readonly',
+    name: 'contract_section_readonly'
   },
   {
     input: '<section accept="x">',
@@ -1803,7 +1921,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_section_accept',
+    name: 'contract_section_accept'
   },
   {
     input: '<section defer="x">',
@@ -1820,7 +1938,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_section_defer',
+    name: 'contract_section_defer'
   },
   {
     input: '<nav></nav>',
@@ -1835,7 +1953,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_nav_plain',
+    name: 'contract_nav_plain'
   },
   {
     input: '<nav><script>alert()</script></nav>',
@@ -1853,7 +1971,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><nav></nav><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_nav_scriptinside',
+    name: 'contract_nav_scriptinside'
   },
   {
     input: '<nav srcdoc="x">',
@@ -1870,7 +1988,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_nav_srcdoc',
+    name: 'contract_nav_srcdoc'
   },
   {
     input: '<nav action="x">',
@@ -1887,7 +2005,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_nav_action',
+    name: 'contract_nav_action'
   },
   {
     input: '<nav method="x">',
@@ -1904,7 +2022,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_nav_method',
+    name: 'contract_nav_method'
   },
   {
     input: '<nav formaction="x">',
@@ -1921,7 +2039,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_nav_formaction',
+    name: 'contract_nav_formaction'
   },
   {
     input: '<nav formmethod="x">',
@@ -1938,7 +2056,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_nav_formmethod',
+    name: 'contract_nav_formmethod'
   },
   {
     input: '<nav pattern="x">',
@@ -1955,7 +2073,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_nav_pattern',
+    name: 'contract_nav_pattern'
   },
   {
     input: '<nav readonly="x">',
@@ -1972,7 +2090,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_nav_readonly',
+    name: 'contract_nav_readonly'
   },
   {
     input: '<nav accept="x">',
@@ -1989,7 +2107,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_nav_accept',
+    name: 'contract_nav_accept'
   },
   {
     input: '<nav defer="x">',
@@ -2006,7 +2124,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_nav_defer',
+    name: 'contract_nav_defer'
   },
   {
     input: '<aside></aside>',
@@ -2021,7 +2139,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_aside_plain',
+    name: 'contract_aside_plain'
   },
   {
     input: '<aside><script>alert()</script></aside>',
@@ -2039,7 +2157,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><aside></aside><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_aside_scriptinside',
+    name: 'contract_aside_scriptinside'
   },
   {
     input: '<aside srcdoc="x">',
@@ -2056,7 +2174,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_aside_srcdoc',
+    name: 'contract_aside_srcdoc'
   },
   {
     input: '<aside action="x">',
@@ -2073,7 +2191,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_aside_action',
+    name: 'contract_aside_action'
   },
   {
     input: '<aside method="x">',
@@ -2090,7 +2208,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_aside_method',
+    name: 'contract_aside_method'
   },
   {
     input: '<aside formaction="x">',
@@ -2107,7 +2225,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_aside_formaction',
+    name: 'contract_aside_formaction'
   },
   {
     input: '<aside formmethod="x">',
@@ -2124,7 +2242,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_aside_formmethod',
+    name: 'contract_aside_formmethod'
   },
   {
     input: '<aside pattern="x">',
@@ -2141,7 +2259,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_aside_pattern',
+    name: 'contract_aside_pattern'
   },
   {
     input: '<aside readonly="x">',
@@ -2158,7 +2276,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_aside_readonly',
+    name: 'contract_aside_readonly'
   },
   {
     input: '<aside accept="x">',
@@ -2175,7 +2293,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_aside_accept',
+    name: 'contract_aside_accept'
   },
   {
     input: '<aside defer="x">',
@@ -2192,7 +2310,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_aside_defer',
+    name: 'contract_aside_defer'
   },
   {
     input: '<h1></h1>',
@@ -2207,7 +2325,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h1_plain',
+    name: 'contract_h1_plain'
   },
   {
     input: '<h1><script>alert()</script></h1>',
@@ -2225,7 +2343,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><h1></h1><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_h1_scriptinside',
+    name: 'contract_h1_scriptinside'
   },
   {
     input: '<h1 srcdoc="x">',
@@ -2242,7 +2360,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h1_srcdoc',
+    name: 'contract_h1_srcdoc'
   },
   {
     input: '<h1 action="x">',
@@ -2259,7 +2377,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h1_action',
+    name: 'contract_h1_action'
   },
   {
     input: '<h1 method="x">',
@@ -2276,7 +2394,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h1_method',
+    name: 'contract_h1_method'
   },
   {
     input: '<h1 formaction="x">',
@@ -2293,7 +2411,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h1_formaction',
+    name: 'contract_h1_formaction'
   },
   {
     input: '<h1 formmethod="x">',
@@ -2310,7 +2428,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h1_formmethod',
+    name: 'contract_h1_formmethod'
   },
   {
     input: '<h1 pattern="x">',
@@ -2327,7 +2445,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h1_pattern',
+    name: 'contract_h1_pattern'
   },
   {
     input: '<h1 readonly="x">',
@@ -2344,7 +2462,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h1_readonly',
+    name: 'contract_h1_readonly'
   },
   {
     input: '<h1 accept="x">',
@@ -2361,7 +2479,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h1_accept',
+    name: 'contract_h1_accept'
   },
   {
     input: '<h1 defer="x">',
@@ -2378,7 +2496,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h1_defer',
+    name: 'contract_h1_defer'
   },
   {
     input: '<h2></h2>',
@@ -2393,7 +2511,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h2_plain',
+    name: 'contract_h2_plain'
   },
   {
     input: '<h2><script>alert()</script></h2>',
@@ -2411,7 +2529,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><h2></h2><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_h2_scriptinside',
+    name: 'contract_h2_scriptinside'
   },
   {
     input: '<h2 srcdoc="x">',
@@ -2428,7 +2546,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h2_srcdoc',
+    name: 'contract_h2_srcdoc'
   },
   {
     input: '<h2 action="x">',
@@ -2445,7 +2563,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h2_action',
+    name: 'contract_h2_action'
   },
   {
     input: '<h2 method="x">',
@@ -2462,7 +2580,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h2_method',
+    name: 'contract_h2_method'
   },
   {
     input: '<h2 formaction="x">',
@@ -2479,7 +2597,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h2_formaction',
+    name: 'contract_h2_formaction'
   },
   {
     input: '<h2 formmethod="x">',
@@ -2496,7 +2614,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h2_formmethod',
+    name: 'contract_h2_formmethod'
   },
   {
     input: '<h2 pattern="x">',
@@ -2513,7 +2631,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h2_pattern',
+    name: 'contract_h2_pattern'
   },
   {
     input: '<h2 readonly="x">',
@@ -2530,7 +2648,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h2_readonly',
+    name: 'contract_h2_readonly'
   },
   {
     input: '<h2 accept="x">',
@@ -2547,7 +2665,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h2_accept',
+    name: 'contract_h2_accept'
   },
   {
     input: '<h2 defer="x">',
@@ -2564,7 +2682,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h2_defer',
+    name: 'contract_h2_defer'
   },
   {
     input: '<h3></h3>',
@@ -2579,7 +2697,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h3_plain',
+    name: 'contract_h3_plain'
   },
   {
     input: '<h3><script>alert()</script></h3>',
@@ -2597,7 +2715,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><h3></h3><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_h3_scriptinside',
+    name: 'contract_h3_scriptinside'
   },
   {
     input: '<h3 srcdoc="x">',
@@ -2614,7 +2732,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h3_srcdoc',
+    name: 'contract_h3_srcdoc'
   },
   {
     input: '<h3 action="x">',
@@ -2631,7 +2749,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h3_action',
+    name: 'contract_h3_action'
   },
   {
     input: '<h3 method="x">',
@@ -2648,7 +2766,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h3_method',
+    name: 'contract_h3_method'
   },
   {
     input: '<h3 formaction="x">',
@@ -2665,7 +2783,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h3_formaction',
+    name: 'contract_h3_formaction'
   },
   {
     input: '<h3 formmethod="x">',
@@ -2682,7 +2800,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h3_formmethod',
+    name: 'contract_h3_formmethod'
   },
   {
     input: '<h3 pattern="x">',
@@ -2699,7 +2817,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h3_pattern',
+    name: 'contract_h3_pattern'
   },
   {
     input: '<h3 readonly="x">',
@@ -2716,7 +2834,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h3_readonly',
+    name: 'contract_h3_readonly'
   },
   {
     input: '<h3 accept="x">',
@@ -2733,7 +2851,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h3_accept',
+    name: 'contract_h3_accept'
   },
   {
     input: '<h3 defer="x">',
@@ -2750,7 +2868,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h3_defer',
+    name: 'contract_h3_defer'
   },
   {
     input: '<h4></h4>',
@@ -2765,7 +2883,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h4_plain',
+    name: 'contract_h4_plain'
   },
   {
     input: '<h4><script>alert()</script></h4>',
@@ -2783,7 +2901,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><h4></h4><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_h4_scriptinside',
+    name: 'contract_h4_scriptinside'
   },
   {
     input: '<h4 srcdoc="x">',
@@ -2800,7 +2918,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h4_srcdoc',
+    name: 'contract_h4_srcdoc'
   },
   {
     input: '<h4 action="x">',
@@ -2817,7 +2935,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h4_action',
+    name: 'contract_h4_action'
   },
   {
     input: '<h4 method="x">',
@@ -2834,7 +2952,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h4_method',
+    name: 'contract_h4_method'
   },
   {
     input: '<h4 formaction="x">',
@@ -2851,7 +2969,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h4_formaction',
+    name: 'contract_h4_formaction'
   },
   {
     input: '<h4 formmethod="x">',
@@ -2868,7 +2986,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h4_formmethod',
+    name: 'contract_h4_formmethod'
   },
   {
     input: '<h4 pattern="x">',
@@ -2885,7 +3003,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h4_pattern',
+    name: 'contract_h4_pattern'
   },
   {
     input: '<h4 readonly="x">',
@@ -2902,7 +3020,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h4_readonly',
+    name: 'contract_h4_readonly'
   },
   {
     input: '<h4 accept="x">',
@@ -2919,7 +3037,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h4_accept',
+    name: 'contract_h4_accept'
   },
   {
     input: '<h4 defer="x">',
@@ -2936,7 +3054,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h4_defer',
+    name: 'contract_h4_defer'
   },
   {
     input: '<h5></h5>',
@@ -2951,7 +3069,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h5_plain',
+    name: 'contract_h5_plain'
   },
   {
     input: '<h5><script>alert()</script></h5>',
@@ -2969,7 +3087,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><h5></h5><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_h5_scriptinside',
+    name: 'contract_h5_scriptinside'
   },
   {
     input: '<h5 srcdoc="x">',
@@ -2986,7 +3104,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h5_srcdoc',
+    name: 'contract_h5_srcdoc'
   },
   {
     input: '<h5 action="x">',
@@ -3003,7 +3121,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h5_action',
+    name: 'contract_h5_action'
   },
   {
     input: '<h5 method="x">',
@@ -3020,7 +3138,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h5_method',
+    name: 'contract_h5_method'
   },
   {
     input: '<h5 formaction="x">',
@@ -3037,7 +3155,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h5_formaction',
+    name: 'contract_h5_formaction'
   },
   {
     input: '<h5 formmethod="x">',
@@ -3054,7 +3172,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h5_formmethod',
+    name: 'contract_h5_formmethod'
   },
   {
     input: '<h5 pattern="x">',
@@ -3071,7 +3189,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h5_pattern',
+    name: 'contract_h5_pattern'
   },
   {
     input: '<h5 readonly="x">',
@@ -3088,7 +3206,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h5_readonly',
+    name: 'contract_h5_readonly'
   },
   {
     input: '<h5 accept="x">',
@@ -3105,7 +3223,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h5_accept',
+    name: 'contract_h5_accept'
   },
   {
     input: '<h5 defer="x">',
@@ -3122,7 +3240,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h5_defer',
+    name: 'contract_h5_defer'
   },
   {
     input: '<h6></h6>',
@@ -3137,7 +3255,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h6_plain',
+    name: 'contract_h6_plain'
   },
   {
     input: '<h6><script>alert()</script></h6>',
@@ -3155,7 +3273,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><h6></h6><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_h6_scriptinside',
+    name: 'contract_h6_scriptinside'
   },
   {
     input: '<h6 srcdoc="x">',
@@ -3172,7 +3290,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h6_srcdoc',
+    name: 'contract_h6_srcdoc'
   },
   {
     input: '<h6 action="x">',
@@ -3189,7 +3307,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h6_action',
+    name: 'contract_h6_action'
   },
   {
     input: '<h6 method="x">',
@@ -3206,7 +3324,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h6_method',
+    name: 'contract_h6_method'
   },
   {
     input: '<h6 formaction="x">',
@@ -3223,7 +3341,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h6_formaction',
+    name: 'contract_h6_formaction'
   },
   {
     input: '<h6 formmethod="x">',
@@ -3240,7 +3358,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h6_formmethod',
+    name: 'contract_h6_formmethod'
   },
   {
     input: '<h6 pattern="x">',
@@ -3257,7 +3375,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h6_pattern',
+    name: 'contract_h6_pattern'
   },
   {
     input: '<h6 readonly="x">',
@@ -3274,7 +3392,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h6_readonly',
+    name: 'contract_h6_readonly'
   },
   {
     input: '<h6 accept="x">',
@@ -3291,7 +3409,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h6_accept',
+    name: 'contract_h6_accept'
   },
   {
     input: '<h6 defer="x">',
@@ -3308,7 +3426,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_h6_defer',
+    name: 'contract_h6_defer'
   },
   {
     input: '<header></header>',
@@ -3323,7 +3441,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_header_plain',
+    name: 'contract_header_plain'
   },
   {
     input: '<header><script>alert()</script></header>',
@@ -3341,7 +3459,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><header></header><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_header_scriptinside',
+    name: 'contract_header_scriptinside'
   },
   {
     input: '<header srcdoc="x">',
@@ -3358,7 +3476,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_header_srcdoc',
+    name: 'contract_header_srcdoc'
   },
   {
     input: '<header action="x">',
@@ -3375,7 +3493,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_header_action',
+    name: 'contract_header_action'
   },
   {
     input: '<header method="x">',
@@ -3392,7 +3510,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_header_method',
+    name: 'contract_header_method'
   },
   {
     input: '<header formaction="x">',
@@ -3409,7 +3527,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_header_formaction',
+    name: 'contract_header_formaction'
   },
   {
     input: '<header formmethod="x">',
@@ -3426,7 +3544,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_header_formmethod',
+    name: 'contract_header_formmethod'
   },
   {
     input: '<header pattern="x">',
@@ -3443,7 +3561,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_header_pattern',
+    name: 'contract_header_pattern'
   },
   {
     input: '<header readonly="x">',
@@ -3460,7 +3578,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_header_readonly',
+    name: 'contract_header_readonly'
   },
   {
     input: '<header accept="x">',
@@ -3477,7 +3595,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_header_accept',
+    name: 'contract_header_accept'
   },
   {
     input: '<header defer="x">',
@@ -3494,7 +3612,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_header_defer',
+    name: 'contract_header_defer'
   },
   {
     input: '<footer></footer>',
@@ -3509,7 +3627,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_footer_plain',
+    name: 'contract_footer_plain'
   },
   {
     input: '<footer><script>alert()</script></footer>',
@@ -3527,7 +3645,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><footer></footer><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_footer_scriptinside',
+    name: 'contract_footer_scriptinside'
   },
   {
     input: '<footer srcdoc="x">',
@@ -3544,7 +3662,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_footer_srcdoc',
+    name: 'contract_footer_srcdoc'
   },
   {
     input: '<footer action="x">',
@@ -3561,7 +3679,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_footer_action',
+    name: 'contract_footer_action'
   },
   {
     input: '<footer method="x">',
@@ -3578,7 +3696,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_footer_method',
+    name: 'contract_footer_method'
   },
   {
     input: '<footer formaction="x">',
@@ -3595,7 +3713,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_footer_formaction',
+    name: 'contract_footer_formaction'
   },
   {
     input: '<footer formmethod="x">',
@@ -3612,7 +3730,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_footer_formmethod',
+    name: 'contract_footer_formmethod'
   },
   {
     input: '<footer pattern="x">',
@@ -3629,7 +3747,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_footer_pattern',
+    name: 'contract_footer_pattern'
   },
   {
     input: '<footer readonly="x">',
@@ -3646,7 +3764,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_footer_readonly',
+    name: 'contract_footer_readonly'
   },
   {
     input: '<footer accept="x">',
@@ -3663,7 +3781,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_footer_accept',
+    name: 'contract_footer_accept'
   },
   {
     input: '<footer defer="x">',
@@ -3680,7 +3798,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_footer_defer',
+    name: 'contract_footer_defer'
   },
   {
     input: '<address></address>',
@@ -3695,7 +3813,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_address_plain',
+    name: 'contract_address_plain'
   },
   {
     input: '<address><script>alert()</script></address>',
@@ -3713,7 +3831,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><address></address><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_address_scriptinside',
+    name: 'contract_address_scriptinside'
   },
   {
     input: '<address srcdoc="x">',
@@ -3730,7 +3848,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_address_srcdoc',
+    name: 'contract_address_srcdoc'
   },
   {
     input: '<address action="x">',
@@ -3747,7 +3865,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_address_action',
+    name: 'contract_address_action'
   },
   {
     input: '<address method="x">',
@@ -3764,7 +3882,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_address_method',
+    name: 'contract_address_method'
   },
   {
     input: '<address formaction="x">',
@@ -3781,7 +3899,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_address_formaction',
+    name: 'contract_address_formaction'
   },
   {
     input: '<address formmethod="x">',
@@ -3798,7 +3916,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_address_formmethod',
+    name: 'contract_address_formmethod'
   },
   {
     input: '<address pattern="x">',
@@ -3815,7 +3933,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_address_pattern',
+    name: 'contract_address_pattern'
   },
   {
     input: '<address readonly="x">',
@@ -3832,7 +3950,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_address_readonly',
+    name: 'contract_address_readonly'
   },
   {
     input: '<address accept="x">',
@@ -3849,7 +3967,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_address_accept',
+    name: 'contract_address_accept'
   },
   {
     input: '<address defer="x">',
@@ -3866,7 +3984,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_address_defer',
+    name: 'contract_address_defer'
   },
   {
     input: '<p></p>',
@@ -3881,7 +3999,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_p_plain',
+    name: 'contract_p_plain'
   },
   {
     input: '<p><script>alert()</script></p>',
@@ -3899,7 +4017,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><p></p><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_p_scriptinside',
+    name: 'contract_p_scriptinside'
   },
   {
     input: '<p srcdoc="x">',
@@ -3916,7 +4034,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_p_srcdoc',
+    name: 'contract_p_srcdoc'
   },
   {
     input: '<p action="x">',
@@ -3933,7 +4051,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_p_action',
+    name: 'contract_p_action'
   },
   {
     input: '<p method="x">',
@@ -3950,7 +4068,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_p_method',
+    name: 'contract_p_method'
   },
   {
     input: '<p formaction="x">',
@@ -3967,7 +4085,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_p_formaction',
+    name: 'contract_p_formaction'
   },
   {
     input: '<p formmethod="x">',
@@ -3984,7 +4102,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_p_formmethod',
+    name: 'contract_p_formmethod'
   },
   {
     input: '<p pattern="x">',
@@ -4001,7 +4119,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_p_pattern',
+    name: 'contract_p_pattern'
   },
   {
     input: '<p readonly="x">',
@@ -4018,7 +4136,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_p_readonly',
+    name: 'contract_p_readonly'
   },
   {
     input: '<p accept="x">',
@@ -4035,7 +4153,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_p_accept',
+    name: 'contract_p_accept'
   },
   {
     input: '<p defer="x">',
@@ -4052,7 +4170,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_p_defer',
+    name: 'contract_p_defer'
   },
   {
     input: '<hr></hr>',
@@ -4068,7 +4186,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_hr_plain',
+    name: 'contract_hr_plain'
   },
   {
     input: '<hr><script>alert()</script></hr>',
@@ -4085,7 +4203,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '',
       '<table><hr><td></td></table>',
     ],
-    name: 'contract_hr_scriptinside',
+    name: 'contract_hr_scriptinside'
   },
   {
     input: '<hr srcdoc="x">',
@@ -4102,7 +4220,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_hr_srcdoc',
+    name: 'contract_hr_srcdoc'
   },
   {
     input: '<hr action="x">',
@@ -4119,7 +4237,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_hr_action',
+    name: 'contract_hr_action'
   },
   {
     input: '<hr method="x">',
@@ -4136,7 +4254,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_hr_method',
+    name: 'contract_hr_method'
   },
   {
     input: '<hr formaction="x">',
@@ -4153,7 +4271,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_hr_formaction',
+    name: 'contract_hr_formaction'
   },
   {
     input: '<hr formmethod="x">',
@@ -4170,7 +4288,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_hr_formmethod',
+    name: 'contract_hr_formmethod'
   },
   {
     input: '<hr pattern="x">',
@@ -4187,7 +4305,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_hr_pattern',
+    name: 'contract_hr_pattern'
   },
   {
     input: '<hr readonly="x">',
@@ -4204,7 +4322,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_hr_readonly',
+    name: 'contract_hr_readonly'
   },
   {
     input: '<hr accept="x">',
@@ -4221,7 +4339,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_hr_accept',
+    name: 'contract_hr_accept'
   },
   {
     input: '<hr defer="x">',
@@ -4238,7 +4356,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_hr_defer',
+    name: 'contract_hr_defer'
   },
   {
     input: '<pre></pre>',
@@ -4253,7 +4371,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_pre_plain',
+    name: 'contract_pre_plain'
   },
   {
     input: '<pre><script>alert()</script></pre>',
@@ -4271,7 +4389,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><pre></pre><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_pre_scriptinside',
+    name: 'contract_pre_scriptinside'
   },
   {
     input: '<pre srcdoc="x">',
@@ -4288,7 +4406,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_pre_srcdoc',
+    name: 'contract_pre_srcdoc'
   },
   {
     input: '<pre action="x">',
@@ -4305,7 +4423,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_pre_action',
+    name: 'contract_pre_action'
   },
   {
     input: '<pre method="x">',
@@ -4322,7 +4440,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_pre_method',
+    name: 'contract_pre_method'
   },
   {
     input: '<pre formaction="x">',
@@ -4339,7 +4457,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_pre_formaction',
+    name: 'contract_pre_formaction'
   },
   {
     input: '<pre formmethod="x">',
@@ -4356,7 +4474,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_pre_formmethod',
+    name: 'contract_pre_formmethod'
   },
   {
     input: '<pre pattern="x">',
@@ -4373,7 +4491,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_pre_pattern',
+    name: 'contract_pre_pattern'
   },
   {
     input: '<pre readonly="x">',
@@ -4390,7 +4508,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_pre_readonly',
+    name: 'contract_pre_readonly'
   },
   {
     input: '<pre accept="x">',
@@ -4407,7 +4525,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_pre_accept',
+    name: 'contract_pre_accept'
   },
   {
     input: '<pre defer="x">',
@@ -4424,7 +4542,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_pre_defer',
+    name: 'contract_pre_defer'
   },
   {
     input: '<blockquote></blockquote>',
@@ -4439,7 +4557,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_blockquote_plain',
+    name: 'contract_blockquote_plain'
   },
   {
     input: '<blockquote><script>alert()</script></blockquote>',
@@ -4457,7 +4575,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><blockquote></blockquote><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_blockquote_scriptinside',
+    name: 'contract_blockquote_scriptinside'
   },
   {
     input: '<blockquote srcdoc="x">',
@@ -4474,7 +4592,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_blockquote_srcdoc',
+    name: 'contract_blockquote_srcdoc'
   },
   {
     input: '<blockquote action="x">',
@@ -4491,7 +4609,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_blockquote_action',
+    name: 'contract_blockquote_action'
   },
   {
     input: '<blockquote method="x">',
@@ -4508,7 +4626,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_blockquote_method',
+    name: 'contract_blockquote_method'
   },
   {
     input: '<blockquote formaction="x">',
@@ -4525,7 +4643,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_blockquote_formaction',
+    name: 'contract_blockquote_formaction'
   },
   {
     input: '<blockquote formmethod="x">',
@@ -4542,7 +4660,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_blockquote_formmethod',
+    name: 'contract_blockquote_formmethod'
   },
   {
     input: '<blockquote pattern="x">',
@@ -4559,7 +4677,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_blockquote_pattern',
+    name: 'contract_blockquote_pattern'
   },
   {
     input: '<blockquote readonly="x">',
@@ -4576,7 +4694,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_blockquote_readonly',
+    name: 'contract_blockquote_readonly'
   },
   {
     input: '<blockquote accept="x">',
@@ -4593,7 +4711,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_blockquote_accept',
+    name: 'contract_blockquote_accept'
   },
   {
     input: '<blockquote defer="x">',
@@ -4610,7 +4728,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_blockquote_defer',
+    name: 'contract_blockquote_defer'
   },
   {
     input: '<ol></ol>',
@@ -4625,7 +4743,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_ol_plain',
+    name: 'contract_ol_plain'
   },
   {
     input: '<ol><script>alert()</script></ol>',
@@ -4643,7 +4761,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><ol></ol><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_ol_scriptinside',
+    name: 'contract_ol_scriptinside'
   },
   {
     input: '<ol srcdoc="x">',
@@ -4660,7 +4778,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_ol_srcdoc',
+    name: 'contract_ol_srcdoc'
   },
   {
     input: '<ol action="x">',
@@ -4677,7 +4795,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_ol_action',
+    name: 'contract_ol_action'
   },
   {
     input: '<ol method="x">',
@@ -4694,7 +4812,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_ol_method',
+    name: 'contract_ol_method'
   },
   {
     input: '<ol formaction="x">',
@@ -4711,7 +4829,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_ol_formaction',
+    name: 'contract_ol_formaction'
   },
   {
     input: '<ol formmethod="x">',
@@ -4728,7 +4846,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_ol_formmethod',
+    name: 'contract_ol_formmethod'
   },
   {
     input: '<ol pattern="x">',
@@ -4745,7 +4863,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_ol_pattern',
+    name: 'contract_ol_pattern'
   },
   {
     input: '<ol readonly="x">',
@@ -4762,7 +4880,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_ol_readonly',
+    name: 'contract_ol_readonly'
   },
   {
     input: '<ol accept="x">',
@@ -4779,7 +4897,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_ol_accept',
+    name: 'contract_ol_accept'
   },
   {
     input: '<ol defer="x">',
@@ -4796,7 +4914,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_ol_defer',
+    name: 'contract_ol_defer'
   },
   {
     input: '<ul></ul>',
@@ -4811,7 +4929,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_ul_plain',
+    name: 'contract_ul_plain'
   },
   {
     input: '<ul><script>alert()</script></ul>',
@@ -4829,7 +4947,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><ul></ul><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_ul_scriptinside',
+    name: 'contract_ul_scriptinside'
   },
   {
     input: '<ul srcdoc="x">',
@@ -4846,7 +4964,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_ul_srcdoc',
+    name: 'contract_ul_srcdoc'
   },
   {
     input: '<ul action="x">',
@@ -4863,7 +4981,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_ul_action',
+    name: 'contract_ul_action'
   },
   {
     input: '<ul method="x">',
@@ -4880,7 +4998,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_ul_method',
+    name: 'contract_ul_method'
   },
   {
     input: '<ul formaction="x">',
@@ -4897,7 +5015,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_ul_formaction',
+    name: 'contract_ul_formaction'
   },
   {
     input: '<ul formmethod="x">',
@@ -4914,7 +5032,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_ul_formmethod',
+    name: 'contract_ul_formmethod'
   },
   {
     input: '<ul pattern="x">',
@@ -4931,7 +5049,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_ul_pattern',
+    name: 'contract_ul_pattern'
   },
   {
     input: '<ul readonly="x">',
@@ -4948,7 +5066,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_ul_readonly',
+    name: 'contract_ul_readonly'
   },
   {
     input: '<ul accept="x">',
@@ -4965,7 +5083,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_ul_accept',
+    name: 'contract_ul_accept'
   },
   {
     input: '<ul defer="x">',
@@ -4982,7 +5100,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_ul_defer',
+    name: 'contract_ul_defer'
   },
   {
     input: '<lh></lh>',
@@ -4997,7 +5115,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_lh_plain',
+    name: 'contract_lh_plain'
   },
   {
     input: '<lh><script>alert()</script></lh>',
@@ -5015,7 +5133,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><lh></lh><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_lh_scriptinside',
+    name: 'contract_lh_scriptinside'
   },
   {
     input: '<lh srcdoc="x">',
@@ -5032,7 +5150,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_lh_srcdoc',
+    name: 'contract_lh_srcdoc'
   },
   {
     input: '<lh action="x">',
@@ -5049,7 +5167,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_lh_action',
+    name: 'contract_lh_action'
   },
   {
     input: '<lh method="x">',
@@ -5066,7 +5184,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_lh_method',
+    name: 'contract_lh_method'
   },
   {
     input: '<lh formaction="x">',
@@ -5083,7 +5201,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_lh_formaction',
+    name: 'contract_lh_formaction'
   },
   {
     input: '<lh formmethod="x">',
@@ -5100,7 +5218,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_lh_formmethod',
+    name: 'contract_lh_formmethod'
   },
   {
     input: '<lh pattern="x">',
@@ -5117,7 +5235,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_lh_pattern',
+    name: 'contract_lh_pattern'
   },
   {
     input: '<lh readonly="x">',
@@ -5134,7 +5252,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_lh_readonly',
+    name: 'contract_lh_readonly'
   },
   {
     input: '<lh accept="x">',
@@ -5151,7 +5269,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_lh_accept',
+    name: 'contract_lh_accept'
   },
   {
     input: '<lh defer="x">',
@@ -5168,7 +5286,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_lh_defer',
+    name: 'contract_lh_defer'
   },
   {
     input: '<li></li>',
@@ -5183,7 +5301,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_li_plain',
+    name: 'contract_li_plain'
   },
   {
     input: '<li><script>alert()</script></li>',
@@ -5201,7 +5319,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><li></li><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_li_scriptinside',
+    name: 'contract_li_scriptinside'
   },
   {
     input: '<li srcdoc="x">',
@@ -5218,7 +5336,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_li_srcdoc',
+    name: 'contract_li_srcdoc'
   },
   {
     input: '<li action="x">',
@@ -5235,7 +5353,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_li_action',
+    name: 'contract_li_action'
   },
   {
     input: '<li method="x">',
@@ -5252,7 +5370,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_li_method',
+    name: 'contract_li_method'
   },
   {
     input: '<li formaction="x">',
@@ -5269,7 +5387,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_li_formaction',
+    name: 'contract_li_formaction'
   },
   {
     input: '<li formmethod="x">',
@@ -5286,7 +5404,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_li_formmethod',
+    name: 'contract_li_formmethod'
   },
   {
     input: '<li pattern="x">',
@@ -5303,7 +5421,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_li_pattern',
+    name: 'contract_li_pattern'
   },
   {
     input: '<li readonly="x">',
@@ -5320,7 +5438,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_li_readonly',
+    name: 'contract_li_readonly'
   },
   {
     input: '<li accept="x">',
@@ -5337,7 +5455,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_li_accept',
+    name: 'contract_li_accept'
   },
   {
     input: '<li defer="x">',
@@ -5354,7 +5472,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_li_defer',
+    name: 'contract_li_defer'
   },
   {
     input: '<dl></dl>',
@@ -5369,7 +5487,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dl_plain',
+    name: 'contract_dl_plain'
   },
   {
     input: '<dl><script>alert()</script></dl>',
@@ -5387,7 +5505,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><dl></dl><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_dl_scriptinside',
+    name: 'contract_dl_scriptinside'
   },
   {
     input: '<dl srcdoc="x">',
@@ -5404,7 +5522,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dl_srcdoc',
+    name: 'contract_dl_srcdoc'
   },
   {
     input: '<dl action="x">',
@@ -5421,7 +5539,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dl_action',
+    name: 'contract_dl_action'
   },
   {
     input: '<dl method="x">',
@@ -5438,7 +5556,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dl_method',
+    name: 'contract_dl_method'
   },
   {
     input: '<dl formaction="x">',
@@ -5455,7 +5573,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dl_formaction',
+    name: 'contract_dl_formaction'
   },
   {
     input: '<dl formmethod="x">',
@@ -5472,7 +5590,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dl_formmethod',
+    name: 'contract_dl_formmethod'
   },
   {
     input: '<dl pattern="x">',
@@ -5489,7 +5607,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dl_pattern',
+    name: 'contract_dl_pattern'
   },
   {
     input: '<dl readonly="x">',
@@ -5506,7 +5624,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dl_readonly',
+    name: 'contract_dl_readonly'
   },
   {
     input: '<dl accept="x">',
@@ -5523,7 +5641,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dl_accept',
+    name: 'contract_dl_accept'
   },
   {
     input: '<dl defer="x">',
@@ -5540,7 +5658,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dl_defer',
+    name: 'contract_dl_defer'
   },
   {
     input: '<dt></dt>',
@@ -5555,7 +5673,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dt_plain',
+    name: 'contract_dt_plain'
   },
   {
     input: '<dt><script>alert()</script></dt>',
@@ -5573,7 +5691,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><dt></dt><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_dt_scriptinside',
+    name: 'contract_dt_scriptinside'
   },
   {
     input: '<dt srcdoc="x">',
@@ -5590,7 +5708,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dt_srcdoc',
+    name: 'contract_dt_srcdoc'
   },
   {
     input: '<dt action="x">',
@@ -5607,7 +5725,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dt_action',
+    name: 'contract_dt_action'
   },
   {
     input: '<dt method="x">',
@@ -5624,7 +5742,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dt_method',
+    name: 'contract_dt_method'
   },
   {
     input: '<dt formaction="x">',
@@ -5641,7 +5759,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dt_formaction',
+    name: 'contract_dt_formaction'
   },
   {
     input: '<dt formmethod="x">',
@@ -5658,7 +5776,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dt_formmethod',
+    name: 'contract_dt_formmethod'
   },
   {
     input: '<dt pattern="x">',
@@ -5675,7 +5793,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dt_pattern',
+    name: 'contract_dt_pattern'
   },
   {
     input: '<dt readonly="x">',
@@ -5692,7 +5810,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dt_readonly',
+    name: 'contract_dt_readonly'
   },
   {
     input: '<dt accept="x">',
@@ -5709,7 +5827,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dt_accept',
+    name: 'contract_dt_accept'
   },
   {
     input: '<dt defer="x">',
@@ -5726,7 +5844,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dt_defer',
+    name: 'contract_dt_defer'
   },
   {
     input: '<dd></dd>',
@@ -5741,7 +5859,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dd_plain',
+    name: 'contract_dd_plain'
   },
   {
     input: '<dd><script>alert()</script></dd>',
@@ -5759,7 +5877,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><dd></dd><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_dd_scriptinside',
+    name: 'contract_dd_scriptinside'
   },
   {
     input: '<dd srcdoc="x">',
@@ -5776,7 +5894,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dd_srcdoc',
+    name: 'contract_dd_srcdoc'
   },
   {
     input: '<dd action="x">',
@@ -5793,7 +5911,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dd_action',
+    name: 'contract_dd_action'
   },
   {
     input: '<dd method="x">',
@@ -5810,7 +5928,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dd_method',
+    name: 'contract_dd_method'
   },
   {
     input: '<dd formaction="x">',
@@ -5827,7 +5945,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dd_formaction',
+    name: 'contract_dd_formaction'
   },
   {
     input: '<dd formmethod="x">',
@@ -5844,7 +5962,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dd_formmethod',
+    name: 'contract_dd_formmethod'
   },
   {
     input: '<dd pattern="x">',
@@ -5861,7 +5979,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dd_pattern',
+    name: 'contract_dd_pattern'
   },
   {
     input: '<dd readonly="x">',
@@ -5878,7 +5996,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dd_readonly',
+    name: 'contract_dd_readonly'
   },
   {
     input: '<dd accept="x">',
@@ -5895,7 +6013,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dd_accept',
+    name: 'contract_dd_accept'
   },
   {
     input: '<dd defer="x">',
@@ -5912,7 +6030,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dd_defer',
+    name: 'contract_dd_defer'
   },
   {
     input: '<figure></figure>',
@@ -5927,7 +6045,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_figure_plain',
+    name: 'contract_figure_plain'
   },
   {
     input: '<figure><script>alert()</script></figure>',
@@ -5945,7 +6063,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><figure></figure><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_figure_scriptinside',
+    name: 'contract_figure_scriptinside'
   },
   {
     input: '<figure srcdoc="x">',
@@ -5962,7 +6080,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_figure_srcdoc',
+    name: 'contract_figure_srcdoc'
   },
   {
     input: '<figure action="x">',
@@ -5979,7 +6097,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_figure_action',
+    name: 'contract_figure_action'
   },
   {
     input: '<figure method="x">',
@@ -5996,7 +6114,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_figure_method',
+    name: 'contract_figure_method'
   },
   {
     input: '<figure formaction="x">',
@@ -6013,7 +6131,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_figure_formaction',
+    name: 'contract_figure_formaction'
   },
   {
     input: '<figure formmethod="x">',
@@ -6030,7 +6148,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_figure_formmethod',
+    name: 'contract_figure_formmethod'
   },
   {
     input: '<figure pattern="x">',
@@ -6047,7 +6165,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_figure_pattern',
+    name: 'contract_figure_pattern'
   },
   {
     input: '<figure readonly="x">',
@@ -6064,7 +6182,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_figure_readonly',
+    name: 'contract_figure_readonly'
   },
   {
     input: '<figure accept="x">',
@@ -6081,7 +6199,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_figure_accept',
+    name: 'contract_figure_accept'
   },
   {
     input: '<figure defer="x">',
@@ -6098,7 +6216,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_figure_defer',
+    name: 'contract_figure_defer'
   },
   {
     input: '<figcaption></figcaption>',
@@ -6113,7 +6231,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_figcaption_plain',
+    name: 'contract_figcaption_plain'
   },
   {
     input: '<figcaption><script>alert()</script></figcaption>',
@@ -6131,7 +6249,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><figcaption></figcaption><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_figcaption_scriptinside',
+    name: 'contract_figcaption_scriptinside'
   },
   {
     input: '<figcaption srcdoc="x">',
@@ -6148,7 +6266,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_figcaption_srcdoc',
+    name: 'contract_figcaption_srcdoc'
   },
   {
     input: '<figcaption action="x">',
@@ -6165,7 +6283,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_figcaption_action',
+    name: 'contract_figcaption_action'
   },
   {
     input: '<figcaption method="x">',
@@ -6182,7 +6300,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_figcaption_method',
+    name: 'contract_figcaption_method'
   },
   {
     input: '<figcaption formaction="x">',
@@ -6199,7 +6317,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_figcaption_formaction',
+    name: 'contract_figcaption_formaction'
   },
   {
     input: '<figcaption formmethod="x">',
@@ -6216,7 +6334,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_figcaption_formmethod',
+    name: 'contract_figcaption_formmethod'
   },
   {
     input: '<figcaption pattern="x">',
@@ -6233,7 +6351,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_figcaption_pattern',
+    name: 'contract_figcaption_pattern'
   },
   {
     input: '<figcaption readonly="x">',
@@ -6250,7 +6368,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_figcaption_readonly',
+    name: 'contract_figcaption_readonly'
   },
   {
     input: '<figcaption accept="x">',
@@ -6267,7 +6385,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_figcaption_accept',
+    name: 'contract_figcaption_accept'
   },
   {
     input: '<figcaption defer="x">',
@@ -6284,7 +6402,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_figcaption_defer',
+    name: 'contract_figcaption_defer'
   },
   {
     input: '<main></main>',
@@ -6299,7 +6417,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_main_plain',
+    name: 'contract_main_plain'
   },
   {
     input: '<main><script>alert()</script></main>',
@@ -6317,7 +6435,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><main></main><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_main_scriptinside',
+    name: 'contract_main_scriptinside'
   },
   {
     input: '<main srcdoc="x">',
@@ -6334,7 +6452,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_main_srcdoc',
+    name: 'contract_main_srcdoc'
   },
   {
     input: '<main action="x">',
@@ -6351,7 +6469,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_main_action',
+    name: 'contract_main_action'
   },
   {
     input: '<main method="x">',
@@ -6368,7 +6486,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_main_method',
+    name: 'contract_main_method'
   },
   {
     input: '<main formaction="x">',
@@ -6385,7 +6503,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_main_formaction',
+    name: 'contract_main_formaction'
   },
   {
     input: '<main formmethod="x">',
@@ -6402,7 +6520,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_main_formmethod',
+    name: 'contract_main_formmethod'
   },
   {
     input: '<main pattern="x">',
@@ -6419,7 +6537,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_main_pattern',
+    name: 'contract_main_pattern'
   },
   {
     input: '<main readonly="x">',
@@ -6436,7 +6554,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_main_readonly',
+    name: 'contract_main_readonly'
   },
   {
     input: '<main accept="x">',
@@ -6453,7 +6571,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_main_accept',
+    name: 'contract_main_accept'
   },
   {
     input: '<main defer="x">',
@@ -6470,7 +6588,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_main_defer',
+    name: 'contract_main_defer'
   },
   {
     input: '<div></div>',
@@ -6485,7 +6603,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_div_plain',
+    name: 'contract_div_plain'
   },
   {
     input: '<div><script>alert()</script></div>',
@@ -6503,7 +6621,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><div></div><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_div_scriptinside',
+    name: 'contract_div_scriptinside'
   },
   {
     input: '<div srcdoc="x">',
@@ -6520,7 +6638,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_div_srcdoc',
+    name: 'contract_div_srcdoc'
   },
   {
     input: '<div action="x">',
@@ -6537,7 +6655,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_div_action',
+    name: 'contract_div_action'
   },
   {
     input: '<div method="x">',
@@ -6554,7 +6672,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_div_method',
+    name: 'contract_div_method'
   },
   {
     input: '<div formaction="x">',
@@ -6571,7 +6689,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_div_formaction',
+    name: 'contract_div_formaction'
   },
   {
     input: '<div formmethod="x">',
@@ -6588,7 +6706,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_div_formmethod',
+    name: 'contract_div_formmethod'
   },
   {
     input: '<div pattern="x">',
@@ -6605,7 +6723,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_div_pattern',
+    name: 'contract_div_pattern'
   },
   {
     input: '<div readonly="x">',
@@ -6622,7 +6740,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_div_readonly',
+    name: 'contract_div_readonly'
   },
   {
     input: '<div accept="x">',
@@ -6639,7 +6757,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_div_accept',
+    name: 'contract_div_accept'
   },
   {
     input: '<div defer="x">',
@@ -6656,7 +6774,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_div_defer',
+    name: 'contract_div_defer'
   },
   {
     input: '<a></a>',
@@ -6671,7 +6789,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_a_plain',
+    name: 'contract_a_plain'
   },
   {
     input: '<a><script>alert()</script></a>',
@@ -6689,7 +6807,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><a></a><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_a_scriptinside',
+    name: 'contract_a_scriptinside'
   },
   {
     input: '<a href="javascript:xss">',
@@ -6709,7 +6827,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<a href="about:invalid#zClosurez"/>',
       '<a href="about:invalid#zClosurez" />',
     ],
-    name: 'contract_a_href',
+    name: 'contract_a_href'
   },
   {
     input: '<a srcdoc="x">',
@@ -6726,7 +6844,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_a_srcdoc',
+    name: 'contract_a_srcdoc'
   },
   {
     input: '<a action="x">',
@@ -6743,7 +6861,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_a_action',
+    name: 'contract_a_action'
   },
   {
     input: '<a method="x">',
@@ -6760,7 +6878,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_a_method',
+    name: 'contract_a_method'
   },
   {
     input: '<a formaction="x">',
@@ -6777,7 +6895,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_a_formaction',
+    name: 'contract_a_formaction'
   },
   {
     input: '<a formmethod="x">',
@@ -6794,7 +6912,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_a_formmethod',
+    name: 'contract_a_formmethod'
   },
   {
     input: '<a pattern="x">',
@@ -6811,7 +6929,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_a_pattern',
+    name: 'contract_a_pattern'
   },
   {
     input: '<a readonly="x">',
@@ -6828,7 +6946,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_a_readonly',
+    name: 'contract_a_readonly'
   },
   {
     input: '<a accept="x">',
@@ -6845,7 +6963,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_a_accept',
+    name: 'contract_a_accept'
   },
   {
     input: '<a defer="x">',
@@ -6862,7 +6980,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_a_defer',
+    name: 'contract_a_defer'
   },
   {
     input: '<area></area>',
@@ -6878,7 +6996,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_area_plain',
+    name: 'contract_area_plain'
   },
   {
     input: '<area><script>alert()</script></area>',
@@ -6895,7 +7013,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '',
       '<table><area><td></td></table>',
     ],
-    name: 'contract_area_scriptinside',
+    name: 'contract_area_scriptinside'
   },
   {
     input: '<area href="javascript:xss">',
@@ -6915,7 +7033,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<area href="about:invalid#zClosurez"/>',
       '<area href="about:invalid#zClosurez" />',
     ],
-    name: 'contract_area_href',
+    name: 'contract_area_href'
   },
   {
     input: '<area srcdoc="x">',
@@ -6932,7 +7050,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_area_srcdoc',
+    name: 'contract_area_srcdoc'
   },
   {
     input: '<area action="x">',
@@ -6949,7 +7067,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_area_action',
+    name: 'contract_area_action'
   },
   {
     input: '<area method="x">',
@@ -6966,7 +7084,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_area_method',
+    name: 'contract_area_method'
   },
   {
     input: '<area formaction="x">',
@@ -6983,7 +7101,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_area_formaction',
+    name: 'contract_area_formaction'
   },
   {
     input: '<area formmethod="x">',
@@ -7000,7 +7118,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_area_formmethod',
+    name: 'contract_area_formmethod'
   },
   {
     input: '<area pattern="x">',
@@ -7017,7 +7135,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_area_pattern',
+    name: 'contract_area_pattern'
   },
   {
     input: '<area readonly="x">',
@@ -7034,7 +7152,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_area_readonly',
+    name: 'contract_area_readonly'
   },
   {
     input: '<area accept="x">',
@@ -7051,7 +7169,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_area_accept',
+    name: 'contract_area_accept'
   },
   {
     input: '<area defer="x">',
@@ -7068,7 +7186,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_area_defer',
+    name: 'contract_area_defer'
   },
   {
     input: '<em></em>',
@@ -7083,7 +7201,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_em_plain',
+    name: 'contract_em_plain'
   },
   {
     input: '<em><script>alert()</script></em>',
@@ -7101,7 +7219,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><em></em><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_em_scriptinside',
+    name: 'contract_em_scriptinside'
   },
   {
     input: '<em srcdoc="x">',
@@ -7118,7 +7236,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_em_srcdoc',
+    name: 'contract_em_srcdoc'
   },
   {
     input: '<em action="x">',
@@ -7135,7 +7253,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_em_action',
+    name: 'contract_em_action'
   },
   {
     input: '<em method="x">',
@@ -7152,7 +7270,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_em_method',
+    name: 'contract_em_method'
   },
   {
     input: '<em formaction="x">',
@@ -7169,7 +7287,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_em_formaction',
+    name: 'contract_em_formaction'
   },
   {
     input: '<em formmethod="x">',
@@ -7186,7 +7304,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_em_formmethod',
+    name: 'contract_em_formmethod'
   },
   {
     input: '<em pattern="x">',
@@ -7203,7 +7321,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_em_pattern',
+    name: 'contract_em_pattern'
   },
   {
     input: '<em readonly="x">',
@@ -7220,7 +7338,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_em_readonly',
+    name: 'contract_em_readonly'
   },
   {
     input: '<em accept="x">',
@@ -7237,7 +7355,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_em_accept',
+    name: 'contract_em_accept'
   },
   {
     input: '<em defer="x">',
@@ -7254,7 +7372,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_em_defer',
+    name: 'contract_em_defer'
   },
   {
     input: '<strong></strong>',
@@ -7269,7 +7387,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_strong_plain',
+    name: 'contract_strong_plain'
   },
   {
     input: '<strong><script>alert()</script></strong>',
@@ -7287,7 +7405,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><strong></strong><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_strong_scriptinside',
+    name: 'contract_strong_scriptinside'
   },
   {
     input: '<strong srcdoc="x">',
@@ -7304,7 +7422,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_strong_srcdoc',
+    name: 'contract_strong_srcdoc'
   },
   {
     input: '<strong action="x">',
@@ -7321,7 +7439,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_strong_action',
+    name: 'contract_strong_action'
   },
   {
     input: '<strong method="x">',
@@ -7338,7 +7456,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_strong_method',
+    name: 'contract_strong_method'
   },
   {
     input: '<strong formaction="x">',
@@ -7355,7 +7473,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_strong_formaction',
+    name: 'contract_strong_formaction'
   },
   {
     input: '<strong formmethod="x">',
@@ -7372,7 +7490,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_strong_formmethod',
+    name: 'contract_strong_formmethod'
   },
   {
     input: '<strong pattern="x">',
@@ -7389,7 +7507,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_strong_pattern',
+    name: 'contract_strong_pattern'
   },
   {
     input: '<strong readonly="x">',
@@ -7406,7 +7524,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_strong_readonly',
+    name: 'contract_strong_readonly'
   },
   {
     input: '<strong accept="x">',
@@ -7423,7 +7541,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_strong_accept',
+    name: 'contract_strong_accept'
   },
   {
     input: '<strong defer="x">',
@@ -7440,7 +7558,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_strong_defer',
+    name: 'contract_strong_defer'
   },
   {
     input: '<small></small>',
@@ -7455,7 +7573,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_small_plain',
+    name: 'contract_small_plain'
   },
   {
     input: '<small><script>alert()</script></small>',
@@ -7473,7 +7591,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><small></small><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_small_scriptinside',
+    name: 'contract_small_scriptinside'
   },
   {
     input: '<small srcdoc="x">',
@@ -7490,7 +7608,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_small_srcdoc',
+    name: 'contract_small_srcdoc'
   },
   {
     input: '<small action="x">',
@@ -7507,7 +7625,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_small_action',
+    name: 'contract_small_action'
   },
   {
     input: '<small method="x">',
@@ -7524,7 +7642,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_small_method',
+    name: 'contract_small_method'
   },
   {
     input: '<small formaction="x">',
@@ -7541,7 +7659,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_small_formaction',
+    name: 'contract_small_formaction'
   },
   {
     input: '<small formmethod="x">',
@@ -7558,7 +7676,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_small_formmethod',
+    name: 'contract_small_formmethod'
   },
   {
     input: '<small pattern="x">',
@@ -7575,7 +7693,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_small_pattern',
+    name: 'contract_small_pattern'
   },
   {
     input: '<small readonly="x">',
@@ -7592,7 +7710,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_small_readonly',
+    name: 'contract_small_readonly'
   },
   {
     input: '<small accept="x">',
@@ -7609,7 +7727,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_small_accept',
+    name: 'contract_small_accept'
   },
   {
     input: '<small defer="x">',
@@ -7626,7 +7744,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_small_defer',
+    name: 'contract_small_defer'
   },
   {
     input: '<s></s>',
@@ -7641,7 +7759,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_s_plain',
+    name: 'contract_s_plain'
   },
   {
     input: '<s><script>alert()</script></s>',
@@ -7659,7 +7777,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><s></s><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_s_scriptinside',
+    name: 'contract_s_scriptinside'
   },
   {
     input: '<s srcdoc="x">',
@@ -7676,7 +7794,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_s_srcdoc',
+    name: 'contract_s_srcdoc'
   },
   {
     input: '<s action="x">',
@@ -7693,7 +7811,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_s_action',
+    name: 'contract_s_action'
   },
   {
     input: '<s method="x">',
@@ -7710,7 +7828,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_s_method',
+    name: 'contract_s_method'
   },
   {
     input: '<s formaction="x">',
@@ -7727,7 +7845,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_s_formaction',
+    name: 'contract_s_formaction'
   },
   {
     input: '<s formmethod="x">',
@@ -7744,7 +7862,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_s_formmethod',
+    name: 'contract_s_formmethod'
   },
   {
     input: '<s pattern="x">',
@@ -7761,7 +7879,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_s_pattern',
+    name: 'contract_s_pattern'
   },
   {
     input: '<s readonly="x">',
@@ -7778,7 +7896,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_s_readonly',
+    name: 'contract_s_readonly'
   },
   {
     input: '<s accept="x">',
@@ -7795,7 +7913,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_s_accept',
+    name: 'contract_s_accept'
   },
   {
     input: '<s defer="x">',
@@ -7812,7 +7930,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_s_defer',
+    name: 'contract_s_defer'
   },
   {
     input: '<cite></cite>',
@@ -7827,7 +7945,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_cite_plain',
+    name: 'contract_cite_plain'
   },
   {
     input: '<cite><script>alert()</script></cite>',
@@ -7845,7 +7963,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><cite></cite><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_cite_scriptinside',
+    name: 'contract_cite_scriptinside'
   },
   {
     input: '<cite srcdoc="x">',
@@ -7862,7 +7980,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_cite_srcdoc',
+    name: 'contract_cite_srcdoc'
   },
   {
     input: '<cite action="x">',
@@ -7879,7 +7997,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_cite_action',
+    name: 'contract_cite_action'
   },
   {
     input: '<cite method="x">',
@@ -7896,7 +8014,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_cite_method',
+    name: 'contract_cite_method'
   },
   {
     input: '<cite formaction="x">',
@@ -7913,7 +8031,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_cite_formaction',
+    name: 'contract_cite_formaction'
   },
   {
     input: '<cite formmethod="x">',
@@ -7930,7 +8048,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_cite_formmethod',
+    name: 'contract_cite_formmethod'
   },
   {
     input: '<cite pattern="x">',
@@ -7947,7 +8065,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_cite_pattern',
+    name: 'contract_cite_pattern'
   },
   {
     input: '<cite readonly="x">',
@@ -7964,7 +8082,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_cite_readonly',
+    name: 'contract_cite_readonly'
   },
   {
     input: '<cite accept="x">',
@@ -7981,7 +8099,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_cite_accept',
+    name: 'contract_cite_accept'
   },
   {
     input: '<cite defer="x">',
@@ -7998,7 +8116,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_cite_defer',
+    name: 'contract_cite_defer'
   },
   {
     input: '<q></q>',
@@ -8013,7 +8131,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_q_plain',
+    name: 'contract_q_plain'
   },
   {
     input: '<q><script>alert()</script></q>',
@@ -8031,7 +8149,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><q></q><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_q_scriptinside',
+    name: 'contract_q_scriptinside'
   },
   {
     input: '<q srcdoc="x">',
@@ -8048,7 +8166,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_q_srcdoc',
+    name: 'contract_q_srcdoc'
   },
   {
     input: '<q action="x">',
@@ -8065,7 +8183,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_q_action',
+    name: 'contract_q_action'
   },
   {
     input: '<q method="x">',
@@ -8082,7 +8200,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_q_method',
+    name: 'contract_q_method'
   },
   {
     input: '<q formaction="x">',
@@ -8099,7 +8217,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_q_formaction',
+    name: 'contract_q_formaction'
   },
   {
     input: '<q formmethod="x">',
@@ -8116,7 +8234,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_q_formmethod',
+    name: 'contract_q_formmethod'
   },
   {
     input: '<q pattern="x">',
@@ -8133,7 +8251,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_q_pattern',
+    name: 'contract_q_pattern'
   },
   {
     input: '<q readonly="x">',
@@ -8150,7 +8268,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_q_readonly',
+    name: 'contract_q_readonly'
   },
   {
     input: '<q accept="x">',
@@ -8167,7 +8285,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_q_accept',
+    name: 'contract_q_accept'
   },
   {
     input: '<q defer="x">',
@@ -8184,7 +8302,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_q_defer',
+    name: 'contract_q_defer'
   },
   {
     input: '<dfn></dfn>',
@@ -8199,7 +8317,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dfn_plain',
+    name: 'contract_dfn_plain'
   },
   {
     input: '<dfn><script>alert()</script></dfn>',
@@ -8217,7 +8335,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><dfn></dfn><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_dfn_scriptinside',
+    name: 'contract_dfn_scriptinside'
   },
   {
     input: '<dfn srcdoc="x">',
@@ -8234,7 +8352,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dfn_srcdoc',
+    name: 'contract_dfn_srcdoc'
   },
   {
     input: '<dfn action="x">',
@@ -8251,7 +8369,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dfn_action',
+    name: 'contract_dfn_action'
   },
   {
     input: '<dfn method="x">',
@@ -8268,7 +8386,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dfn_method',
+    name: 'contract_dfn_method'
   },
   {
     input: '<dfn formaction="x">',
@@ -8285,7 +8403,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dfn_formaction',
+    name: 'contract_dfn_formaction'
   },
   {
     input: '<dfn formmethod="x">',
@@ -8302,7 +8420,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dfn_formmethod',
+    name: 'contract_dfn_formmethod'
   },
   {
     input: '<dfn pattern="x">',
@@ -8319,7 +8437,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dfn_pattern',
+    name: 'contract_dfn_pattern'
   },
   {
     input: '<dfn readonly="x">',
@@ -8336,7 +8454,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dfn_readonly',
+    name: 'contract_dfn_readonly'
   },
   {
     input: '<dfn accept="x">',
@@ -8353,7 +8471,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dfn_accept',
+    name: 'contract_dfn_accept'
   },
   {
     input: '<dfn defer="x">',
@@ -8370,7 +8488,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dfn_defer',
+    name: 'contract_dfn_defer'
   },
   {
     input: '<abbr></abbr>',
@@ -8385,7 +8503,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_abbr_plain',
+    name: 'contract_abbr_plain'
   },
   {
     input: '<abbr><script>alert()</script></abbr>',
@@ -8403,7 +8521,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><abbr></abbr><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_abbr_scriptinside',
+    name: 'contract_abbr_scriptinside'
   },
   {
     input: '<abbr srcdoc="x">',
@@ -8420,7 +8538,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_abbr_srcdoc',
+    name: 'contract_abbr_srcdoc'
   },
   {
     input: '<abbr action="x">',
@@ -8437,7 +8555,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_abbr_action',
+    name: 'contract_abbr_action'
   },
   {
     input: '<abbr method="x">',
@@ -8454,7 +8572,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_abbr_method',
+    name: 'contract_abbr_method'
   },
   {
     input: '<abbr formaction="x">',
@@ -8471,7 +8589,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_abbr_formaction',
+    name: 'contract_abbr_formaction'
   },
   {
     input: '<abbr formmethod="x">',
@@ -8488,7 +8606,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_abbr_formmethod',
+    name: 'contract_abbr_formmethod'
   },
   {
     input: '<abbr pattern="x">',
@@ -8505,7 +8623,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_abbr_pattern',
+    name: 'contract_abbr_pattern'
   },
   {
     input: '<abbr readonly="x">',
@@ -8522,7 +8640,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_abbr_readonly',
+    name: 'contract_abbr_readonly'
   },
   {
     input: '<abbr accept="x">',
@@ -8539,7 +8657,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_abbr_accept',
+    name: 'contract_abbr_accept'
   },
   {
     input: '<abbr defer="x">',
@@ -8556,7 +8674,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_abbr_defer',
+    name: 'contract_abbr_defer'
   },
   {
     input: '<ruby></ruby>',
@@ -8571,7 +8689,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_ruby_plain',
+    name: 'contract_ruby_plain'
   },
   {
     input: '<ruby><script>alert()</script></ruby>',
@@ -8589,7 +8707,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><ruby></ruby><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_ruby_scriptinside',
+    name: 'contract_ruby_scriptinside'
   },
   {
     input: '<ruby srcdoc="x">',
@@ -8606,7 +8724,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_ruby_srcdoc',
+    name: 'contract_ruby_srcdoc'
   },
   {
     input: '<ruby action="x">',
@@ -8623,7 +8741,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_ruby_action',
+    name: 'contract_ruby_action'
   },
   {
     input: '<ruby method="x">',
@@ -8640,7 +8758,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_ruby_method',
+    name: 'contract_ruby_method'
   },
   {
     input: '<ruby formaction="x">',
@@ -8657,7 +8775,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_ruby_formaction',
+    name: 'contract_ruby_formaction'
   },
   {
     input: '<ruby formmethod="x">',
@@ -8674,7 +8792,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_ruby_formmethod',
+    name: 'contract_ruby_formmethod'
   },
   {
     input: '<ruby pattern="x">',
@@ -8691,7 +8809,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_ruby_pattern',
+    name: 'contract_ruby_pattern'
   },
   {
     input: '<ruby readonly="x">',
@@ -8708,7 +8826,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_ruby_readonly',
+    name: 'contract_ruby_readonly'
   },
   {
     input: '<ruby accept="x">',
@@ -8725,7 +8843,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_ruby_accept',
+    name: 'contract_ruby_accept'
   },
   {
     input: '<ruby defer="x">',
@@ -8742,7 +8860,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_ruby_defer',
+    name: 'contract_ruby_defer'
   },
   {
     input: '<rb></rb>',
@@ -8757,7 +8875,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_rb_plain',
+    name: 'contract_rb_plain'
   },
   {
     input: '<rb><script>alert()</script></rb>',
@@ -8775,7 +8893,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><rb></rb><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_rb_scriptinside',
+    name: 'contract_rb_scriptinside'
   },
   {
     input: '<rb srcdoc="x">',
@@ -8792,7 +8910,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_rb_srcdoc',
+    name: 'contract_rb_srcdoc'
   },
   {
     input: '<rb action="x">',
@@ -8809,7 +8927,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_rb_action',
+    name: 'contract_rb_action'
   },
   {
     input: '<rb method="x">',
@@ -8826,7 +8944,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_rb_method',
+    name: 'contract_rb_method'
   },
   {
     input: '<rb formaction="x">',
@@ -8843,7 +8961,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_rb_formaction',
+    name: 'contract_rb_formaction'
   },
   {
     input: '<rb formmethod="x">',
@@ -8860,7 +8978,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_rb_formmethod',
+    name: 'contract_rb_formmethod'
   },
   {
     input: '<rb pattern="x">',
@@ -8877,7 +8995,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_rb_pattern',
+    name: 'contract_rb_pattern'
   },
   {
     input: '<rb readonly="x">',
@@ -8894,7 +9012,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_rb_readonly',
+    name: 'contract_rb_readonly'
   },
   {
     input: '<rb accept="x">',
@@ -8911,7 +9029,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_rb_accept',
+    name: 'contract_rb_accept'
   },
   {
     input: '<rb defer="x">',
@@ -8928,7 +9046,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_rb_defer',
+    name: 'contract_rb_defer'
   },
   {
     input: '<rt></rt>',
@@ -8943,7 +9061,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_rt_plain',
+    name: 'contract_rt_plain'
   },
   {
     input: '<rt><script>alert()</script></rt>',
@@ -8961,7 +9079,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><rt></rt><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_rt_scriptinside',
+    name: 'contract_rt_scriptinside'
   },
   {
     input: '<rt srcdoc="x">',
@@ -8978,7 +9096,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_rt_srcdoc',
+    name: 'contract_rt_srcdoc'
   },
   {
     input: '<rt action="x">',
@@ -8995,7 +9113,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_rt_action',
+    name: 'contract_rt_action'
   },
   {
     input: '<rt method="x">',
@@ -9012,7 +9130,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_rt_method',
+    name: 'contract_rt_method'
   },
   {
     input: '<rt formaction="x">',
@@ -9029,7 +9147,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_rt_formaction',
+    name: 'contract_rt_formaction'
   },
   {
     input: '<rt formmethod="x">',
@@ -9046,7 +9164,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_rt_formmethod',
+    name: 'contract_rt_formmethod'
   },
   {
     input: '<rt pattern="x">',
@@ -9063,7 +9181,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_rt_pattern',
+    name: 'contract_rt_pattern'
   },
   {
     input: '<rt readonly="x">',
@@ -9080,7 +9198,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_rt_readonly',
+    name: 'contract_rt_readonly'
   },
   {
     input: '<rt accept="x">',
@@ -9097,7 +9215,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_rt_accept',
+    name: 'contract_rt_accept'
   },
   {
     input: '<rt defer="x">',
@@ -9114,7 +9232,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_rt_defer',
+    name: 'contract_rt_defer'
   },
   {
     input: '<rtc></rtc>',
@@ -9129,7 +9247,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_rtc_plain',
+    name: 'contract_rtc_plain'
   },
   {
     input: '<rtc><script>alert()</script></rtc>',
@@ -9147,7 +9265,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><rtc></rtc><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_rtc_scriptinside',
+    name: 'contract_rtc_scriptinside'
   },
   {
     input: '<rtc srcdoc="x">',
@@ -9164,7 +9282,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_rtc_srcdoc',
+    name: 'contract_rtc_srcdoc'
   },
   {
     input: '<rtc action="x">',
@@ -9181,7 +9299,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_rtc_action',
+    name: 'contract_rtc_action'
   },
   {
     input: '<rtc method="x">',
@@ -9198,7 +9316,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_rtc_method',
+    name: 'contract_rtc_method'
   },
   {
     input: '<rtc formaction="x">',
@@ -9215,7 +9333,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_rtc_formaction',
+    name: 'contract_rtc_formaction'
   },
   {
     input: '<rtc formmethod="x">',
@@ -9232,7 +9350,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_rtc_formmethod',
+    name: 'contract_rtc_formmethod'
   },
   {
     input: '<rtc pattern="x">',
@@ -9249,7 +9367,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_rtc_pattern',
+    name: 'contract_rtc_pattern'
   },
   {
     input: '<rtc readonly="x">',
@@ -9266,7 +9384,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_rtc_readonly',
+    name: 'contract_rtc_readonly'
   },
   {
     input: '<rtc accept="x">',
@@ -9283,7 +9401,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_rtc_accept',
+    name: 'contract_rtc_accept'
   },
   {
     input: '<rtc defer="x">',
@@ -9300,7 +9418,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_rtc_defer',
+    name: 'contract_rtc_defer'
   },
   {
     input: '<rp></rp>',
@@ -9315,7 +9433,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_rp_plain',
+    name: 'contract_rp_plain'
   },
   {
     input: '<rp><script>alert()</script></rp>',
@@ -9333,7 +9451,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><rp></rp><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_rp_scriptinside',
+    name: 'contract_rp_scriptinside'
   },
   {
     input: '<rp srcdoc="x">',
@@ -9350,7 +9468,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_rp_srcdoc',
+    name: 'contract_rp_srcdoc'
   },
   {
     input: '<rp action="x">',
@@ -9367,7 +9485,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_rp_action',
+    name: 'contract_rp_action'
   },
   {
     input: '<rp method="x">',
@@ -9384,7 +9502,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_rp_method',
+    name: 'contract_rp_method'
   },
   {
     input: '<rp formaction="x">',
@@ -9401,7 +9519,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_rp_formaction',
+    name: 'contract_rp_formaction'
   },
   {
     input: '<rp formmethod="x">',
@@ -9418,7 +9536,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_rp_formmethod',
+    name: 'contract_rp_formmethod'
   },
   {
     input: '<rp pattern="x">',
@@ -9435,7 +9553,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_rp_pattern',
+    name: 'contract_rp_pattern'
   },
   {
     input: '<rp readonly="x">',
@@ -9452,7 +9570,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_rp_readonly',
+    name: 'contract_rp_readonly'
   },
   {
     input: '<rp accept="x">',
@@ -9469,7 +9587,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_rp_accept',
+    name: 'contract_rp_accept'
   },
   {
     input: '<rp defer="x">',
@@ -9486,7 +9604,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_rp_defer',
+    name: 'contract_rp_defer'
   },
   {
     input: '<data></data>',
@@ -9501,7 +9619,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_data_plain',
+    name: 'contract_data_plain'
   },
   {
     input: '<data><script>alert()</script></data>',
@@ -9519,7 +9637,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><data></data><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_data_scriptinside',
+    name: 'contract_data_scriptinside'
   },
   {
     input: '<data srcdoc="x">',
@@ -9536,7 +9654,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_data_srcdoc',
+    name: 'contract_data_srcdoc'
   },
   {
     input: '<data action="x">',
@@ -9553,7 +9671,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_data_action',
+    name: 'contract_data_action'
   },
   {
     input: '<data method="x">',
@@ -9570,7 +9688,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_data_method',
+    name: 'contract_data_method'
   },
   {
     input: '<data formaction="x">',
@@ -9587,7 +9705,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_data_formaction',
+    name: 'contract_data_formaction'
   },
   {
     input: '<data formmethod="x">',
@@ -9604,7 +9722,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_data_formmethod',
+    name: 'contract_data_formmethod'
   },
   {
     input: '<data pattern="x">',
@@ -9621,7 +9739,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_data_pattern',
+    name: 'contract_data_pattern'
   },
   {
     input: '<data readonly="x">',
@@ -9638,7 +9756,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_data_readonly',
+    name: 'contract_data_readonly'
   },
   {
     input: '<data accept="x">',
@@ -9655,7 +9773,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_data_accept',
+    name: 'contract_data_accept'
   },
   {
     input: '<data defer="x">',
@@ -9672,7 +9790,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_data_defer',
+    name: 'contract_data_defer'
   },
   {
     input: '<time></time>',
@@ -9687,7 +9805,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_time_plain',
+    name: 'contract_time_plain'
   },
   {
     input: '<time><script>alert()</script></time>',
@@ -9705,7 +9823,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><time></time><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_time_scriptinside',
+    name: 'contract_time_scriptinside'
   },
   {
     input: '<time srcdoc="x">',
@@ -9722,7 +9840,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_time_srcdoc',
+    name: 'contract_time_srcdoc'
   },
   {
     input: '<time action="x">',
@@ -9739,7 +9857,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_time_action',
+    name: 'contract_time_action'
   },
   {
     input: '<time method="x">',
@@ -9756,7 +9874,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_time_method',
+    name: 'contract_time_method'
   },
   {
     input: '<time formaction="x">',
@@ -9773,7 +9891,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_time_formaction',
+    name: 'contract_time_formaction'
   },
   {
     input: '<time formmethod="x">',
@@ -9790,7 +9908,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_time_formmethod',
+    name: 'contract_time_formmethod'
   },
   {
     input: '<time pattern="x">',
@@ -9807,7 +9925,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_time_pattern',
+    name: 'contract_time_pattern'
   },
   {
     input: '<time readonly="x">',
@@ -9824,7 +9942,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_time_readonly',
+    name: 'contract_time_readonly'
   },
   {
     input: '<time accept="x">',
@@ -9841,7 +9959,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_time_accept',
+    name: 'contract_time_accept'
   },
   {
     input: '<time defer="x">',
@@ -9858,7 +9976,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_time_defer',
+    name: 'contract_time_defer'
   },
   {
     input: '<code></code>',
@@ -9873,7 +9991,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_code_plain',
+    name: 'contract_code_plain'
   },
   {
     input: '<code><script>alert()</script></code>',
@@ -9891,7 +10009,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><code></code><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_code_scriptinside',
+    name: 'contract_code_scriptinside'
   },
   {
     input: '<code srcdoc="x">',
@@ -9908,7 +10026,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_code_srcdoc',
+    name: 'contract_code_srcdoc'
   },
   {
     input: '<code action="x">',
@@ -9925,7 +10043,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_code_action',
+    name: 'contract_code_action'
   },
   {
     input: '<code method="x">',
@@ -9942,7 +10060,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_code_method',
+    name: 'contract_code_method'
   },
   {
     input: '<code formaction="x">',
@@ -9959,7 +10077,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_code_formaction',
+    name: 'contract_code_formaction'
   },
   {
     input: '<code formmethod="x">',
@@ -9976,7 +10094,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_code_formmethod',
+    name: 'contract_code_formmethod'
   },
   {
     input: '<code pattern="x">',
@@ -9993,7 +10111,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_code_pattern',
+    name: 'contract_code_pattern'
   },
   {
     input: '<code readonly="x">',
@@ -10010,7 +10128,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_code_readonly',
+    name: 'contract_code_readonly'
   },
   {
     input: '<code accept="x">',
@@ -10027,7 +10145,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_code_accept',
+    name: 'contract_code_accept'
   },
   {
     input: '<code defer="x">',
@@ -10044,7 +10162,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_code_defer',
+    name: 'contract_code_defer'
   },
   {
     input: '<var></var>',
@@ -10059,7 +10177,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_var_plain',
+    name: 'contract_var_plain'
   },
   {
     input: '<var><script>alert()</script></var>',
@@ -10077,7 +10195,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><var></var><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_var_scriptinside',
+    name: 'contract_var_scriptinside'
   },
   {
     input: '<var srcdoc="x">',
@@ -10094,7 +10212,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_var_srcdoc',
+    name: 'contract_var_srcdoc'
   },
   {
     input: '<var action="x">',
@@ -10111,7 +10229,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_var_action',
+    name: 'contract_var_action'
   },
   {
     input: '<var method="x">',
@@ -10128,7 +10246,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_var_method',
+    name: 'contract_var_method'
   },
   {
     input: '<var formaction="x">',
@@ -10145,7 +10263,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_var_formaction',
+    name: 'contract_var_formaction'
   },
   {
     input: '<var formmethod="x">',
@@ -10162,7 +10280,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_var_formmethod',
+    name: 'contract_var_formmethod'
   },
   {
     input: '<var pattern="x">',
@@ -10179,7 +10297,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_var_pattern',
+    name: 'contract_var_pattern'
   },
   {
     input: '<var readonly="x">',
@@ -10196,7 +10314,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_var_readonly',
+    name: 'contract_var_readonly'
   },
   {
     input: '<var accept="x">',
@@ -10213,7 +10331,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_var_accept',
+    name: 'contract_var_accept'
   },
   {
     input: '<var defer="x">',
@@ -10230,7 +10348,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_var_defer',
+    name: 'contract_var_defer'
   },
   {
     input: '<samp></samp>',
@@ -10245,7 +10363,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_samp_plain',
+    name: 'contract_samp_plain'
   },
   {
     input: '<samp><script>alert()</script></samp>',
@@ -10263,7 +10381,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><samp></samp><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_samp_scriptinside',
+    name: 'contract_samp_scriptinside'
   },
   {
     input: '<samp srcdoc="x">',
@@ -10280,7 +10398,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_samp_srcdoc',
+    name: 'contract_samp_srcdoc'
   },
   {
     input: '<samp action="x">',
@@ -10297,7 +10415,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_samp_action',
+    name: 'contract_samp_action'
   },
   {
     input: '<samp method="x">',
@@ -10314,7 +10432,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_samp_method',
+    name: 'contract_samp_method'
   },
   {
     input: '<samp formaction="x">',
@@ -10331,7 +10449,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_samp_formaction',
+    name: 'contract_samp_formaction'
   },
   {
     input: '<samp formmethod="x">',
@@ -10348,7 +10466,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_samp_formmethod',
+    name: 'contract_samp_formmethod'
   },
   {
     input: '<samp pattern="x">',
@@ -10365,7 +10483,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_samp_pattern',
+    name: 'contract_samp_pattern'
   },
   {
     input: '<samp readonly="x">',
@@ -10382,7 +10500,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_samp_readonly',
+    name: 'contract_samp_readonly'
   },
   {
     input: '<samp accept="x">',
@@ -10399,7 +10517,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_samp_accept',
+    name: 'contract_samp_accept'
   },
   {
     input: '<samp defer="x">',
@@ -10416,7 +10534,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_samp_defer',
+    name: 'contract_samp_defer'
   },
   {
     input: '<kbd></kbd>',
@@ -10431,7 +10549,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_kbd_plain',
+    name: 'contract_kbd_plain'
   },
   {
     input: '<kbd><script>alert()</script></kbd>',
@@ -10449,7 +10567,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><kbd></kbd><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_kbd_scriptinside',
+    name: 'contract_kbd_scriptinside'
   },
   {
     input: '<kbd srcdoc="x">',
@@ -10466,7 +10584,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_kbd_srcdoc',
+    name: 'contract_kbd_srcdoc'
   },
   {
     input: '<kbd action="x">',
@@ -10483,7 +10601,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_kbd_action',
+    name: 'contract_kbd_action'
   },
   {
     input: '<kbd method="x">',
@@ -10500,7 +10618,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_kbd_method',
+    name: 'contract_kbd_method'
   },
   {
     input: '<kbd formaction="x">',
@@ -10517,7 +10635,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_kbd_formaction',
+    name: 'contract_kbd_formaction'
   },
   {
     input: '<kbd formmethod="x">',
@@ -10534,7 +10652,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_kbd_formmethod',
+    name: 'contract_kbd_formmethod'
   },
   {
     input: '<kbd pattern="x">',
@@ -10551,7 +10669,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_kbd_pattern',
+    name: 'contract_kbd_pattern'
   },
   {
     input: '<kbd readonly="x">',
@@ -10568,7 +10686,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_kbd_readonly',
+    name: 'contract_kbd_readonly'
   },
   {
     input: '<kbd accept="x">',
@@ -10585,7 +10703,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_kbd_accept',
+    name: 'contract_kbd_accept'
   },
   {
     input: '<kbd defer="x">',
@@ -10602,7 +10720,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_kbd_defer',
+    name: 'contract_kbd_defer'
   },
   {
     input: '<sub></sub>',
@@ -10617,7 +10735,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_sub_plain',
+    name: 'contract_sub_plain'
   },
   {
     input: '<sub><script>alert()</script></sub>',
@@ -10635,7 +10753,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><sub></sub><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_sub_scriptinside',
+    name: 'contract_sub_scriptinside'
   },
   {
     input: '<sub srcdoc="x">',
@@ -10652,7 +10770,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_sub_srcdoc',
+    name: 'contract_sub_srcdoc'
   },
   {
     input: '<sub action="x">',
@@ -10669,7 +10787,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_sub_action',
+    name: 'contract_sub_action'
   },
   {
     input: '<sub method="x">',
@@ -10686,7 +10804,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_sub_method',
+    name: 'contract_sub_method'
   },
   {
     input: '<sub formaction="x">',
@@ -10703,7 +10821,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_sub_formaction',
+    name: 'contract_sub_formaction'
   },
   {
     input: '<sub formmethod="x">',
@@ -10720,7 +10838,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_sub_formmethod',
+    name: 'contract_sub_formmethod'
   },
   {
     input: '<sub pattern="x">',
@@ -10737,7 +10855,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_sub_pattern',
+    name: 'contract_sub_pattern'
   },
   {
     input: '<sub readonly="x">',
@@ -10754,7 +10872,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_sub_readonly',
+    name: 'contract_sub_readonly'
   },
   {
     input: '<sub accept="x">',
@@ -10771,7 +10889,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_sub_accept',
+    name: 'contract_sub_accept'
   },
   {
     input: '<sub defer="x">',
@@ -10788,7 +10906,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_sub_defer',
+    name: 'contract_sub_defer'
   },
   {
     input: '<sup></sup>',
@@ -10803,7 +10921,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_sup_plain',
+    name: 'contract_sup_plain'
   },
   {
     input: '<sup><script>alert()</script></sup>',
@@ -10821,7 +10939,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><sup></sup><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_sup_scriptinside',
+    name: 'contract_sup_scriptinside'
   },
   {
     input: '<sup srcdoc="x">',
@@ -10838,7 +10956,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_sup_srcdoc',
+    name: 'contract_sup_srcdoc'
   },
   {
     input: '<sup action="x">',
@@ -10855,7 +10973,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_sup_action',
+    name: 'contract_sup_action'
   },
   {
     input: '<sup method="x">',
@@ -10872,7 +10990,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_sup_method',
+    name: 'contract_sup_method'
   },
   {
     input: '<sup formaction="x">',
@@ -10889,7 +11007,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_sup_formaction',
+    name: 'contract_sup_formaction'
   },
   {
     input: '<sup formmethod="x">',
@@ -10906,7 +11024,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_sup_formmethod',
+    name: 'contract_sup_formmethod'
   },
   {
     input: '<sup pattern="x">',
@@ -10923,7 +11041,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_sup_pattern',
+    name: 'contract_sup_pattern'
   },
   {
     input: '<sup readonly="x">',
@@ -10940,7 +11058,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_sup_readonly',
+    name: 'contract_sup_readonly'
   },
   {
     input: '<sup accept="x">',
@@ -10957,7 +11075,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_sup_accept',
+    name: 'contract_sup_accept'
   },
   {
     input: '<sup defer="x">',
@@ -10974,7 +11092,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_sup_defer',
+    name: 'contract_sup_defer'
   },
   {
     input: '<i></i>',
@@ -10989,7 +11107,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_i_plain',
+    name: 'contract_i_plain'
   },
   {
     input: '<i><script>alert()</script></i>',
@@ -11007,7 +11125,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><i></i><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_i_scriptinside',
+    name: 'contract_i_scriptinside'
   },
   {
     input: '<i srcdoc="x">',
@@ -11024,7 +11142,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_i_srcdoc',
+    name: 'contract_i_srcdoc'
   },
   {
     input: '<i action="x">',
@@ -11041,7 +11159,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_i_action',
+    name: 'contract_i_action'
   },
   {
     input: '<i method="x">',
@@ -11058,7 +11176,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_i_method',
+    name: 'contract_i_method'
   },
   {
     input: '<i formaction="x">',
@@ -11075,7 +11193,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_i_formaction',
+    name: 'contract_i_formaction'
   },
   {
     input: '<i formmethod="x">',
@@ -11092,7 +11210,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_i_formmethod',
+    name: 'contract_i_formmethod'
   },
   {
     input: '<i pattern="x">',
@@ -11109,7 +11227,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_i_pattern',
+    name: 'contract_i_pattern'
   },
   {
     input: '<i readonly="x">',
@@ -11126,7 +11244,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_i_readonly',
+    name: 'contract_i_readonly'
   },
   {
     input: '<i accept="x">',
@@ -11143,7 +11261,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_i_accept',
+    name: 'contract_i_accept'
   },
   {
     input: '<i defer="x">',
@@ -11160,7 +11278,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_i_defer',
+    name: 'contract_i_defer'
   },
   {
     input: '<b></b>',
@@ -11175,7 +11293,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_b_plain',
+    name: 'contract_b_plain'
   },
   {
     input: '<b><script>alert()</script></b>',
@@ -11193,7 +11311,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><b></b><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_b_scriptinside',
+    name: 'contract_b_scriptinside'
   },
   {
     input: '<b srcdoc="x">',
@@ -11210,7 +11328,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_b_srcdoc',
+    name: 'contract_b_srcdoc'
   },
   {
     input: '<b action="x">',
@@ -11227,7 +11345,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_b_action',
+    name: 'contract_b_action'
   },
   {
     input: '<b method="x">',
@@ -11244,7 +11362,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_b_method',
+    name: 'contract_b_method'
   },
   {
     input: '<b formaction="x">',
@@ -11261,7 +11379,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_b_formaction',
+    name: 'contract_b_formaction'
   },
   {
     input: '<b formmethod="x">',
@@ -11278,7 +11396,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_b_formmethod',
+    name: 'contract_b_formmethod'
   },
   {
     input: '<b pattern="x">',
@@ -11295,7 +11413,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_b_pattern',
+    name: 'contract_b_pattern'
   },
   {
     input: '<b readonly="x">',
@@ -11312,7 +11430,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_b_readonly',
+    name: 'contract_b_readonly'
   },
   {
     input: '<b accept="x">',
@@ -11329,7 +11447,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_b_accept',
+    name: 'contract_b_accept'
   },
   {
     input: '<b defer="x">',
@@ -11346,7 +11464,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_b_defer',
+    name: 'contract_b_defer'
   },
   {
     input: '<u></u>',
@@ -11361,7 +11479,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_u_plain',
+    name: 'contract_u_plain'
   },
   {
     input: '<u><script>alert()</script></u>',
@@ -11379,7 +11497,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><u></u><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_u_scriptinside',
+    name: 'contract_u_scriptinside'
   },
   {
     input: '<u srcdoc="x">',
@@ -11396,7 +11514,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_u_srcdoc',
+    name: 'contract_u_srcdoc'
   },
   {
     input: '<u action="x">',
@@ -11413,7 +11531,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_u_action',
+    name: 'contract_u_action'
   },
   {
     input: '<u method="x">',
@@ -11430,7 +11548,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_u_method',
+    name: 'contract_u_method'
   },
   {
     input: '<u formaction="x">',
@@ -11447,7 +11565,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_u_formaction',
+    name: 'contract_u_formaction'
   },
   {
     input: '<u formmethod="x">',
@@ -11464,7 +11582,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_u_formmethod',
+    name: 'contract_u_formmethod'
   },
   {
     input: '<u pattern="x">',
@@ -11481,7 +11599,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_u_pattern',
+    name: 'contract_u_pattern'
   },
   {
     input: '<u readonly="x">',
@@ -11498,7 +11616,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_u_readonly',
+    name: 'contract_u_readonly'
   },
   {
     input: '<u accept="x">',
@@ -11515,7 +11633,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_u_accept',
+    name: 'contract_u_accept'
   },
   {
     input: '<u defer="x">',
@@ -11532,7 +11650,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_u_defer',
+    name: 'contract_u_defer'
   },
   {
     input: '<mark></mark>',
@@ -11547,7 +11665,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_mark_plain',
+    name: 'contract_mark_plain'
   },
   {
     input: '<mark><script>alert()</script></mark>',
@@ -11565,7 +11683,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><mark></mark><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_mark_scriptinside',
+    name: 'contract_mark_scriptinside'
   },
   {
     input: '<mark srcdoc="x">',
@@ -11582,7 +11700,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_mark_srcdoc',
+    name: 'contract_mark_srcdoc'
   },
   {
     input: '<mark action="x">',
@@ -11599,7 +11717,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_mark_action',
+    name: 'contract_mark_action'
   },
   {
     input: '<mark method="x">',
@@ -11616,7 +11734,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_mark_method',
+    name: 'contract_mark_method'
   },
   {
     input: '<mark formaction="x">',
@@ -11633,7 +11751,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_mark_formaction',
+    name: 'contract_mark_formaction'
   },
   {
     input: '<mark formmethod="x">',
@@ -11650,7 +11768,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_mark_formmethod',
+    name: 'contract_mark_formmethod'
   },
   {
     input: '<mark pattern="x">',
@@ -11667,7 +11785,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_mark_pattern',
+    name: 'contract_mark_pattern'
   },
   {
     input: '<mark readonly="x">',
@@ -11684,7 +11802,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_mark_readonly',
+    name: 'contract_mark_readonly'
   },
   {
     input: '<mark accept="x">',
@@ -11701,7 +11819,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_mark_accept',
+    name: 'contract_mark_accept'
   },
   {
     input: '<mark defer="x">',
@@ -11718,7 +11836,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_mark_defer',
+    name: 'contract_mark_defer'
   },
   {
     input: '<bdi></bdi>',
@@ -11733,7 +11851,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_bdi_plain',
+    name: 'contract_bdi_plain'
   },
   {
     input: '<bdi><script>alert()</script></bdi>',
@@ -11751,7 +11869,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><bdi></bdi><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_bdi_scriptinside',
+    name: 'contract_bdi_scriptinside'
   },
   {
     input: '<bdi srcdoc="x">',
@@ -11768,7 +11886,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_bdi_srcdoc',
+    name: 'contract_bdi_srcdoc'
   },
   {
     input: '<bdi action="x">',
@@ -11785,7 +11903,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_bdi_action',
+    name: 'contract_bdi_action'
   },
   {
     input: '<bdi method="x">',
@@ -11802,7 +11920,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_bdi_method',
+    name: 'contract_bdi_method'
   },
   {
     input: '<bdi formaction="x">',
@@ -11819,7 +11937,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_bdi_formaction',
+    name: 'contract_bdi_formaction'
   },
   {
     input: '<bdi formmethod="x">',
@@ -11836,7 +11954,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_bdi_formmethod',
+    name: 'contract_bdi_formmethod'
   },
   {
     input: '<bdi pattern="x">',
@@ -11853,7 +11971,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_bdi_pattern',
+    name: 'contract_bdi_pattern'
   },
   {
     input: '<bdi readonly="x">',
@@ -11870,7 +11988,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_bdi_readonly',
+    name: 'contract_bdi_readonly'
   },
   {
     input: '<bdi accept="x">',
@@ -11887,7 +12005,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_bdi_accept',
+    name: 'contract_bdi_accept'
   },
   {
     input: '<bdi defer="x">',
@@ -11904,7 +12022,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_bdi_defer',
+    name: 'contract_bdi_defer'
   },
   {
     input: '<bdo></bdo>',
@@ -11919,7 +12037,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_bdo_plain',
+    name: 'contract_bdo_plain'
   },
   {
     input: '<bdo><script>alert()</script></bdo>',
@@ -11937,7 +12055,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><bdo></bdo><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_bdo_scriptinside',
+    name: 'contract_bdo_scriptinside'
   },
   {
     input: '<bdo srcdoc="x">',
@@ -11954,7 +12072,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_bdo_srcdoc',
+    name: 'contract_bdo_srcdoc'
   },
   {
     input: '<bdo action="x">',
@@ -11971,7 +12089,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_bdo_action',
+    name: 'contract_bdo_action'
   },
   {
     input: '<bdo method="x">',
@@ -11988,7 +12106,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_bdo_method',
+    name: 'contract_bdo_method'
   },
   {
     input: '<bdo formaction="x">',
@@ -12005,7 +12123,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_bdo_formaction',
+    name: 'contract_bdo_formaction'
   },
   {
     input: '<bdo formmethod="x">',
@@ -12022,7 +12140,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_bdo_formmethod',
+    name: 'contract_bdo_formmethod'
   },
   {
     input: '<bdo pattern="x">',
@@ -12039,7 +12157,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_bdo_pattern',
+    name: 'contract_bdo_pattern'
   },
   {
     input: '<bdo readonly="x">',
@@ -12056,7 +12174,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_bdo_readonly',
+    name: 'contract_bdo_readonly'
   },
   {
     input: '<bdo accept="x">',
@@ -12073,7 +12191,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_bdo_accept',
+    name: 'contract_bdo_accept'
   },
   {
     input: '<bdo defer="x">',
@@ -12090,7 +12208,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_bdo_defer',
+    name: 'contract_bdo_defer'
   },
   {
     input: '<span></span>',
@@ -12103,7 +12221,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<SPAN></SPAN>',
       '',
     ],
-    name: 'contract_span_plain',
+    name: 'contract_span_plain'
   },
   {
     input: '<span><script>alert()</script></span>',
@@ -12119,7 +12237,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><span></span><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_span_scriptinside',
+    name: 'contract_span_scriptinside'
   },
   {
     input: '<span srcdoc="x">',
@@ -12134,7 +12252,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<SPAN></SPAN>',
       '',
     ],
-    name: 'contract_span_srcdoc',
+    name: 'contract_span_srcdoc'
   },
   {
     input: '<span action="x">',
@@ -12149,7 +12267,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<SPAN></SPAN>',
       '',
     ],
-    name: 'contract_span_action',
+    name: 'contract_span_action'
   },
   {
     input: '<span method="x">',
@@ -12164,7 +12282,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<SPAN></SPAN>',
       '',
     ],
-    name: 'contract_span_method',
+    name: 'contract_span_method'
   },
   {
     input: '<span formaction="x">',
@@ -12179,7 +12297,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<SPAN></SPAN>',
       '',
     ],
-    name: 'contract_span_formaction',
+    name: 'contract_span_formaction'
   },
   {
     input: '<span formmethod="x">',
@@ -12194,7 +12312,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<SPAN></SPAN>',
       '',
     ],
-    name: 'contract_span_formmethod',
+    name: 'contract_span_formmethod'
   },
   {
     input: '<span pattern="x">',
@@ -12209,7 +12327,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<SPAN></SPAN>',
       '',
     ],
-    name: 'contract_span_pattern',
+    name: 'contract_span_pattern'
   },
   {
     input: '<span readonly="x">',
@@ -12224,7 +12342,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<SPAN></SPAN>',
       '',
     ],
-    name: 'contract_span_readonly',
+    name: 'contract_span_readonly'
   },
   {
     input: '<span accept="x">',
@@ -12239,7 +12357,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<SPAN></SPAN>',
       '',
     ],
-    name: 'contract_span_accept',
+    name: 'contract_span_accept'
   },
   {
     input: '<span defer="x">',
@@ -12254,7 +12372,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<SPAN></SPAN>',
       '',
     ],
-    name: 'contract_span_defer',
+    name: 'contract_span_defer'
   },
   {
     input: '<br></br>',
@@ -12270,7 +12388,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_br_plain',
+    name: 'contract_br_plain'
   },
   {
     input: '<br><script>alert()</script></br>',
@@ -12287,7 +12405,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '',
       '<table><br><td></td></table>',
     ],
-    name: 'contract_br_scriptinside',
+    name: 'contract_br_scriptinside'
   },
   {
     input: '<br srcdoc="x">',
@@ -12304,7 +12422,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_br_srcdoc',
+    name: 'contract_br_srcdoc'
   },
   {
     input: '<br action="x">',
@@ -12321,7 +12439,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_br_action',
+    name: 'contract_br_action'
   },
   {
     input: '<br method="x">',
@@ -12338,7 +12456,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_br_method',
+    name: 'contract_br_method'
   },
   {
     input: '<br formaction="x">',
@@ -12355,7 +12473,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_br_formaction',
+    name: 'contract_br_formaction'
   },
   {
     input: '<br formmethod="x">',
@@ -12372,7 +12490,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_br_formmethod',
+    name: 'contract_br_formmethod'
   },
   {
     input: '<br pattern="x">',
@@ -12389,7 +12507,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_br_pattern',
+    name: 'contract_br_pattern'
   },
   {
     input: '<br readonly="x">',
@@ -12406,7 +12524,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_br_readonly',
+    name: 'contract_br_readonly'
   },
   {
     input: '<br accept="x">',
@@ -12423,7 +12541,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_br_accept',
+    name: 'contract_br_accept'
   },
   {
     input: '<br defer="x">',
@@ -12440,7 +12558,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_br_defer',
+    name: 'contract_br_defer'
   },
   {
     input: '<wbr></wbr>',
@@ -12456,7 +12574,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_wbr_plain',
+    name: 'contract_wbr_plain'
   },
   {
     input: '<wbr><script>alert()</script></wbr>',
@@ -12473,7 +12591,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '',
       '<table><wbr><td></td></table>',
     ],
-    name: 'contract_wbr_scriptinside',
+    name: 'contract_wbr_scriptinside'
   },
   {
     input: '<wbr srcdoc="x">',
@@ -12490,7 +12608,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_wbr_srcdoc',
+    name: 'contract_wbr_srcdoc'
   },
   {
     input: '<wbr action="x">',
@@ -12507,7 +12625,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_wbr_action',
+    name: 'contract_wbr_action'
   },
   {
     input: '<wbr method="x">',
@@ -12524,7 +12642,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_wbr_method',
+    name: 'contract_wbr_method'
   },
   {
     input: '<wbr formaction="x">',
@@ -12541,7 +12659,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_wbr_formaction',
+    name: 'contract_wbr_formaction'
   },
   {
     input: '<wbr formmethod="x">',
@@ -12558,7 +12676,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_wbr_formmethod',
+    name: 'contract_wbr_formmethod'
   },
   {
     input: '<wbr pattern="x">',
@@ -12575,7 +12693,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_wbr_pattern',
+    name: 'contract_wbr_pattern'
   },
   {
     input: '<wbr readonly="x">',
@@ -12592,7 +12710,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_wbr_readonly',
+    name: 'contract_wbr_readonly'
   },
   {
     input: '<wbr accept="x">',
@@ -12609,7 +12727,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_wbr_accept',
+    name: 'contract_wbr_accept'
   },
   {
     input: '<wbr defer="x">',
@@ -12626,7 +12744,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_wbr_defer',
+    name: 'contract_wbr_defer'
   },
   {
     input: '<link></link>',
@@ -12642,7 +12760,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_link_plain',
+    name: 'contract_link_plain'
   },
   {
     input: '<link><script>alert()</script></link>',
@@ -12659,7 +12777,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '',
       '<table><link><td></td></table>',
     ],
-    name: 'contract_link_scriptinside',
+    name: 'contract_link_scriptinside'
   },
   {
     input: '<link rel="alternate" href="x">',
@@ -12672,7 +12790,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<link rel="alternate" href="x" />',
       '',
     ],
-    name: 'contract_link_rel_alternate',
+    name: 'contract_link_rel_alternate'
   },
   {
     input: '<link rel="x" href="x">',
@@ -12683,7 +12801,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<link rel="x" />',
       '',
     ],
-    name: 'link_alternate_x',
+    name: 'link_alternate_x'
   },
   {
     input: '<link rel="author" href="x">',
@@ -12696,7 +12814,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<link rel="author" href="x" />',
       '',
     ],
-    name: 'contract_link_rel_author',
+    name: 'contract_link_rel_author'
   },
   {
     input: '<link rel="x" href="x">',
@@ -12707,7 +12825,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<link rel="x" />',
       '',
     ],
-    name: 'link_author_x',
+    name: 'link_author_x'
   },
   {
     input: '<link rel="bookmark" href="x">',
@@ -12720,7 +12838,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<link rel="bookmark" href="x" />',
       '',
     ],
-    name: 'contract_link_rel_bookmark',
+    name: 'contract_link_rel_bookmark'
   },
   {
     input: '<link rel="x" href="x">',
@@ -12731,7 +12849,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<link rel="x" />',
       '',
     ],
-    name: 'link_bookmark_x',
+    name: 'link_bookmark_x'
   },
   {
     input: '<link rel="canonical" href="x">',
@@ -12744,7 +12862,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<link rel="canonical" href="x" />',
       '',
     ],
-    name: 'contract_link_rel_canonical',
+    name: 'contract_link_rel_canonical'
   },
   {
     input: '<link rel="x" href="x">',
@@ -12755,7 +12873,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<link rel="x" />',
       '',
     ],
-    name: 'link_canonical_x',
+    name: 'link_canonical_x'
   },
   {
     input: '<link rel="cite" href="x">',
@@ -12768,7 +12886,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<link rel="cite" href="x" />',
       '',
     ],
-    name: 'contract_link_rel_cite',
+    name: 'contract_link_rel_cite'
   },
   {
     input: '<link rel="x" href="x">',
@@ -12779,7 +12897,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<link rel="x" />',
       '',
     ],
-    name: 'link_cite_x',
+    name: 'link_cite_x'
   },
   {
     input: '<link rel="help" href="x">',
@@ -12792,7 +12910,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<link rel="help" href="x" />',
       '',
     ],
-    name: 'contract_link_rel_help',
+    name: 'contract_link_rel_help'
   },
   {
     input: '<link rel="x" href="x">',
@@ -12803,7 +12921,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<link rel="x" />',
       '',
     ],
-    name: 'link_help_x',
+    name: 'link_help_x'
   },
   {
     input: '<link rel="icon" href="x">',
@@ -12816,7 +12934,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<link rel="icon" href="x" />',
       '',
     ],
-    name: 'contract_link_rel_icon',
+    name: 'contract_link_rel_icon'
   },
   {
     input: '<link rel="x" href="x">',
@@ -12827,7 +12945,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<link rel="x" />',
       '',
     ],
-    name: 'link_icon_x',
+    name: 'link_icon_x'
   },
   {
     input: '<link rel="license" href="x">',
@@ -12840,7 +12958,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<link rel="license" href="x" />',
       '',
     ],
-    name: 'contract_link_rel_license',
+    name: 'contract_link_rel_license'
   },
   {
     input: '<link rel="x" href="x">',
@@ -12851,7 +12969,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<link rel="x" />',
       '',
     ],
-    name: 'link_license_x',
+    name: 'link_license_x'
   },
   {
     input: '<link rel="next" href="x">',
@@ -12864,7 +12982,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<link rel="next" href="x" />',
       '',
     ],
-    name: 'contract_link_rel_next',
+    name: 'contract_link_rel_next'
   },
   {
     input: '<link rel="x" href="x">',
@@ -12875,7 +12993,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<link rel="x" />',
       '',
     ],
-    name: 'link_next_x',
+    name: 'link_next_x'
   },
   {
     input: '<link rel="prefetch" href="x">',
@@ -12888,7 +13006,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<link rel="prefetch" href="x" />',
       '',
     ],
-    name: 'contract_link_rel_prefetch',
+    name: 'contract_link_rel_prefetch'
   },
   {
     input: '<link rel="x" href="x">',
@@ -12899,7 +13017,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<link rel="x" />',
       '',
     ],
-    name: 'link_prefetch_x',
+    name: 'link_prefetch_x'
   },
   {
     input: '<link rel="dns-prefetch" href="x">',
@@ -12912,7 +13030,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<link rel="dns-prefetch" href="x" />',
       '',
     ],
-    name: 'contract_link_rel_dns-prefetch',
+    name: 'contract_link_rel_dns-prefetch'
   },
   {
     input: '<link rel="x" href="x">',
@@ -12923,7 +13041,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<link rel="x" />',
       '',
     ],
-    name: 'link_dns-prefetch_x',
+    name: 'link_dns-prefetch_x'
   },
   {
     input: '<link rel="prerender" href="x">',
@@ -12936,7 +13054,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<link rel="prerender" href="x" />',
       '',
     ],
-    name: 'contract_link_rel_prerender',
+    name: 'contract_link_rel_prerender'
   },
   {
     input: '<link rel="x" href="x">',
@@ -12947,7 +13065,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<link rel="x" />',
       '',
     ],
-    name: 'link_prerender_x',
+    name: 'link_prerender_x'
   },
   {
     input: '<link rel="preconnect" href="x">',
@@ -12960,7 +13078,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<link rel="preconnect" href="x" />',
       '',
     ],
-    name: 'contract_link_rel_preconnect',
+    name: 'contract_link_rel_preconnect'
   },
   {
     input: '<link rel="x" href="x">',
@@ -12971,7 +13089,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<link rel="x" />',
       '',
     ],
-    name: 'link_preconnect_x',
+    name: 'link_preconnect_x'
   },
   {
     input: '<link rel="preload" href="x">',
@@ -12984,7 +13102,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<link rel="preload" href="x" />',
       '',
     ],
-    name: 'contract_link_rel_preload',
+    name: 'contract_link_rel_preload'
   },
   {
     input: '<link rel="x" href="x">',
@@ -12995,7 +13113,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<link rel="x" />',
       '',
     ],
-    name: 'link_preload_x',
+    name: 'link_preload_x'
   },
   {
     input: '<link rel="prev" href="x">',
@@ -13008,7 +13126,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<link rel="prev" href="x" />',
       '',
     ],
-    name: 'contract_link_rel_prev',
+    name: 'contract_link_rel_prev'
   },
   {
     input: '<link rel="x" href="x">',
@@ -13019,7 +13137,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<link rel="x" />',
       '',
     ],
-    name: 'link_prev_x',
+    name: 'link_prev_x'
   },
   {
     input: '<link rel="search" href="x">',
@@ -13032,7 +13150,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<link rel="search" href="x" />',
       '',
     ],
-    name: 'contract_link_rel_search',
+    name: 'contract_link_rel_search'
   },
   {
     input: '<link rel="x" href="x">',
@@ -13043,7 +13161,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<link rel="x" />',
       '',
     ],
-    name: 'link_search_x',
+    name: 'link_search_x'
   },
   {
     input: '<link rel="subresource" href="x">',
@@ -13056,7 +13174,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<link rel="subresource" href="x" />',
       '',
     ],
-    name: 'contract_link_rel_subresource',
+    name: 'contract_link_rel_subresource'
   },
   {
     input: '<link rel="x" href="x">',
@@ -13067,7 +13185,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<link rel="x" />',
       '',
     ],
-    name: 'link_subresource_x',
+    name: 'link_subresource_x'
   },
   {
     input: '<link srcdoc="x">',
@@ -13084,7 +13202,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_link_srcdoc',
+    name: 'contract_link_srcdoc'
   },
   {
     input: '<link action="x">',
@@ -13101,7 +13219,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_link_action',
+    name: 'contract_link_action'
   },
   {
     input: '<link method="x">',
@@ -13118,7 +13236,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_link_method',
+    name: 'contract_link_method'
   },
   {
     input: '<link formaction="x">',
@@ -13135,7 +13253,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_link_formaction',
+    name: 'contract_link_formaction'
   },
   {
     input: '<link formmethod="x">',
@@ -13152,7 +13270,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_link_formmethod',
+    name: 'contract_link_formmethod'
   },
   {
     input: '<link pattern="x">',
@@ -13169,7 +13287,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_link_pattern',
+    name: 'contract_link_pattern'
   },
   {
     input: '<link readonly="x">',
@@ -13186,7 +13304,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_link_readonly',
+    name: 'contract_link_readonly'
   },
   {
     input: '<link accept="x">',
@@ -13203,7 +13321,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_link_accept',
+    name: 'contract_link_accept'
   },
   {
     input: '<link defer="x">',
@@ -13220,7 +13338,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_link_defer',
+    name: 'contract_link_defer'
   },
   {
     input: '<ins></ins>',
@@ -13235,7 +13353,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_ins_plain',
+    name: 'contract_ins_plain'
   },
   {
     input: '<ins><script>alert()</script></ins>',
@@ -13253,7 +13371,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><ins></ins><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_ins_scriptinside',
+    name: 'contract_ins_scriptinside'
   },
   {
     input: '<ins srcdoc="x">',
@@ -13270,7 +13388,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_ins_srcdoc',
+    name: 'contract_ins_srcdoc'
   },
   {
     input: '<ins action="x">',
@@ -13287,7 +13405,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_ins_action',
+    name: 'contract_ins_action'
   },
   {
     input: '<ins method="x">',
@@ -13304,7 +13422,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_ins_method',
+    name: 'contract_ins_method'
   },
   {
     input: '<ins formaction="x">',
@@ -13321,7 +13439,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_ins_formaction',
+    name: 'contract_ins_formaction'
   },
   {
     input: '<ins formmethod="x">',
@@ -13338,7 +13456,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_ins_formmethod',
+    name: 'contract_ins_formmethod'
   },
   {
     input: '<ins pattern="x">',
@@ -13355,7 +13473,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_ins_pattern',
+    name: 'contract_ins_pattern'
   },
   {
     input: '<ins readonly="x">',
@@ -13372,7 +13490,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_ins_readonly',
+    name: 'contract_ins_readonly'
   },
   {
     input: '<ins accept="x">',
@@ -13389,7 +13507,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_ins_accept',
+    name: 'contract_ins_accept'
   },
   {
     input: '<ins defer="x">',
@@ -13406,7 +13524,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_ins_defer',
+    name: 'contract_ins_defer'
   },
   {
     input: '<del></del>',
@@ -13421,7 +13539,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_del_plain',
+    name: 'contract_del_plain'
   },
   {
     input: '<del><script>alert()</script></del>',
@@ -13439,7 +13557,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><del></del><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_del_scriptinside',
+    name: 'contract_del_scriptinside'
   },
   {
     input: '<del srcdoc="x">',
@@ -13456,7 +13574,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_del_srcdoc',
+    name: 'contract_del_srcdoc'
   },
   {
     input: '<del action="x">',
@@ -13473,7 +13591,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_del_action',
+    name: 'contract_del_action'
   },
   {
     input: '<del method="x">',
@@ -13490,7 +13608,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_del_method',
+    name: 'contract_del_method'
   },
   {
     input: '<del formaction="x">',
@@ -13507,7 +13625,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_del_formaction',
+    name: 'contract_del_formaction'
   },
   {
     input: '<del formmethod="x">',
@@ -13524,7 +13642,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_del_formmethod',
+    name: 'contract_del_formmethod'
   },
   {
     input: '<del pattern="x">',
@@ -13541,7 +13659,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_del_pattern',
+    name: 'contract_del_pattern'
   },
   {
     input: '<del readonly="x">',
@@ -13558,7 +13676,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_del_readonly',
+    name: 'contract_del_readonly'
   },
   {
     input: '<del accept="x">',
@@ -13575,7 +13693,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_del_accept',
+    name: 'contract_del_accept'
   },
   {
     input: '<del defer="x">',
@@ -13592,7 +13710,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_del_defer',
+    name: 'contract_del_defer'
   },
   {
     input: '<picture></picture>',
@@ -13607,7 +13725,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_picture_plain',
+    name: 'contract_picture_plain'
   },
   {
     input: '<picture><script>alert()</script></picture>',
@@ -13625,7 +13743,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><picture></picture><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_picture_scriptinside',
+    name: 'contract_picture_scriptinside'
   },
   {
     input: '<picture srcdoc="x">',
@@ -13642,7 +13760,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_picture_srcdoc',
+    name: 'contract_picture_srcdoc'
   },
   {
     input: '<picture action="x">',
@@ -13659,7 +13777,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_picture_action',
+    name: 'contract_picture_action'
   },
   {
     input: '<picture method="x">',
@@ -13676,7 +13794,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_picture_method',
+    name: 'contract_picture_method'
   },
   {
     input: '<picture formaction="x">',
@@ -13693,7 +13811,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_picture_formaction',
+    name: 'contract_picture_formaction'
   },
   {
     input: '<picture formmethod="x">',
@@ -13710,7 +13828,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_picture_formmethod',
+    name: 'contract_picture_formmethod'
   },
   {
     input: '<picture pattern="x">',
@@ -13727,7 +13845,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_picture_pattern',
+    name: 'contract_picture_pattern'
   },
   {
     input: '<picture readonly="x">',
@@ -13744,7 +13862,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_picture_readonly',
+    name: 'contract_picture_readonly'
   },
   {
     input: '<picture accept="x">',
@@ -13761,7 +13879,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_picture_accept',
+    name: 'contract_picture_accept'
   },
   {
     input: '<picture defer="x">',
@@ -13778,7 +13896,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_picture_defer',
+    name: 'contract_picture_defer'
   },
   {
     input: '<source></source>',
@@ -13794,7 +13912,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_source_plain',
+    name: 'contract_source_plain'
   },
   {
     input: '<source><script>alert()</script></source>',
@@ -13811,7 +13929,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '',
       '<table><source><td></td></table>',
     ],
-    name: 'contract_source_scriptinside',
+    name: 'contract_source_scriptinside'
   },
   {
     input: '<source srcdoc="x">',
@@ -13828,7 +13946,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_source_srcdoc',
+    name: 'contract_source_srcdoc'
   },
   {
     input: '<source action="x">',
@@ -13845,7 +13963,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_source_action',
+    name: 'contract_source_action'
   },
   {
     input: '<source method="x">',
@@ -13862,7 +13980,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_source_method',
+    name: 'contract_source_method'
   },
   {
     input: '<source formaction="x">',
@@ -13879,7 +13997,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_source_formaction',
+    name: 'contract_source_formaction'
   },
   {
     input: '<source formmethod="x">',
@@ -13896,7 +14014,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_source_formmethod',
+    name: 'contract_source_formmethod'
   },
   {
     input: '<source pattern="x">',
@@ -13913,7 +14031,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_source_pattern',
+    name: 'contract_source_pattern'
   },
   {
     input: '<source readonly="x">',
@@ -13930,7 +14048,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_source_readonly',
+    name: 'contract_source_readonly'
   },
   {
     input: '<source accept="x">',
@@ -13947,7 +14065,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_source_accept',
+    name: 'contract_source_accept'
   },
   {
     input: '<source defer="x">',
@@ -13964,7 +14082,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_source_defer',
+    name: 'contract_source_defer'
   },
   {
     input: '<img></img>',
@@ -13980,7 +14098,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_img_plain',
+    name: 'contract_img_plain'
   },
   {
     input: '<img><script>alert()</script></img>',
@@ -13997,7 +14115,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '',
       '<table><img><td></td></table>',
     ],
-    name: 'contract_img_scriptinside',
+    name: 'contract_img_scriptinside'
   },
   {
     input: '<img srcdoc="x">',
@@ -14014,7 +14132,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_img_srcdoc',
+    name: 'contract_img_srcdoc'
   },
   {
     input: '<img action="x">',
@@ -14031,7 +14149,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_img_action',
+    name: 'contract_img_action'
   },
   {
     input: '<img method="x">',
@@ -14048,7 +14166,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_img_method',
+    name: 'contract_img_method'
   },
   {
     input: '<img formaction="x">',
@@ -14065,7 +14183,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_img_formaction',
+    name: 'contract_img_formaction'
   },
   {
     input: '<img formmethod="x">',
@@ -14082,7 +14200,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_img_formmethod',
+    name: 'contract_img_formmethod'
   },
   {
     input: '<img pattern="x">',
@@ -14099,7 +14217,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_img_pattern',
+    name: 'contract_img_pattern'
   },
   {
     input: '<img readonly="x">',
@@ -14116,7 +14234,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_img_readonly',
+    name: 'contract_img_readonly'
   },
   {
     input: '<img accept="x">',
@@ -14133,7 +14251,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_img_accept',
+    name: 'contract_img_accept'
   },
   {
     input: '<img defer="x">',
@@ -14150,7 +14268,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_img_defer',
+    name: 'contract_img_defer'
   },
   {
     input: '<iframe srcdoc="x"></iframe>',
@@ -14161,7 +14279,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<iframe/>',
       '',
     ],
-    name: 'contract_iframe_srcdoc',
+    name: 'contract_iframe_srcdoc'
   },
   {
     input: '<iframe action="x">',
@@ -14178,7 +14296,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_iframe_action',
+    name: 'contract_iframe_action'
   },
   {
     input: '<iframe method="x">',
@@ -14195,7 +14313,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_iframe_method',
+    name: 'contract_iframe_method'
   },
   {
     input: '<iframe formaction="x">',
@@ -14212,7 +14330,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_iframe_formaction',
+    name: 'contract_iframe_formaction'
   },
   {
     input: '<iframe formmethod="x">',
@@ -14229,7 +14347,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_iframe_formmethod',
+    name: 'contract_iframe_formmethod'
   },
   {
     input: '<iframe pattern="x">',
@@ -14246,7 +14364,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_iframe_pattern',
+    name: 'contract_iframe_pattern'
   },
   {
     input: '<iframe readonly="x">',
@@ -14263,7 +14381,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_iframe_readonly',
+    name: 'contract_iframe_readonly'
   },
   {
     input: '<iframe accept="x">',
@@ -14280,7 +14398,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_iframe_accept',
+    name: 'contract_iframe_accept'
   },
   {
     input: '<iframe defer="x">',
@@ -14297,17 +14415,25 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_iframe_defer',
+    name: 'contract_iframe_defer'
   },
   {
     input: '<embed></embed>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_embed_plain',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_embed_plain'
   },
   {
     input: '<embed><script>alert()</script></embed>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_embed_scriptinside',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_embed_scriptinside'
   },
   {
     input: '<embed srcdoc="x">',
@@ -14324,7 +14450,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_embed_srcdoc',
+    name: 'contract_embed_srcdoc'
   },
   {
     input: '<embed action="x">',
@@ -14341,7 +14467,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_embed_action',
+    name: 'contract_embed_action'
   },
   {
     input: '<embed method="x">',
@@ -14358,7 +14484,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_embed_method',
+    name: 'contract_embed_method'
   },
   {
     input: '<embed formaction="x">',
@@ -14375,7 +14501,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_embed_formaction',
+    name: 'contract_embed_formaction'
   },
   {
     input: '<embed formmethod="x">',
@@ -14392,7 +14518,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_embed_formmethod',
+    name: 'contract_embed_formmethod'
   },
   {
     input: '<embed pattern="x">',
@@ -14409,7 +14535,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_embed_pattern',
+    name: 'contract_embed_pattern'
   },
   {
     input: '<embed readonly="x">',
@@ -14426,7 +14552,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_embed_readonly',
+    name: 'contract_embed_readonly'
   },
   {
     input: '<embed accept="x">',
@@ -14443,7 +14569,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_embed_accept',
+    name: 'contract_embed_accept'
   },
   {
     input: '<embed defer="x">',
@@ -14460,17 +14586,25 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_embed_defer',
+    name: 'contract_embed_defer'
   },
   {
     input: '<object></object>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_object_plain',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_object_plain'
   },
   {
     input: '<object><script>alert()</script></object>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_object_scriptinside',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_object_scriptinside'
   },
   {
     input: '<object srcdoc="x">',
@@ -14487,7 +14621,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_object_srcdoc',
+    name: 'contract_object_srcdoc'
   },
   {
     input: '<object action="x">',
@@ -14504,7 +14638,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_object_action',
+    name: 'contract_object_action'
   },
   {
     input: '<object method="x">',
@@ -14521,7 +14655,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_object_method',
+    name: 'contract_object_method'
   },
   {
     input: '<object formaction="x">',
@@ -14538,7 +14672,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_object_formaction',
+    name: 'contract_object_formaction'
   },
   {
     input: '<object formmethod="x">',
@@ -14555,7 +14689,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_object_formmethod',
+    name: 'contract_object_formmethod'
   },
   {
     input: '<object pattern="x">',
@@ -14572,7 +14706,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_object_pattern',
+    name: 'contract_object_pattern'
   },
   {
     input: '<object readonly="x">',
@@ -14589,7 +14723,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_object_readonly',
+    name: 'contract_object_readonly'
   },
   {
     input: '<object accept="x">',
@@ -14606,7 +14740,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_object_accept',
+    name: 'contract_object_accept'
   },
   {
     input: '<object defer="x">',
@@ -14623,7 +14757,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_object_defer',
+    name: 'contract_object_defer'
   },
   {
     input: '<param></param>',
@@ -14639,7 +14773,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_param_plain',
+    name: 'contract_param_plain'
   },
   {
     input: '<param><script>alert()</script></param>',
@@ -14656,7 +14790,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '',
       '<table><param><td></td></table>',
     ],
-    name: 'contract_param_scriptinside',
+    name: 'contract_param_scriptinside'
   },
   {
     input: '<param srcdoc="x">',
@@ -14673,7 +14807,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_param_srcdoc',
+    name: 'contract_param_srcdoc'
   },
   {
     input: '<param action="x">',
@@ -14690,7 +14824,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_param_action',
+    name: 'contract_param_action'
   },
   {
     input: '<param method="x">',
@@ -14707,7 +14841,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_param_method',
+    name: 'contract_param_method'
   },
   {
     input: '<param formaction="x">',
@@ -14724,7 +14858,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_param_formaction',
+    name: 'contract_param_formaction'
   },
   {
     input: '<param formmethod="x">',
@@ -14741,7 +14875,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_param_formmethod',
+    name: 'contract_param_formmethod'
   },
   {
     input: '<param pattern="x">',
@@ -14758,7 +14892,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_param_pattern',
+    name: 'contract_param_pattern'
   },
   {
     input: '<param readonly="x">',
@@ -14775,7 +14909,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_param_readonly',
+    name: 'contract_param_readonly'
   },
   {
     input: '<param accept="x">',
@@ -14792,7 +14926,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_param_accept',
+    name: 'contract_param_accept'
   },
   {
     input: '<param defer="x">',
@@ -14809,7 +14943,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_param_defer',
+    name: 'contract_param_defer'
   },
   {
     input: '<video></video>',
@@ -14824,7 +14958,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_video_plain',
+    name: 'contract_video_plain'
   },
   {
     input: '<video><script>alert()</script></video>',
@@ -14842,7 +14976,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><video></video><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_video_scriptinside',
+    name: 'contract_video_scriptinside'
   },
   {
     input: '<video srcdoc="x">',
@@ -14859,7 +14993,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_video_srcdoc',
+    name: 'contract_video_srcdoc'
   },
   {
     input: '<video action="x">',
@@ -14876,7 +15010,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_video_action',
+    name: 'contract_video_action'
   },
   {
     input: '<video method="x">',
@@ -14893,7 +15027,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_video_method',
+    name: 'contract_video_method'
   },
   {
     input: '<video formaction="x">',
@@ -14910,7 +15044,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_video_formaction',
+    name: 'contract_video_formaction'
   },
   {
     input: '<video formmethod="x">',
@@ -14927,7 +15061,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_video_formmethod',
+    name: 'contract_video_formmethod'
   },
   {
     input: '<video pattern="x">',
@@ -14944,7 +15078,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_video_pattern',
+    name: 'contract_video_pattern'
   },
   {
     input: '<video readonly="x">',
@@ -14961,7 +15095,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_video_readonly',
+    name: 'contract_video_readonly'
   },
   {
     input: '<video accept="x">',
@@ -14978,7 +15112,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_video_accept',
+    name: 'contract_video_accept'
   },
   {
     input: '<video defer="x">',
@@ -14995,7 +15129,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_video_defer',
+    name: 'contract_video_defer'
   },
   {
     input: '<audio></audio>',
@@ -15010,7 +15144,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_audio_plain',
+    name: 'contract_audio_plain'
   },
   {
     input: '<audio><script>alert()</script></audio>',
@@ -15028,7 +15162,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><audio></audio><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_audio_scriptinside',
+    name: 'contract_audio_scriptinside'
   },
   {
     input: '<audio srcdoc="x">',
@@ -15045,7 +15179,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_audio_srcdoc',
+    name: 'contract_audio_srcdoc'
   },
   {
     input: '<audio action="x">',
@@ -15062,7 +15196,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_audio_action',
+    name: 'contract_audio_action'
   },
   {
     input: '<audio method="x">',
@@ -15079,7 +15213,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_audio_method',
+    name: 'contract_audio_method'
   },
   {
     input: '<audio formaction="x">',
@@ -15096,7 +15230,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_audio_formaction',
+    name: 'contract_audio_formaction'
   },
   {
     input: '<audio formmethod="x">',
@@ -15113,7 +15247,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_audio_formmethod',
+    name: 'contract_audio_formmethod'
   },
   {
     input: '<audio pattern="x">',
@@ -15130,7 +15264,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_audio_pattern',
+    name: 'contract_audio_pattern'
   },
   {
     input: '<audio readonly="x">',
@@ -15147,7 +15281,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_audio_readonly',
+    name: 'contract_audio_readonly'
   },
   {
     input: '<audio accept="x">',
@@ -15164,7 +15298,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_audio_accept',
+    name: 'contract_audio_accept'
   },
   {
     input: '<audio defer="x">',
@@ -15181,7 +15315,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_audio_defer',
+    name: 'contract_audio_defer'
   },
   {
     input: '<track></track>',
@@ -15197,7 +15331,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_track_plain',
+    name: 'contract_track_plain'
   },
   {
     input: '<track><script>alert()</script></track>',
@@ -15214,7 +15348,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '',
       '<table><track><td></td></table>',
     ],
-    name: 'contract_track_scriptinside',
+    name: 'contract_track_scriptinside'
   },
   {
     input: '<track srcdoc="x">',
@@ -15231,7 +15365,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_track_srcdoc',
+    name: 'contract_track_srcdoc'
   },
   {
     input: '<track action="x">',
@@ -15248,7 +15382,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_track_action',
+    name: 'contract_track_action'
   },
   {
     input: '<track method="x">',
@@ -15265,7 +15399,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_track_method',
+    name: 'contract_track_method'
   },
   {
     input: '<track formaction="x">',
@@ -15282,7 +15416,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_track_formaction',
+    name: 'contract_track_formaction'
   },
   {
     input: '<track formmethod="x">',
@@ -15299,7 +15433,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_track_formmethod',
+    name: 'contract_track_formmethod'
   },
   {
     input: '<track pattern="x">',
@@ -15316,7 +15450,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_track_pattern',
+    name: 'contract_track_pattern'
   },
   {
     input: '<track readonly="x">',
@@ -15333,7 +15467,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_track_readonly',
+    name: 'contract_track_readonly'
   },
   {
     input: '<track accept="x">',
@@ -15350,7 +15484,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_track_accept',
+    name: 'contract_track_accept'
   },
   {
     input: '<track defer="x">',
@@ -15367,7 +15501,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_track_defer',
+    name: 'contract_track_defer'
   },
   {
     input: '<map></map>',
@@ -15382,7 +15516,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_map_plain',
+    name: 'contract_map_plain'
   },
   {
     input: '<map><script>alert()</script></map>',
@@ -15400,7 +15534,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><map></map><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_map_scriptinside',
+    name: 'contract_map_scriptinside'
   },
   {
     input: '<map srcdoc="x">',
@@ -15417,7 +15551,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_map_srcdoc',
+    name: 'contract_map_srcdoc'
   },
   {
     input: '<map action="x">',
@@ -15434,7 +15568,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_map_action',
+    name: 'contract_map_action'
   },
   {
     input: '<map method="x">',
@@ -15451,7 +15585,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_map_method',
+    name: 'contract_map_method'
   },
   {
     input: '<map formaction="x">',
@@ -15468,7 +15602,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_map_formaction',
+    name: 'contract_map_formaction'
   },
   {
     input: '<map formmethod="x">',
@@ -15485,7 +15619,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_map_formmethod',
+    name: 'contract_map_formmethod'
   },
   {
     input: '<map pattern="x">',
@@ -15502,7 +15636,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_map_pattern',
+    name: 'contract_map_pattern'
   },
   {
     input: '<map readonly="x">',
@@ -15519,7 +15653,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_map_readonly',
+    name: 'contract_map_readonly'
   },
   {
     input: '<map accept="x">',
@@ -15536,7 +15670,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_map_accept',
+    name: 'contract_map_accept'
   },
   {
     input: '<map defer="x">',
@@ -15553,7 +15687,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_map_defer',
+    name: 'contract_map_defer'
   },
   {
     input: '<table></table>',
@@ -15568,7 +15702,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_table_plain',
+    name: 'contract_table_plain'
   },
   {
     input: '<table><script>alert()</script></table>',
@@ -15586,7 +15720,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><table></table><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_table_scriptinside',
+    name: 'contract_table_scriptinside'
   },
   {
     input: '<table srcdoc="x">',
@@ -15603,7 +15737,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_table_srcdoc',
+    name: 'contract_table_srcdoc'
   },
   {
     input: '<table action="x">',
@@ -15620,7 +15754,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_table_action',
+    name: 'contract_table_action'
   },
   {
     input: '<table method="x">',
@@ -15637,7 +15771,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_table_method',
+    name: 'contract_table_method'
   },
   {
     input: '<table formaction="x">',
@@ -15654,7 +15788,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_table_formaction',
+    name: 'contract_table_formaction'
   },
   {
     input: '<table formmethod="x">',
@@ -15671,7 +15805,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_table_formmethod',
+    name: 'contract_table_formmethod'
   },
   {
     input: '<table pattern="x">',
@@ -15688,7 +15822,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_table_pattern',
+    name: 'contract_table_pattern'
   },
   {
     input: '<table readonly="x">',
@@ -15705,7 +15839,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_table_readonly',
+    name: 'contract_table_readonly'
   },
   {
     input: '<table accept="x">',
@@ -15722,7 +15856,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_table_accept',
+    name: 'contract_table_accept'
   },
   {
     input: '<table defer="x">',
@@ -15739,7 +15873,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_table_defer',
+    name: 'contract_table_defer'
   },
   {
     input: '<caption></caption>',
@@ -15754,7 +15888,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_caption_plain',
+    name: 'contract_caption_plain'
   },
   {
     input: '<caption><script>alert()</script></caption>',
@@ -15772,7 +15906,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><caption></caption><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_caption_scriptinside',
+    name: 'contract_caption_scriptinside'
   },
   {
     input: '<caption srcdoc="x">',
@@ -15789,7 +15923,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_caption_srcdoc',
+    name: 'contract_caption_srcdoc'
   },
   {
     input: '<caption action="x">',
@@ -15806,7 +15940,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_caption_action',
+    name: 'contract_caption_action'
   },
   {
     input: '<caption method="x">',
@@ -15823,7 +15957,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_caption_method',
+    name: 'contract_caption_method'
   },
   {
     input: '<caption formaction="x">',
@@ -15840,7 +15974,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_caption_formaction',
+    name: 'contract_caption_formaction'
   },
   {
     input: '<caption formmethod="x">',
@@ -15857,7 +15991,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_caption_formmethod',
+    name: 'contract_caption_formmethod'
   },
   {
     input: '<caption pattern="x">',
@@ -15874,7 +16008,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_caption_pattern',
+    name: 'contract_caption_pattern'
   },
   {
     input: '<caption readonly="x">',
@@ -15891,7 +16025,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_caption_readonly',
+    name: 'contract_caption_readonly'
   },
   {
     input: '<caption accept="x">',
@@ -15908,7 +16042,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_caption_accept',
+    name: 'contract_caption_accept'
   },
   {
     input: '<caption defer="x">',
@@ -15925,7 +16059,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_caption_defer',
+    name: 'contract_caption_defer'
   },
   {
     input: '<colgroup></colgroup>',
@@ -15940,7 +16074,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_colgroup_plain',
+    name: 'contract_colgroup_plain'
   },
   {
     input: '<colgroup><script>alert()</script></colgroup>',
@@ -15958,7 +16092,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><colgroup></colgroup><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_colgroup_scriptinside',
+    name: 'contract_colgroup_scriptinside'
   },
   {
     input: '<colgroup srcdoc="x">',
@@ -15975,7 +16109,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_colgroup_srcdoc',
+    name: 'contract_colgroup_srcdoc'
   },
   {
     input: '<colgroup action="x">',
@@ -15992,7 +16126,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_colgroup_action',
+    name: 'contract_colgroup_action'
   },
   {
     input: '<colgroup method="x">',
@@ -16009,7 +16143,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_colgroup_method',
+    name: 'contract_colgroup_method'
   },
   {
     input: '<colgroup formaction="x">',
@@ -16026,7 +16160,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_colgroup_formaction',
+    name: 'contract_colgroup_formaction'
   },
   {
     input: '<colgroup formmethod="x">',
@@ -16043,7 +16177,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_colgroup_formmethod',
+    name: 'contract_colgroup_formmethod'
   },
   {
     input: '<colgroup pattern="x">',
@@ -16060,7 +16194,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_colgroup_pattern',
+    name: 'contract_colgroup_pattern'
   },
   {
     input: '<colgroup readonly="x">',
@@ -16077,7 +16211,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_colgroup_readonly',
+    name: 'contract_colgroup_readonly'
   },
   {
     input: '<colgroup accept="x">',
@@ -16094,7 +16228,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_colgroup_accept',
+    name: 'contract_colgroup_accept'
   },
   {
     input: '<colgroup defer="x">',
@@ -16111,7 +16245,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_colgroup_defer',
+    name: 'contract_colgroup_defer'
   },
   {
     input: '<col></col>',
@@ -16127,7 +16261,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_col_plain',
+    name: 'contract_col_plain'
   },
   {
     input: '<col><script>alert()</script></col>',
@@ -16144,7 +16278,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '',
       '<table><col><td></td></table>',
     ],
-    name: 'contract_col_scriptinside',
+    name: 'contract_col_scriptinside'
   },
   {
     input: '<col srcdoc="x">',
@@ -16161,7 +16295,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_col_srcdoc',
+    name: 'contract_col_srcdoc'
   },
   {
     input: '<col action="x">',
@@ -16178,7 +16312,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_col_action',
+    name: 'contract_col_action'
   },
   {
     input: '<col method="x">',
@@ -16195,7 +16329,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_col_method',
+    name: 'contract_col_method'
   },
   {
     input: '<col formaction="x">',
@@ -16212,7 +16346,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_col_formaction',
+    name: 'contract_col_formaction'
   },
   {
     input: '<col formmethod="x">',
@@ -16229,7 +16363,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_col_formmethod',
+    name: 'contract_col_formmethod'
   },
   {
     input: '<col pattern="x">',
@@ -16246,7 +16380,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_col_pattern',
+    name: 'contract_col_pattern'
   },
   {
     input: '<col readonly="x">',
@@ -16263,7 +16397,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_col_readonly',
+    name: 'contract_col_readonly'
   },
   {
     input: '<col accept="x">',
@@ -16280,7 +16414,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_col_accept',
+    name: 'contract_col_accept'
   },
   {
     input: '<col defer="x">',
@@ -16297,7 +16431,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_col_defer',
+    name: 'contract_col_defer'
   },
   {
     input: '<tbody></tbody>',
@@ -16312,7 +16446,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_tbody_plain',
+    name: 'contract_tbody_plain'
   },
   {
     input: '<tbody><script>alert()</script></tbody>',
@@ -16330,7 +16464,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><tbody></tbody><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_tbody_scriptinside',
+    name: 'contract_tbody_scriptinside'
   },
   {
     input: '<tbody srcdoc="x">',
@@ -16347,7 +16481,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_tbody_srcdoc',
+    name: 'contract_tbody_srcdoc'
   },
   {
     input: '<tbody action="x">',
@@ -16364,7 +16498,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_tbody_action',
+    name: 'contract_tbody_action'
   },
   {
     input: '<tbody method="x">',
@@ -16381,7 +16515,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_tbody_method',
+    name: 'contract_tbody_method'
   },
   {
     input: '<tbody formaction="x">',
@@ -16398,7 +16532,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_tbody_formaction',
+    name: 'contract_tbody_formaction'
   },
   {
     input: '<tbody formmethod="x">',
@@ -16415,7 +16549,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_tbody_formmethod',
+    name: 'contract_tbody_formmethod'
   },
   {
     input: '<tbody pattern="x">',
@@ -16432,7 +16566,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_tbody_pattern',
+    name: 'contract_tbody_pattern'
   },
   {
     input: '<tbody readonly="x">',
@@ -16449,7 +16583,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_tbody_readonly',
+    name: 'contract_tbody_readonly'
   },
   {
     input: '<tbody accept="x">',
@@ -16466,7 +16600,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_tbody_accept',
+    name: 'contract_tbody_accept'
   },
   {
     input: '<tbody defer="x">',
@@ -16483,7 +16617,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_tbody_defer',
+    name: 'contract_tbody_defer'
   },
   {
     input: '<thead></thead>',
@@ -16498,7 +16632,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_thead_plain',
+    name: 'contract_thead_plain'
   },
   {
     input: '<thead><script>alert()</script></thead>',
@@ -16516,7 +16650,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><thead></thead><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_thead_scriptinside',
+    name: 'contract_thead_scriptinside'
   },
   {
     input: '<thead srcdoc="x">',
@@ -16533,7 +16667,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_thead_srcdoc',
+    name: 'contract_thead_srcdoc'
   },
   {
     input: '<thead action="x">',
@@ -16550,7 +16684,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_thead_action',
+    name: 'contract_thead_action'
   },
   {
     input: '<thead method="x">',
@@ -16567,7 +16701,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_thead_method',
+    name: 'contract_thead_method'
   },
   {
     input: '<thead formaction="x">',
@@ -16584,7 +16718,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_thead_formaction',
+    name: 'contract_thead_formaction'
   },
   {
     input: '<thead formmethod="x">',
@@ -16601,7 +16735,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_thead_formmethod',
+    name: 'contract_thead_formmethod'
   },
   {
     input: '<thead pattern="x">',
@@ -16618,7 +16752,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_thead_pattern',
+    name: 'contract_thead_pattern'
   },
   {
     input: '<thead readonly="x">',
@@ -16635,7 +16769,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_thead_readonly',
+    name: 'contract_thead_readonly'
   },
   {
     input: '<thead accept="x">',
@@ -16652,7 +16786,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_thead_accept',
+    name: 'contract_thead_accept'
   },
   {
     input: '<thead defer="x">',
@@ -16669,7 +16803,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_thead_defer',
+    name: 'contract_thead_defer'
   },
   {
     input: '<tfoot></tfoot>',
@@ -16684,7 +16818,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_tfoot_plain',
+    name: 'contract_tfoot_plain'
   },
   {
     input: '<tfoot><script>alert()</script></tfoot>',
@@ -16702,7 +16836,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><tfoot></tfoot><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_tfoot_scriptinside',
+    name: 'contract_tfoot_scriptinside'
   },
   {
     input: '<tfoot srcdoc="x">',
@@ -16719,7 +16853,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_tfoot_srcdoc',
+    name: 'contract_tfoot_srcdoc'
   },
   {
     input: '<tfoot action="x">',
@@ -16736,7 +16870,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_tfoot_action',
+    name: 'contract_tfoot_action'
   },
   {
     input: '<tfoot method="x">',
@@ -16753,7 +16887,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_tfoot_method',
+    name: 'contract_tfoot_method'
   },
   {
     input: '<tfoot formaction="x">',
@@ -16770,7 +16904,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_tfoot_formaction',
+    name: 'contract_tfoot_formaction'
   },
   {
     input: '<tfoot formmethod="x">',
@@ -16787,7 +16921,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_tfoot_formmethod',
+    name: 'contract_tfoot_formmethod'
   },
   {
     input: '<tfoot pattern="x">',
@@ -16804,7 +16938,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_tfoot_pattern',
+    name: 'contract_tfoot_pattern'
   },
   {
     input: '<tfoot readonly="x">',
@@ -16821,7 +16955,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_tfoot_readonly',
+    name: 'contract_tfoot_readonly'
   },
   {
     input: '<tfoot accept="x">',
@@ -16838,7 +16972,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_tfoot_accept',
+    name: 'contract_tfoot_accept'
   },
   {
     input: '<tfoot defer="x">',
@@ -16855,7 +16989,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_tfoot_defer',
+    name: 'contract_tfoot_defer'
   },
   {
     input: '<tr></tr>',
@@ -16870,7 +17004,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_tr_plain',
+    name: 'contract_tr_plain'
   },
   {
     input: '<tr><script>alert()</script></tr>',
@@ -16888,7 +17022,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><tr></tr><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_tr_scriptinside',
+    name: 'contract_tr_scriptinside'
   },
   {
     input: '<tr srcdoc="x">',
@@ -16905,7 +17039,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_tr_srcdoc',
+    name: 'contract_tr_srcdoc'
   },
   {
     input: '<tr action="x">',
@@ -16922,7 +17056,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_tr_action',
+    name: 'contract_tr_action'
   },
   {
     input: '<tr method="x">',
@@ -16939,7 +17073,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_tr_method',
+    name: 'contract_tr_method'
   },
   {
     input: '<tr formaction="x">',
@@ -16956,7 +17090,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_tr_formaction',
+    name: 'contract_tr_formaction'
   },
   {
     input: '<tr formmethod="x">',
@@ -16973,7 +17107,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_tr_formmethod',
+    name: 'contract_tr_formmethod'
   },
   {
     input: '<tr pattern="x">',
@@ -16990,7 +17124,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_tr_pattern',
+    name: 'contract_tr_pattern'
   },
   {
     input: '<tr readonly="x">',
@@ -17007,7 +17141,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_tr_readonly',
+    name: 'contract_tr_readonly'
   },
   {
     input: '<tr accept="x">',
@@ -17024,7 +17158,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_tr_accept',
+    name: 'contract_tr_accept'
   },
   {
     input: '<tr defer="x">',
@@ -17041,7 +17175,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_tr_defer',
+    name: 'contract_tr_defer'
   },
   {
     input: '<td></td>',
@@ -17056,7 +17190,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_td_plain',
+    name: 'contract_td_plain'
   },
   {
     input: '<td><script>alert()</script></td>',
@@ -17073,7 +17207,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><td><td></td></td></table>',
       '<table><td></td><td></td></table>',
     ],
-    name: 'contract_td_scriptinside',
+    name: 'contract_td_scriptinside'
   },
   {
     input: '<td srcdoc="x">',
@@ -17090,7 +17224,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_td_srcdoc',
+    name: 'contract_td_srcdoc'
   },
   {
     input: '<td action="x">',
@@ -17107,7 +17241,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_td_action',
+    name: 'contract_td_action'
   },
   {
     input: '<td method="x">',
@@ -17124,7 +17258,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_td_method',
+    name: 'contract_td_method'
   },
   {
     input: '<td formaction="x">',
@@ -17141,7 +17275,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_td_formaction',
+    name: 'contract_td_formaction'
   },
   {
     input: '<td formmethod="x">',
@@ -17158,7 +17292,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_td_formmethod',
+    name: 'contract_td_formmethod'
   },
   {
     input: '<td pattern="x">',
@@ -17175,7 +17309,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_td_pattern',
+    name: 'contract_td_pattern'
   },
   {
     input: '<td readonly="x">',
@@ -17192,7 +17326,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_td_readonly',
+    name: 'contract_td_readonly'
   },
   {
     input: '<td accept="x">',
@@ -17209,7 +17343,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_td_accept',
+    name: 'contract_td_accept'
   },
   {
     input: '<td defer="x">',
@@ -17226,7 +17360,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_td_defer',
+    name: 'contract_td_defer'
   },
   {
     input: '<th></th>',
@@ -17241,7 +17375,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_th_plain',
+    name: 'contract_th_plain'
   },
   {
     input: '<th><script>alert()</script></th>',
@@ -17259,7 +17393,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><th></th><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_th_scriptinside',
+    name: 'contract_th_scriptinside'
   },
   {
     input: '<th srcdoc="x">',
@@ -17276,7 +17410,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_th_srcdoc',
+    name: 'contract_th_srcdoc'
   },
   {
     input: '<th action="x">',
@@ -17293,7 +17427,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_th_action',
+    name: 'contract_th_action'
   },
   {
     input: '<th method="x">',
@@ -17310,7 +17444,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_th_method',
+    name: 'contract_th_method'
   },
   {
     input: '<th formaction="x">',
@@ -17327,7 +17461,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_th_formaction',
+    name: 'contract_th_formaction'
   },
   {
     input: '<th formmethod="x">',
@@ -17344,7 +17478,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_th_formmethod',
+    name: 'contract_th_formmethod'
   },
   {
     input: '<th pattern="x">',
@@ -17361,7 +17495,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_th_pattern',
+    name: 'contract_th_pattern'
   },
   {
     input: '<th readonly="x">',
@@ -17378,7 +17512,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_th_readonly',
+    name: 'contract_th_readonly'
   },
   {
     input: '<th accept="x">',
@@ -17395,7 +17529,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_th_accept',
+    name: 'contract_th_accept'
   },
   {
     input: '<th defer="x">',
@@ -17412,17 +17546,25 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_th_defer',
+    name: 'contract_th_defer'
   },
   {
     input: '<form></form>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_form_plain',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_form_plain'
   },
   {
     input: '<form><script>alert()</script></form>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_form_scriptinside',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_form_scriptinside'
   },
   {
     input: '<form action="javascript:xss">',
@@ -17442,7 +17584,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<form action="about:invalid#zClosurez"/>',
       '<form action="about:invalid#zClosurez" />',
     ],
-    name: 'contract_form_action',
+    name: 'contract_form_action'
   },
   {
     input: '<form srcdoc="x">',
@@ -17459,7 +17601,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_form_srcdoc',
+    name: 'contract_form_srcdoc'
   },
   {
     input: '<form formaction="x">',
@@ -17476,7 +17618,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_form_formaction',
+    name: 'contract_form_formaction'
   },
   {
     input: '<form formmethod="x">',
@@ -17493,7 +17635,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_form_formmethod',
+    name: 'contract_form_formmethod'
   },
   {
     input: '<form pattern="x">',
@@ -17510,7 +17652,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_form_pattern',
+    name: 'contract_form_pattern'
   },
   {
     input: '<form readonly="x">',
@@ -17527,7 +17669,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_form_readonly',
+    name: 'contract_form_readonly'
   },
   {
     input: '<form accept="x">',
@@ -17544,7 +17686,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_form_accept',
+    name: 'contract_form_accept'
   },
   {
     input: '<form defer="x">',
@@ -17561,17 +17703,25 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_form_defer',
+    name: 'contract_form_defer'
   },
   {
     input: '<label></label>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_label_plain',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_label_plain'
   },
   {
     input: '<label><script>alert()</script></label>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_label_scriptinside',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_label_scriptinside'
   },
   {
     input: '<label srcdoc="x">',
@@ -17588,7 +17738,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_label_srcdoc',
+    name: 'contract_label_srcdoc'
   },
   {
     input: '<label action="x">',
@@ -17605,7 +17755,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_label_action',
+    name: 'contract_label_action'
   },
   {
     input: '<label method="x">',
@@ -17622,7 +17772,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_label_method',
+    name: 'contract_label_method'
   },
   {
     input: '<label formaction="x">',
@@ -17639,7 +17789,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_label_formaction',
+    name: 'contract_label_formaction'
   },
   {
     input: '<label formmethod="x">',
@@ -17656,7 +17806,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_label_formmethod',
+    name: 'contract_label_formmethod'
   },
   {
     input: '<label pattern="x">',
@@ -17673,7 +17823,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_label_pattern',
+    name: 'contract_label_pattern'
   },
   {
     input: '<label readonly="x">',
@@ -17690,7 +17840,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_label_readonly',
+    name: 'contract_label_readonly'
   },
   {
     input: '<label accept="x">',
@@ -17707,7 +17857,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_label_accept',
+    name: 'contract_label_accept'
   },
   {
     input: '<label defer="x">',
@@ -17724,17 +17874,25 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_label_defer',
+    name: 'contract_label_defer'
   },
   {
     input: '<input></input>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_input_plain',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_input_plain'
   },
   {
     input: '<input><script>alert()</script></input>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_input_scriptinside',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_input_scriptinside'
   },
   {
     input: '<input formaction="javascript:xss">',
@@ -17754,7 +17912,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<input formaction="about:invalid#zClosurez"/>',
       '<input formaction="about:invalid#zClosurez" />',
     ],
-    name: 'contract_input_formaction',
+    name: 'contract_input_formaction'
   },
   {
     input: '<input src="javascript:xss">',
@@ -17774,7 +17932,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<input src="about:invalid#zClosurez"/>',
       '<input src="about:invalid#zClosurez" />',
     ],
-    name: 'contract_input_src',
+    name: 'contract_input_src'
   },
   {
     input: '<input srcdoc="x">',
@@ -17791,7 +17949,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_input_srcdoc',
+    name: 'contract_input_srcdoc'
   },
   {
     input: '<input action="x">',
@@ -17808,7 +17966,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_input_action',
+    name: 'contract_input_action'
   },
   {
     input: '<input method="x">',
@@ -17825,7 +17983,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_input_method',
+    name: 'contract_input_method'
   },
   {
     input: '<input defer="x">',
@@ -17842,17 +18000,25 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_input_defer',
+    name: 'contract_input_defer'
   },
   {
     input: '<command></command>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_command_plain',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_command_plain'
   },
   {
     input: '<command><script>alert()</script></command>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_command_scriptinside',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_command_scriptinside'
   },
   {
     input: '<command srcdoc="x">',
@@ -17869,7 +18035,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_command_srcdoc',
+    name: 'contract_command_srcdoc'
   },
   {
     input: '<command action="x">',
@@ -17886,7 +18052,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_command_action',
+    name: 'contract_command_action'
   },
   {
     input: '<command method="x">',
@@ -17903,7 +18069,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_command_method',
+    name: 'contract_command_method'
   },
   {
     input: '<command formaction="x">',
@@ -17920,7 +18086,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_command_formaction',
+    name: 'contract_command_formaction'
   },
   {
     input: '<command formmethod="x">',
@@ -17937,7 +18103,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_command_formmethod',
+    name: 'contract_command_formmethod'
   },
   {
     input: '<command pattern="x">',
@@ -17954,7 +18120,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_command_pattern',
+    name: 'contract_command_pattern'
   },
   {
     input: '<command readonly="x">',
@@ -17971,7 +18137,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_command_readonly',
+    name: 'contract_command_readonly'
   },
   {
     input: '<command accept="x">',
@@ -17988,7 +18154,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_command_accept',
+    name: 'contract_command_accept'
   },
   {
     input: '<command defer="x">',
@@ -18005,17 +18171,25 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_command_defer',
+    name: 'contract_command_defer'
   },
   {
     input: '<button></button>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_button_plain',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_button_plain'
   },
   {
     input: '<button><script>alert()</script></button>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_button_scriptinside',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_button_scriptinside'
   },
   {
     input: '<button formaction="javascript:xss">',
@@ -18035,7 +18209,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<button formaction="about:invalid#zClosurez"/>',
       '<button formaction="about:invalid#zClosurez" />',
     ],
-    name: 'contract_button_formaction',
+    name: 'contract_button_formaction'
   },
   {
     input: '<button srcdoc="x">',
@@ -18052,7 +18226,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_button_srcdoc',
+    name: 'contract_button_srcdoc'
   },
   {
     input: '<button action="x">',
@@ -18069,7 +18243,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_button_action',
+    name: 'contract_button_action'
   },
   {
     input: '<button method="x">',
@@ -18086,7 +18260,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_button_method',
+    name: 'contract_button_method'
   },
   {
     input: '<button pattern="x">',
@@ -18103,7 +18277,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_button_pattern',
+    name: 'contract_button_pattern'
   },
   {
     input: '<button readonly="x">',
@@ -18120,7 +18294,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_button_readonly',
+    name: 'contract_button_readonly'
   },
   {
     input: '<button accept="x">',
@@ -18137,7 +18311,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_button_accept',
+    name: 'contract_button_accept'
   },
   {
     input: '<button defer="x">',
@@ -18154,7 +18328,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_button_defer',
+    name: 'contract_button_defer'
   },
   {
     input: '<select></select>',
@@ -18169,7 +18343,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_select_plain',
+    name: 'contract_select_plain'
   },
   {
     input: '<select><script>alert()</script></select>',
@@ -18187,7 +18361,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><select></select><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_select_scriptinside',
+    name: 'contract_select_scriptinside'
   },
   {
     input: '<select srcdoc="x">',
@@ -18204,7 +18378,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_select_srcdoc',
+    name: 'contract_select_srcdoc'
   },
   {
     input: '<select action="x">',
@@ -18221,7 +18395,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_select_action',
+    name: 'contract_select_action'
   },
   {
     input: '<select method="x">',
@@ -18238,7 +18412,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_select_method',
+    name: 'contract_select_method'
   },
   {
     input: '<select formaction="x">',
@@ -18255,7 +18429,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_select_formaction',
+    name: 'contract_select_formaction'
   },
   {
     input: '<select formmethod="x">',
@@ -18272,7 +18446,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_select_formmethod',
+    name: 'contract_select_formmethod'
   },
   {
     input: '<select pattern="x">',
@@ -18289,7 +18463,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_select_pattern',
+    name: 'contract_select_pattern'
   },
   {
     input: '<select readonly="x">',
@@ -18306,7 +18480,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_select_readonly',
+    name: 'contract_select_readonly'
   },
   {
     input: '<select accept="x">',
@@ -18323,7 +18497,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_select_accept',
+    name: 'contract_select_accept'
   },
   {
     input: '<select defer="x">',
@@ -18340,7 +18514,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_select_defer',
+    name: 'contract_select_defer'
   },
   {
     input: '<datalist></datalist>',
@@ -18355,7 +18529,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_datalist_plain',
+    name: 'contract_datalist_plain'
   },
   {
     input: '<datalist><script>alert()</script></datalist>',
@@ -18373,7 +18547,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><datalist></datalist><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_datalist_scriptinside',
+    name: 'contract_datalist_scriptinside'
   },
   {
     input: '<datalist srcdoc="x">',
@@ -18390,7 +18564,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_datalist_srcdoc',
+    name: 'contract_datalist_srcdoc'
   },
   {
     input: '<datalist action="x">',
@@ -18407,7 +18581,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_datalist_action',
+    name: 'contract_datalist_action'
   },
   {
     input: '<datalist method="x">',
@@ -18424,7 +18598,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_datalist_method',
+    name: 'contract_datalist_method'
   },
   {
     input: '<datalist formaction="x">',
@@ -18441,7 +18615,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_datalist_formaction',
+    name: 'contract_datalist_formaction'
   },
   {
     input: '<datalist formmethod="x">',
@@ -18458,7 +18632,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_datalist_formmethod',
+    name: 'contract_datalist_formmethod'
   },
   {
     input: '<datalist pattern="x">',
@@ -18475,7 +18649,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_datalist_pattern',
+    name: 'contract_datalist_pattern'
   },
   {
     input: '<datalist readonly="x">',
@@ -18492,7 +18666,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_datalist_readonly',
+    name: 'contract_datalist_readonly'
   },
   {
     input: '<datalist accept="x">',
@@ -18509,7 +18683,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_datalist_accept',
+    name: 'contract_datalist_accept'
   },
   {
     input: '<datalist defer="x">',
@@ -18526,7 +18700,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_datalist_defer',
+    name: 'contract_datalist_defer'
   },
   {
     input: '<optgroup></optgroup>',
@@ -18541,7 +18715,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_optgroup_plain',
+    name: 'contract_optgroup_plain'
   },
   {
     input: '<optgroup><script>alert()</script></optgroup>',
@@ -18559,7 +18733,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><optgroup></optgroup><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_optgroup_scriptinside',
+    name: 'contract_optgroup_scriptinside'
   },
   {
     input: '<optgroup srcdoc="x">',
@@ -18576,7 +18750,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_optgroup_srcdoc',
+    name: 'contract_optgroup_srcdoc'
   },
   {
     input: '<optgroup action="x">',
@@ -18593,7 +18767,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_optgroup_action',
+    name: 'contract_optgroup_action'
   },
   {
     input: '<optgroup method="x">',
@@ -18610,7 +18784,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_optgroup_method',
+    name: 'contract_optgroup_method'
   },
   {
     input: '<optgroup formaction="x">',
@@ -18627,7 +18801,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_optgroup_formaction',
+    name: 'contract_optgroup_formaction'
   },
   {
     input: '<optgroup formmethod="x">',
@@ -18644,7 +18818,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_optgroup_formmethod',
+    name: 'contract_optgroup_formmethod'
   },
   {
     input: '<optgroup pattern="x">',
@@ -18661,7 +18835,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_optgroup_pattern',
+    name: 'contract_optgroup_pattern'
   },
   {
     input: '<optgroup readonly="x">',
@@ -18678,7 +18852,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_optgroup_readonly',
+    name: 'contract_optgroup_readonly'
   },
   {
     input: '<optgroup accept="x">',
@@ -18695,7 +18869,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_optgroup_accept',
+    name: 'contract_optgroup_accept'
   },
   {
     input: '<optgroup defer="x">',
@@ -18712,7 +18886,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_optgroup_defer',
+    name: 'contract_optgroup_defer'
   },
   {
     input: '<option></option>',
@@ -18727,7 +18901,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_option_plain',
+    name: 'contract_option_plain'
   },
   {
     input: '<option><script>alert()</script></option>',
@@ -18745,7 +18919,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><option></option><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_option_scriptinside',
+    name: 'contract_option_scriptinside'
   },
   {
     input: '<option srcdoc="x">',
@@ -18762,7 +18936,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_option_srcdoc',
+    name: 'contract_option_srcdoc'
   },
   {
     input: '<option action="x">',
@@ -18779,7 +18953,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_option_action',
+    name: 'contract_option_action'
   },
   {
     input: '<option method="x">',
@@ -18796,7 +18970,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_option_method',
+    name: 'contract_option_method'
   },
   {
     input: '<option formaction="x">',
@@ -18813,7 +18987,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_option_formaction',
+    name: 'contract_option_formaction'
   },
   {
     input: '<option formmethod="x">',
@@ -18830,7 +19004,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_option_formmethod',
+    name: 'contract_option_formmethod'
   },
   {
     input: '<option pattern="x">',
@@ -18847,7 +19021,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_option_pattern',
+    name: 'contract_option_pattern'
   },
   {
     input: '<option readonly="x">',
@@ -18864,7 +19038,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_option_readonly',
+    name: 'contract_option_readonly'
   },
   {
     input: '<option accept="x">',
@@ -18881,7 +19055,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_option_accept',
+    name: 'contract_option_accept'
   },
   {
     input: '<option defer="x">',
@@ -18898,17 +19072,25 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_option_defer',
+    name: 'contract_option_defer'
   },
   {
     input: '<textarea></textarea>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_textarea_plain',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_textarea_plain'
   },
   {
     input: '<textarea><script>alert()</script></textarea>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_textarea_scriptinside',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_textarea_scriptinside'
   },
   {
     input: '<textarea srcdoc="x">',
@@ -18925,7 +19107,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_textarea_srcdoc',
+    name: 'contract_textarea_srcdoc'
   },
   {
     input: '<textarea action="x">',
@@ -18942,7 +19124,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_textarea_action',
+    name: 'contract_textarea_action'
   },
   {
     input: '<textarea method="x">',
@@ -18959,7 +19141,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_textarea_method',
+    name: 'contract_textarea_method'
   },
   {
     input: '<textarea formaction="x">',
@@ -18976,7 +19158,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_textarea_formaction',
+    name: 'contract_textarea_formaction'
   },
   {
     input: '<textarea formmethod="x">',
@@ -18993,7 +19175,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_textarea_formmethod',
+    name: 'contract_textarea_formmethod'
   },
   {
     input: '<textarea pattern="x">',
@@ -19010,7 +19192,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_textarea_pattern',
+    name: 'contract_textarea_pattern'
   },
   {
     input: '<textarea accept="x">',
@@ -19027,7 +19209,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_textarea_accept',
+    name: 'contract_textarea_accept'
   },
   {
     input: '<textarea defer="x">',
@@ -19044,7 +19226,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_textarea_defer',
+    name: 'contract_textarea_defer'
   },
   {
     input: '<output></output>',
@@ -19059,7 +19241,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_output_plain',
+    name: 'contract_output_plain'
   },
   {
     input: '<output><script>alert()</script></output>',
@@ -19077,7 +19259,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><output></output><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_output_scriptinside',
+    name: 'contract_output_scriptinside'
   },
   {
     input: '<output srcdoc="x">',
@@ -19094,7 +19276,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_output_srcdoc',
+    name: 'contract_output_srcdoc'
   },
   {
     input: '<output action="x">',
@@ -19111,7 +19293,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_output_action',
+    name: 'contract_output_action'
   },
   {
     input: '<output method="x">',
@@ -19128,7 +19310,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_output_method',
+    name: 'contract_output_method'
   },
   {
     input: '<output formaction="x">',
@@ -19145,7 +19327,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_output_formaction',
+    name: 'contract_output_formaction'
   },
   {
     input: '<output formmethod="x">',
@@ -19162,7 +19344,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_output_formmethod',
+    name: 'contract_output_formmethod'
   },
   {
     input: '<output pattern="x">',
@@ -19179,7 +19361,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_output_pattern',
+    name: 'contract_output_pattern'
   },
   {
     input: '<output readonly="x">',
@@ -19196,7 +19378,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_output_readonly',
+    name: 'contract_output_readonly'
   },
   {
     input: '<output accept="x">',
@@ -19213,7 +19395,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_output_accept',
+    name: 'contract_output_accept'
   },
   {
     input: '<output defer="x">',
@@ -19230,7 +19412,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_output_defer',
+    name: 'contract_output_defer'
   },
   {
     input: '<progress></progress>',
@@ -19245,7 +19427,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_progress_plain',
+    name: 'contract_progress_plain'
   },
   {
     input: '<progress><script>alert()</script></progress>',
@@ -19263,7 +19445,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><progress></progress><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_progress_scriptinside',
+    name: 'contract_progress_scriptinside'
   },
   {
     input: '<progress srcdoc="x">',
@@ -19280,7 +19462,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_progress_srcdoc',
+    name: 'contract_progress_srcdoc'
   },
   {
     input: '<progress action="x">',
@@ -19297,7 +19479,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_progress_action',
+    name: 'contract_progress_action'
   },
   {
     input: '<progress method="x">',
@@ -19314,7 +19496,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_progress_method',
+    name: 'contract_progress_method'
   },
   {
     input: '<progress formaction="x">',
@@ -19331,7 +19513,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_progress_formaction',
+    name: 'contract_progress_formaction'
   },
   {
     input: '<progress formmethod="x">',
@@ -19348,7 +19530,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_progress_formmethod',
+    name: 'contract_progress_formmethod'
   },
   {
     input: '<progress pattern="x">',
@@ -19365,7 +19547,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_progress_pattern',
+    name: 'contract_progress_pattern'
   },
   {
     input: '<progress readonly="x">',
@@ -19382,7 +19564,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_progress_readonly',
+    name: 'contract_progress_readonly'
   },
   {
     input: '<progress accept="x">',
@@ -19399,7 +19581,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_progress_accept',
+    name: 'contract_progress_accept'
   },
   {
     input: '<progress defer="x">',
@@ -19416,7 +19598,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_progress_defer',
+    name: 'contract_progress_defer'
   },
   {
     input: '<meter></meter>',
@@ -19431,7 +19613,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_meter_plain',
+    name: 'contract_meter_plain'
   },
   {
     input: '<meter><script>alert()</script></meter>',
@@ -19449,7 +19631,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><meter></meter><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_meter_scriptinside',
+    name: 'contract_meter_scriptinside'
   },
   {
     input: '<meter srcdoc="x">',
@@ -19466,7 +19648,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_meter_srcdoc',
+    name: 'contract_meter_srcdoc'
   },
   {
     input: '<meter action="x">',
@@ -19483,7 +19665,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_meter_action',
+    name: 'contract_meter_action'
   },
   {
     input: '<meter method="x">',
@@ -19500,7 +19682,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_meter_method',
+    name: 'contract_meter_method'
   },
   {
     input: '<meter formaction="x">',
@@ -19517,7 +19699,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_meter_formaction',
+    name: 'contract_meter_formaction'
   },
   {
     input: '<meter formmethod="x">',
@@ -19534,7 +19716,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_meter_formmethod',
+    name: 'contract_meter_formmethod'
   },
   {
     input: '<meter pattern="x">',
@@ -19551,7 +19733,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_meter_pattern',
+    name: 'contract_meter_pattern'
   },
   {
     input: '<meter readonly="x">',
@@ -19568,7 +19750,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_meter_readonly',
+    name: 'contract_meter_readonly'
   },
   {
     input: '<meter accept="x">',
@@ -19585,7 +19767,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_meter_accept',
+    name: 'contract_meter_accept'
   },
   {
     input: '<meter defer="x">',
@@ -19602,7 +19784,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_meter_defer',
+    name: 'contract_meter_defer'
   },
   {
     input: '<fieldset></fieldset>',
@@ -19617,7 +19799,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_fieldset_plain',
+    name: 'contract_fieldset_plain'
   },
   {
     input: '<fieldset><script>alert()</script></fieldset>',
@@ -19635,7 +19817,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><fieldset></fieldset><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_fieldset_scriptinside',
+    name: 'contract_fieldset_scriptinside'
   },
   {
     input: '<fieldset srcdoc="x">',
@@ -19652,7 +19834,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_fieldset_srcdoc',
+    name: 'contract_fieldset_srcdoc'
   },
   {
     input: '<fieldset action="x">',
@@ -19669,7 +19851,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_fieldset_action',
+    name: 'contract_fieldset_action'
   },
   {
     input: '<fieldset method="x">',
@@ -19686,7 +19868,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_fieldset_method',
+    name: 'contract_fieldset_method'
   },
   {
     input: '<fieldset formaction="x">',
@@ -19703,7 +19885,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_fieldset_formaction',
+    name: 'contract_fieldset_formaction'
   },
   {
     input: '<fieldset formmethod="x">',
@@ -19720,7 +19902,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_fieldset_formmethod',
+    name: 'contract_fieldset_formmethod'
   },
   {
     input: '<fieldset pattern="x">',
@@ -19737,7 +19919,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_fieldset_pattern',
+    name: 'contract_fieldset_pattern'
   },
   {
     input: '<fieldset readonly="x">',
@@ -19754,7 +19936,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_fieldset_readonly',
+    name: 'contract_fieldset_readonly'
   },
   {
     input: '<fieldset accept="x">',
@@ -19771,7 +19953,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_fieldset_accept',
+    name: 'contract_fieldset_accept'
   },
   {
     input: '<fieldset defer="x">',
@@ -19788,7 +19970,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_fieldset_defer',
+    name: 'contract_fieldset_defer'
   },
   {
     input: '<legend></legend>',
@@ -19803,7 +19985,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_legend_plain',
+    name: 'contract_legend_plain'
   },
   {
     input: '<legend><script>alert()</script></legend>',
@@ -19821,7 +20003,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><legend></legend><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_legend_scriptinside',
+    name: 'contract_legend_scriptinside'
   },
   {
     input: '<legend srcdoc="x">',
@@ -19838,7 +20020,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_legend_srcdoc',
+    name: 'contract_legend_srcdoc'
   },
   {
     input: '<legend action="x">',
@@ -19855,7 +20037,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_legend_action',
+    name: 'contract_legend_action'
   },
   {
     input: '<legend method="x">',
@@ -19872,7 +20054,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_legend_method',
+    name: 'contract_legend_method'
   },
   {
     input: '<legend formaction="x">',
@@ -19889,7 +20071,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_legend_formaction',
+    name: 'contract_legend_formaction'
   },
   {
     input: '<legend formmethod="x">',
@@ -19906,7 +20088,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_legend_formmethod',
+    name: 'contract_legend_formmethod'
   },
   {
     input: '<legend pattern="x">',
@@ -19923,7 +20105,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_legend_pattern',
+    name: 'contract_legend_pattern'
   },
   {
     input: '<legend readonly="x">',
@@ -19940,7 +20122,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_legend_readonly',
+    name: 'contract_legend_readonly'
   },
   {
     input: '<legend accept="x">',
@@ -19957,7 +20139,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_legend_accept',
+    name: 'contract_legend_accept'
   },
   {
     input: '<legend defer="x">',
@@ -19974,7 +20156,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_legend_defer',
+    name: 'contract_legend_defer'
   },
   {
     input: '<details></details>',
@@ -19989,7 +20171,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_details_plain',
+    name: 'contract_details_plain'
   },
   {
     input: '<details><script>alert()</script></details>',
@@ -20007,7 +20189,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><details></details><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_details_scriptinside',
+    name: 'contract_details_scriptinside'
   },
   {
     input: '<details srcdoc="x">',
@@ -20024,7 +20206,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_details_srcdoc',
+    name: 'contract_details_srcdoc'
   },
   {
     input: '<details action="x">',
@@ -20041,7 +20223,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_details_action',
+    name: 'contract_details_action'
   },
   {
     input: '<details method="x">',
@@ -20058,7 +20240,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_details_method',
+    name: 'contract_details_method'
   },
   {
     input: '<details formaction="x">',
@@ -20075,7 +20257,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_details_formaction',
+    name: 'contract_details_formaction'
   },
   {
     input: '<details formmethod="x">',
@@ -20092,7 +20274,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_details_formmethod',
+    name: 'contract_details_formmethod'
   },
   {
     input: '<details pattern="x">',
@@ -20109,7 +20291,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_details_pattern',
+    name: 'contract_details_pattern'
   },
   {
     input: '<details readonly="x">',
@@ -20126,7 +20308,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_details_readonly',
+    name: 'contract_details_readonly'
   },
   {
     input: '<details accept="x">',
@@ -20143,7 +20325,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_details_accept',
+    name: 'contract_details_accept'
   },
   {
     input: '<details defer="x">',
@@ -20160,7 +20342,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_details_defer',
+    name: 'contract_details_defer'
   },
   {
     input: '<summary></summary>',
@@ -20175,7 +20357,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_summary_plain',
+    name: 'contract_summary_plain'
   },
   {
     input: '<summary><script>alert()</script></summary>',
@@ -20193,7 +20375,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><summary></summary><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_summary_scriptinside',
+    name: 'contract_summary_scriptinside'
   },
   {
     input: '<summary srcdoc="x">',
@@ -20210,7 +20392,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_summary_srcdoc',
+    name: 'contract_summary_srcdoc'
   },
   {
     input: '<summary action="x">',
@@ -20227,7 +20409,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_summary_action',
+    name: 'contract_summary_action'
   },
   {
     input: '<summary method="x">',
@@ -20244,7 +20426,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_summary_method',
+    name: 'contract_summary_method'
   },
   {
     input: '<summary formaction="x">',
@@ -20261,7 +20443,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_summary_formaction',
+    name: 'contract_summary_formaction'
   },
   {
     input: '<summary formmethod="x">',
@@ -20278,7 +20460,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_summary_formmethod',
+    name: 'contract_summary_formmethod'
   },
   {
     input: '<summary pattern="x">',
@@ -20295,7 +20477,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_summary_pattern',
+    name: 'contract_summary_pattern'
   },
   {
     input: '<summary readonly="x">',
@@ -20312,7 +20494,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_summary_readonly',
+    name: 'contract_summary_readonly'
   },
   {
     input: '<summary accept="x">',
@@ -20329,7 +20511,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_summary_accept',
+    name: 'contract_summary_accept'
   },
   {
     input: '<summary defer="x">',
@@ -20346,7 +20528,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_summary_defer',
+    name: 'contract_summary_defer'
   },
   {
     input: '<menu></menu>',
@@ -20361,7 +20543,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_menu_plain',
+    name: 'contract_menu_plain'
   },
   {
     input: '<menu><script>alert()</script></menu>',
@@ -20379,7 +20561,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><menu></menu><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_menu_scriptinside',
+    name: 'contract_menu_scriptinside'
   },
   {
     input: '<menu srcdoc="x">',
@@ -20396,7 +20578,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_menu_srcdoc',
+    name: 'contract_menu_srcdoc'
   },
   {
     input: '<menu action="x">',
@@ -20413,7 +20595,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_menu_action',
+    name: 'contract_menu_action'
   },
   {
     input: '<menu method="x">',
@@ -20430,7 +20612,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_menu_method',
+    name: 'contract_menu_method'
   },
   {
     input: '<menu formaction="x">',
@@ -20447,7 +20629,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_menu_formaction',
+    name: 'contract_menu_formaction'
   },
   {
     input: '<menu formmethod="x">',
@@ -20464,7 +20646,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_menu_formmethod',
+    name: 'contract_menu_formmethod'
   },
   {
     input: '<menu pattern="x">',
@@ -20481,7 +20663,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_menu_pattern',
+    name: 'contract_menu_pattern'
   },
   {
     input: '<menu readonly="x">',
@@ -20498,7 +20680,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_menu_readonly',
+    name: 'contract_menu_readonly'
   },
   {
     input: '<menu accept="x">',
@@ -20515,7 +20697,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_menu_accept',
+    name: 'contract_menu_accept'
   },
   {
     input: '<menu defer="x">',
@@ -20532,7 +20714,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_menu_defer',
+    name: 'contract_menu_defer'
   },
   {
     input: '<dialog></dialog>',
@@ -20547,7 +20729,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dialog_plain',
+    name: 'contract_dialog_plain'
   },
   {
     input: '<dialog><script>alert()</script></dialog>',
@@ -20565,7 +20747,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><dialog></dialog><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_dialog_scriptinside',
+    name: 'contract_dialog_scriptinside'
   },
   {
     input: '<dialog srcdoc="x">',
@@ -20582,7 +20764,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dialog_srcdoc',
+    name: 'contract_dialog_srcdoc'
   },
   {
     input: '<dialog action="x">',
@@ -20599,7 +20781,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dialog_action',
+    name: 'contract_dialog_action'
   },
   {
     input: '<dialog method="x">',
@@ -20616,7 +20798,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dialog_method',
+    name: 'contract_dialog_method'
   },
   {
     input: '<dialog formaction="x">',
@@ -20633,7 +20815,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dialog_formaction',
+    name: 'contract_dialog_formaction'
   },
   {
     input: '<dialog formmethod="x">',
@@ -20650,7 +20832,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dialog_formmethod',
+    name: 'contract_dialog_formmethod'
   },
   {
     input: '<dialog pattern="x">',
@@ -20667,7 +20849,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dialog_pattern',
+    name: 'contract_dialog_pattern'
   },
   {
     input: '<dialog readonly="x">',
@@ -20684,7 +20866,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dialog_readonly',
+    name: 'contract_dialog_readonly'
   },
   {
     input: '<dialog accept="x">',
@@ -20701,7 +20883,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dialog_accept',
+    name: 'contract_dialog_accept'
   },
   {
     input: '<dialog defer="x">',
@@ -20718,17 +20900,25 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dialog_defer',
+    name: 'contract_dialog_defer'
   },
   {
     input: '<script></script>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_script_plain',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_script_plain'
   },
   {
     input: '<script><script>alert()</script></script>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_script_scriptinside',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_script_scriptinside'
   },
   {
     input: '<script srcdoc="x">',
@@ -20745,7 +20935,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_script_srcdoc',
+    name: 'contract_script_srcdoc'
   },
   {
     input: '<script action="x">',
@@ -20762,7 +20952,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_script_action',
+    name: 'contract_script_action'
   },
   {
     input: '<script method="x">',
@@ -20779,7 +20969,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_script_method',
+    name: 'contract_script_method'
   },
   {
     input: '<script formaction="x">',
@@ -20796,7 +20986,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_script_formaction',
+    name: 'contract_script_formaction'
   },
   {
     input: '<script formmethod="x">',
@@ -20813,7 +21003,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_script_formmethod',
+    name: 'contract_script_formmethod'
   },
   {
     input: '<script pattern="x">',
@@ -20830,7 +21020,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_script_pattern',
+    name: 'contract_script_pattern'
   },
   {
     input: '<script readonly="x">',
@@ -20847,7 +21037,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_script_readonly',
+    name: 'contract_script_readonly'
   },
   {
     input: '<script accept="x">',
@@ -20864,17 +21054,25 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_script_accept',
+    name: 'contract_script_accept'
   },
   {
     input: '<noscript></noscript>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_noscript_plain',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_noscript_plain'
   },
   {
     input: '<noscript><script>alert()</script></noscript>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_noscript_scriptinside',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_noscript_scriptinside'
   },
   {
     input: '<noscript srcdoc="x">',
@@ -20891,7 +21089,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_noscript_srcdoc',
+    name: 'contract_noscript_srcdoc'
   },
   {
     input: '<noscript action="x">',
@@ -20908,7 +21106,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_noscript_action',
+    name: 'contract_noscript_action'
   },
   {
     input: '<noscript method="x">',
@@ -20925,7 +21123,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_noscript_method',
+    name: 'contract_noscript_method'
   },
   {
     input: '<noscript formaction="x">',
@@ -20942,7 +21140,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_noscript_formaction',
+    name: 'contract_noscript_formaction'
   },
   {
     input: '<noscript formmethod="x">',
@@ -20959,7 +21157,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_noscript_formmethod',
+    name: 'contract_noscript_formmethod'
   },
   {
     input: '<noscript pattern="x">',
@@ -20976,7 +21174,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_noscript_pattern',
+    name: 'contract_noscript_pattern'
   },
   {
     input: '<noscript readonly="x">',
@@ -20993,7 +21191,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_noscript_readonly',
+    name: 'contract_noscript_readonly'
   },
   {
     input: '<noscript accept="x">',
@@ -21010,7 +21208,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_noscript_accept',
+    name: 'contract_noscript_accept'
   },
   {
     input: '<noscript defer="x">',
@@ -21027,17 +21225,25 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_noscript_defer',
+    name: 'contract_noscript_defer'
   },
   {
     input: '<template></template>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_template_plain',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_template_plain'
   },
   {
     input: '<template><script>alert()</script></template>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_template_scriptinside',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_template_scriptinside'
   },
   {
     input: '<template srcdoc="x">',
@@ -21054,7 +21260,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_template_srcdoc',
+    name: 'contract_template_srcdoc'
   },
   {
     input: '<template action="x">',
@@ -21071,7 +21277,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_template_action',
+    name: 'contract_template_action'
   },
   {
     input: '<template method="x">',
@@ -21088,7 +21294,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_template_method',
+    name: 'contract_template_method'
   },
   {
     input: '<template formaction="x">',
@@ -21105,7 +21311,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_template_formaction',
+    name: 'contract_template_formaction'
   },
   {
     input: '<template formmethod="x">',
@@ -21122,7 +21328,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_template_formmethod',
+    name: 'contract_template_formmethod'
   },
   {
     input: '<template pattern="x">',
@@ -21139,7 +21345,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_template_pattern',
+    name: 'contract_template_pattern'
   },
   {
     input: '<template readonly="x">',
@@ -21156,7 +21362,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_template_readonly',
+    name: 'contract_template_readonly'
   },
   {
     input: '<template accept="x">',
@@ -21173,7 +21379,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_template_accept',
+    name: 'contract_template_accept'
   },
   {
     input: '<template defer="x">',
@@ -21190,7 +21396,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_template_defer',
+    name: 'contract_template_defer'
   },
   {
     input: '<slot></slot>',
@@ -21205,7 +21411,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_slot_plain',
+    name: 'contract_slot_plain'
   },
   {
     input: '<slot><script>alert()</script></slot>',
@@ -21223,7 +21429,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><slot></slot><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_slot_scriptinside',
+    name: 'contract_slot_scriptinside'
   },
   {
     input: '<slot srcdoc="x">',
@@ -21240,7 +21446,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_slot_srcdoc',
+    name: 'contract_slot_srcdoc'
   },
   {
     input: '<slot action="x">',
@@ -21257,7 +21463,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_slot_action',
+    name: 'contract_slot_action'
   },
   {
     input: '<slot method="x">',
@@ -21274,7 +21480,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_slot_method',
+    name: 'contract_slot_method'
   },
   {
     input: '<slot formaction="x">',
@@ -21291,7 +21497,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_slot_formaction',
+    name: 'contract_slot_formaction'
   },
   {
     input: '<slot formmethod="x">',
@@ -21308,7 +21514,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_slot_formmethod',
+    name: 'contract_slot_formmethod'
   },
   {
     input: '<slot pattern="x">',
@@ -21325,7 +21531,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_slot_pattern',
+    name: 'contract_slot_pattern'
   },
   {
     input: '<slot readonly="x">',
@@ -21342,7 +21548,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_slot_readonly',
+    name: 'contract_slot_readonly'
   },
   {
     input: '<slot accept="x">',
@@ -21359,7 +21565,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_slot_accept',
+    name: 'contract_slot_accept'
   },
   {
     input: '<slot defer="x">',
@@ -21376,7 +21582,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_slot_defer',
+    name: 'contract_slot_defer'
   },
   {
     input: '<canvas></canvas>',
@@ -21391,7 +21597,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_canvas_plain',
+    name: 'contract_canvas_plain'
   },
   {
     input: '<canvas><script>alert()</script></canvas>',
@@ -21409,7 +21615,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><canvas></canvas><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_canvas_scriptinside',
+    name: 'contract_canvas_scriptinside'
   },
   {
     input: '<canvas srcdoc="x">',
@@ -21426,7 +21632,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_canvas_srcdoc',
+    name: 'contract_canvas_srcdoc'
   },
   {
     input: '<canvas action="x">',
@@ -21443,7 +21649,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_canvas_action',
+    name: 'contract_canvas_action'
   },
   {
     input: '<canvas method="x">',
@@ -21460,7 +21666,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_canvas_method',
+    name: 'contract_canvas_method'
   },
   {
     input: '<canvas formaction="x">',
@@ -21477,7 +21683,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_canvas_formaction',
+    name: 'contract_canvas_formaction'
   },
   {
     input: '<canvas formmethod="x">',
@@ -21494,7 +21700,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_canvas_formmethod',
+    name: 'contract_canvas_formmethod'
   },
   {
     input: '<canvas pattern="x">',
@@ -21511,7 +21717,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_canvas_pattern',
+    name: 'contract_canvas_pattern'
   },
   {
     input: '<canvas readonly="x">',
@@ -21528,7 +21734,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_canvas_readonly',
+    name: 'contract_canvas_readonly'
   },
   {
     input: '<canvas accept="x">',
@@ -21545,7 +21751,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_canvas_accept',
+    name: 'contract_canvas_accept'
   },
   {
     input: '<canvas defer="x">',
@@ -21562,17 +21768,25 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_canvas_defer',
+    name: 'contract_canvas_defer'
   },
   {
     input: '<applet></applet>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_applet_plain',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_applet_plain'
   },
   {
     input: '<applet><script>alert()</script></applet>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_applet_scriptinside',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_applet_scriptinside'
   },
   {
     input: '<applet srcdoc="x">',
@@ -21589,7 +21803,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_applet_srcdoc',
+    name: 'contract_applet_srcdoc'
   },
   {
     input: '<applet action="x">',
@@ -21606,7 +21820,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_applet_action',
+    name: 'contract_applet_action'
   },
   {
     input: '<applet method="x">',
@@ -21623,7 +21837,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_applet_method',
+    name: 'contract_applet_method'
   },
   {
     input: '<applet formaction="x">',
@@ -21640,7 +21854,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_applet_formaction',
+    name: 'contract_applet_formaction'
   },
   {
     input: '<applet formmethod="x">',
@@ -21657,7 +21871,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_applet_formmethod',
+    name: 'contract_applet_formmethod'
   },
   {
     input: '<applet pattern="x">',
@@ -21674,7 +21888,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_applet_pattern',
+    name: 'contract_applet_pattern'
   },
   {
     input: '<applet readonly="x">',
@@ -21691,7 +21905,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_applet_readonly',
+    name: 'contract_applet_readonly'
   },
   {
     input: '<applet accept="x">',
@@ -21708,7 +21922,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_applet_accept',
+    name: 'contract_applet_accept'
   },
   {
     input: '<applet defer="x">',
@@ -21725,17 +21939,25 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_applet_defer',
+    name: 'contract_applet_defer'
   },
   {
     input: '<math></math>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_math_plain',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_math_plain'
   },
   {
     input: '<math><script>alert()</script></math>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_math_scriptinside',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_math_scriptinside'
   },
   {
     input: '<math srcdoc="x">',
@@ -21752,7 +21974,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_math_srcdoc',
+    name: 'contract_math_srcdoc'
   },
   {
     input: '<math action="x">',
@@ -21769,7 +21991,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_math_action',
+    name: 'contract_math_action'
   },
   {
     input: '<math method="x">',
@@ -21786,7 +22008,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_math_method',
+    name: 'contract_math_method'
   },
   {
     input: '<math formaction="x">',
@@ -21803,7 +22025,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_math_formaction',
+    name: 'contract_math_formaction'
   },
   {
     input: '<math formmethod="x">',
@@ -21820,7 +22042,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_math_formmethod',
+    name: 'contract_math_formmethod'
   },
   {
     input: '<math pattern="x">',
@@ -21837,7 +22059,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_math_pattern',
+    name: 'contract_math_pattern'
   },
   {
     input: '<math readonly="x">',
@@ -21854,7 +22076,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_math_readonly',
+    name: 'contract_math_readonly'
   },
   {
     input: '<math accept="x">',
@@ -21871,7 +22093,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_math_accept',
+    name: 'contract_math_accept'
   },
   {
     input: '<math defer="x">',
@@ -21888,17 +22110,25 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_math_defer',
+    name: 'contract_math_defer'
   },
   {
     input: '<svg></svg>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_svg_plain',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_svg_plain'
   },
   {
     input: '<svg><script>alert()</script></svg>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_svg_scriptinside',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_svg_scriptinside'
   },
   {
     input: '<svg srcdoc="x">',
@@ -21915,7 +22145,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_svg_srcdoc',
+    name: 'contract_svg_srcdoc'
   },
   {
     input: '<svg action="x">',
@@ -21932,7 +22162,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_svg_action',
+    name: 'contract_svg_action'
   },
   {
     input: '<svg method="x">',
@@ -21949,7 +22179,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_svg_method',
+    name: 'contract_svg_method'
   },
   {
     input: '<svg formaction="x">',
@@ -21966,7 +22196,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_svg_formaction',
+    name: 'contract_svg_formaction'
   },
   {
     input: '<svg formmethod="x">',
@@ -21983,7 +22213,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_svg_formmethod',
+    name: 'contract_svg_formmethod'
   },
   {
     input: '<svg pattern="x">',
@@ -22000,7 +22230,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_svg_pattern',
+    name: 'contract_svg_pattern'
   },
   {
     input: '<svg readonly="x">',
@@ -22017,7 +22247,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_svg_readonly',
+    name: 'contract_svg_readonly'
   },
   {
     input: '<svg accept="x">',
@@ -22034,7 +22264,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_svg_accept',
+    name: 'contract_svg_accept'
   },
   {
     input: '<svg defer="x">',
@@ -22051,17 +22281,25 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_svg_defer',
+    name: 'contract_svg_defer'
   },
   {
     input: '<frameset></frameset>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_frameset_plain',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_frameset_plain'
   },
   {
     input: '<frameset><script>alert()</script></frameset>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_frameset_scriptinside',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_frameset_scriptinside'
   },
   {
     input: '<frameset srcdoc="x">',
@@ -22078,7 +22316,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_frameset_srcdoc',
+    name: 'contract_frameset_srcdoc'
   },
   {
     input: '<frameset action="x">',
@@ -22095,7 +22333,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_frameset_action',
+    name: 'contract_frameset_action'
   },
   {
     input: '<frameset method="x">',
@@ -22112,7 +22350,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_frameset_method',
+    name: 'contract_frameset_method'
   },
   {
     input: '<frameset formaction="x">',
@@ -22129,7 +22367,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_frameset_formaction',
+    name: 'contract_frameset_formaction'
   },
   {
     input: '<frameset formmethod="x">',
@@ -22146,7 +22384,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_frameset_formmethod',
+    name: 'contract_frameset_formmethod'
   },
   {
     input: '<frameset pattern="x">',
@@ -22163,7 +22401,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_frameset_pattern',
+    name: 'contract_frameset_pattern'
   },
   {
     input: '<frameset readonly="x">',
@@ -22180,7 +22418,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_frameset_readonly',
+    name: 'contract_frameset_readonly'
   },
   {
     input: '<frameset accept="x">',
@@ -22197,7 +22435,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_frameset_accept',
+    name: 'contract_frameset_accept'
   },
   {
     input: '<frameset defer="x">',
@@ -22214,17 +22452,25 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_frameset_defer',
+    name: 'contract_frameset_defer'
   },
   {
     input: '<frame></frame>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_frame_plain',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_frame_plain'
   },
   {
     input: '<frame><script>alert()</script></frame>',
-    acceptable: ['<span></span>', '<span />', ''],
-    name: 'contract_frame_scriptinside',
+    acceptable: [
+      '<span></span>',
+      '<span />',
+      '',
+    ],
+    name: 'contract_frame_scriptinside'
   },
   {
     input: '<frame srcdoc="x">',
@@ -22241,7 +22487,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_frame_srcdoc',
+    name: 'contract_frame_srcdoc'
   },
   {
     input: '<frame action="x">',
@@ -22258,7 +22504,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_frame_action',
+    name: 'contract_frame_action'
   },
   {
     input: '<frame method="x">',
@@ -22275,7 +22521,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_frame_method',
+    name: 'contract_frame_method'
   },
   {
     input: '<frame formaction="x">',
@@ -22292,7 +22538,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_frame_formaction',
+    name: 'contract_frame_formaction'
   },
   {
     input: '<frame formmethod="x">',
@@ -22309,7 +22555,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_frame_formmethod',
+    name: 'contract_frame_formmethod'
   },
   {
     input: '<frame pattern="x">',
@@ -22326,7 +22572,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_frame_pattern',
+    name: 'contract_frame_pattern'
   },
   {
     input: '<frame readonly="x">',
@@ -22343,7 +22589,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_frame_readonly',
+    name: 'contract_frame_readonly'
   },
   {
     input: '<frame accept="x">',
@@ -22360,7 +22606,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_frame_accept',
+    name: 'contract_frame_accept'
   },
   {
     input: '<frame defer="x">',
@@ -22377,7 +22623,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_frame_defer',
+    name: 'contract_frame_defer'
   },
   {
     input: '<font></font>',
@@ -22392,7 +22638,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_font_plain',
+    name: 'contract_font_plain'
   },
   {
     input: '<font><script>alert()</script></font>',
@@ -22410,7 +22656,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><font></font><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_font_scriptinside',
+    name: 'contract_font_scriptinside'
   },
   {
     input: '<font srcdoc="x">',
@@ -22427,7 +22673,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_font_srcdoc',
+    name: 'contract_font_srcdoc'
   },
   {
     input: '<font action="x">',
@@ -22444,7 +22690,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_font_action',
+    name: 'contract_font_action'
   },
   {
     input: '<font method="x">',
@@ -22461,7 +22707,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_font_method',
+    name: 'contract_font_method'
   },
   {
     input: '<font formaction="x">',
@@ -22478,7 +22724,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_font_formaction',
+    name: 'contract_font_formaction'
   },
   {
     input: '<font formmethod="x">',
@@ -22495,7 +22741,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_font_formmethod',
+    name: 'contract_font_formmethod'
   },
   {
     input: '<font pattern="x">',
@@ -22512,7 +22758,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_font_pattern',
+    name: 'contract_font_pattern'
   },
   {
     input: '<font readonly="x">',
@@ -22529,7 +22775,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_font_readonly',
+    name: 'contract_font_readonly'
   },
   {
     input: '<font accept="x">',
@@ -22546,7 +22792,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_font_accept',
+    name: 'contract_font_accept'
   },
   {
     input: '<font defer="x">',
@@ -22563,7 +22809,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_font_defer',
+    name: 'contract_font_defer'
   },
   {
     input: '<center></center>',
@@ -22578,7 +22824,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_center_plain',
+    name: 'contract_center_plain'
   },
   {
     input: '<center><script>alert()</script></center>',
@@ -22596,7 +22842,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><center></center><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_center_scriptinside',
+    name: 'contract_center_scriptinside'
   },
   {
     input: '<center srcdoc="x">',
@@ -22613,7 +22859,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_center_srcdoc',
+    name: 'contract_center_srcdoc'
   },
   {
     input: '<center action="x">',
@@ -22630,7 +22876,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_center_action',
+    name: 'contract_center_action'
   },
   {
     input: '<center method="x">',
@@ -22647,7 +22893,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_center_method',
+    name: 'contract_center_method'
   },
   {
     input: '<center formaction="x">',
@@ -22664,7 +22910,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_center_formaction',
+    name: 'contract_center_formaction'
   },
   {
     input: '<center formmethod="x">',
@@ -22681,7 +22927,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_center_formmethod',
+    name: 'contract_center_formmethod'
   },
   {
     input: '<center pattern="x">',
@@ -22698,7 +22944,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_center_pattern',
+    name: 'contract_center_pattern'
   },
   {
     input: '<center readonly="x">',
@@ -22715,7 +22961,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_center_readonly',
+    name: 'contract_center_readonly'
   },
   {
     input: '<center accept="x">',
@@ -22732,7 +22978,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_center_accept',
+    name: 'contract_center_accept'
   },
   {
     input: '<center defer="x">',
@@ -22749,7 +22995,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_center_defer',
+    name: 'contract_center_defer'
   },
   {
     input: '<acronym></acronym>',
@@ -22764,7 +23010,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_acronym_plain',
+    name: 'contract_acronym_plain'
   },
   {
     input: '<acronym><script>alert()</script></acronym>',
@@ -22782,7 +23028,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><acronym></acronym><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_acronym_scriptinside',
+    name: 'contract_acronym_scriptinside'
   },
   {
     input: '<acronym srcdoc="x">',
@@ -22799,7 +23045,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_acronym_srcdoc',
+    name: 'contract_acronym_srcdoc'
   },
   {
     input: '<acronym action="x">',
@@ -22816,7 +23062,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_acronym_action',
+    name: 'contract_acronym_action'
   },
   {
     input: '<acronym method="x">',
@@ -22833,7 +23079,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_acronym_method',
+    name: 'contract_acronym_method'
   },
   {
     input: '<acronym formaction="x">',
@@ -22850,7 +23096,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_acronym_formaction',
+    name: 'contract_acronym_formaction'
   },
   {
     input: '<acronym formmethod="x">',
@@ -22867,7 +23113,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_acronym_formmethod',
+    name: 'contract_acronym_formmethod'
   },
   {
     input: '<acronym pattern="x">',
@@ -22884,7 +23130,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_acronym_pattern',
+    name: 'contract_acronym_pattern'
   },
   {
     input: '<acronym readonly="x">',
@@ -22901,7 +23147,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_acronym_readonly',
+    name: 'contract_acronym_readonly'
   },
   {
     input: '<acronym accept="x">',
@@ -22918,7 +23164,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_acronym_accept',
+    name: 'contract_acronym_accept'
   },
   {
     input: '<acronym defer="x">',
@@ -22935,7 +23181,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_acronym_defer',
+    name: 'contract_acronym_defer'
   },
   {
     input: '<basefont></basefont>',
@@ -22950,7 +23196,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_basefont_plain',
+    name: 'contract_basefont_plain'
   },
   {
     input: '<basefont><script>alert()</script></basefont>',
@@ -22968,7 +23214,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><basefont></basefont><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_basefont_scriptinside',
+    name: 'contract_basefont_scriptinside'
   },
   {
     input: '<basefont srcdoc="x">',
@@ -22985,7 +23231,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_basefont_srcdoc',
+    name: 'contract_basefont_srcdoc'
   },
   {
     input: '<basefont action="x">',
@@ -23002,7 +23248,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_basefont_action',
+    name: 'contract_basefont_action'
   },
   {
     input: '<basefont method="x">',
@@ -23019,7 +23265,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_basefont_method',
+    name: 'contract_basefont_method'
   },
   {
     input: '<basefont formaction="x">',
@@ -23036,7 +23282,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_basefont_formaction',
+    name: 'contract_basefont_formaction'
   },
   {
     input: '<basefont formmethod="x">',
@@ -23053,7 +23299,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_basefont_formmethod',
+    name: 'contract_basefont_formmethod'
   },
   {
     input: '<basefont pattern="x">',
@@ -23070,7 +23316,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_basefont_pattern',
+    name: 'contract_basefont_pattern'
   },
   {
     input: '<basefont readonly="x">',
@@ -23087,7 +23333,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_basefont_readonly',
+    name: 'contract_basefont_readonly'
   },
   {
     input: '<basefont accept="x">',
@@ -23104,7 +23350,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_basefont_accept',
+    name: 'contract_basefont_accept'
   },
   {
     input: '<basefont defer="x">',
@@ -23121,7 +23367,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_basefont_defer',
+    name: 'contract_basefont_defer'
   },
   {
     input: '<big></big>',
@@ -23136,7 +23382,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_big_plain',
+    name: 'contract_big_plain'
   },
   {
     input: '<big><script>alert()</script></big>',
@@ -23154,7 +23400,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><big></big><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_big_scriptinside',
+    name: 'contract_big_scriptinside'
   },
   {
     input: '<big srcdoc="x">',
@@ -23171,7 +23417,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_big_srcdoc',
+    name: 'contract_big_srcdoc'
   },
   {
     input: '<big action="x">',
@@ -23188,7 +23434,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_big_action',
+    name: 'contract_big_action'
   },
   {
     input: '<big method="x">',
@@ -23205,7 +23451,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_big_method',
+    name: 'contract_big_method'
   },
   {
     input: '<big formaction="x">',
@@ -23222,7 +23468,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_big_formaction',
+    name: 'contract_big_formaction'
   },
   {
     input: '<big formmethod="x">',
@@ -23239,7 +23485,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_big_formmethod',
+    name: 'contract_big_formmethod'
   },
   {
     input: '<big pattern="x">',
@@ -23256,7 +23502,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_big_pattern',
+    name: 'contract_big_pattern'
   },
   {
     input: '<big readonly="x">',
@@ -23273,7 +23519,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_big_readonly',
+    name: 'contract_big_readonly'
   },
   {
     input: '<big accept="x">',
@@ -23290,7 +23536,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_big_accept',
+    name: 'contract_big_accept'
   },
   {
     input: '<big defer="x">',
@@ -23307,7 +23553,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_big_defer',
+    name: 'contract_big_defer'
   },
   {
     input: '<dir></dir>',
@@ -23322,7 +23568,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dir_plain',
+    name: 'contract_dir_plain'
   },
   {
     input: '<dir><script>alert()</script></dir>',
@@ -23340,7 +23586,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><dir></dir><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_dir_scriptinside',
+    name: 'contract_dir_scriptinside'
   },
   {
     input: '<dir srcdoc="x">',
@@ -23357,7 +23603,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dir_srcdoc',
+    name: 'contract_dir_srcdoc'
   },
   {
     input: '<dir action="x">',
@@ -23374,7 +23620,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dir_action',
+    name: 'contract_dir_action'
   },
   {
     input: '<dir method="x">',
@@ -23391,7 +23637,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dir_method',
+    name: 'contract_dir_method'
   },
   {
     input: '<dir formaction="x">',
@@ -23408,7 +23654,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dir_formaction',
+    name: 'contract_dir_formaction'
   },
   {
     input: '<dir formmethod="x">',
@@ -23425,7 +23671,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dir_formmethod',
+    name: 'contract_dir_formmethod'
   },
   {
     input: '<dir pattern="x">',
@@ -23442,7 +23688,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dir_pattern',
+    name: 'contract_dir_pattern'
   },
   {
     input: '<dir readonly="x">',
@@ -23459,7 +23705,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dir_readonly',
+    name: 'contract_dir_readonly'
   },
   {
     input: '<dir accept="x">',
@@ -23476,7 +23722,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dir_accept',
+    name: 'contract_dir_accept'
   },
   {
     input: '<dir defer="x">',
@@ -23493,7 +23739,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_dir_defer',
+    name: 'contract_dir_defer'
   },
   {
     input: '<hgroup></hgroup>',
@@ -23508,7 +23754,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_hgroup_plain',
+    name: 'contract_hgroup_plain'
   },
   {
     input: '<hgroup><script>alert()</script></hgroup>',
@@ -23526,7 +23772,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><hgroup></hgroup><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_hgroup_scriptinside',
+    name: 'contract_hgroup_scriptinside'
   },
   {
     input: '<hgroup srcdoc="x">',
@@ -23543,7 +23789,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_hgroup_srcdoc',
+    name: 'contract_hgroup_srcdoc'
   },
   {
     input: '<hgroup action="x">',
@@ -23560,7 +23806,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_hgroup_action',
+    name: 'contract_hgroup_action'
   },
   {
     input: '<hgroup method="x">',
@@ -23577,7 +23823,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_hgroup_method',
+    name: 'contract_hgroup_method'
   },
   {
     input: '<hgroup formaction="x">',
@@ -23594,7 +23840,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_hgroup_formaction',
+    name: 'contract_hgroup_formaction'
   },
   {
     input: '<hgroup formmethod="x">',
@@ -23611,7 +23857,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_hgroup_formmethod',
+    name: 'contract_hgroup_formmethod'
   },
   {
     input: '<hgroup pattern="x">',
@@ -23628,7 +23874,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_hgroup_pattern',
+    name: 'contract_hgroup_pattern'
   },
   {
     input: '<hgroup readonly="x">',
@@ -23645,7 +23891,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_hgroup_readonly',
+    name: 'contract_hgroup_readonly'
   },
   {
     input: '<hgroup accept="x">',
@@ -23662,7 +23908,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_hgroup_accept',
+    name: 'contract_hgroup_accept'
   },
   {
     input: '<hgroup defer="x">',
@@ -23679,7 +23925,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_hgroup_defer',
+    name: 'contract_hgroup_defer'
   },
   {
     input: '<strike></strike>',
@@ -23694,7 +23940,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_strike_plain',
+    name: 'contract_strike_plain'
   },
   {
     input: '<strike><script>alert()</script></strike>',
@@ -23712,7 +23958,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><strike></strike><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_strike_scriptinside',
+    name: 'contract_strike_scriptinside'
   },
   {
     input: '<strike srcdoc="x">',
@@ -23729,7 +23975,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_strike_srcdoc',
+    name: 'contract_strike_srcdoc'
   },
   {
     input: '<strike action="x">',
@@ -23746,7 +23992,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_strike_action',
+    name: 'contract_strike_action'
   },
   {
     input: '<strike method="x">',
@@ -23763,7 +24009,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_strike_method',
+    name: 'contract_strike_method'
   },
   {
     input: '<strike formaction="x">',
@@ -23780,7 +24026,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_strike_formaction',
+    name: 'contract_strike_formaction'
   },
   {
     input: '<strike formmethod="x">',
@@ -23797,7 +24043,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_strike_formmethod',
+    name: 'contract_strike_formmethod'
   },
   {
     input: '<strike pattern="x">',
@@ -23814,7 +24060,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_strike_pattern',
+    name: 'contract_strike_pattern'
   },
   {
     input: '<strike readonly="x">',
@@ -23831,7 +24077,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_strike_readonly',
+    name: 'contract_strike_readonly'
   },
   {
     input: '<strike accept="x">',
@@ -23848,7 +24094,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_strike_accept',
+    name: 'contract_strike_accept'
   },
   {
     input: '<strike defer="x">',
@@ -23865,7 +24111,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_strike_defer',
+    name: 'contract_strike_defer'
   },
   {
     input: '<tt></tt>',
@@ -23880,7 +24126,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_tt_plain',
+    name: 'contract_tt_plain'
   },
   {
     input: '<tt><script>alert()</script></tt>',
@@ -23898,7 +24144,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<table><tt></tt><td></td></table>',
       '<table><td></td></table>',
     ],
-    name: 'contract_tt_scriptinside',
+    name: 'contract_tt_scriptinside'
   },
   {
     input: '<tt srcdoc="x">',
@@ -23915,7 +24161,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_tt_srcdoc',
+    name: 'contract_tt_srcdoc'
   },
   {
     input: '<tt action="x">',
@@ -23932,7 +24178,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_tt_action',
+    name: 'contract_tt_action'
   },
   {
     input: '<tt method="x">',
@@ -23949,7 +24195,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_tt_method',
+    name: 'contract_tt_method'
   },
   {
     input: '<tt formaction="x">',
@@ -23966,7 +24212,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_tt_formaction',
+    name: 'contract_tt_formaction'
   },
   {
     input: '<tt formmethod="x">',
@@ -23983,7 +24229,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_tt_formmethod',
+    name: 'contract_tt_formmethod'
   },
   {
     input: '<tt pattern="x">',
@@ -24000,7 +24246,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_tt_pattern',
+    name: 'contract_tt_pattern'
   },
   {
     input: '<tt readonly="x">',
@@ -24017,7 +24263,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_tt_readonly',
+    name: 'contract_tt_readonly'
   },
   {
     input: '<tt accept="x">',
@@ -24034,7 +24280,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_tt_accept',
+    name: 'contract_tt_accept'
   },
   {
     input: '<tt defer="x">',
@@ -24051,12 +24297,16 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<span />',
       '',
     ],
-    name: 'contract_tt_defer',
+    name: 'contract_tt_defer'
   },
   {
     input: '<p dir="x"></p>',
-    acceptable: ['<p></p>', '<p />', ''],
-    name: 'contract_dir',
+    acceptable: [
+      '<p></p>',
+      '<p />',
+      '',
+    ],
+    name: 'contract_dir'
   },
   {
     input: '<p dir="auto"></p>',
@@ -24067,7 +24317,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<p></p>',
       '<p />',
     ],
-    name: 'contract_dir_auto',
+    name: 'contract_dir_auto'
   },
   {
     input: '<p dir="ltr"></p>',
@@ -24078,7 +24328,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<p></p>',
       '<p />',
     ],
-    name: 'contract_dir_ltr',
+    name: 'contract_dir_ltr'
   },
   {
     input: '<p dir="rtl"></p>',
@@ -24089,7 +24339,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<p></p>',
       '<p />',
     ],
-    name: 'contract_dir_rtl',
+    name: 'contract_dir_rtl'
   },
   {
     input: '<p style="javascript:xss"></p>',
@@ -24100,7 +24350,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<p style="about:invalid#zClosurez"></p>',
       '<p style="about:invalid#zClosurez" />',
     ],
-    name: 'contract_style',
+    name: 'contract_style'
   },
   {
     input: '<p aria-activedescendant="javascript:xss"></p>',
@@ -24111,7 +24361,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<p aria-activedescendant="about:invalid#zClosurez"></p>',
       '<p aria-activedescendant="about:invalid#zClosurez" />',
     ],
-    name: 'contract_aria-activedescendant',
+    name: 'contract_aria-activedescendant'
   },
   {
     input: '<p aria-controls="javascript:xss"></p>',
@@ -24122,7 +24372,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<p aria-controls="about:invalid#zClosurez"></p>',
       '<p aria-controls="about:invalid#zClosurez" />',
     ],
-    name: 'contract_aria-controls',
+    name: 'contract_aria-controls'
   },
   {
     input: '<p aria-labelledby="javascript:xss"></p>',
@@ -24133,7 +24383,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<p aria-labelledby="about:invalid#zClosurez"></p>',
       '<p aria-labelledby="about:invalid#zClosurez" />',
     ],
-    name: 'contract_aria-labelledby',
+    name: 'contract_aria-labelledby'
   },
   {
     input: '<p aria-owns="javascript:xss"></p>',
@@ -24144,12 +24394,16 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<p aria-owns="about:invalid#zClosurez"></p>',
       '<p aria-owns="about:invalid#zClosurez" />',
     ],
-    name: 'contract_aria-owns',
+    name: 'contract_aria-owns'
   },
   {
     input: '<p async="x"></p>',
-    acceptable: ['<p></p>', '<p />', ''],
-    name: 'contract_async',
+    acceptable: [
+      '<p></p>',
+      '<p />',
+      '',
+    ],
+    name: 'contract_async'
   },
   {
     input: '<p async="async"></p>',
@@ -24160,7 +24414,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<p></p>',
       '<p />',
     ],
-    name: 'contract_async_async',
+    name: 'contract_async_async'
   },
   {
     input: '<p cite="javascript:xss"></p>',
@@ -24171,7 +24425,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<p cite="about:invalid#zClosurez"></p>',
       '<p cite="about:invalid#zClosurez" />',
     ],
-    name: 'contract_cite',
+    name: 'contract_cite'
   },
   {
     input: '<p for="javascript:xss"></p>',
@@ -24182,12 +24436,17 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<p for="about:invalid#zClosurez"></p>',
       '<p for="about:invalid#zClosurez" />',
     ],
-    name: 'contract_for',
+    name: 'contract_for'
   },
   {
     input: '<p href="x"></p>',
-    acceptable: ['<p href="javascript:void(0);"></p>', '<p></p>', '<p />', ''],
-    name: 'contract_href',
+    acceptable: [
+      '<p href="javascript:void(0);"></p>',
+      '<p></p>',
+      '<p />',
+      '',
+    ],
+    name: 'contract_href'
   },
   {
     input: '<p id="javascript:xss"></p>',
@@ -24198,7 +24457,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<p id="about:invalid#zClosurez"></p>',
       '<p id="about:invalid#zClosurez" />',
     ],
-    name: 'contract_id',
+    name: 'contract_id'
   },
   {
     input: '<p list="javascript:xss"></p>',
@@ -24209,12 +24468,16 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<p list="about:invalid#zClosurez"></p>',
       '<p list="about:invalid#zClosurez" />',
     ],
-    name: 'contract_list',
+    name: 'contract_list'
   },
   {
     input: '<p loading="x"></p>',
-    acceptable: ['<p></p>', '<p />', ''],
-    name: 'contract_loading',
+    acceptable: [
+      '<p></p>',
+      '<p />',
+      '',
+    ],
+    name: 'contract_loading'
   },
   {
     input: '<p loading="eager"></p>',
@@ -24225,7 +24488,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<p></p>',
       '<p />',
     ],
-    name: 'contract_loading_eager',
+    name: 'contract_loading_eager'
   },
   {
     input: '<p loading="lazy"></p>',
@@ -24236,7 +24499,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<p></p>',
       '<p />',
     ],
-    name: 'contract_loading_lazy',
+    name: 'contract_loading_lazy'
   },
   {
     input: '<p name="javascript:xss"></p>',
@@ -24247,7 +24510,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<p name="about:invalid#zClosurez"></p>',
       '<p name="about:invalid#zClosurez" />',
     ],
-    name: 'contract_name',
+    name: 'contract_name'
   },
   {
     input: '<p poster="javascript:xss"></p>',
@@ -24258,7 +24521,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<p poster="about:invalid#zClosurez"></p>',
       '<p poster="about:invalid#zClosurez" />',
     ],
-    name: 'contract_poster',
+    name: 'contract_poster'
   },
   {
     input: '<p srcset="javascript:xss"></p>',
@@ -24269,17 +24532,26 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<p srcset="about:invalid#zClosurez"></p>',
       '<p srcset="about:invalid#zClosurez" />',
     ],
-    name: 'contract_srcset',
+    name: 'contract_srcset'
   },
   {
     input: '<p src="x"></p>',
-    acceptable: ['<p src="javascript:void(0);"></p>', '<p></p>', '<p />', ''],
-    name: 'contract_src',
+    acceptable: [
+      '<p src="javascript:void(0);"></p>',
+      '<p></p>',
+      '<p />',
+      '',
+    ],
+    name: 'contract_src'
   },
   {
     input: '<p target="x"></p>',
-    acceptable: ['<p></p>', '<p />', ''],
-    name: 'contract_target',
+    acceptable: [
+      '<p></p>',
+      '<p />',
+      '',
+    ],
+    name: 'contract_target'
   },
   {
     input: '<p target="_self"></p>',
@@ -24290,7 +24562,7 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<p></p>',
       '<p />',
     ],
-    name: 'contract_target__self',
+    name: 'contract_target__self'
   },
   {
     input: '<p target="_blank"></p>',
@@ -24301,6 +24573,6 @@ export const HTML_TEST_VECTORS: TestVector[] = [
       '<p></p>',
       '<p />',
     ],
-    name: 'contract_target__blank',
+    name: 'contract_target__blank'
   },
 ];

@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+// g3-format-clang
+
 /**
  * The name of the Trusted Types policy used by TS safevalues, or empty
  * to disable Trusted Types. This duplicates the 'google#safe', but
@@ -22,8 +24,8 @@ function trustedTypes() {
  * Returns window.trustedTypes if Trusted Types are enabled and supported, or
  * null otherwise.
  */
-export function getTrustedTypes(): TrustedTypePolicyFactory | null {
-  return trustedTypesPolicyName !== '' ? trustedTypes() ?? null : null;
+export function getTrustedTypes(): TrustedTypePolicyFactory|null {
+  return (trustedTypesPolicyName !== '') ? (trustedTypes() ?? null) : null;
 }
 
 /**
@@ -31,22 +33,23 @@ export function getTrustedTypes(): TrustedTypePolicyFactory | null {
  * are not enabled/supported, or undefined if the policy has not been created
  * yet.
  */
-let trustedTypesPolicy: TrustedTypePolicy | null | undefined;
+let trustedTypesPolicy: TrustedTypePolicy|null|undefined;
 
 /**
  * Returns the Trusted Types policy used by TS safevalues, or null if Trusted
  * Types are not enabled/supported. The first call to this function will
  * create the policy.
  */
-export function getTrustedTypesPolicy(): TrustedTypePolicy | null {
+export function getTrustedTypesPolicy(): TrustedTypePolicy|null {
   if (trustedTypesPolicy === undefined) {
     try {
       trustedTypesPolicy =
-        getTrustedTypes()?.createPolicy(trustedTypesPolicyName, {
-          createHTML: (s: string) => s,
-          createScript: (s: string) => s,
-          createScriptURL: (s: string) => s,
-        }) ?? null;
+          getTrustedTypes()?.createPolicy(trustedTypesPolicyName, {
+            createHTML: (s: string) => s,
+            createScript: (s: string) => s,
+            createScriptURL: (s: string) => s
+          }) ??
+          null;
     } catch {
       // In Chromium versions before 81, trustedTypes.createPolicy throws if
       // called with a name that is already registered, even if no CSP is set.

@@ -3,7 +3,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+// g3-format-clang
+
 import '../environment/dev';
+
 import {createHtmlInternal, SafeHtml, unwrapHtml} from '../internals/html_impl';
 import {assertIsTemplateObject} from '../internals/string_literal';
 
@@ -20,16 +23,14 @@ import {assertIsTemplateObject} from '../internals/string_literal';
  *
  * @param templateObj This contains the literal part of the template literal.
  */
-export function htmlFragment(
-  templateObj: TemplateStringsArray,
-): DocumentFragment {
+export function htmlFragment(templateObj: TemplateStringsArray):
+    DocumentFragment {
   if (process.env.NODE_ENV !== 'production') {
     assertIsTemplateObject(templateObj, 0);
   }
   const range = document.createRange();
   return range.createContextualFragment(
-    unwrapHtml(createHtmlInternal(templateObj[0])) as string,
-  );
+      unwrapHtml(createHtmlInternal(templateObj[0])) as string);
 }
 
 /**
@@ -42,9 +43,8 @@ export function htmlFragment(
  *
  * @param templateObj This contains the literal part of the template literal.
  */
-export function svgFragment(
-  templateObj: TemplateStringsArray,
-): DocumentFragment {
+export function svgFragment(templateObj: TemplateStringsArray):
+    DocumentFragment {
   if (process.env.NODE_ENV !== 'production') {
     assertIsTemplateObject(templateObj, 0);
   }
@@ -52,13 +52,12 @@ export function svgFragment(
   const range = document.createRange();
   range.selectNodeContents(svgElem);
   return range.createContextualFragment(
-    unwrapHtml(createHtmlInternal(templateObj[0])) as string,
-  );
+      unwrapHtml(createHtmlInternal(templateObj[0])) as string);
 }
 
 /** Converts HTML markup into a node. */
 export function htmlToNode(html: SafeHtml): Node {
   const range = document.createRange();
   const fragment = range.createContextualFragment(unwrapHtml(html) as string);
-  return fragment.childNodes.length === 1 ? fragment.childNodes[0] : fragment;
+  return (fragment.childNodes.length === 1) ? fragment.childNodes[0] : fragment;
 }

@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+// g3-format-clang
+
 import {unwrapUrlOrSanitize, Url} from '../../builders/url_builders';
 
 /**
@@ -10,11 +12,7 @@ import {unwrapUrlOrSanitize, Url} from '../../builders/url_builders';
  * target {@link Url}.
  */
 export function open(
-  win: Window,
-  url: Url,
-  target?: string,
-  features?: string,
-): Window | null {
+    win: Window, url: Url, target?: string, features?: string): Window|null {
   const sanitizedUrl = unwrapUrlOrSanitize(url);
   if (sanitizedUrl !== undefined) {
     return win.open(sanitizedUrl, target, features);
@@ -32,12 +30,11 @@ export function getStyleNonce(win: Window): string {
   return getNonceFor('style', win);
 }
 
-function getNonceFor(elementName: 'script' | 'style', win: Window): string {
+function getNonceFor(elementName: 'script'|'style', win: Window): string {
   const doc = win.document;
   // document.querySelector can be undefined in non-browser environments.
-  const el = doc.querySelector?.<HTMLScriptElement | HTMLStyleElement>(
-    `${elementName}[nonce]`,
-  );
+  const el = doc.querySelector?.<HTMLScriptElement|HTMLStyleElement>(
+      `${elementName}[nonce]`);
   if (el) {
     // Try to get the nonce from the IDL property first, because browsers that
     // implement additional nonce protection features (currently only Chrome) to

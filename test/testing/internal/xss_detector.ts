@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+// g3-format-clang
+
 /**
  * Helper to detect if something should trigger an XSS or not,
  * this allows us to test that our code is not triggering XSS.
@@ -12,9 +14,8 @@ export class XSSDetector {
   private readonly RANDOM_ID = Math.random().toString(16).slice(2);
 
   // Conveniently casted version of window.
-  private readonly global = window as unknown as {
-    [x: string]: Function | undefined;
-  };
+  private readonly global =
+      window as unknown as {[x: string]: Function | undefined};
 
   // A promise to wait for things to load.
   private readonly promise: Promise<boolean>;

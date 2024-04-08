@@ -3,13 +3,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+// g3-format-clang
+
+import {restrictivelySanitizeUrl, sanitizeJavaScriptUrl,} from '../../src/builders/url_builders';
 import {URL_TEST_VECTORS as JAVASCRIPT_URL_TEST_VECTORS} from '../testing/testvectors/javascript_url_sanitizer_test_vectors';
 import {URL_TEST_VECTORS} from '../testing/testvectors/url_test_vectors';
-
-import {
-  restrictivelySanitizeUrl,
-  sanitizeJavaScriptUrl,
-} from '../../src/builders/url_builders';
 
 describe('url_sanitizer', () => {
   describe('sanitizeJavaScriptUrl', () => {
