@@ -3,9 +3,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-// g3-format-clang
-
-import {getNodeName, isElement, isText} from '../../../src/builders/html_sanitizer/no_clobber';
+import {
+  getNodeName,
+  isElement,
+  isText,
+} from '../../../src/builders/html_sanitizer/no_clobber';
 
 function createClobberedElement(property: string): Element {
   const formElement = document.createElement('form');
