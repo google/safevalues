@@ -9,8 +9,6 @@
  * that are not tied to elements (like location.href or Worker constructor).
  */
 
-// g3-format-clang
-
 import '../../environment/dev';
 import {
   SafeAttributePrefix,

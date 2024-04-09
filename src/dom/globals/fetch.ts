@@ -9,8 +9,6 @@
  * interpreted as SafeHtml or SafeScript.
  */
 
-// g3-format-clang
-
 import {createHtmlInternal, SafeHtml} from '../../internals/html_impl';
 import {
   TrustedResourceUrl,
