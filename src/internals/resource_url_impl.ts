@@ -3,13 +3,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-// g3-format-clang
-
 import '../environment/dev';
 
 import {ensureTokenIsValid, secretToken} from './secrets';
 import {getTrustedTypes, getTrustedTypesPolicy} from './trusted_types';
-
 
 /**
  * Runtime implementation of `TrustedScriptURL` in browsers that don't support
@@ -29,7 +26,7 @@ class ResourceUrlImpl {
 }
 
 const GlobalTrustedScriptURL =
-    (typeof window !== 'undefined') ? window.TrustedScriptURL : undefined;
+  typeof window !== 'undefined' ? window.TrustedScriptURL : undefined;
 
 /**
  * String that is safe to use in all URL contexts in DOM APIs and HTML
@@ -41,8 +38,8 @@ export type TrustedResourceUrl = TrustedScriptURL;
 /**
  * Also exports the constructor so that instanceof checks work.
  */
-export const TrustedResourceUrl =
-    (GlobalTrustedScriptURL ?? ResourceUrlImpl) as unknown as TrustedScriptURL;
+export const TrustedResourceUrl = (GlobalTrustedScriptURL ??
+  ResourceUrlImpl) as unknown as TrustedScriptURL;
 
 /**
  * Builds a new `TrustedResourceUrl` from the given string, without
@@ -54,17 +51,18 @@ export function createResourceUrlInternal(url: string): TrustedResourceUrl {
   /** @noinline */
   const noinlineUrl = url;
   const trustedScriptURL =
-      getTrustedTypesPolicy()?.createScriptURL(noinlineUrl);
-  return (trustedScriptURL ?? new ResourceUrlImpl(noinlineUrl, secretToken)) as
-      TrustedResourceUrl;
+    getTrustedTypesPolicy()?.createScriptURL(noinlineUrl);
+  return (trustedScriptURL ??
+    new ResourceUrlImpl(noinlineUrl, secretToken)) as TrustedResourceUrl;
 }
 
 /**
  * Checks if the given value is a `TrustedResourceUrl` instance.
  */
 export function isResourceUrl(value: unknown): value is TrustedResourceUrl {
-  return getTrustedTypes()?.isScriptURL(value) ||
-      value instanceof ResourceUrlImpl;
+  return (
+    getTrustedTypes()?.isScriptURL(value) || value instanceof ResourceUrlImpl
+  );
 }
 
 /**
@@ -74,8 +72,9 @@ export function isResourceUrl(value: unknown): value is TrustedResourceUrl {
  * Returns a native `TrustedScriptURL` or a string if Trusted Types are
  * disabled.
  */
-export function unwrapResourceUrl(value: TrustedResourceUrl): TrustedScriptURL|
-    string {
+export function unwrapResourceUrl(
+  value: TrustedResourceUrl,
+): TrustedScriptURL | string {
   if (getTrustedTypes()?.isScriptURL(value)) {
     return value;
   } else if (value instanceof ResourceUrlImpl) {

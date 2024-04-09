@@ -3,8 +3,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-// g3-format-clang
-
 import {ensureTokenIsValid, secretToken} from '../../src/internals/secrets';
 
 describe('ensureTokenIsValid', () => {

@@ -3,11 +3,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-// g3-format-clang
-
 import {htmlEscape} from '../../src/builders/html_builders';
 import {trustedResourceUrl} from '../../src/builders/resource_url_builders';
 import {safeScript} from '../../src/builders/script_builders';
+
 import {unwrapHtml} from '../../src/internals/html_impl';
 import {unwrapResourceUrl} from '../../src/internals/resource_url_impl';
 import {unwrapScript} from '../../src/internals/script_impl';
@@ -45,9 +44,9 @@ const mockTrustedTypes = {
     name,
     createHTML: (s: string) => new MockTrustedHTML(stringifiers.createHTML!(s)),
     createScript: (s: string) =>
-        new MockTrustedScript(stringifiers.createScript!(s)),
+      new MockTrustedScript(stringifiers.createScript!(s)),
     createScriptURL: (s: string) =>
-        new MockTrustedScriptURL(stringifiers.createScriptURL!(s)),
+      new MockTrustedScriptURL(stringifiers.createScriptURL!(s)),
   }),
   isHTML: (o: unknown) => o instanceof MockTrustedHTML,
   isScript: (o: unknown) => o instanceof MockTrustedScript,
@@ -59,8 +58,10 @@ const NATIVE_TT = {
   'trustedTypes': Object.getOwnPropertyDescriptor(window, 'trustedTypes'),
   'TrustedHTML': Object.getOwnPropertyDescriptor(window, 'TrustedHTML'),
   'TrustedScript': Object.getOwnPropertyDescriptor(window, 'TrustedScript'),
-  'TrustedScriptURL':
-      Object.getOwnPropertyDescriptor(window, 'TrustedScriptURL'),
+  'TrustedScriptURL': Object.getOwnPropertyDescriptor(
+    window,
+    'TrustedScriptURL',
+  ),
 };
 
 /**
@@ -115,16 +116,18 @@ describe('Trusted Types in safevalues', () => {
       const safe = safeScript`a = b;`;
       expect(safe.toString()).toEqual('a = b;');
       expect(unwrapScript(safe).toString()).toEqual('a = b;');
-      expect(unwrapScript(safe) as unknown)
-          .toEqual(new MockTrustedScript('a = b;'));
+      expect(unwrapScript(safe) as unknown).toEqual(
+        new MockTrustedScript('a = b;'),
+      );
     });
 
     it('should be used by TrustedResourceUrl', () => {
       const safe = trustedResourceUrl`a/b/c`;
       expect(safe.toString()).toEqual('a/b/c');
       expect(unwrapResourceUrl(safe).toString()).toEqual('a/b/c');
-      expect(unwrapResourceUrl(safe) as unknown)
-          .toEqual(new MockTrustedScriptURL('a/b/c'));
+      expect(unwrapResourceUrl(safe) as unknown).toEqual(
+        new MockTrustedScriptURL('a/b/c'),
+      );
     });
   };
 
