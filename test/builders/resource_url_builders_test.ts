@@ -321,9 +321,7 @@ describe('resource_url_builders', () => {
     });
 
     afterEach(() => {
-      if (!isIE()) {
-        Object.defineProperty(Node.prototype, 'baseURI', oldBaseURI);
-      }
+      Object.defineProperty(Node.prototype, 'baseURI', oldBaseURI);
     });
 
     const tests = [
@@ -374,10 +372,6 @@ describe('resource_url_builders', () => {
       it(`appropriately prefixes the document base URI for ${
              test.trusted.toString()}`,
          () => {
-           if (isIE()) {
-             skipTest();
-             return;
-           }
            Object.defineProperty(
                Node.prototype, 'baseURI', {value: test.baseURI});
            expect(toAbsoluteResourceUrl(test.trusted))
@@ -413,12 +407,4 @@ async function fetchScriptContent(url: TrustedResourceUrl): Promise<string> {
       };
     });
   }
-}
-
-function isIE() {
-  return navigator.userAgent.indexOf('Trident/') > 0;
-}
-
-function skipTest() {
-  expect(true).toBeTrue();
 }

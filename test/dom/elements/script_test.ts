@@ -5,6 +5,7 @@
 
 // g3-format-clang
 
+
 import {trustedResourceUrl} from '../../../src/builders/resource_url_builders';
 import {safeScript} from '../../../src/builders/script_builders';
 import * as safeScriptEl from '../../../src/dom/elements/script';

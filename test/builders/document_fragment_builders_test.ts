@@ -25,11 +25,6 @@ describe('document_fragment_builders', () => {
   });
 
   describe('svgFragment', () => {
-    // svgFragment doesn’t support IE
-    if (isIE()) {
-      return;
-    }
-
     it('can build a simple svg fragment', () => {
       const fragment = svgFragment`<circle cx="100" cy="100" r="100"></circle>`;
       expect((fragment.firstChild! as Element).outerHTML)
@@ -74,7 +69,3 @@ describe('document_fragment_builders', () => {
     });
   });
 });
-
-function isIE() {
-  return navigator.userAgent.indexOf('Trident/') > 0;
-}
