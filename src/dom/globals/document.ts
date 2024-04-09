@@ -3,8 +3,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-// g3-format-clang
-
 import {SafeHtml, unwrapHtml} from '../../internals/html_impl';
 
 /**
@@ -15,15 +13,19 @@ export function write(doc: Document, text: SafeHtml) {
   doc.write(unwrapHtml(text) as string);
 }
 
-type ValueType<Cmd extends string> =
-    Lowercase<Cmd> extends 'inserthtml' ? SafeHtml : SafeHtml|string;
+type ValueType<Cmd extends string> = Lowercase<Cmd> extends 'inserthtml'
+  ? SafeHtml
+  : SafeHtml | string;
 
 /**
  * Safely calls {@link Document.execCommand}. When command is insertHtml, a
  * SafeHtml must be passed in as value.
  */
 export function execCommand<Cmd extends string>(
-    doc: Document, command: Cmd, value?: ValueType<Cmd>): boolean {
+  doc: Document,
+  command: Cmd,
+  value?: ValueType<Cmd>,
+): boolean {
   const commandString = String(command);
   let valueArgument = value as string;
   if (commandString.toLowerCase() === 'inserthtml') {
@@ -38,5 +40,8 @@ export function execCommand<Cmd extends string>(
  */
 export function execCommandInsertHtml(doc: Document, html: SafeHtml): boolean {
   return doc.execCommand(
-      'insertHTML', /* showUi= */ false, unwrapHtml(html) as string);
+    'insertHTML',
+    /* showUi= */ false,
+    unwrapHtml(html) as string,
+  );
 }

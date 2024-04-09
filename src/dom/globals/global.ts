@@ -3,8 +3,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-// g3-format-clang
-
 import {SafeScript, unwrapScript} from '../../internals/script_impl';
 
 export {fetchResourceUrl, type SafeResponse} from './fetch';
@@ -16,7 +14,9 @@ export {fetchResourceUrl, type SafeResponse} from './fetch';
  * benefit from compiler optimizations.
  */
 export function globalEval(
-    win: Window|typeof globalThis, script: SafeScript): unknown {
+  win: Window | typeof globalThis,
+  script: SafeScript,
+): unknown {
   const trustedScript = unwrapScript(script);
   let result = (win as typeof globalThis).eval(trustedScript as string);
   if (result === trustedScript) {

@@ -3,10 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-// g3-format-clang
+import {testonlyScript} from '../../testing/conversions';
 
 import * as safeGlobal from '../../../src/dom/globals/global';
-import {testonlyScript} from '../../testing/conversions';
 
 describe('safeGlobal', () => {
   describe('with TS safe types', () => {

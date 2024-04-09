@@ -3,9 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-// g3-format-clang
-
 import {trustedResourceUrl} from '../../../src/builders/resource_url_builders';
+
 import * as safeBaseEl from '../../../src/dom/elements/base';
 
 describe('safeBaseEl', () => {

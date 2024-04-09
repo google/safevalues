@@ -3,8 +3,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-// g3-format-clang
-
 import * as safeSvgEl from '../../../src/dom/elements/svg';
 
 describe('safeSvgEl', () => {
@@ -32,6 +30,7 @@ describe('safeSvgEl', () => {
       safeSvgEl.setAttribute(svgEl, 'href', url);
     };
     expect(setHerf).toThrow(
-        new Error(`Setting the 'href' attribute on SVG can cause XSS.`));
+      new Error(`Setting the 'href' attribute on SVG can cause XSS.`),
+    );
   });
 });

@@ -3,14 +3,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-// g3-format-clang
-
-
 import {trustedResourceUrl} from '../../../src/builders/resource_url_builders';
 import {safeScript} from '../../../src/builders/script_builders';
-import * as safeScriptEl from '../../../src/dom/elements/script';
 import {safeDocument} from '../../../src/dom/index';
 import {testonlyHtml} from '../../testing/conversions';
+
+import * as safeScriptEl from '../../../src/dom/elements/script';
 
 describe('safeScriptEl', () => {
   const nonce = btoa(`Nonce12345`);
@@ -25,8 +23,7 @@ describe('safeScriptEl', () => {
   afterEach(() => {
     try {
       document.body.removeChild(noncedScript);
-    } catch {
-    }
+    } catch {}
   });
 
   describe('with TS safe types', () => {
@@ -90,8 +87,9 @@ describe('safeScriptEl', () => {
       document.body.appendChild(iframe);
       const iframeDocument = iframe.contentWindow!.document;
       safeDocument.write(
-          iframeDocument,
-          testonlyHtml(`<script nonce="${nonceIframe}"><script>`));
+        iframeDocument,
+        testonlyHtml(`<script nonce="${nonceIframe}"><script>`),
+      );
       iframeDocument.close();
       const blankScript = iframeDocument.createElement('script');
       iframeDocument.body.appendChild(blankScript);

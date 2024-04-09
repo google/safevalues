@@ -3,9 +3,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-// g3-format-clang
-
-import {TrustedResourceUrl, unwrapResourceUrl} from '../../internals/resource_url_impl';
+import {
+  TrustedResourceUrl,
+  unwrapResourceUrl,
+} from '../../internals/resource_url_impl';
 
 /**
  * Sets the Href attribute from the given TrustedResourceUrl.

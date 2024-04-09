@@ -3,14 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-// g3-format-clang
-
 import '../../environment/dev';
 
-const UNSAFE_SVG_ATTRIBUTES = [
-  'href',
-  'xlink:href',
-];
+const UNSAFE_SVG_ATTRIBUTES = ['href', 'xlink:href'];
 
 /**
  * Set attribute on SVGElement if the attribute doesn't have security
@@ -18,8 +13,10 @@ const UNSAFE_SVG_ATTRIBUTES = [
  */
 export function setAttribute(svg: SVGElement, attr: string, value: string) {
   const attrLower = attr.toLowerCase();
-  if (UNSAFE_SVG_ATTRIBUTES.indexOf(attrLower) !== -1 ||
-      attrLower.indexOf('on') === 0) {
+  if (
+    UNSAFE_SVG_ATTRIBUTES.indexOf(attrLower) !== -1 ||
+    attrLower.indexOf('on') === 0
+  ) {
     let msg = '';
     if (process.env.NODE_ENV !== 'production') {
       msg = `Setting the '${attrLower}' attribute on SVG can cause XSS.`;
