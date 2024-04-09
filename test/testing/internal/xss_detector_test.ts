@@ -3,12 +3,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-// g3-format-clang
-
 import {setSrc, setTextContent} from '../../../src/dom/elements/script';
 import {globalEval} from '../../../src/dom/globals/global';
 import {createContextualFragment} from '../../../src/dom/globals/range';
-import {testonlyHtml, testonlyResourceUrl, testonlyScript} from '../conversions';
+import {
+  testonlyHtml,
+  testonlyResourceUrl,
+  testonlyScript,
+} from '../conversions';
 
 import {XSSDetector} from './xss_detector';
 
@@ -65,22 +67,22 @@ describe('XSSDetector', () => {
     expect(detector.wasTriggered()).toBe(true);
   });
 
-  it('triggers asynchronously when parsing img with onerror handler',
-     async () => {
-       const detector = new XSSDetector();
+  it('triggers asynchronously when parsing img with onerror handler', async () => {
+    const detector = new XSSDetector();
 
-       // The bad-scheme is important to make sure the load fails without having
-       // to hit the newtork stack, which would make the test flaky due to the
-       // variable time it takes to trigger the onerror handler.
-       const html =
-           testonlyHtml(`<img src=bad-scheme:_ onerror="${detector.payload}">`);
-       const range = document.createRange();
-       createContextualFragment(range, html);
+    // The bad-scheme is important to make sure the load fails without having
+    // to hit the newtork stack, which would make the test flaky due to the
+    // variable time it takes to trigger the onerror handler.
+    const html = testonlyHtml(
+      `<img src=bad-scheme:_ onerror="${detector.payload}">`,
+    );
+    const range = document.createRange();
+    createContextualFragment(range, html);
 
-       expect(detector.wasTriggered()).toBe(false);
+    expect(detector.wasTriggered()).toBe(false);
 
-       expect(await detector.waitForTrigger()).toBe(true);
-     });
+    expect(await detector.waitForTrigger()).toBe(true);
+  });
 
   it('can be instantiated multiple times in parallel', async () => {
     const detector1 = new XSSDetector();
@@ -110,11 +112,10 @@ describe('XSSDetector', () => {
     expect(await detector3.waitForTrigger()).toBe(true);
   });
 
-  it('throws an error if the detector is checked whith an unused payload',
-     async () => {
-       const detector = new XSSDetector();
+  it('throws an error if the detector is checked whith an unused payload', async () => {
+    const detector = new XSSDetector();
 
-       expect(() => detector.wasTriggered()).toThrow();
-       await expectAsync(detector.waitForTrigger()).toBeRejected();
-     });
+    expect(() => detector.wasTriggered()).toThrow();
+    await expectAsync(detector.waitForTrigger()).toBeRejected();
+  });
 });
