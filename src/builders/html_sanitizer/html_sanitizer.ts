@@ -8,7 +8,7 @@
 import '../../environment/dev';
 
 import {SafeHtml} from '../../internals/html_impl';
-/* g3_import_pure from '../../internals/pure' */
+import {pure} from '../../internals/pure';
 import {ensureTokenIsValid, secretToken} from '../../internals/secrets';
 import {nodeToHtmlInternal} from '../html_builders';
 import {restrictivelySanitizeUrl} from '../url_builders';
@@ -231,8 +231,8 @@ function setAttribute(el: Element, name: string, value: string) {
 }
 
 const defaultHtmlSanitizer =
-    /* #__PURE__ */ (
-        () => new HtmlSanitizerImpl(defaultSanitizerTable, secretToken))();
+    /* #__PURE__ */ pure(
+        () => new HtmlSanitizerImpl(defaultSanitizerTable, secretToken));
 
 /** Sanitizes untrusted html using the default sanitizer configuration. */
 export function sanitizeHtml(html: string): SafeHtml {
