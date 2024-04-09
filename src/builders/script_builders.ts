@@ -3,16 +3,19 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-// g3-format-clang
-
 import '../environment/dev';
-
-import {createScriptInternal, SafeScript, unwrapScript} from '../internals/script_impl';
+import {
+  createScriptInternal,
+  SafeScript,
+  unwrapScript,
+} from '../internals/script_impl';
 import {assertIsTemplateObject} from '../internals/string_literal';
 
-type Primitive = number|string|boolean|null;
+type Primitive = number | string | boolean | null;
 type Serializable =
-    Primitive|readonly Serializable[]|{readonly [key: string]: Serializable};
+  | Primitive
+  | readonly Serializable[]
+  | {readonly [key: string]: Serializable};
 
 /**
  * Creates a SafeScript object from a template literal (without any embedded
@@ -27,13 +30,15 @@ type Serializable =
  *     inline comments.
  */
 export function safeScript(
-    templateObj: TemplateStringsArray,
-    ...emptyArgs: ReadonlyArray<''>): SafeScript {
+  templateObj: TemplateStringsArray,
+  ...emptyArgs: ReadonlyArray<''>
+): SafeScript {
   if (process.env.NODE_ENV !== 'production') {
-    if (emptyArgs.some(a => a !== '')) {
+    if (emptyArgs.some((a) => a !== '')) {
       throw new Error(
-          'safeScript only allows empty string expressions ' +
-          'to enable inline comments.');
+        'safeScript only allows empty string expressions ' +
+          'to enable inline comments.',
+      );
     }
     assertIsTemplateObject(templateObj, emptyArgs.length);
   }
@@ -79,19 +84,22 @@ export function valueAsScript(value: Serializable): SafeScript {
  *     inline comments.
  */
 export function safeScriptWithArgs(
-    templateObj: TemplateStringsArray, ...emptyArgs: ReadonlyArray<''>):
-    (...argValues: Serializable[]) => SafeScript {
+  templateObj: TemplateStringsArray,
+  ...emptyArgs: ReadonlyArray<''>
+): (...argValues: Serializable[]) => SafeScript {
   if (process.env.NODE_ENV !== 'production') {
-    if (emptyArgs.some(a => a !== '')) {
+    if (emptyArgs.some((a) => a !== '')) {
       throw new Error(
-          'safeScriptWithArgs only allows empty string expressions ' +
-          'to enable inline comments.');
+        'safeScriptWithArgs only allows empty string expressions ' +
+          'to enable inline comments.',
+      );
     }
     assertIsTemplateObject(templateObj, emptyArgs.length);
   }
   return (...argValues: Serializable[]) => {
     const values = argValues.map((v) => valueAsScript(v).toString());
     return createScriptInternal(
-        `(${templateObj.join('')})(${values.join(',')})`);
+      `(${templateObj.join('')})(${values.join(',')})`,
+    );
   };
 }

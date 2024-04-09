@@ -3,8 +3,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-// g3-format-clang
-
 import '../environment/dev';
 
 /**
@@ -13,7 +11,7 @@ import '../environment/dev';
  * @param url The URL to extract the scheme from.
  * @return the URL scheme.
  */
-export function extractScheme(url: string): string|undefined {
+export function extractScheme(url: string): string | undefined {
   let parsedUrl;
   try {
     parsedUrl = new URL(url);
@@ -41,7 +39,7 @@ const ALLOWED_SCHEMES = ['data:', 'http:', 'https:', 'mailto:', 'ftp:'];
  *     which means the colon appears in path, query or fragment part of the URL.
  */
 export const IS_NOT_JAVASCRIPT_URL_PATTERN =
-    /^\s*(?!javascript:)(?:[\w+.-]+:|[^:/?#]*(?:[/?#]|$))/i;
+  /^\s*(?!javascript:)(?:[\w+.-]+:|[^:/?#]*(?:[/?#]|$))/i;
 
 /**
  * Checks whether a urls has a `javascript:` scheme.
@@ -65,7 +63,7 @@ export function reportJavaScriptUrl(url: string): boolean {
  * @return undefined if url has a javascript: scheme, the original URL
  *     otherwise.
  */
-export function sanitizeJavaScriptUrl(url: string): string|undefined {
+export function sanitizeJavaScriptUrl(url: string): string | undefined {
   if (reportJavaScriptUrl(url)) {
     return undefined;
   }
@@ -81,7 +79,7 @@ export type Url = string;
  * Adapter to sanitize string URLs in DOM sink wrappers.
  * @return undefined if the URL was sanitized.
  */
-export function unwrapUrlOrSanitize(url: Url): string|undefined {
+export function unwrapUrlOrSanitize(url: Url): string | undefined {
   return sanitizeJavaScriptUrl(url);
 }
 
@@ -94,8 +92,10 @@ export function unwrapUrlOrSanitize(url: Url): string|undefined {
  */
 export function restrictivelySanitizeUrl(url: string): string {
   const parsedScheme = extractScheme(url);
-  if (parsedScheme !== undefined &&
-      ALLOWED_SCHEMES.indexOf(parsedScheme.toLowerCase()) !== -1) {
+  if (
+    parsedScheme !== undefined &&
+    ALLOWED_SCHEMES.indexOf(parsedScheme.toLowerCase()) !== -1
+  ) {
     return url;
   }
   return 'about:invalid#zClosurez';

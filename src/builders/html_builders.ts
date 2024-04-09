@@ -3,10 +3,16 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-// g3-format-clang
-
-import {createHtmlInternal, isHtml, SafeHtml, unwrapHtml} from '../internals/html_impl';
-import {TrustedResourceUrl, unwrapResourceUrl} from '../internals/resource_url_impl';
+import {
+  createHtmlInternal,
+  isHtml,
+  SafeHtml,
+  unwrapHtml,
+} from '../internals/html_impl';
+import {
+  TrustedResourceUrl,
+  unwrapResourceUrl,
+} from '../internals/resource_url_impl';
 import {SafeScript, unwrapScript} from '../internals/script_impl';
 
 /**
@@ -19,26 +25,33 @@ import {SafeScript, unwrapScript} from '../internals/script_impl';
  * - `preserveNewlines` turns newline characters into breaks (`<br>`).
  * - `preserveTabs` wraps tab characters in a span with style=white-space:pre.
  */
-export function htmlEscape(value: SafeHtml|string, options: {
-  preserveNewlines?: boolean,
-  preserveSpaces?: boolean,
-  preserveTabs?: boolean
-} = {}): SafeHtml {
+export function htmlEscape(
+  value: SafeHtml | string,
+  options: {
+    preserveNewlines?: boolean;
+    preserveSpaces?: boolean;
+    preserveTabs?: boolean;
+  } = {},
+): SafeHtml {
   if (isHtml(value)) {
     return value;
   }
   let htmlEscapedString = htmlEscapeToString(String(value));
   if (options.preserveSpaces) {
     // Do this first to ensure we preserve spaces after newlines and tabs.
-    htmlEscapedString =
-        htmlEscapedString.replace(/(^|[\r\n\t ]) /g, '$1&#160;');
+    htmlEscapedString = htmlEscapedString.replace(
+      /(^|[\r\n\t ]) /g,
+      '$1&#160;',
+    );
   }
   if (options.preserveNewlines) {
     htmlEscapedString = htmlEscapedString.replace(/(\r\n|\n|\r)/g, '<br>');
   }
   if (options.preserveTabs) {
     htmlEscapedString = htmlEscapedString.replace(
-        /(\t+)/g, '<span style="white-space:pre">$1</span>');
+      /(\t+)/g,
+      '<span style="white-space:pre">$1</span>',
+    );
   }
   return createHtmlInternal(htmlEscapedString);
 }
@@ -46,12 +59,15 @@ export function htmlEscape(value: SafeHtml|string, options: {
 /**
  * Creates a `SafeHtml` representing a script tag with inline script content.
  */
-export function scriptToHtml(script: SafeScript, options: {
-  defer?: boolean,
-  id?: string,
-  nonce?: string,
-  type?: string,
-} = {}): SafeHtml {
+export function scriptToHtml(
+  script: SafeScript,
+  options: {
+    defer?: boolean;
+    id?: string;
+    nonce?: string;
+    type?: string;
+  } = {},
+): SafeHtml {
   const unwrappedScript = unwrapScript(script).toString();
   let stringTag = `<script`;
   if (options.id) {
@@ -74,23 +90,27 @@ export function scriptToHtml(script: SafeScript, options: {
  * Creates a `SafeHtml` representing a script tag with the src attribute.
  * This also supports CSP nonces and async loading.
  */
-export function scriptUrlToHtml(src: TrustedResourceUrl, options: {
-  async?: boolean,
-  customElement?: string,
-  defer?: boolean,
-  id?: string,
-  nonce?: string,
-  type?: string,
-  crossorigin?: 'anonymous'|'use-credentials',
-} = {}): SafeHtml {
+export function scriptUrlToHtml(
+  src: TrustedResourceUrl,
+  options: {
+    async?: boolean;
+    customElement?: string;
+    defer?: boolean;
+    id?: string;
+    nonce?: string;
+    type?: string;
+    crossorigin?: 'anonymous' | 'use-credentials';
+  } = {},
+): SafeHtml {
   const unwrappedSrc = unwrapResourceUrl(src).toString();
   let stringTag = `<script src="${htmlEscapeToString(unwrappedSrc)}"`;
   if (options.async) {
     stringTag += ' async';
   }
   if (options.customElement) {
-    stringTag +=
-        ` custom-element="${htmlEscapeToString(options.customElement)}"`;
+    stringTag += ` custom-element="${htmlEscapeToString(
+      options.customElement,
+    )}"`;
   }
   if (options.defer) {
     stringTag += ` defer`;
@@ -115,16 +135,17 @@ export function scriptUrlToHtml(src: TrustedResourceUrl, options: {
  * HTML-escapes the given text (`&`, `<`, `>`, `"` and `'`).
  */
 function htmlEscapeToString(text: string): string {
-  const escaped = text.replace(/&/g, '&amp;')
-                      .replace(/</g, '&lt;')
-                      .replace(/>/g, '&gt;')
-                      .replace(/"/g, '&quot;')
-                      .replace(/'/g, '&apos;');
+  const escaped = text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
   return escaped;
 }
 
 /** Creates a `SafeHtml` value by concatenating multiple `SafeHtml`s. */
-export function concatHtmls(htmls: ReadonlyArray<SafeHtml|string>): SafeHtml {
+export function concatHtmls(htmls: ReadonlyArray<SafeHtml | string>): SafeHtml {
   return joinHtmls('', htmls);
 }
 
@@ -133,11 +154,15 @@ export function concatHtmls(htmls: ReadonlyArray<SafeHtml|string>): SafeHtml {
  * with a separator.
  */
 export function joinHtmls(
-    separator: SafeHtml|string,
-    htmls: ReadonlyArray<SafeHtml|string>): SafeHtml {
+  separator: SafeHtml | string,
+  htmls: ReadonlyArray<SafeHtml | string>,
+): SafeHtml {
   const separatorHtml = htmlEscape(separator);
-  return createHtmlInternal(htmls.map((value) => unwrapHtml(htmlEscape(value)))
-                                .join(unwrapHtml(separatorHtml).toString()));
+  return createHtmlInternal(
+    htmls
+      .map((value) => unwrapHtml(htmlEscape(value)))
+      .join(unwrapHtml(separatorHtml).toString()),
+  );
 }
 
 /**
@@ -154,7 +179,9 @@ export function doctypeHtml(): SafeHtml {
  * accomodate for the sanitizer's user case.
  */
 export function nodeToHtmlInternal(
-    node: Node, temporaryRoot: Element): SafeHtml {
+  node: Node,
+  temporaryRoot: Element,
+): SafeHtml {
   temporaryRoot.appendChild(node);
 
   // XML serialization is preferred over HTML serialization as it is
@@ -166,7 +193,9 @@ export function nodeToHtmlInternal(
   // the root for the sanitized tree and contains a spurious xmlns attribute
   // from the XML serialization step.
   serializedNewTree = serializedNewTree.slice(
-      serializedNewTree.indexOf('>') + 1, serializedNewTree.lastIndexOf('</'));
+    serializedNewTree.indexOf('>') + 1,
+    serializedNewTree.lastIndexOf('</'),
+  );
   return createHtmlInternal(serializedNewTree);
 }
 
