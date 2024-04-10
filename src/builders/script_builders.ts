@@ -11,11 +11,11 @@ import {
 } from '../internals/script_impl';
 import {assertIsTemplateObject} from '../internals/string_literal';
 
-type Primitive = number | string | boolean | null;
+type Primitive = number | string | boolean;
 type Serializable =
   | Primitive
-  | readonly Serializable[]
-  | {readonly [key: string]: Serializable};
+  | ReadonlyArray<Serializable | null>
+  | {readonly [key: string]: Serializable | null};
 
 /**
  * Creates a SafeScript object from a template literal (without any embedded
@@ -56,7 +56,7 @@ export function concatScripts(scripts: readonly SafeScript[]): SafeScript {
  * "&lt/script>" doesn't break out of the context.
  * @param value The value to serialize.
  */
-export function valueAsScript(value: Serializable): SafeScript {
+export function valueAsScript(value: Serializable | null): SafeScript {
   return createScriptInternal(JSON.stringify(value).replace(/</g, '\\u003C'));
 }
 
@@ -86,7 +86,7 @@ export function valueAsScript(value: Serializable): SafeScript {
 export function safeScriptWithArgs(
   templateObj: TemplateStringsArray,
   ...emptyArgs: ReadonlyArray<''>
-): (...argValues: Serializable[]) => SafeScript {
+): (...argValues: ReadonlyArray<Serializable | null>) => SafeScript {
   if (process.env.NODE_ENV !== 'production') {
     if (emptyArgs.some((a) => a !== '')) {
       throw new Error(
@@ -96,7 +96,7 @@ export function safeScriptWithArgs(
     }
     assertIsTemplateObject(templateObj, emptyArgs.length);
   }
-  return (...argValues: Serializable[]) => {
+  return (...argValues: ReadonlyArray<Serializable | null>) => {
     const values = argValues.map((v) => valueAsScript(v).toString());
     return createScriptInternal(
       `(${templateObj.join('')})(${values.join(',')})`,

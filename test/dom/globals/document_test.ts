@@ -37,7 +37,7 @@ describe('safeDocument', () => {
       ).toThrow();
     });
     it('accepts SafeHtml argument for insertHtml', () => {
-      const cmd: string = 'insertHtml';
+      const cmd = 'insertHtml';
       expect(() =>
         safeDocument.execCommand(document, cmd, htmlEscape('text')),
       ).not.toThrow();
