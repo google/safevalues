@@ -40,6 +40,15 @@ export function createAttributePrefixInternal(
 }
 
 /**
+ * Checks if the given value is a `SafeAttributePrefix` instance.
+ */
+export function isAttributePrefix(
+  value: unknown,
+): value is SafeAttributePrefix {
+  return value instanceof SafeAttributePrefix;
+}
+
+/**
  * Returns the string value of the passed `SafeAttributePrefix` object while
  * ensuring it has the correct type.
  */
