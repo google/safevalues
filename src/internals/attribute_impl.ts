@@ -3,40 +3,47 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+/** @fileoverview Internal implementations of SafeAttributePrefix. */
+
 import '../environment/dev';
 
 import {ensureTokenIsValid, secretToken} from './secrets';
 
-/** A prefix with which an attribute is safe to set using plain strings. */
-export abstract class SafeAttributePrefix {
-  // @ts-ignore: error TS6133: 'brand' is declared but its value is never read.
-  private readonly brand!: never; // To prevent structural typing.
-}
+/**
+ * A prefix with which an attribute is safe to set using plain strings.
+ */
+export class SafeAttributePrefix {
+  private readonly privateDoNotAccessOrElseWrappedAttributePrefix: string;
 
-/** Implementation for `SafeAttributePrefix` */
-class AttributePrefixImpl extends SafeAttributePrefix {
-  readonly privateDoNotAccessOrElseWrappedAttrPrefix: string;
+  private constructor(token: object, value: string) {
+    if (process.env.NODE_ENV !== 'production') {
+      ensureTokenIsValid(token);
+    }
 
-  constructor(attrPrefix: string, token: object) {
-    super();
-    ensureTokenIsValid(token);
-    this.privateDoNotAccessOrElseWrappedAttrPrefix = attrPrefix;
+    this.privateDoNotAccessOrElseWrappedAttributePrefix = value;
   }
 
-  override toString(): string {
-    return this.privateDoNotAccessOrElseWrappedAttrPrefix;
+  toString(): string {
+    return this.privateDoNotAccessOrElseWrappedAttributePrefix;
   }
 }
+
+interface AttributePrefixImpl {
+  privateDoNotAccessOrElseWrappedAttributePrefix: string;
+}
+const AttributePrefixImpl = SafeAttributePrefix as {
+  new (token: object, value: string): SafeAttributePrefix;
+};
 
 /**
- * Builds a new `SafeAttribute` from the given string, without enforcing
+ * Builds a new `SafeAttributePrefix` from the given string, without enforcing
  * safety guarantees. This shouldn't be exposed to application developers, and
  * must only be used as a step towards safe builders or safe constants.
  */
 export function createAttributePrefixInternal(
-  attrPrefix: string,
+  value: string,
 ): SafeAttributePrefix {
-  return new AttributePrefixImpl(attrPrefix, secretToken);
+  return new AttributePrefixImpl(secretToken, value);
 }
 
 /**
@@ -53,13 +60,13 @@ export function isAttributePrefix(
  * ensuring it has the correct type.
  */
 export function unwrapAttributePrefix(value: SafeAttributePrefix): string {
-  if (value instanceof AttributePrefixImpl) {
-    return value.privateDoNotAccessOrElseWrappedAttrPrefix;
-  } else {
-    let message = '';
-    if (process.env.NODE_ENV !== 'production') {
-      message = 'Unexpected type when unwrapping SafeAttributePrefix';
-    }
-    throw new Error(message);
+  if (isAttributePrefix(value)) {
+    return (value as unknown as AttributePrefixImpl)
+      .privateDoNotAccessOrElseWrappedAttributePrefix;
   }
+  let message = '';
+  if (process.env.NODE_ENV !== 'production') {
+    message = `Unexpected type when unwrapping SafeAttributePrefix, got '${value}' of type '${typeof value}'`;
+  }
+  throw new Error(message);
 }
