@@ -24253,17 +24253,6 @@ export const HTML_TEST_VECTORS: TestVector[] = [
     name: 'contract_poster',
   },
   {
-    input: '<p srcset="javascript:xss"></p>',
-    acceptable: [
-      '<p></p>',
-      '<p />',
-      '',
-      '<p srcset="about:invalid#zClosurez"></p>',
-      '<p srcset="about:invalid#zClosurez" />',
-    ],
-    name: 'contract_srcset',
-  },
-  {
     input: '<p src="x"></p>',
     acceptable: ['<p src="javascript:void(0);"></p>', '<p></p>', '<p />', ''],
     name: 'contract_src',

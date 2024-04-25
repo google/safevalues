@@ -182,6 +182,12 @@ const ELEMENT_POLICIES: ReadonlyArray<[string, ElementPolicy]> = [
           policyAction: AttributePolicyAction.KEEP,
         },
       ],
+      [
+        'srcset',
+        {
+          policyAction: AttributePolicyAction.KEEP,
+        },
+      ],
     ]),
   ],
   [
@@ -189,6 +195,12 @@ const ELEMENT_POLICIES: ReadonlyArray<[string, ElementPolicy]> = [
     new Map<string, AttributePolicy>([
       [
         'src',
+        {
+          policyAction: AttributePolicyAction.KEEP,
+        },
+      ],
+      [
+        'srcset',
         {
           policyAction: AttributePolicyAction.KEEP,
         },
