@@ -13,9 +13,8 @@ export function write(doc: Document, text: SafeHtml) {
   doc.write(unwrapHtml(text) as string);
 }
 
-type ValueType<Cmd extends string> = Lowercase<Cmd> extends 'inserthtml'
-  ? SafeHtml
-  : SafeHtml | string;
+type ValueType<Cmd extends string> =
+  Lowercase<Cmd> extends 'inserthtml' ? SafeHtml : SafeHtml | string;
 
 /**
  * Safely calls {@link Document.execCommand}. When command is insertHtml, a
