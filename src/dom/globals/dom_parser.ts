@@ -23,13 +23,7 @@ export function parseHtml(parser: DOMParser, html: SafeHtml): HTMLDocument {
 export function parseXml(parser: DOMParser, xml: string): XMLDocument {
   const doc = parseFromString(parser, createHtmlInternal(xml), 'text/xml');
 
-  const iterator = document.createNodeIterator(
-    doc,
-    NodeFilter.SHOW_ALL,
-    null,
-    // @ts-ignore: error TS2554: Expected 1-3 arguments, but got 4.
-    false, // This is required in IE and ignored in other browsers.
-  );
+  const iterator = document.createNodeIterator(doc, NodeFilter.SHOW_ALL);
 
   let currentNode: Node | null;
   while ((currentNode = iterator.nextNode())) {

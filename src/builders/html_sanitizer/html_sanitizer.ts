@@ -78,13 +78,7 @@ export class HtmlSanitizerImpl implements HtmlSanitizer {
     const treeWalker = document.createTreeWalker(
       dirtyFragment,
       5 /* NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT */,
-      // IE10 and IE11 won't accept a proper `NodeFilter` interface, and
-      // expect the filtering function to be passed directly. It seems that
-      // other browsers also do not mind getting the function directly. see
-      // https://stackoverflow.com/q/38245898
-      ((n: Node) => this.nodeFilter(n)) as unknown as NodeFilter,
-      // @ts-ignore: error TS2554: Expected 1-3 arguments, but got 4.
-      false, // This is required in IE and ignored in other browsers.
+      (n) => this.nodeFilter(n),
     );
 
     // `nextNode` is called so we skip the root `DocumentFragment`.
