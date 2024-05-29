@@ -18,12 +18,6 @@ import {
   SanitizerTable,
 } from '../../../src/builders/html_sanitizer/sanitizer_table/sanitizer_table';
 
-/**
- * Once we stop supporting IE 10 and 11, the set of acceptable outputs can be
- * reduced. Extra cases were added due to XMLSerializer collapsing empty begin
- * and end tags from <tag></tag> to <tag /> in IE contexts.
- */
-
 function sanitize(table: SanitizerTable, html: string): string {
   return new HtmlSanitizerImpl(table, secretToken).sanitize(html).toString();
 }
@@ -102,8 +96,7 @@ describe('HtmlSanitizer', () => {
     );
 
     const sanitized = sanitize(sanitizerTable, '<a></a>');
-    const expectedValues = ['<a></a>', '<a />'];
-    expect(expectedValues).toContain(sanitized);
+    expect(sanitized).toBe('<a></a>');
   });
 
   it('drops unknown attribute', () => {
@@ -115,8 +108,7 @@ describe('HtmlSanitizer', () => {
     );
 
     const sanitized = sanitize(sanitizerTable, '<a href="value"></a>');
-    const expectedValues = ['<a></a>', '<a />'];
-    expect(expectedValues).toContain(sanitized);
+    expect(sanitized).toBe('<a></a>');
   });
 
   it('uses global attribute policy when no element specific one is provided', () => {
@@ -128,8 +120,7 @@ describe('HtmlSanitizer', () => {
     );
 
     const sanitized = sanitize(sanitizerTable, '<a href="value"></a>');
-    const expectedValues = ['<a href="value"></a>', '<a href="value" />'];
-    expect(expectedValues).toContain(sanitized);
+    expect(sanitized).toBe('<a href="value"></a>');
   });
 
   it('uses element specific attribute policy even when a global one is provided', () => {
@@ -143,8 +134,7 @@ describe('HtmlSanitizer', () => {
     );
 
     const sanitized = sanitize(sanitizerTable, '<a href="value"></a>');
-    const expectedValues = ['<a href="value"></a>', '<a href="value" />'];
-    expect(expectedValues).toContain(sanitized);
+    expect(sanitized).toBe('<a href="value"></a>');
   });
 
   it('drops attributes with the drop attribute policy', () => {
@@ -158,8 +148,7 @@ describe('HtmlSanitizer', () => {
     );
 
     const sanitized = sanitize(sanitizerTable, '<a drop></a>');
-    const expectedValues = ['<a></a>', '<a />'];
-    expect(expectedValues).toContain(sanitized);
+    expect(sanitized).toBe('<a></a>');
   });
 
   it('keeps attributes with the keep attribute policy', () => {
@@ -173,8 +162,7 @@ describe('HtmlSanitizer', () => {
     );
 
     const sanitized = sanitize(sanitizerTable, '<a keep="value"></a>');
-    const expectedValues = ['<a keep="value"></a>', '<a keep="value" />'];
-    expect(expectedValues).toContain(sanitized);
+    expect(sanitized).toBe('<a keep="value"></a>');
   });
 
   it('sanitizes attributes with the sanitize url attribute policy', () => {
@@ -199,11 +187,7 @@ describe('HtmlSanitizer', () => {
       sanitizerTable,
       '<a sanitize_url="javascript:evil()"></a>',
     );
-    const expectedValues = [
-      '<a sanitize_url="about:invalid#zClosurez"></a>',
-      '<a sanitize_url="about:invalid#zClosurez" />',
-    ];
-    expect(expectedValues).toContain(sanitized);
+    expect(sanitized).toBe('<a sanitize_url="about:invalid#zClosurez"></a>');
   });
 
   it('normalizes attributes with the normalize attribute policy', () => {
@@ -225,11 +209,7 @@ describe('HtmlSanitizer', () => {
     );
 
     const sanitized = sanitize(sanitizerTable, '<a normalize="VALUE"></a>');
-    const expectedValues = [
-      '<a normalize="value"></a>',
-      '<a normalize="value" />',
-    ];
-    expect(expectedValues).toContain(sanitized);
+    expect(sanitized).toBe('<a normalize="value"></a>');
   });
 
   it('keeps the value dependent attribute when all of the conditions are met', () => {
@@ -259,13 +239,9 @@ describe('HtmlSanitizer', () => {
     );
     const expectedValues = [
       '<a value_dependent_attribute="" constrained_attribute="accepted_value" another_attribute="accepted_value"></a>',
-      '<a value_dependent_attribute="" constrained_attribute="accepted_value" another_attribute="accepted_value" />',
       '<a value_dependent_attribute="" another_attribute="accepted_value" constrained_attribute="accepted_value"></a>',
-      '<a value_dependent_attribute="" another_attribute="accepted_value" constrained_attribute="accepted_value" />',
       '<a constrained_attribute="accepted_value" value_dependent_attribute="" another_attribute="accepted_value"></a>',
-      '<a constrained_attribute="accepted_value" value_dependent_attribute="" another_attribute="accepted_value" />',
       '<a another_attribute="accepted_value" constrained_attribute="accepted_value" value_dependent_attribute=""></a>',
-      '<a another_attribute="accepted_value" constrained_attribute="accepted_value" value_dependent_attribute="" />',
     ];
     expect(expectedValues).toContain(sanitized);
   });
@@ -297,9 +273,7 @@ describe('HtmlSanitizer', () => {
     );
     const expectedValues = [
       '<a another_attribute="invalid_value" constrained_attribute="accepted_value"></a>',
-      '<a another_attribute="invalid_value" constrained_attribute="accepted_value" />',
       '<a constrained_attribute="accepted_value" another_attribute="invalid_value"></a>',
-      '<a constrained_attribute="accepted_value" another_attribute="invalid_value" />',
     ];
     expect(expectedValues).toContain(sanitized);
   });
@@ -327,11 +301,7 @@ describe('HtmlSanitizer', () => {
       sanitizerTable,
       '<a value_dependent_attribute="" constrained_attribute="invalid_value"></a>',
     );
-    const expectedValues = [
-      '<a constrained_attribute="invalid_value"></a>',
-      '<a constrained_attribute="invalid_value" />',
-    ];
-    expect(expectedValues).toContain(sanitized);
+    expect(sanitized).toBe('<a constrained_attribute="invalid_value"></a>');
   });
 
   it('keeps the value dependent attribute when none of the constraint attributes are specified', () => {
@@ -357,11 +327,7 @@ describe('HtmlSanitizer', () => {
       sanitizerTable,
       '<a value_dependent_attribute=""></a>',
     );
-    const expectedValues = [
-      '<a value_dependent_attribute=""></a>',
-      '<a value_dependent_attribute="" />',
-    ];
-    expect(expectedValues).toContain(sanitized);
+    expect(sanitized).toBe('<a value_dependent_attribute=""></a>');
   });
 
   it('does not load external resources during sanitization', async () => {
@@ -489,10 +455,7 @@ describe('HtmlSanitizer', () => {
     });
 
     it('does not throw an error when the provided input does not change', () => {
-      const expectedValues = ['<a></a>', '<a />'];
-      expect(expectedValues).toContain(
-        sanitizeHtmlAssertUnchanged('<a></a>').toString(),
-      );
+      expect(sanitizeHtmlAssertUnchanged('<a></a>').toString()).toBe('<a></a>');
     });
 
     it('does not throw an error when an attribute value is normalized', () => {
@@ -508,16 +471,12 @@ describe('HtmlSanitizer', () => {
         ]),
       );
 
-      const expectedValues = [
-        '<a normalize="value"></a>',
-        '<a normalize="value" />',
-      ];
-      expect(expectedValues).toContain(
+      expect(
         sanitizeAssertUnchanged(
           sanitizerTable,
           '<a normalize="VALUE"></a>',
         ).toString(),
-      );
+      ).toBe('<a normalize="value"></a>');
     });
 
     it('does not throw an error when dropping `body` elements', () => {
@@ -548,13 +507,12 @@ describe('HtmlSanitizer', () => {
         new Map([]),
       );
 
-      const expectedValues = ['<a></a>', '<a />'];
-      expect(expectedValues).toContain(
+      expect(
         sanitizeAssertUnchanged(
           sanitizerTable,
           '<a></a><!-- Some comment-->',
         ).toString(),
-      );
+      ).toBe('<a></a>');
     });
   });
 });
