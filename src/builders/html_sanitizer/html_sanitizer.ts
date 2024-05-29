@@ -30,12 +30,17 @@ export interface HtmlSanitizer {
   sanitizeAssertUnchanged(html: string): SafeHtml;
 }
 
+/** A function that sanitizes a CSS string. */
+export type CssSanitizer = (css: string) => string;
+
 /** Implementation for `HtmlSanitizer` */
 export class HtmlSanitizerImpl implements HtmlSanitizer {
   private changes: string[] = [];
   constructor(
     private readonly sanitizerTable: SanitizerTable,
     token: object,
+    private readonly styleElementSanitizer?: CssSanitizer,
+    private readonly styleAttributeSanitizer?: CssSanitizer,
   ) {
     ensureTokenIsValid(token);
   }
@@ -94,7 +99,17 @@ export class HtmlSanitizerImpl implements HtmlSanitizer {
       let sanitizedNode;
 
       if (isText(currentNode)) {
-        sanitizedNode = this.sanitizeTextNode(currentNode);
+        if (
+          this.styleElementSanitizer &&
+          sanitizedParent.nodeName === 'STYLE'
+        ) {
+          // TODO(securitymb): The sanitizer should record a change whenever
+          // any meaningful change is made to the stylesheet.
+          const sanitizedCss = this.styleElementSanitizer(currentNode.data);
+          sanitizedNode = this.createTextNode(sanitizedCss);
+        } else {
+          sanitizedNode = this.sanitizeTextNode(currentNode);
+        }
       } else if (isElement(currentNode)) {
         sanitizedNode = this.sanitizeElementNode(currentNode, inertDocument);
       } else {
@@ -124,8 +139,12 @@ export class HtmlSanitizerImpl implements HtmlSanitizer {
     return sanitizedFragment;
   }
 
+  private createTextNode(text: string): Text {
+    return document.createTextNode(text);
+  }
+
   private sanitizeTextNode(textNode: Text): Text {
-    return document.createTextNode(textNode.data);
+    return this.createTextNode(textNode.data);
   }
 
   private sanitizeElementNode(
@@ -164,7 +183,14 @@ export class HtmlSanitizerImpl implements HtmlSanitizer {
           setAttribute(newNode, name, value.toLowerCase());
           break;
         case AttributePolicyAction.KEEP_AND_SANITIZE_STYLE:
-          setAttribute(newNode, name, value);
+          if (this.styleAttributeSanitizer) {
+            const sanitizedCss = this.styleAttributeSanitizer(value);
+            // TODO(securitymb): The sanitizer should record a change whenever
+            // any meaningful change is made to the stylesheet.
+            setAttribute(newNode, name, sanitizedCss);
+          } else {
+            setAttribute(newNode, name, value);
+          }
           break;
         case AttributePolicyAction.DROP:
           this.recordChange(`Attribute: ${name} was dropped`);

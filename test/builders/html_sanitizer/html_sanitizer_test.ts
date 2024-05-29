@@ -7,6 +7,7 @@ import {secretToken} from '../../../src/internals/secrets';
 import {HTML_TEST_VECTORS} from '../../testing/testvectors/html_test_vectors';
 
 import {
+  CssSanitizer,
   HtmlSanitizerImpl,
   sanitizeHtml,
   sanitizeHtmlAssertUnchanged,
@@ -18,8 +19,20 @@ import {
   SanitizerTable,
 } from '../../../src/builders/html_sanitizer/sanitizer_table/sanitizer_table';
 
-function sanitize(table: SanitizerTable, html: string): string {
-  return new HtmlSanitizerImpl(table, secretToken).sanitize(html).toString();
+function sanitize(
+  table: SanitizerTable,
+  html: string,
+  styleElementSanitizer?: CssSanitizer,
+  styleAttributeSanitizer?: CssSanitizer,
+): string {
+  return new HtmlSanitizerImpl(
+    table,
+    secretToken,
+    styleElementSanitizer,
+    styleAttributeSanitizer,
+  )
+    .sanitize(html)
+    .toString();
 }
 
 function sanitizeAssertUnchanged(table: SanitizerTable, html: string): string {
@@ -364,6 +377,95 @@ describe('HtmlSanitizer', () => {
       .find((entry) => entry.name.startsWith('ftp://not-load-subresources'));
 
     expect(entry).toBeUndefined();
+  });
+
+  describe('with styleElementSanitizer and styleAttributeSanitizer', () => {
+    it('calls the styleElementSanitizer when passed', () => {
+      const sanitizerTable = new SanitizerTable(
+        new Set(['STYLE']),
+        new Map([]),
+        new Set(),
+        new Map(),
+      );
+      const styleElementSanitizer = jasmine
+        .createSpy<CssSanitizer>('styleElementSanitizer')
+        .and.returnValue('SANITIZED_CSS');
+
+      const sanitized = sanitize(
+        sanitizerTable,
+        '<style>dangerous css {}</style>',
+        styleElementSanitizer,
+      );
+
+      expect(sanitized).toEqual('<style>SANITIZED_CSS</style>');
+      expect(styleElementSanitizer).toHaveBeenCalledWith('dangerous css {}');
+    });
+
+    it('keeps the stylesheet unsanitized when styleElementSanitizer is not passed', () => {
+      const sanitizerTable = new SanitizerTable(
+        new Set(['STYLE']),
+        new Map([]),
+        new Set(),
+        new Map(),
+      );
+
+      const sanitized = sanitize(
+        sanitizerTable,
+        '<style>dangerous css {}</style>',
+      );
+
+      expect(sanitized).toEqual('<style>dangerous css {}</style>');
+    });
+
+    it('calls the styleAttributeSanitizer when passed', () => {
+      const sanitizerTable = new SanitizerTable(
+        new Set(['A']),
+        new Map(),
+        new Set(),
+        new Map([
+          [
+            'style',
+            {policyAction: AttributePolicyAction.KEEP_AND_SANITIZE_STYLE},
+          ],
+        ]),
+      );
+      const styleAttributeSanitizer = jasmine
+        .createSpy<CssSanitizer>('styleAttributeSanitizer')
+        .and.returnValue('SANITIZED_CSS');
+
+      const sanitized = sanitize(
+        sanitizerTable,
+        '<a style="dangerous-property: attack;"></a>',
+        undefined,
+        styleAttributeSanitizer,
+      );
+
+      expect(sanitized).toEqual('<a style="SANITIZED_CSS"></a>');
+      expect(styleAttributeSanitizer).toHaveBeenCalledWith(
+        'dangerous-property: attack;',
+      );
+    });
+
+    it('keeps the stylesheet unsanitized when styleAttributeSanitizer is not passed', () => {
+      const sanitizerTable = new SanitizerTable(
+        new Set(['A']),
+        new Map(),
+        new Set(),
+        new Map([
+          [
+            'style',
+            {policyAction: AttributePolicyAction.KEEP_AND_SANITIZE_STYLE},
+          ],
+        ]),
+      );
+
+      const sanitized = sanitize(
+        sanitizerTable,
+        '<a style="dangerous-property: attack;"></a>',
+      );
+
+      expect(sanitized).toEqual('<a style="dangerous-property: attack;"></a>');
+    });
   });
 
   describe('sanitizeAssertUnchanged', () => {
