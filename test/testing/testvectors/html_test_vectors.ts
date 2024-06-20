@@ -24117,6 +24117,17 @@ export const HTML_TEST_VECTORS: TestVector[] = [
     name: 'contract_aria-controls',
   },
   {
+    input: '<p aria-describedby="javascript:xss"></p>',
+    acceptable: [
+      '<p></p>',
+      '<p />',
+      '',
+      '<p aria-describedby="about:invalid#zClosurez"></p>',
+      '<p aria-describedby="about:invalid#zClosurez" />',
+    ],
+    name: 'contract_aria-describedby',
+  },
+  {
     input: '<p aria-labelledby="javascript:xss"></p>',
     acceptable: [
       '<p></p>',
