@@ -13,6 +13,10 @@ import {
   sanitizeHtmlAssertUnchanged,
 } from '../../../src/builders/html_sanitizer/html_sanitizer';
 import {
+  ResourceUrlPolicy,
+  ResourceUrlPolicyHintsType,
+} from '../../../src/builders/html_sanitizer/resource_url_policy';
+import {
   AttributePolicy,
   AttributePolicyAction,
   ElementPolicy,
@@ -24,12 +28,14 @@ function sanitize(
   html: string,
   styleElementSanitizer?: CssSanitizer,
   styleAttributeSanitizer?: CssSanitizer,
+  resourceUrlPolicy?: ResourceUrlPolicy,
 ): string {
   return new HtmlSanitizerImpl(
     table,
     secretToken,
     styleElementSanitizer,
     styleAttributeSanitizer,
+    resourceUrlPolicy,
   )
     .sanitize(html)
     .toString();
@@ -377,6 +383,217 @@ describe('HtmlSanitizer', () => {
       .find((entry) => entry.name.startsWith('ftp://not-load-subresources'));
 
     expect(entry).toBeUndefined();
+  });
+
+  describe('with resourceUrlPolicy', () => {
+    it('keeps the attribute marked as KEEP_AND_USE_RESOURCE_URL_POLICY unchanged when the resourceUrlPolicy is undefined', () => {
+      const sanitizerTable = new SanitizerTable(
+        new Set(['IMG']),
+        new Map([
+          [
+            'IMG',
+            new Map([
+              [
+                'src_local',
+                {
+                  policyAction:
+                    AttributePolicyAction.KEEP_AND_USE_RESOURCE_URL_POLICY,
+                },
+              ],
+            ]),
+          ],
+        ]),
+        new Set(),
+        new Map([
+          [
+            'src_global',
+            {
+              policyAction:
+                AttributePolicyAction.KEEP_AND_USE_RESOURCE_URL_POLICY,
+            },
+          ],
+        ]),
+      );
+
+      const sanitized = sanitize(
+        sanitizerTable,
+        '<img src_local="https://google.com/local" src_global="https://google.com/global">',
+        undefined,
+        undefined,
+        /* resourceUrlPolicy= */ undefined,
+      );
+
+      expect(sanitized).toEqual(
+        '<img src_local="https://google.com/local" src_global="https://google.com/global" />',
+      );
+    });
+
+    it('calls the resourceUrlPolicy when passed with attributes marked KEEP_AND_USE_RESOURCE_URL_POLICY', () => {
+      const sanitizerTable = new SanitizerTable(
+        new Set(['IMG']),
+        new Map([
+          [
+            'IMG',
+            new Map([
+              [
+                'src_local',
+                {
+                  policyAction:
+                    AttributePolicyAction.KEEP_AND_USE_RESOURCE_URL_POLICY,
+                },
+              ],
+            ]),
+          ],
+        ]),
+        new Set(),
+        new Map([
+          [
+            'src_global',
+            {
+              policyAction:
+                AttributePolicyAction.KEEP_AND_USE_RESOURCE_URL_POLICY,
+            },
+          ],
+        ]),
+      );
+      const resourceUrlPolicy = jasmine
+        .createSpy<ResourceUrlPolicy>('resourceUrlPolicy')
+        .and.returnValue(new URL('https://google.com'));
+
+      sanitize(
+        sanitizerTable,
+        '<img src_local="https://google.com/local" src_global="https://google.com/global">',
+        undefined,
+        undefined,
+        resourceUrlPolicy,
+      );
+
+      expect(resourceUrlPolicy).toHaveBeenCalledTimes(2);
+      expect(resourceUrlPolicy).toHaveBeenCalledWith(
+        new URL('https://google.com/local'),
+        {
+          type: ResourceUrlPolicyHintsType.HTML_ATTRIBUTE,
+          attributeName: 'src_local',
+          tagName: 'IMG',
+        },
+      );
+      expect(resourceUrlPolicy).toHaveBeenCalledWith(
+        new URL('https://google.com/global'),
+        {
+          type: ResourceUrlPolicyHintsType.HTML_ATTRIBUTE,
+          attributeName: 'src_global',
+          tagName: 'IMG',
+        },
+      );
+    });
+
+    it('sets the attribute to the sanitized URL when the resourceUrlPolicy returns a URL', () => {
+      const sanitizerTable = new SanitizerTable(
+        new Set(['IMG']),
+        new Map([
+          [
+            'IMG',
+            new Map([
+              [
+                'src',
+                {
+                  policyAction:
+                    AttributePolicyAction.KEEP_AND_USE_RESOURCE_URL_POLICY,
+                },
+              ],
+            ]),
+          ],
+        ]),
+        new Set(),
+        new Map(),
+      );
+      const resourceUrlPolicy = jasmine
+        .createSpy<ResourceUrlPolicy>('resourceUrlPolicy')
+        .and.returnValue(new URL('https://returned.by.policy'));
+
+      const sanitized = sanitize(
+        sanitizerTable,
+        '<img src="https://google.com/local">',
+        undefined,
+        undefined,
+        resourceUrlPolicy,
+      );
+
+      expect(sanitized).toEqual('<img src="https://returned.by.policy/" />');
+    });
+
+    it('passes about:invalid to the resourceUrlPolicy when the attribute value is not a valid URL', () => {
+      const sanitizerTable = new SanitizerTable(
+        new Set(['IMG']),
+        new Map([
+          [
+            'IMG',
+            new Map([
+              [
+                'src',
+                {
+                  policyAction:
+                    AttributePolicyAction.KEEP_AND_USE_RESOURCE_URL_POLICY,
+                },
+              ],
+            ]),
+          ],
+        ]),
+        new Set(),
+        new Map(),
+      );
+      const resourceUrlPolicy = jasmine
+        .createSpy<ResourceUrlPolicy>('resourceUrlPolicy')
+        .and.returnValue(new URL('https://google.com'));
+
+      sanitize(
+        sanitizerTable,
+        '<img src="https://invalid-port:444444444/abc">',
+        undefined,
+        undefined,
+        resourceUrlPolicy,
+      );
+
+      expect(resourceUrlPolicy).toHaveBeenCalledOnceWith(
+        new URL('about:invalid'),
+        jasmine.anything(),
+      );
+    });
+
+    it('drops the attribute when the resourceUrlPolicy returns null', () => {
+      const sanitizerTable = new SanitizerTable(
+        new Set(['IMG']),
+        new Map([
+          [
+            'IMG',
+            new Map([
+              [
+                'src',
+                {
+                  policyAction:
+                    AttributePolicyAction.KEEP_AND_USE_RESOURCE_URL_POLICY,
+                },
+              ],
+            ]),
+          ],
+        ]),
+        new Set(),
+        new Map(),
+      );
+      const resourceUrlPolicy = jasmine
+        .createSpy<ResourceUrlPolicy>('resourceUrlPolicy')
+        .and.returnValue(null);
+
+      const sanitized = sanitize(
+        sanitizerTable,
+        '<img src="https://google.com/">',
+        undefined,
+        undefined,
+        resourceUrlPolicy,
+      );
+
+      expect(sanitized).toEqual('<img />');
+    });
   });
 
   describe('with styleElementSanitizer and styleAttributeSanitizer', () => {

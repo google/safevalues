@@ -73,6 +73,7 @@ export enum AttributePolicyAction {
   KEEP_AND_NORMALIZE,
   // This action is currently equivalent to KEEP as there is no style sanitizer.
   KEEP_AND_SANITIZE_STYLE,
+  KEEP_AND_USE_RESOURCE_URL_POLICY,
 }
 
 /**

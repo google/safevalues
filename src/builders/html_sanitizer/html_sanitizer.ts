@@ -12,6 +12,11 @@ import {restrictivelySanitizeUrl} from '../url_builders';
 
 import {createInertFragment} from './inert_fragment';
 import {getNodeName, isElement, isText} from './no_clobber';
+import {
+  ResourceUrlPolicy,
+  ResourceUrlPolicyHints,
+  ResourceUrlPolicyHintsType,
+} from './resource_url_policy';
 import {defaultSanitizerTable} from './sanitizer_table/default_sanitizer_table';
 import {
   AttributePolicyAction,
@@ -41,6 +46,7 @@ export class HtmlSanitizerImpl implements HtmlSanitizer {
     token: object,
     private readonly styleElementSanitizer?: CssSanitizer,
     private readonly styleAttributeSanitizer?: CssSanitizer,
+    private readonly resourceUrlPolicy?: ResourceUrlPolicy,
   ) {
     ensureTokenIsValid(token);
   }
@@ -192,6 +198,28 @@ export class HtmlSanitizerImpl implements HtmlSanitizer {
             setAttribute(newNode, name, value);
           }
           break;
+        case AttributePolicyAction.KEEP_AND_USE_RESOURCE_URL_POLICY:
+          if (this.resourceUrlPolicy) {
+            const hints: ResourceUrlPolicyHints = {
+              type: ResourceUrlPolicyHintsType.HTML_ATTRIBUTE,
+              attributeName: name,
+              tagName: elementName,
+            };
+            const url = parseUrl(value);
+            const sanitizedUrl = this.resourceUrlPolicy(url, hints);
+            // TODO(securitymb): A change should be recorded if the resource url
+            // changes the URL.
+            if (sanitizedUrl) {
+              setAttribute(newNode, name, sanitizedUrl.toString());
+            }
+            // If null is returned, the attribute is dropped.
+          } else {
+            // If the resource url policy is not set, we allow all resources.
+            // This is how the sanitizer behaved before the resource url policy
+            // was introduced.
+            setAttribute(newNode, name, value);
+          }
+          break;
         case AttributePolicyAction.DROP:
           this.recordChange(`Attribute: ${name} was dropped`);
           break;
@@ -255,6 +283,14 @@ export class HtmlSanitizerImpl implements HtmlSanitizer {
     }
 
     return true;
+  }
+}
+
+function parseUrl(value: string): URL {
+  try {
+    return new URL(value, window.document.baseURI);
+  } catch (e) {
+    return new URL('about:invalid');
   }
 }
 
