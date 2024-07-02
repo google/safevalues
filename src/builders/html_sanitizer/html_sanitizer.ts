@@ -220,6 +220,33 @@ export class HtmlSanitizerImpl implements HtmlSanitizer {
             setAttribute(newNode, name, value);
           }
           break;
+        case AttributePolicyAction.KEEP_AND_USE_RESOURCE_URL_POLICY_FOR_SRCSET:
+          if (this.resourceUrlPolicy) {
+            const hints: ResourceUrlPolicyHints = {
+              type: ResourceUrlPolicyHintsType.HTML_ATTRIBUTE,
+              attributeName: name,
+              tagName: elementName,
+            };
+            const srcset = parseSrcset(value);
+            const sanitizedSrcset: Srcset = {parts: []};
+            for (const part of srcset.parts) {
+              const url = parseUrl(part.url);
+              const sanitizedUrl = this.resourceUrlPolicy(url, hints);
+              if (sanitizedUrl) {
+                sanitizedSrcset.parts.push({
+                  url: sanitizedUrl.toString(),
+                  descriptor: part.descriptor,
+                });
+              }
+            }
+            setAttribute(newNode, name, serializeSrcset(sanitizedSrcset));
+          } else {
+            // If the resource url policy is not set, we allow all resources.
+            // This is how the sanitizer behaved before the resource url
+            // policy was introduced.
+            setAttribute(newNode, name, value);
+          }
+          break;
         case AttributePolicyAction.DROP:
           this.recordChange(`Attribute: ${name} was dropped`);
           break;

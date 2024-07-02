@@ -74,6 +74,7 @@ export enum AttributePolicyAction {
   // This action is currently equivalent to KEEP as there is no style sanitizer.
   KEEP_AND_SANITIZE_STYLE,
   KEEP_AND_USE_RESOURCE_URL_POLICY,
+  KEEP_AND_USE_RESOURCE_URL_POLICY_FOR_SRCSET,
 }
 
 /**
