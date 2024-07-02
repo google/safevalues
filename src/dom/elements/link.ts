@@ -80,7 +80,8 @@ export function setHrefAndRel(
   rel: string,
 ) {
   if (isResourceUrl(url)) {
-    link.href = unwrapResourceUrl(url).toString();
+    setHrefAndRelWithTrustedResourceUrl(link, url, rel);
+    return;
   } else {
     if ((SAFE_URL_REL_VALUES as readonly string[]).indexOf(rel) === -1) {
       throw new Error(
@@ -93,5 +94,20 @@ export function setHrefAndRel(
     }
     link.href = sanitizedUrl;
   }
+  link.rel = rel;
+}
+
+/**
+ * Safely sets a link element's "href" property using a TrustedResourceUrl and
+ * an arbitrary "rel" value. It is recommended to use this method when the url
+ * is always a TrustedResourceUrl, since the resulting binary size will be
+ * smaller.
+ */
+export function setHrefAndRelWithTrustedResourceUrl(
+  link: HTMLLinkElement,
+  url: TrustedResourceUrl,
+  rel: TrustedResourecUrlRelTypes | string,
+) {
+  link.href = unwrapResourceUrl(url).toString();
   link.rel = rel;
 }

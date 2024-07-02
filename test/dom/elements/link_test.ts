@@ -14,6 +14,17 @@ describe('safeLink#setHrefAndRel', () => {
       linkElem = document.createElement('link');
     });
 
+    it('sets TrustedResourceUrl `href` and arbitraty `rel` attribute as expected ', () => {
+      const url = trustedResourceUrl`https://google.com/test.css`;
+      safeLinkEl.setHrefAndRelWithTrustedResourceUrl(
+        linkElem,
+        url,
+        'stylesheet',
+      );
+      expect(linkElem.href).toBe('https://google.com/test.css');
+      expect(linkElem.rel).toBe('stylesheet');
+    });
+
     it('expects TrustedResourceUrl `href` for unknown `rel` values', () => {
       const url = trustedResourceUrl`https://google.com/test.css`;
       safeLinkEl.setHrefAndRel(linkElem, url, 'stylesheet');
