@@ -9,8 +9,11 @@ import {HTML_TEST_VECTORS} from '../../testing/testvectors/html_test_vectors';
 import {
   CssSanitizer,
   HtmlSanitizerImpl,
+  parseSrcset,
   sanitizeHtml,
   sanitizeHtmlAssertUnchanged,
+  serializeSrcset,
+  Srcset,
 } from '../../../src/builders/html_sanitizer/html_sanitizer';
 import {
   ResourceUrlPolicy,
@@ -834,4 +837,118 @@ describe('HtmlSanitizer', () => {
       ).toBe('<a></a>');
     });
   });
+});
+
+describe('parseSrcset', () => {
+  interface TestCase {
+    input: string;
+    expected: Srcset;
+  }
+  const TEST_CASES: TestCase[] = [
+    {
+      input: 'url',
+      expected: {parts: [{url: 'url', descriptor: undefined}]},
+    },
+    {
+      input: 'url, url2',
+      expected: {
+        parts: [
+          {url: 'url', descriptor: undefined},
+          {url: 'url2', descriptor: undefined},
+        ],
+      },
+    },
+    {
+      input: 'url, url2\n1x',
+      expected: {
+        parts: [
+          {url: 'url', descriptor: undefined},
+          {url: 'url2', descriptor: '1x'},
+        ],
+      },
+    },
+    {
+      input: '  url, url2 1x,  url3   2x ',
+      expected: {
+        parts: [
+          {url: 'url', descriptor: undefined},
+          {url: 'url2', descriptor: '1x'},
+          {url: 'url3', descriptor: '2x'},
+        ],
+      },
+    },
+    {
+      input: '  url1\n480w,url2\t640w, url3 960w',
+      expected: {
+        parts: [
+          {url: 'url1', descriptor: '480w'},
+          {url: 'url2', descriptor: '640w'},
+          {url: 'url3', descriptor: '960w'},
+        ],
+      },
+    },
+  ];
+
+  for (const testCase of TEST_CASES) {
+    it(`parses ${JSON.stringify(testCase.input)} correctly`, () => {
+      expect(parseSrcset(testCase.input)).toEqual(testCase.expected);
+    });
+  }
+});
+
+describe('serializeSrcset', () => {
+  interface TestCase {
+    input: Srcset;
+    expected: string;
+  }
+  const TEST_CASES: TestCase[] = [
+    {
+      input: {parts: [{url: 'url', descriptor: undefined}]},
+      expected: 'url',
+    },
+    {
+      input: {
+        parts: [
+          {url: 'url', descriptor: undefined},
+          {url: 'url2', descriptor: undefined},
+        ],
+      },
+      expected: 'url , url2',
+    },
+    {
+      input: {
+        parts: [
+          {url: 'url', descriptor: undefined},
+          {url: 'url2', descriptor: '1x'},
+        ],
+      },
+      expected: 'url , url2 1x',
+    },
+    {
+      input: {
+        parts: [
+          {url: 'url', descriptor: undefined},
+          {url: 'url2', descriptor: '1x'},
+          {url: 'url3', descriptor: '2x'},
+        ],
+      },
+      expected: 'url , url2 1x , url3 2x',
+    },
+    {
+      input: {
+        parts: [
+          {url: 'url1', descriptor: '480w'},
+          {url: 'url2', descriptor: '640w'},
+          {url: 'url3', descriptor: '960w'},
+        ],
+      },
+      expected: 'url1 480w , url2 640w , url3 960w',
+    },
+  ];
+
+  for (const testCase of TEST_CASES) {
+    it(`serializes ${JSON.stringify(testCase.input)} correctly`, () => {
+      expect(serializeSrcset(testCase.input)).toEqual(testCase.expected);
+    });
+  }
 });

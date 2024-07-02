@@ -299,6 +299,59 @@ function setAttribute(el: Element, name: string, value: string) {
   el.setAttribute(name, value);
 }
 
+interface SrcsetPart {
+  url: string;
+  descriptor: string | undefined;
+}
+
+/**
+ * A structured representation of a srcset attribute.
+ */
+export interface Srcset {
+  parts: SrcsetPart[];
+}
+
+/**
+ * Parses a srcset attribute into a structured representation.
+ *
+ * @param srcset The srcset attribute value.
+ * @return The parsed srcset.
+ */
+export function parseSrcset(srcset: string): Srcset {
+  // The algorithm is described in the spec at
+  // https://html.spec.whatwg.org/multipage/images.html#srcset-attributes.
+  //
+  // The code below is greatly simplified though; we don't check the validity of
+  // the descriptors, only extract them. If they happen to be invalid, the
+  // browser will ignore them anyway.
+
+  const parts: SrcsetPart[] = [];
+  for (const part of srcset.split(',')) {
+    const [url, descriptor] = part.trim().split(/\s+/, 2);
+    parts.push({url, descriptor});
+  }
+  return {parts};
+}
+
+/**
+ * Serializes a srcset into a string.
+ *
+ * @param srcset The srcset to serialize.
+ * @return The serialized srcset.
+ */
+export function serializeSrcset(srcset: Srcset): string {
+  return (
+    srcset.parts
+      .map((part) => {
+        const {url, descriptor} = part;
+        return `${url}${descriptor ? ` ${descriptor}` : ''}`;
+      })
+      // We always add whitespaces around the parts to remove the ambiguity of
+      // whether a comma character is a part of the URL or not.
+      .join(' , ')
+  );
+}
+
 const defaultHtmlSanitizer = /* #__PURE__ */ pure(
   () => new HtmlSanitizerImpl(defaultSanitizerTable, secretToken),
 );
