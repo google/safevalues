@@ -6,7 +6,7 @@
 import {secretToken} from '../../internals/secrets';
 
 import {HtmlSanitizer, HtmlSanitizerImpl} from './html_sanitizer';
-import {defaultSanitizerTable} from './sanitizer_table/default_sanitizer_table';
+import {DEFAULT_SANITIZER_TABLE} from './sanitizer_table/default_sanitizer_table';
 import {
   AttributePolicy,
   AttributePolicyAction,
@@ -26,7 +26,7 @@ export class HtmlSanitizerBuilder {
   private resourceUrlPolicy?: ResourceUrlPolicy;
 
   constructor() {
-    this.sanitizerTable = defaultSanitizerTable;
+    this.sanitizerTable = DEFAULT_SANITIZER_TABLE;
   }
 
   /** Builder option to restrict allowed elements to a smaller subset. */

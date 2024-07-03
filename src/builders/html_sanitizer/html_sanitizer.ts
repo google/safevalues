@@ -17,7 +17,7 @@ import {
   ResourceUrlPolicyHints,
   ResourceUrlPolicyHintsType,
 } from './resource_url_policy';
-import {defaultSanitizerTable} from './sanitizer_table/default_sanitizer_table';
+import {DEFAULT_SANITIZER_TABLE} from './sanitizer_table/default_sanitizer_table';
 import {
   AttributePolicyAction,
   SanitizerTable,
@@ -380,7 +380,7 @@ export function serializeSrcset(srcset: Srcset): string {
 }
 
 const defaultHtmlSanitizer = /* #__PURE__ */ pure(
-  () => new HtmlSanitizerImpl(defaultSanitizerTable, secretToken),
+  () => new HtmlSanitizerImpl(DEFAULT_SANITIZER_TABLE, secretToken),
 );
 
 /** Sanitizes untrusted html using the default sanitizer configuration. */
