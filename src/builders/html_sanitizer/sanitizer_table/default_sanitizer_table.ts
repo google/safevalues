@@ -404,3 +404,29 @@ export const DEFAULT_SANITIZER_TABLE = new SanitizerTable(
   new Set(ALLOWED_GLOBAL_ATTRIBUTES),
   new Map(GLOBAL_ATTRIBUTE_POLICIES),
 );
+
+/**
+ * Sanitizer table used by the CSS sanitizer.
+ */
+export const CSS_SANITIZER_TABLE = new SanitizerTable(
+  new Set(/* #__PURE__ */ pure(() => ALLOWED_ELEMENTS.concat(['STYLE']))),
+  new Map(ELEMENT_POLICIES),
+  // We allow id, name, and class because they can be used in CSS selectors.
+  // Shadow DOM ensures that those names don't clash with other names in the
+  // document.
+  new Set(
+    /* #__PURE__ */ pure(() =>
+      ALLOWED_GLOBAL_ATTRIBUTES.concat(['id', 'name', 'class']),
+    ),
+  ),
+  new Map(
+    /* #__PURE__ */ pure(() =>
+      GLOBAL_ATTRIBUTE_POLICIES.concat([
+        [
+          'style',
+          {policyAction: AttributePolicyAction.KEEP_AND_SANITIZE_STYLE},
+        ],
+      ]),
+    ),
+  ),
+);
