@@ -21,9 +21,8 @@ describe('html sanitizer builder test', () => {
         .onlyAllowElements(new Set<string>(['article']))
         .build();
 
-      const expectedValues = ['<article></article>', '<article />'];
-      expect(expectedValues).toContain(
-        sanitizer.sanitize('<article></article>').toString(),
+      expect(sanitizer.sanitize('<article></article>').toString()).toEqual(
+        '<article></article>',
       );
     });
 
@@ -32,13 +31,9 @@ describe('html sanitizer builder test', () => {
         .onlyAllowElements(new Set<string>(['a']))
         .build();
 
-      const expectedValues = [
-        '<a href="https://www.google.com"></a>',
-        '<a href="https://www.google.com" />',
-      ];
-      expect(expectedValues).toContain(
+      expect(
         sanitizer.sanitize('<a href="https://www.google.com"></a>').toString(),
-      );
+      ).toEqual('<a href="https://www.google.com"></a>');
     });
 
     it('removes elements that were not set', () => {
@@ -76,17 +71,13 @@ describe('html sanitizer builder test', () => {
         .onlyAllowAttributes(new Set<string>(['href']))
         .onlyAllowElements(new Set<string>(['area']))
         .build();
-      const expectedValues = [
-        '<area href="https://google.com" ></area>',
-        '<area href="https://google.com" />',
-      ];
-      expect(expectedValues).toContain(
+      expect(
         sanitizer
           .sanitize(
-            '<a href="https://google.com" ></a><area href="https://google.com" ></area>',
+            '<a href="https://google.com" ></a><area href="https://google.com" />',
           )
           .toString(),
-      );
+      ).toEqual('<area href="https://google.com" />');
     });
   });
 
@@ -96,14 +87,9 @@ describe('html sanitizer builder test', () => {
         .allowCustomElement('my-element')
         .build();
 
-      const expectedValues = [
-        '<my-element></my-element>',
-        // ie11-win7
-        '<MY-ELEMENT />',
-      ];
-      expect(expectedValues).toContain(
+      expect(
         sanitizer.sanitize('<my-element></my-element>').toString(),
-      );
+      ).toEqual('<my-element></my-element>');
     });
 
     it('does not override onlyAllowElements', () => {
@@ -112,9 +98,8 @@ describe('html sanitizer builder test', () => {
         .allowCustomElement('my-element')
         .build();
 
-      const expectedValues = ['<article></article>', '<article />'];
-      expect(expectedValues).toContain(
-        sanitizer.sanitize('<article></article>').toString(),
+      expect(sanitizer.sanitize('<article></article>').toString()).toEqual(
+        '<article></article>',
       );
     });
 
@@ -123,16 +108,11 @@ describe('html sanitizer builder test', () => {
         .allowCustomElement('my-element', new Set<string>(['my-attribute']))
         .build();
 
-      const expectedValues = [
-        '<my-element my-attribute="value"></my-element>',
-        // ie11-win7
-        '<MY-ELEMENT my-attribute="value" />',
-      ];
-      expect(expectedValues).toContain(
+      expect(
         sanitizer
           .sanitize('<my-element my-attribute="value"></my-element>')
           .toString(),
-      );
+      ).toEqual('<my-element my-attribute="value"></my-element>');
     });
 
     it('removes non-allowed attributes on custom elements', () => {
@@ -140,16 +120,11 @@ describe('html sanitizer builder test', () => {
         .allowCustomElement('my-element', new Set<string>(['my-attribute']))
         .build();
 
-      const expectedValues = [
-        '<my-element></my-element>',
-        // ie11-win7
-        '<MY-ELEMENT />',
-      ];
-      expect(expectedValues).toContain(
+      expect(
         sanitizer
           .sanitize('<my-element my-other-attribute="value"></my-element>')
           .toString(),
-      );
+      ).toEqual('<my-element></my-element>');
     });
 
     it('removes other custom elements', () => {
@@ -180,22 +155,21 @@ describe('html sanitizer builder test', () => {
       const sanitizer = new HtmlSanitizerBuilder()
         .onlyAllowAttributes(new Set<string>(['width']))
         .build();
-      const expectedValues = ['<img width="500"></img>', '<img width="500" />'];
-      expect(expectedValues).toContain(
+
+      expect(
         sanitizer.sanitize('<img width="500" height="600"></img>').toString(),
-      );
+      ).toEqual('<img width="500" />');
     });
 
     it('allows global attributes with policies', () => {
       const sanitizer = new HtmlSanitizerBuilder()
         .onlyAllowAttributes(new Set<string>(['target']))
         .build();
-      const expectedValues = ['<a target="_self"></a>', '<a target="_self" />'];
-      expect(expectedValues).toContain(
+      expect(
         sanitizer
           .sanitize('<a target="_self" media="something"></a>')
           .toString(),
-      );
+      ).toEqual('<a target="_self"></a>');
     });
 
     it("doesn't reallow elements that were disallowed in onlyAllowElements", () => {
@@ -203,17 +177,14 @@ describe('html sanitizer builder test', () => {
         .onlyAllowElements(new Set<string>(['area']))
         .onlyAllowAttributes(new Set<string>(['href']))
         .build();
-      const expectedValues = [
-        '<area href="https://google.com" ></area>',
-        '<area href="https://google.com" />',
-      ];
-      expect(expectedValues).toContain(
+
+      expect(
         sanitizer
           .sanitize(
             '<a href="https://google.com" ></a><area href="https://google.com" ></area>',
           )
           .toString(),
-      );
+      ).toEqual('<area href="https://google.com" />');
     });
   });
 
@@ -223,13 +194,9 @@ describe('html sanitizer builder test', () => {
         .allowDataAttributes(['data-foo'])
         .build();
 
-      const expectedValues = [
-        '<article data-foo="hello"></article>',
-        '<article data-foo="hello" />',
-      ];
-      expect(expectedValues).toContain(
+      expect(
         sanitizer.sanitize('<article data-foo="hello"></article>').toString(),
-      );
+      ).toEqual('<article data-foo="hello"></article>');
     });
 
     it('throws an error when the attribute name is not prefixed with data', () => {
@@ -245,14 +212,14 @@ describe('html sanitizer builder test', () => {
         .onlyAllowAttributes(new Set<string>(['src']))
         .allowDataAttributes(['data-foo'])
         .build();
-      const expectedValues = [
-        '<article data-foo="hello"></article>',
-        '<article data-foo="hello" />',
-      ];
 
-      expect(expectedValues).toContain(
-        sanitizer.sanitize('<article data-foo="hello" ></article>').toString(),
-      );
+      expect(
+        sanitizer
+          .sanitize(
+            '<article data-foo="hello" src="https://google.com"></article>',
+          )
+          .toString(),
+      ).toEqual('<article data-foo="hello"></article>');
     });
   });
 
@@ -262,16 +229,14 @@ describe('html sanitizer builder test', () => {
         .allowStyleAttributes()
         .build();
 
-      const expectedValues = [
-        '<div style="background-image: url(&quot;http://www.example.com/image3.jpg&quot;);" />',
-        '<div style="background-image: url(http://www.example.com/image3.jpg);"></div>',
-      ];
-      expect(expectedValues).toContain(
+      expect(
         sanitizer
           .sanitize(
             '<div style="background-image: url(http://www.example.com/image3.jpg);"></div>',
           )
           .toString(),
+      ).toEqual(
+        '<div style="background-image: url(http://www.example.com/image3.jpg);"></div>',
       );
     });
   });
@@ -282,13 +247,9 @@ describe('html sanitizer builder test', () => {
         .allowClassAttributes()
         .build();
 
-      const expectedValues = [
-        '<div class="my-class"></div>',
-        '<div class="my-class" />',
-      ];
-      expect(expectedValues).toContain(
+      expect(
         sanitizer.sanitize('<div class="my-class"></div>').toString(),
-      );
+      ).toEqual('<div class="my-class"></div>');
     });
   });
 
@@ -296,9 +257,8 @@ describe('html sanitizer builder test', () => {
     it('allows id attributes', () => {
       const sanitizer = new HtmlSanitizerBuilder().allowIdAttributes().build();
 
-      const expectedValues = ['<div id="my-id"></div>', '<div id="my-id" />'];
-      expect(expectedValues).toContain(
-        sanitizer.sanitize('<div id="my-id"></div>').toString(),
+      expect(sanitizer.sanitize('<div id="my-id"></div>').toString()).toEqual(
+        '<div id="my-id"></div>',
       );
     });
   });
@@ -309,13 +269,9 @@ describe('html sanitizer builder test', () => {
         .allowIdReferenceAttributes()
         .build();
 
-      const expectedValues = [
-        '<div aria-labelledby="my-id"></div>',
-        '<div aria-labelledby="my-id" />',
-      ];
-      expect(expectedValues).toContain(
+      expect(
         sanitizer.sanitize('<div aria-labelledby="my-id"></div>').toString(),
-      );
+      ).toEqual('<div aria-labelledby="my-id"></div>');
     });
   });
 });
