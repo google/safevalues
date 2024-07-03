@@ -4,6 +4,10 @@
  */
 
 import {HtmlSanitizerBuilder} from '../../../src/builders/html_sanitizer/html_sanitizer_builder';
+import {
+  ResourceUrlPolicy,
+  ResourceUrlPolicyHintsType,
+} from '../../../src/builders/html_sanitizer/resource_url_policy';
 
 describe('html sanitizer builder test', () => {
   it('throws an error when calling build twice', () => {
@@ -272,6 +276,33 @@ describe('html sanitizer builder test', () => {
       expect(
         sanitizer.sanitize('<div aria-labelledby="my-id"></div>').toString(),
       ).toEqual('<div aria-labelledby="my-id"></div>');
+    });
+  });
+
+  describe('when calling withResourceUrlPolicy:', () => {
+    it('sets resourceUrlPolicy to the provided value', () => {
+      const resourceUrlPolicy = jasmine
+        .createSpy<ResourceUrlPolicy>()
+        .and.returnValue(new URL('https://returned.by.policy'));
+      const sanitizer = new HtmlSanitizerBuilder()
+        .withResourceUrlPolicy(resourceUrlPolicy)
+        .build();
+
+      const sanitized = sanitizer.sanitize(
+        '<img src="https://google.com"></img>',
+      );
+
+      expect(resourceUrlPolicy).toHaveBeenCalledOnceWith(
+        new URL('https://google.com'),
+        {
+          type: ResourceUrlPolicyHintsType.HTML_ATTRIBUTE,
+          attributeName: 'src',
+          tagName: 'IMG',
+        },
+      );
+      expect(sanitized.toString()).toEqual(
+        '<img src="https://returned.by.policy/" />',
+      );
     });
   });
 });

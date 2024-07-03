@@ -15,12 +15,15 @@ import {
   isCustomElement,
 } from './sanitizer_table/sanitizer_table';
 
+import {ResourceUrlPolicy} from './resource_url_policy';
+
 /** This class allows modifications to the default sanitizer configuration. */
 export class HtmlSanitizerBuilder {
   private sanitizerTable: SanitizerTable;
   // To denote if the builder has called build() and therefore should make no
   // further changes to the sanitizer table.
   private calledBuild = false;
+  private resourceUrlPolicy?: ResourceUrlPolicy;
 
   constructor() {
     this.sanitizerTable = defaultSanitizerTable;
@@ -262,11 +265,63 @@ export class HtmlSanitizerBuilder {
     return this;
   }
 
+  /**
+   * Sets the ResourceUrlPolicy to be used by the sanitizer.
+   *
+   * The ResourceUrlPolicy can be used to decide whether a given URL is allowed
+   * to be loaded as an external resource. It is a function that an instance
+   * of `URL` and a set of hints giving a context on why an image was loaded.
+   *
+   * The policy can return `null` to indicate that the resource should be
+   * dropped, otherwise it should return a valid `URL` that will be used to
+   * replace the original URL in the sanitized output.
+   *
+   * For example the following policy will allow all images loaded from
+   * `https://google.com` but will drop all images loaded from
+   * `https://forbidden.google.com`.
+   *
+   * ```typescript
+   * const resourceUrlPolicy: ResourceUrlPolicy = (url) => {
+   *   if (url.hostname === 'forbidden.google.com') {
+   *     return null;
+   *   }
+   *   return url;
+   * };
+   * ```
+   *
+   * You can also use the `ResourceUrlPolicyHints` to make the policy more
+   * informed. For example the following policy will only allow images loaded
+   * via a <img src> tag but will drop all other images.
+   *
+   * ```typescript
+   * const resourceUrlPolicy: ResourceUrlPolicy = (url, hints) => {
+   *   if (hints.type === ResourceUrlPolicyHintsType.HTML_ATTRIBUTE &&
+   *       hints.attributeName === 'src' &&
+   *       hints.tagName === 'IMG') {
+   *     return url;
+   *   }
+   *   return null;
+   * };
+   * ```
+   */
+  withResourceUrlPolicy(
+    resourceUrlPolicy: ResourceUrlPolicy,
+  ): HtmlSanitizerBuilder {
+    this.resourceUrlPolicy = resourceUrlPolicy;
+    return this;
+  }
+
   build(): HtmlSanitizer {
     if (this.calledBuild) {
       throw new Error('this sanitizer has already called build');
     }
     this.calledBuild = true;
-    return new HtmlSanitizerImpl(this.sanitizerTable, secretToken);
+    return new HtmlSanitizerImpl(
+      this.sanitizerTable,
+      secretToken,
+      undefined, // TODO(securitymb): Add a style element sanitizer.
+      undefined, // TODO(securitymb): Add a style attribute sanitizer.
+      this.resourceUrlPolicy,
+    );
   }
 }
