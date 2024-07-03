@@ -144,7 +144,7 @@ const ELEMENT_POLICIES: ReadonlyArray<[string, ElementPolicy]> = [
       [
         'href',
         {
-          policyAction: AttributePolicyAction.KEEP_AND_SANITIZE_URL,
+          policyAction: AttributePolicyAction.KEEP_AND_USE_RESOURCE_URL_POLICY,
           conditions: new Map<string, Set<string>>([
             [
               'rel',
@@ -179,13 +179,14 @@ const ELEMENT_POLICIES: ReadonlyArray<[string, ElementPolicy]> = [
       [
         'src',
         {
-          policyAction: AttributePolicyAction.KEEP,
+          policyAction: AttributePolicyAction.KEEP_AND_USE_RESOURCE_URL_POLICY,
         },
       ],
       [
         'srcset',
         {
-          policyAction: AttributePolicyAction.KEEP,
+          policyAction:
+            AttributePolicyAction.KEEP_AND_USE_RESOURCE_URL_POLICY_FOR_SRCSET,
         },
       ],
     ]),
@@ -196,13 +197,14 @@ const ELEMENT_POLICIES: ReadonlyArray<[string, ElementPolicy]> = [
       [
         'src',
         {
-          policyAction: AttributePolicyAction.KEEP,
+          policyAction: AttributePolicyAction.KEEP_AND_USE_RESOURCE_URL_POLICY,
         },
       ],
       [
         'srcset',
         {
-          policyAction: AttributePolicyAction.KEEP,
+          policyAction:
+            AttributePolicyAction.KEEP_AND_USE_RESOURCE_URL_POLICY_FOR_SRCSET,
         },
       ],
     ]),
@@ -213,7 +215,7 @@ const ELEMENT_POLICIES: ReadonlyArray<[string, ElementPolicy]> = [
       [
         'src',
         {
-          policyAction: AttributePolicyAction.KEEP,
+          policyAction: AttributePolicyAction.KEEP_AND_USE_RESOURCE_URL_POLICY,
         },
       ],
     ]),
@@ -224,7 +226,7 @@ const ELEMENT_POLICIES: ReadonlyArray<[string, ElementPolicy]> = [
       [
         'src',
         {
-          policyAction: AttributePolicyAction.KEEP,
+          policyAction: AttributePolicyAction.KEEP_AND_USE_RESOURCE_URL_POLICY,
         },
       ],
     ]),
