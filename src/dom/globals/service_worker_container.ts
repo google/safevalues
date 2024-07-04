@@ -6,7 +6,7 @@
 import {
   TrustedResourceUrl,
   unwrapResourceUrl,
-} from '../../internals/resource_url_impl';
+} from '../../internals/resource_url_impl.js';
 
 /** Safely registers a service worker by URL */
 export function register(

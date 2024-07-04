@@ -9,12 +9,12 @@
  * that are not tied to elements (like location.href or Worker constructor).
  */
 
-import '../../environment/dev';
+import '../../environment/dev.js';
 import {
   SafeAttributePrefix,
   unwrapAttributePrefix,
-} from '../../internals/attribute_impl';
-import {SafeHtml, unwrapHtml} from '../../internals/html_impl';
+} from '../../internals/attribute_impl.js';
+import {SafeHtml, unwrapHtml} from '../../internals/html_impl.js';
 
 /**
  * Safely set {@link Element.innerHTML} on a given ShadowRoot or Element which

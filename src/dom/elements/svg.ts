@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import '../../environment/dev';
+import '../../environment/dev.js';
 
 const UNSAFE_SVG_ATTRIBUTES = ['href', 'xlink:href'];
 

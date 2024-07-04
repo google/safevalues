@@ -7,7 +7,7 @@
  * @fileoverview Exports methods for serializing CSS tokens.
  */
 
-import {CssToken, CssTokenKind} from './tokens';
+import {CssToken, CssTokenKind} from './tokens.js';
 
 function escapeCodePoint(c: string): string {
   return `\\${c.codePointAt(0)!.toString(16)} `;

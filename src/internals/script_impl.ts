@@ -3,10 +3,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import '../environment/dev';
+import '../environment/dev.js';
 
-import {ensureTokenIsValid, secretToken} from './secrets';
-import {getTrustedTypes, getTrustedTypesPolicy} from './trusted_types';
+import {ensureTokenIsValid, secretToken} from './secrets.js';
+import {getTrustedTypes, getTrustedTypesPolicy} from './trusted_types.js';
 
 /**
  * Runtime implementation of `TrustedScript` in browswers that don't support it.

@@ -7,11 +7,11 @@
  * @fileoverview Safe iframe helpers and go/intents-for-iframes-for-closure
  */
 
-import {SafeHtml, unwrapHtml} from '../../internals/html_impl';
+import {SafeHtml, unwrapHtml} from '../../internals/html_impl.js';
 import {
   TrustedResourceUrl,
   unwrapResourceUrl,
-} from '../../internals/resource_url_impl';
+} from '../../internals/resource_url_impl.js';
 
 /** Sets the Src attribute using a TrustedResourceUrl */
 export function setSrc(iframe: HTMLIFrameElement, v: TrustedResourceUrl) {

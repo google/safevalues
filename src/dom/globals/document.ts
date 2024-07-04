@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {SafeHtml, unwrapHtml} from '../../internals/html_impl';
+import {SafeHtml, unwrapHtml} from '../../internals/html_impl.js';
 
 /**
  * write safely calls {@link Document.write} on the given {@link Document} with

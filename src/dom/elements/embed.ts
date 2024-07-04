@@ -6,7 +6,7 @@
 import {
   TrustedResourceUrl,
   unwrapResourceUrl,
-} from '../../internals/resource_url_impl';
+} from '../../internals/resource_url_impl.js';
 
 /**
  * Sets the Src attribute from the given SafeUrl.

@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {createContextualFragment} from '../../dom/globals/range';
-import '../../environment/dev';
-import {createHtmlInternal} from '../../internals/html_impl';
+import {createContextualFragment} from '../../dom/globals/range.js';
+import '../../environment/dev.js';
+import {createHtmlInternal} from '../../internals/html_impl.js';
 
 /**
  * Returns a fragment that contains the parsed HTML for `dirtyHtml` without

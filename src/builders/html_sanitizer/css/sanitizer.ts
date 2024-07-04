@@ -16,16 +16,16 @@
  *    that bug and possibly other ones.
  */
 
-import {safeStyleEl} from '../../../dom/index';
-import {styleSheetSafeByReview} from '../../../restricted/reviewed';
+import {safeStyleEl} from '../../../dom/index.js';
+import {styleSheetSafeByReview} from '../../../restricted/reviewed.js';
 import {
   ResourceUrlPolicy,
   ResourceUrlPolicyHintsType,
   parseUrl,
-} from '../resource_url_policy';
-import {escapeIdent, serializeTokens} from './serializer';
-import {tokenizeCss} from './tokenizer';
-import {CssToken, CssTokenKind} from './tokens';
+} from '../resource_url_policy.js';
+import {escapeIdent, serializeTokens} from './serializer.js';
+import {tokenizeCss} from './tokenizer.js';
+import {CssToken, CssTokenKind} from './tokens.js';
 
 /**
  * A function that can be used to discard a property.

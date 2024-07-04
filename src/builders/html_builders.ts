@@ -8,12 +8,12 @@ import {
   isHtml,
   SafeHtml,
   unwrapHtml,
-} from '../internals/html_impl';
+} from '../internals/html_impl.js';
 import {
   TrustedResourceUrl,
   unwrapResourceUrl,
-} from '../internals/resource_url_impl';
-import {SafeScript, unwrapScript} from '../internals/script_impl';
+} from '../internals/resource_url_impl.js';
+import {SafeScript, unwrapScript} from '../internals/script_impl.js';
 
 /**
  * Returns HTML-escaped text as a `SafeHtml` object. No-op if value is already a

@@ -3,14 +3,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import '../environment/dev';
+import '../environment/dev.js';
 import {
   createAttributePrefixInternal,
   SafeAttributePrefix,
-} from '../internals/attribute_impl';
-import {assertIsTemplateObject} from '../internals/string_literal';
+} from '../internals/attribute_impl.js';
+import {assertIsTemplateObject} from '../internals/string_literal.js';
 
-import {SECURITY_SENSITIVE_ATTRIBUTES} from './sensitive_attributes';
+import {SECURITY_SENSITIVE_ATTRIBUTES} from './sensitive_attributes.js';
 
 /**
  * Creates a SafeAttributePrefix object from a template literal with no

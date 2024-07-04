@@ -3,26 +3,26 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import '../../environment/dev';
-import {SafeHtml} from '../../internals/html_impl';
-import {pure} from '../../internals/pure';
-import {ensureTokenIsValid, secretToken} from '../../internals/secrets';
-import {nodeToHtmlInternal} from '../html_builders';
-import {restrictivelySanitizeUrl} from '../url_builders';
+import '../../environment/dev.js';
+import {SafeHtml} from '../../internals/html_impl.js';
+import {pure} from '../../internals/pure.js';
+import {ensureTokenIsValid, secretToken} from '../../internals/secrets.js';
+import {nodeToHtmlInternal} from '../html_builders.js';
+import {restrictivelySanitizeUrl} from '../url_builders.js';
 
-import {createInertFragment} from './inert_fragment';
-import {getNodeName, isElement, isText} from './no_clobber';
+import {createInertFragment} from './inert_fragment.js';
+import {getNodeName, isElement, isText} from './no_clobber.js';
 import {
   parseUrl,
   ResourceUrlPolicy,
   ResourceUrlPolicyHints,
   ResourceUrlPolicyHintsType,
-} from './resource_url_policy';
-import {DEFAULT_SANITIZER_TABLE} from './sanitizer_table/default_sanitizer_table';
+} from './resource_url_policy.js';
+import {DEFAULT_SANITIZER_TABLE} from './sanitizer_table/default_sanitizer_table.js';
 import {
   AttributePolicyAction,
   SanitizerTable,
-} from './sanitizer_table/sanitizer_table';
+} from './sanitizer_table/sanitizer_table.js';
 
 /**
  * An HTML5-compliant markup sanitizer that produces SafeHtml markup.

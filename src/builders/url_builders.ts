@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import '../environment/dev';
+import '../environment/dev.js';
 
 /**
  * Extracts the scheme from the given URL. If the URL is relative, https: is

@@ -3,12 +3,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import '../../environment/dev';
+import '../../environment/dev.js';
 import {
   createHtmlInternal,
   SafeHtml,
   unwrapHtml,
-} from '../../internals/html_impl';
+} from '../../internals/html_impl.js';
 
 /** Safely parses a string using the HTML parser. */
 export function parseHtml(parser: DOMParser, html: SafeHtml): HTMLDocument {

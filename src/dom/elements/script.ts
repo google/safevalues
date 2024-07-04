@@ -6,9 +6,9 @@
 import {
   TrustedResourceUrl,
   unwrapResourceUrl,
-} from '../../internals/resource_url_impl';
-import {SafeScript, unwrapScript} from '../../internals/script_impl';
-import {getScriptNonce} from '../globals/window';
+} from '../../internals/resource_url_impl.js';
+import {SafeScript, unwrapScript} from '../../internals/script_impl.js';
+import {getScriptNonce} from '../globals/window.js';
 
 /** Propagates CSP nonce to dynamically created scripts. */
 function setNonceForScriptElement(script: HTMLScriptElement) {

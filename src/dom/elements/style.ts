@@ -6,7 +6,7 @@
 import {
   SafeStyleSheet,
   unwrapStyleSheet,
-} from '../../internals/style_sheet_impl';
+} from '../../internals/style_sheet_impl.js';
 
 /** Safe setters for `HTMLStyleElement`s. */
 export function setTextContent(

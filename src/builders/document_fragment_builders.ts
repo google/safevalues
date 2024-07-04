@@ -3,9 +3,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import '../environment/dev';
-import {createHtmlInternal, SafeHtml, unwrapHtml} from '../internals/html_impl';
-import {assertIsTemplateObject} from '../internals/string_literal';
+import '../environment/dev.js';
+import {
+  createHtmlInternal,
+  SafeHtml,
+  unwrapHtml,
+} from '../internals/html_impl.js';
+import {assertIsTemplateObject} from '../internals/string_literal.js';
 
 /**
  * Creates a DocumentFragment object from a template literal (without any

@@ -6,7 +6,7 @@
 import {
   TrustedResourceUrl,
   unwrapResourceUrl,
-} from '../../internals/resource_url_impl';
+} from '../../internals/resource_url_impl.js';
 
 // We can't depend on WorkerGlobalScope directly, as lib.webworker.d.ts alters
 // the global scope typing.

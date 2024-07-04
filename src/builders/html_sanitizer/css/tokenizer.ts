@@ -18,7 +18,7 @@ import {
   NumberToken,
   PercentageToken,
   StringToken,
-} from './tokens';
+} from './tokens.js';
 
 const HEX_DIGIT_REGEX = /^[0-9a-fA-F]$/;
 

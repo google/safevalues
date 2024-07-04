@@ -3,14 +3,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import '../environment/dev';
+import '../environment/dev.js';
 import {
   createResourceUrlInternal,
   TrustedResourceUrl,
   unwrapResourceUrl,
-} from '../internals/resource_url_impl';
-import {SafeScript, unwrapScript} from '../internals/script_impl';
-import {assertIsTemplateObject} from '../internals/string_literal';
+} from '../internals/resource_url_impl.js';
+import {SafeScript, unwrapScript} from '../internals/script_impl.js';
+import {assertIsTemplateObject} from '../internals/string_literal.js';
 
 /** Type that we know how to interpolate */
 type Primitive = string | number | boolean;

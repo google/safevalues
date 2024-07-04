@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import '../environment/dev';
+import '../environment/dev.js';
 
-import {ensureTokenIsValid, secretToken} from './secrets';
+import {ensureTokenIsValid, secretToken} from './secrets.js';
 
 /**
  * A complete CSS style sheet, safe to use in style contexts in an HTML document

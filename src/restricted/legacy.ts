@@ -3,17 +3,17 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import '../environment/dev';
-import {createHtmlInternal, SafeHtml} from '../internals/html_impl';
+import '../environment/dev.js';
+import {createHtmlInternal, SafeHtml} from '../internals/html_impl.js';
 import {
   createResourceUrlInternal,
   TrustedResourceUrl,
-} from '../internals/resource_url_impl';
-import {createScriptInternal, SafeScript} from '../internals/script_impl';
+} from '../internals/resource_url_impl.js';
+import {createScriptInternal, SafeScript} from '../internals/script_impl.js';
 import {
   createStyleSheetInternal,
   SafeStyleSheet,
-} from '../internals/style_sheet_impl';
+} from '../internals/style_sheet_impl.js';
 
 /*
  * Transitional utilities to unsafely trust random strings as

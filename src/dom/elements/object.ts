@@ -6,7 +6,7 @@
 import {
   TrustedResourceUrl,
   unwrapResourceUrl,
-} from '../../internals/resource_url_impl';
+} from '../../internals/resource_url_impl.js';
 
 /** Sets the data attribute using a TrustedResourceUrl */
 export function setData(obj: HTMLObjectElement, v: TrustedResourceUrl) {

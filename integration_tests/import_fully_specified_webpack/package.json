@@ -1,0 +1,13 @@
+{
+  "name": "test_import_fully_specified_webpack",
+  "version": "0.1.0",
+  "description": "Webpack setup that requires a fully specified import with .js extensions",
+  "license": "Apache-2.0",
+  "scripts": {
+    "build": "webpack --mode=development"
+  },
+  "devDependencies": {
+    "webpack": "^5.92.1",
+    "webpack-cli": "^5.1.4"
+  }
+}

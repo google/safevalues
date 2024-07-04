@@ -9,16 +9,16 @@
  * interpreted as SafeHtml or SafeScript.
  */
 
-import {createHtmlInternal, SafeHtml} from '../../internals/html_impl';
+import {createHtmlInternal, SafeHtml} from '../../internals/html_impl.js';
 import {
   TrustedResourceUrl,
   unwrapResourceUrl,
-} from '../../internals/resource_url_impl';
-import {createScriptInternal, SafeScript} from '../../internals/script_impl';
+} from '../../internals/resource_url_impl.js';
+import {createScriptInternal, SafeScript} from '../../internals/script_impl.js';
 import {
   createStyleSheetInternal,
   SafeStyleSheet,
-} from '../../internals/style_sheet_impl';
+} from '../../internals/style_sheet_impl.js';
 
 /**
  * IncorrectTypeError represents an error that can occur with {@link

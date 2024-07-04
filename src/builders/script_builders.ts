@@ -3,13 +3,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import '../environment/dev';
+import '../environment/dev.js';
 import {
   createScriptInternal,
   SafeScript,
   unwrapScript,
-} from '../internals/script_impl';
-import {assertIsTemplateObject} from '../internals/string_literal';
+} from '../internals/script_impl.js';
+import {assertIsTemplateObject} from '../internals/string_literal.js';
 
 type Primitive = number | string | boolean;
 type Serializable =

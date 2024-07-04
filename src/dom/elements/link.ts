@@ -3,12 +3,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {unwrapUrlOrSanitize, Url} from '../../builders/url_builders';
+import {unwrapUrlOrSanitize, Url} from '../../builders/url_builders.js';
 import {
   isResourceUrl,
   TrustedResourceUrl,
   unwrapResourceUrl,
-} from '../../internals/resource_url_impl';
+} from '../../internals/resource_url_impl.js';
 
 const SAFE_URL_REL_VALUES = [
   'alternate',

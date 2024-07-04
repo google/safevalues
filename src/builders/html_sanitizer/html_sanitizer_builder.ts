@@ -3,19 +3,19 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {secretToken} from '../../internals/secrets';
+import {secretToken} from '../../internals/secrets.js';
 
-import {HtmlSanitizer, HtmlSanitizerImpl} from './html_sanitizer';
-import {DEFAULT_SANITIZER_TABLE} from './sanitizer_table/default_sanitizer_table';
+import {HtmlSanitizer, HtmlSanitizerImpl} from './html_sanitizer.js';
+import {DEFAULT_SANITIZER_TABLE} from './sanitizer_table/default_sanitizer_table.js';
 import {
   AttributePolicy,
   AttributePolicyAction,
   ElementPolicy,
   SanitizerTable,
   isCustomElement,
-} from './sanitizer_table/sanitizer_table';
+} from './sanitizer_table/sanitizer_table.js';
 
-import {ResourceUrlPolicy} from './resource_url_policy';
+import {ResourceUrlPolicy} from './resource_url_policy.js';
 
 /** This class allows modifications to the default sanitizer configuration. */
 export class HtmlSanitizerBuilder {

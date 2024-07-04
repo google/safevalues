@@ -5,9 +5,9 @@
 
 /** @fileoverview Internal implementations of SafeAttributePrefix. */
 
-import '../environment/dev';
+import '../environment/dev.js';
 
-import {ensureTokenIsValid, secretToken} from './secrets';
+import {ensureTokenIsValid, secretToken} from './secrets.js';
 
 /**
  * A prefix with which an attribute is safe to set using plain strings.

@@ -6,7 +6,7 @@
 import {
   TrustedResourceUrl,
   unwrapResourceUrl,
-} from '../../internals/resource_url_impl';
+} from '../../internals/resource_url_impl.js';
 
 /**
  * Sets the Href attribute from the given TrustedResourceUrl.

@@ -4,12 +4,12 @@
  */
 
 /** Safe builders */
-export {safeAttrPrefix} from './builders/attribute_builders';
+export {safeAttrPrefix} from './builders/attribute_builders.js';
 export {
   htmlFragment,
   htmlToNode,
   svgFragment,
-} from './builders/document_fragment_builders';
+} from './builders/document_fragment_builders.js';
 export {
   concatHtmls,
   doctypeHtml,
@@ -18,15 +18,15 @@ export {
   nodeToHtml,
   scriptToHtml,
   scriptUrlToHtml,
-} from './builders/html_builders';
+} from './builders/html_builders.js';
 
 export {
   sanitizeHtml,
   sanitizeHtmlAssertUnchanged,
   sanitizeHtmlToFragment,
   type HtmlSanitizer,
-} from './builders/html_sanitizer/html_sanitizer';
-export {HtmlSanitizerBuilder} from './builders/html_sanitizer/html_sanitizer_builder';
+} from './builders/html_sanitizer/html_sanitizer.js';
+export {HtmlSanitizerBuilder} from './builders/html_sanitizer/html_sanitizer_builder.js';
 export {
   appendParams,
   appendPathSegment,
@@ -34,36 +34,41 @@ export {
   replaceFragment,
   toAbsoluteResourceUrl,
   trustedResourceUrl,
-} from './builders/resource_url_builders';
+} from './builders/resource_url_builders.js';
 export {
   concatScripts,
   safeScript,
   safeScriptWithArgs,
   valueAsScript,
-} from './builders/script_builders';
+} from './builders/script_builders.js';
 export {
   concatStyleSheets,
   safeStyleSheet,
-} from './builders/style_sheet_builders';
+} from './builders/style_sheet_builders.js';
 /** Types, constants and unwrappers */
 export {
   SafeAttributePrefix,
   unwrapAttributePrefix,
-} from './internals/attribute_impl';
-export {EMPTY_HTML, SafeHtml, isHtml, unwrapHtml} from './internals/html_impl';
+} from './internals/attribute_impl.js';
+export {
+  EMPTY_HTML,
+  SafeHtml,
+  isHtml,
+  unwrapHtml,
+} from './internals/html_impl.js';
 export {
   TrustedResourceUrl,
   isResourceUrl,
   unwrapResourceUrl,
-} from './internals/resource_url_impl';
+} from './internals/resource_url_impl.js';
 export {
   EMPTY_SCRIPT,
   SafeScript,
   isScript,
   unwrapScript,
-} from './internals/script_impl';
+} from './internals/script_impl.js';
 export {
   SafeStyleSheet,
   isStyleSheet,
   unwrapStyleSheet,
-} from './internals/style_sheet_impl';
+} from './internals/style_sheet_impl.js';

@@ -5,14 +5,14 @@
 
 /* GENERATED CODE, DO NOT MODIFY */
 
-import {pure} from '../../../internals/pure';
+import {pure} from '../../../internals/pure.js';
 
 import {
   AttributePolicy,
   AttributePolicyAction,
   ElementPolicy,
   SanitizerTable,
-} from './sanitizer_table';
+} from './sanitizer_table.js';
 
 const ALLOWED_ELEMENTS: readonly string[] = [
   'ARTICLE',

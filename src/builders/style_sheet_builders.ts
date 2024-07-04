@@ -3,13 +3,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import '../environment/dev';
-import {assertIsTemplateObject} from '../internals/string_literal';
+import '../environment/dev.js';
+import {assertIsTemplateObject} from '../internals/string_literal.js';
 import {
   createStyleSheetInternal,
   SafeStyleSheet,
   unwrapStyleSheet,
-} from '../internals/style_sheet_impl';
+} from '../internals/style_sheet_impl.js';
 
 /**
  * Creates a SafeStyleSheet object from a template literal (without any

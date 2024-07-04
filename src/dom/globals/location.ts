@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {unwrapUrlOrSanitize, Url} from '../../builders/url_builders';
+import {unwrapUrlOrSanitize, Url} from '../../builders/url_builders.js';
 
 /**
  * setHref safely sets {@link Location.href} on the given {@link Location} with
