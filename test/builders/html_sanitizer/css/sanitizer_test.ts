@@ -122,6 +122,38 @@ describe('sanitizeStyleTag', () => {
     });
   }
 
+  describe('without a custom resource url policy', () => {
+    it('allows all URLs', () => {
+      const propertyAllowlist = new Set([
+        'background-image',
+        'border-image-source',
+        'cursor',
+      ]);
+      const functionAllowlist = new Set(['url']);
+      const sanitized = sanitizeStyleTag(
+        `
+          body { background-image: url("https://www.google.com") }
+          div { border-image-source: url("file:///etc/passwd") }
+          span { cursor: url(/relative/path), pointer }
+        `,
+        propertyAllowlist,
+        functionAllowlist,
+        undefined, // resourceUrlPolicy
+        false,
+        [],
+      );
+      const relativePath = new URL(
+        '/relative/path',
+        document.baseURI,
+      ).toString();
+      expect(sanitized).toEqual(
+        `body { background-image: url("https://www.google.com/"); }
+div { border-image-source: url("file:///etc/passwd"); }
+span { cursor: url("${relativePath}"), pointer; }`,
+      );
+    });
+  });
+
   describe('with a custom resource url policy', () => {
     it('calls the policy with a valid URL and hints', () => {
       const resourceUrlPolicy = jasmine

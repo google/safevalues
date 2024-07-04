@@ -41,7 +41,7 @@ class CssSanitizer {
   constructor(
     private readonly propertyAllowlist: ReadonlySet<string>,
     private readonly functionAllowlist: ReadonlySet<string>,
-    private readonly resourceUrlPolicy: ResourceUrlPolicy,
+    private readonly resourceUrlPolicy: ResourceUrlPolicy | undefined,
     private readonly allowKeyframes: boolean,
     private readonly propertyDiscarders: PropertyDiscarder[],
   ) {}
@@ -142,18 +142,21 @@ class CssSanitizer {
           return null;
         }
         const url = nextToken.value;
-        const sanitizedUrl = this.resourceUrlPolicy(parseUrl(url), {
-          type: calledFromStyleTag
-            ? ResourceUrlPolicyHintsType.STYLE_TAG
-            : ResourceUrlPolicyHintsType.STYLE_ATTRIBUTE,
-          propertyName,
-        });
-        if (!sanitizedUrl) {
+        let parsedUrl: URL | null = parseUrl(url);
+        if (this.resourceUrlPolicy) {
+          parsedUrl = this.resourceUrlPolicy(parsedUrl, {
+            type: calledFromStyleTag
+              ? ResourceUrlPolicyHintsType.STYLE_TAG
+              : ResourceUrlPolicyHintsType.STYLE_ATTRIBUTE,
+            propertyName,
+          });
+        }
+        if (!parsedUrl) {
           return null;
         }
         tokens[i + 1] = {
           tokenKind: CssTokenKind.STRING,
-          value: sanitizedUrl.toString(),
+          value: parsedUrl.toString(),
         };
 
         // Skip the string token.
@@ -293,7 +296,7 @@ export function sanitizeStyleTag(
   cssText: string,
   propertyAllowlist: ReadonlySet<string>,
   functionAllowlist: ReadonlySet<string>,
-  resourceUrlPolicy: ResourceUrlPolicy,
+  resourceUrlPolicy: ResourceUrlPolicy | undefined,
   allowKeyframes: boolean,
   propertyDiscarders: PropertyDiscarder[],
 ): string {
@@ -316,7 +319,7 @@ export function sanitizeStyleAttribute(
   cssText: string,
   propertyAllowlist: ReadonlySet<string>,
   functionAllowlist: ReadonlySet<string>,
-  resourceUrlPolicy: ResourceUrlPolicy,
+  resourceUrlPolicy: ResourceUrlPolicy | undefined,
   propertyDiscarders: PropertyDiscarder[],
 ): string {
   return new CssSanitizer(
