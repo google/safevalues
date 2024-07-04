@@ -62,3 +62,15 @@ interface HtmlAttributeResourceUrlPolicyHints {
 export type ResourceUrlPolicyHints =
   | StyleTagOrAttributeResourceUrlPolicyHints
   | HtmlAttributeResourceUrlPolicyHints;
+
+/**
+ * Parses a URL. If the URL is invalid, returns URL instance with
+ * `about:invalid`.
+ */
+export function parseUrl(value: string): URL {
+  try {
+    return new URL(value, window.document.baseURI);
+  } catch (e) {
+    return new URL('about:invalid');
+  }
+}

@@ -13,6 +13,7 @@ import {restrictivelySanitizeUrl} from '../url_builders';
 import {createInertFragment} from './inert_fragment';
 import {getNodeName, isElement, isText} from './no_clobber';
 import {
+  parseUrl,
   ResourceUrlPolicy,
   ResourceUrlPolicyHints,
   ResourceUrlPolicyHintsType,
@@ -310,14 +311,6 @@ export class HtmlSanitizerImpl implements HtmlSanitizer {
     }
 
     return true;
-  }
-}
-
-function parseUrl(value: string): URL {
-  try {
-    return new URL(value, window.document.baseURI);
-  } catch (e) {
-    return new URL('about:invalid');
   }
 }
 
