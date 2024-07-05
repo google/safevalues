@@ -17,7 +17,7 @@
  */
 
 import {safeStyleEl} from '../../../dom/index.js';
-import {styleSheetSafeByReview} from '../../../restricted/reviewed.js';
+import {createStyleSheetInternal} from '../../../internals/style_sheet_impl.js';
 import {
   ResourceUrlPolicy,
   ResourceUrlPolicyHintsType,
@@ -48,9 +48,7 @@ class CssSanitizer {
 
   private getStyleSheet(cssText: string): CSSStyleSheet {
     const style = INERT_DOCUMENT.createElement('style');
-    const safeStyle = styleSheetSafeByReview(cssText, {
-      justification: 'Internal safevalues usage',
-    });
+    const safeStyle = createStyleSheetInternal(cssText);
     safeStyleEl.setTextContent(style, safeStyle);
     INERT_DOCUMENT.head.appendChild(style);
     const sheet = style.sheet!; // guaranteed to be non-null
