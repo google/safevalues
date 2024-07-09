@@ -7,7 +7,7 @@ import {secretToken} from '../../../src/internals/secrets';
 import {HTML_TEST_VECTORS} from '../../testing/testvectors/html_test_vectors';
 
 import {
-  CssSanitizer,
+  CssSanitizationFn,
   HtmlSanitizerImpl,
   parseSrcset,
   sanitizeHtml,
@@ -29,8 +29,8 @@ import {
 function sanitize(
   table: SanitizerTable,
   html: string,
-  styleElementSanitizer?: CssSanitizer,
-  styleAttributeSanitizer?: CssSanitizer,
+  styleElementSanitizer?: CssSanitizationFn,
+  styleAttributeSanitizer?: CssSanitizationFn,
   resourceUrlPolicy?: ResourceUrlPolicy,
 ): string {
   return new HtmlSanitizerImpl(
@@ -757,7 +757,7 @@ describe('HtmlSanitizer', () => {
         new Map(),
       );
       const styleElementSanitizer = jasmine
-        .createSpy<CssSanitizer>('styleElementSanitizer')
+        .createSpy<CssSanitizationFn>('styleElementSanitizer')
         .and.returnValue('SANITIZED_CSS');
 
       const sanitized = sanitize(
@@ -799,7 +799,7 @@ describe('HtmlSanitizer', () => {
         ]),
       );
       const styleAttributeSanitizer = jasmine
-        .createSpy<CssSanitizer>('styleAttributeSanitizer')
+        .createSpy<CssSanitizationFn>('styleAttributeSanitizer')
         .and.returnValue('SANITIZED_CSS');
 
       const sanitized = sanitize(
