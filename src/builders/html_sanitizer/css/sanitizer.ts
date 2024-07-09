@@ -17,7 +17,6 @@
  */
 
 import {safeStyleEl} from '../../../dom/index.js';
-import {pure} from '../../../internals/pure.js';
 import {createStyleSheetInternal} from '../../../internals/style_sheet_impl.js';
 import {
   ResourceUrlPolicy,
@@ -37,9 +36,7 @@ import {CssToken, CssTokenKind} from './tokens.js';
 export type PropertyDiscarder = (name: string) => boolean;
 
 class CssSanitizer {
-  private static readonly INERT_DOCUMENT = /* #__PURE__ */ pure(() =>
-    document.implementation.createHTMLDocument(),
-  );
+  private readonly inertDocument: Document;
 
   constructor(
     private readonly propertyAllowlist: ReadonlySet<string>,
@@ -47,22 +44,24 @@ class CssSanitizer {
     private readonly resourceUrlPolicy: ResourceUrlPolicy | undefined,
     private readonly allowKeyframes: boolean,
     private readonly propertyDiscarders: PropertyDiscarder[],
-  ) {}
+  ) {
+    this.inertDocument = document.implementation.createHTMLDocument();
+  }
 
   private getStyleSheet(cssText: string): CSSStyleSheet {
-    const style = CssSanitizer.INERT_DOCUMENT.createElement('style');
+    const style = this.inertDocument.createElement('style');
     const safeStyle = createStyleSheetInternal(cssText);
     safeStyleEl.setTextContent(style, safeStyle);
-    CssSanitizer.INERT_DOCUMENT.head.appendChild(style);
+    this.inertDocument.head.appendChild(style);
     const sheet = style.sheet!; // guaranteed to be non-null
     style.remove();
     return sheet;
   }
 
   private getStyleDeclaration(cssText: string): CSSStyleDeclaration {
-    const div = CssSanitizer.INERT_DOCUMENT.createElement('div');
+    const div = this.inertDocument.createElement('div');
     div.style.cssText = cssText;
-    CssSanitizer.INERT_DOCUMENT.body.appendChild(div);
+    this.inertDocument.body.appendChild(div);
     const style = div.style;
     div.remove();
     return style;
