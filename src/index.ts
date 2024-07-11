@@ -20,13 +20,18 @@ export {
   scriptUrlToHtml,
 } from './builders/html_builders.js';
 
+export {sanitizeHtmlWithCss} from './builders/html_sanitizer/default_css_sanitizer.js';
 export {
   sanitizeHtml,
   sanitizeHtmlAssertUnchanged,
   sanitizeHtmlToFragment,
+  type CssSanitizer,
   type HtmlSanitizer,
 } from './builders/html_sanitizer/html_sanitizer.js';
-export {HtmlSanitizerBuilder} from './builders/html_sanitizer/html_sanitizer_builder.js';
+export {
+  CssSanitizerBuilder,
+  HtmlSanitizerBuilder,
+} from './builders/html_sanitizer/html_sanitizer_builder.js';
 export {
   ResourceUrlPolicyHintsType,
   type ResourceUrlPolicy,
