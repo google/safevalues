@@ -82,7 +82,7 @@ export class HtmlSanitizerBuilder {
     if (allowedAttributes) {
       const elementPolicy = new Map<string, AttributePolicy>();
       for (const attribute of allowedAttributes) {
-        elementPolicy.set(attribute, {
+        elementPolicy.set(attribute.toLowerCase(), {
           policyAction: AttributePolicyAction.KEEP,
         });
       }

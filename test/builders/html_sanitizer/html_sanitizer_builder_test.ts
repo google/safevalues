@@ -119,6 +119,22 @@ describe('html sanitizer builder test', () => {
       ).toEqual('<my-element my-attribute="value"></my-element>');
     });
 
+    it('allows attributes on custom elements and is case insensitive', () => {
+      const sanitizer = new HtmlSanitizerBuilder()
+        .allowCustomElement('my-element', new Set<string>(['myAttribute']))
+        .build();
+
+      expect(
+        sanitizer
+          .sanitize(
+            '<my-element myAttribute="value"></my-element><my-element myattribute="value"></my-element>',
+          )
+          .toString(),
+      ).toEqual(
+        '<my-element myattribute="value"></my-element><my-element myattribute="value"></my-element>',
+      );
+    });
+
     it('removes non-allowed attributes on custom elements', () => {
       const sanitizer = new HtmlSanitizerBuilder()
         .allowCustomElement('my-element', new Set<string>(['my-attribute']))
