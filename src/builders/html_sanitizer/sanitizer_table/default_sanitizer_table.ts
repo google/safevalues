@@ -73,6 +73,7 @@ const ALLOWED_ELEMENTS: readonly string[] = [
   'SPAN',
   'BR',
   'WBR',
+  'NOBR',
   'INS',
   'DEL',
   'PICTURE',
