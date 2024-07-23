@@ -313,7 +313,7 @@ describe('html sanitizer builder test', () => {
         {
           type: ResourceUrlPolicyHintsType.HTML_ATTRIBUTE,
           attributeName: 'src',
-          tagName: 'IMG',
+          elementName: 'IMG',
         },
       );
       expect(sanitized.toString()).toEqual(

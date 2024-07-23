@@ -204,7 +204,7 @@ export class HtmlSanitizerImpl implements HtmlSanitizer {
             const hints: ResourceUrlPolicyHints = {
               type: ResourceUrlPolicyHintsType.HTML_ATTRIBUTE,
               attributeName: name,
-              tagName: elementName,
+              elementName,
             };
             const url = parseUrl(value);
             const sanitizedUrl = this.resourceUrlPolicy(url, hints);
@@ -226,7 +226,7 @@ export class HtmlSanitizerImpl implements HtmlSanitizer {
             const hints: ResourceUrlPolicyHints = {
               type: ResourceUrlPolicyHintsType.HTML_ATTRIBUTE,
               attributeName: name,
-              tagName: elementName,
+              elementName,
             };
             const srcset = parseSrcset(value);
             const sanitizedSrcset: Srcset = {parts: []};

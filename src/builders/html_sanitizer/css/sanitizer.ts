@@ -118,7 +118,7 @@ class CssSanitizer {
   private sanitizeValue(
     propertyName: string,
     value: string,
-    calledFromStyleTag: boolean,
+    calledFromStyleElement: boolean,
   ): string | null {
     // Values can contain functions, such as url() or rgba(). We maintain
     // an allowlist of functions and we make sure that only those are allowed.
@@ -145,8 +145,8 @@ class CssSanitizer {
         let parsedUrl: URL | null = parseUrl(url);
         if (this.resourceUrlPolicy) {
           parsedUrl = this.resourceUrlPolicy(parsedUrl, {
-            type: calledFromStyleTag
-              ? ResourceUrlPolicyHintsType.STYLE_TAG
+            type: calledFromStyleElement
+              ? ResourceUrlPolicyHintsType.STYLE_ELEMENT
               : ResourceUrlPolicyHintsType.STYLE_ATTRIBUTE,
             propertyName,
           });
@@ -212,12 +212,16 @@ class CssSanitizer {
     name: string,
     value: string,
     isImportant: boolean,
-    calledFromStyleTag: boolean,
+    calledFromStyleElement: boolean,
   ): string | null {
     if (!this.isPropertyNameAllowed(name)) {
       return null;
     }
-    const sanitizedValue = this.sanitizeValue(name, value, calledFromStyleTag);
+    const sanitizedValue = this.sanitizeValue(
+      name,
+      value,
+      calledFromStyleElement,
+    );
     if (!sanitizedValue) {
       return null;
     }
@@ -228,7 +232,7 @@ class CssSanitizer {
 
   private sanitizeStyleDeclaration(
     style: CSSStyleDeclaration,
-    calledFromStyleTag: boolean,
+    calledFromStyleElement: boolean,
   ): string {
     // We sort the property names to ensure a stable serialization. This also
     // makes the output easier to test.
@@ -241,7 +245,7 @@ class CssSanitizer {
         name,
         value,
         isImportant,
-        calledFromStyleTag,
+        calledFromStyleElement,
       );
       if (sanitizedProperty) {
         sanitizedProperties += sanitizedProperty + ';';
@@ -259,7 +263,7 @@ class CssSanitizer {
     return `${selector} { ${sanitizedProperties} }`;
   }
 
-  sanitizeStyleTag(cssText: string): string {
+  sanitizeStyleElement(cssText: string): string {
     const styleSheet = this.getStyleSheet(cssText);
     const rules = styleSheet.cssRules;
     const output: string[] = [];
@@ -292,7 +296,7 @@ class CssSanitizer {
  * @param cssText The CSS string to sanitize.
  * @return The sanitized CSS string.
  */
-export function sanitizeStyleTag(
+export function sanitizeStyleElement(
   cssText: string,
   propertyAllowlist: ReadonlySet<string>,
   functionAllowlist: ReadonlySet<string>,
@@ -306,7 +310,7 @@ export function sanitizeStyleTag(
     resourceUrlPolicy,
     allowKeyframes,
     propertyDiscarders,
-  ).sanitizeStyleTag(cssText);
+  ).sanitizeStyleElement(cssText);
 }
 
 /**

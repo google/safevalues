@@ -497,7 +497,7 @@ describe('HtmlSanitizer', () => {
         {
           type: ResourceUrlPolicyHintsType.HTML_ATTRIBUTE,
           attributeName: 'src_local',
-          tagName: 'IMG',
+          elementName: 'IMG',
         },
       );
       expect(resourceUrlPolicy).toHaveBeenCalledWith(
@@ -505,7 +505,7 @@ describe('HtmlSanitizer', () => {
         {
           type: ResourceUrlPolicyHintsType.HTML_ATTRIBUTE,
           attributeName: 'src_global',
-          tagName: 'IMG',
+          elementName: 'IMG',
         },
       );
     });
@@ -558,7 +558,7 @@ describe('HtmlSanitizer', () => {
         {
           type: ResourceUrlPolicyHintsType.HTML_ATTRIBUTE,
           attributeName: 'srcset_local',
-          tagName: 'IMG',
+          elementName: 'IMG',
         },
       );
       expect(resourceUrlPolicy).toHaveBeenCalledWith(
@@ -566,7 +566,7 @@ describe('HtmlSanitizer', () => {
         {
           type: ResourceUrlPolicyHintsType.HTML_ATTRIBUTE,
           attributeName: 'srcset_local',
-          tagName: 'IMG',
+          elementName: 'IMG',
         },
       );
       expect(resourceUrlPolicy).toHaveBeenCalledWith(
@@ -574,7 +574,7 @@ describe('HtmlSanitizer', () => {
         {
           type: ResourceUrlPolicyHintsType.HTML_ATTRIBUTE,
           attributeName: 'srcset_global',
-          tagName: 'IMG',
+          elementName: 'IMG',
         },
       );
       expect(resourceUrlPolicy).toHaveBeenCalledWith(
@@ -582,7 +582,7 @@ describe('HtmlSanitizer', () => {
         {
           type: ResourceUrlPolicyHintsType.HTML_ATTRIBUTE,
           attributeName: 'srcset_global',
-          tagName: 'IMG',
+          elementName: 'IMG',
         },
       );
     });

@@ -276,13 +276,12 @@ export class HtmlSanitizerBuilder {
    * dropped, otherwise it should return a valid `URL` that will be used to
    * replace the original URL in the sanitized output.
    *
-   * For example the following policy will allow all images loaded from
-   * `https://google.com` but will drop all images loaded from
-   * `https://forbidden.google.com`.
+   * For example the following policy drops all images loaded from
+   * `https://forbidden.google.com` but allows all other images.
    *
    * ```typescript
    * const resourceUrlPolicy: ResourceUrlPolicy = (url) => {
-   *   if (url.hostname === 'forbidden.google.com') {
+   *   if (url.origin === 'https://forbidden.google.com') {
    *     return null;
    *   }
    *   return url;
@@ -290,14 +289,14 @@ export class HtmlSanitizerBuilder {
    * ```
    *
    * You can also use the `ResourceUrlPolicyHints` to make the policy more
-   * informed. For example the following policy will only allow images loaded
-   * via a <img src> tag but will drop all other images.
+   * informed. For example the following policy only allows images loaded
+   * via an <img src> element but drops all other images.
    *
    * ```typescript
    * const resourceUrlPolicy: ResourceUrlPolicy = (url, hints) => {
    *   if (hints.type === ResourceUrlPolicyHintsType.HTML_ATTRIBUTE &&
    *       hints.attributeName === 'src' &&
-   *       hints.tagName === 'IMG') {
+   *       hints.elementName === 'IMG') {
    *     return url;
    *   }
    *   return null;

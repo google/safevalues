@@ -10,10 +10,10 @@ import {
 import {
   PropertyDiscarder,
   sanitizeStyleAttribute,
-  sanitizeStyleTag,
+  sanitizeStyleElement,
 } from '../../../../src/builders/html_sanitizer/css/sanitizer';
 
-describe('sanitizeStyleTag', () => {
+describe('sanitizeStyleElement', () => {
   interface TestCase {
     input: string;
     expected: string[];
@@ -110,7 +110,7 @@ describe('sanitizeStyleTag', () => {
   ];
   for (const testCase of TEST_CASES) {
     it(`sanitizes ${JSON.stringify(testCase.input)} correctly`, () => {
-      const sanitized = sanitizeStyleTag(
+      const sanitized = sanitizeStyleElement(
         testCase.input,
         PROPERTY_ALLOWLIST,
         FUNCTION_ALLOWLIST,
@@ -130,7 +130,7 @@ describe('sanitizeStyleTag', () => {
         'cursor',
       ]);
       const functionAllowlist = new Set(['url']);
-      const sanitized = sanitizeStyleTag(
+      const sanitized = sanitizeStyleElement(
         `
           body { background-image: url("https://www.google.com") }
           div { border-image-source: url("file:///etc/passwd") }
@@ -165,7 +165,7 @@ span { cursor: url("${relativePath}"), pointer; }`,
         'cursor',
       ]);
       const functionAllowlist = new Set(['url']);
-      sanitizeStyleTag(
+      sanitizeStyleElement(
         `
           body { background-image: url("https://www.google.com") }
           div { border-image-source: url("file:///etc/passwd") }
@@ -182,21 +182,21 @@ span { cursor: url("${relativePath}"), pointer; }`,
       expect(resourceUrlPolicy).toHaveBeenCalledWith(
         new URL('https://www.google.com'),
         {
-          type: ResourceUrlPolicyHintsType.STYLE_TAG,
+          type: ResourceUrlPolicyHintsType.STYLE_ELEMENT,
           propertyName: 'background-image',
         },
       );
       expect(resourceUrlPolicy).toHaveBeenCalledWith(
         new URL('file:///etc/passwd'),
         {
-          type: ResourceUrlPolicyHintsType.STYLE_TAG,
+          type: ResourceUrlPolicyHintsType.STYLE_ELEMENT,
           propertyName: 'border-image-source',
         },
       );
       expect(resourceUrlPolicy).toHaveBeenCalledWith(
         new URL('/relative/path', document.baseURI),
         {
-          type: ResourceUrlPolicyHintsType.STYLE_TAG,
+          type: ResourceUrlPolicyHintsType.STYLE_ELEMENT,
           propertyName: 'cursor',
         },
       );
@@ -209,7 +209,7 @@ span { cursor: url("${relativePath}"), pointer; }`,
       const propertyAllowlist = new Set(['background-image']);
       const functionAllowlist = new Set(['url']);
 
-      const sanitized = sanitizeStyleTag(
+      const sanitized = sanitizeStyleElement(
         'body { background-image: url("https://www.google.com") }',
         propertyAllowlist,
         functionAllowlist,
@@ -230,7 +230,7 @@ span { cursor: url("${relativePath}"), pointer; }`,
       const propertyAllowlist = new Set(['background-image']);
       const functionAllowlist = new Set(['url']);
 
-      const sanitized = sanitizeStyleTag(
+      const sanitized = sanitizeStyleElement(
         'body { background-image: url("https://www.google.com") }',
         propertyAllowlist,
         functionAllowlist,
@@ -247,7 +247,7 @@ span { cursor: url("${relativePath}"), pointer; }`,
     it('allows keyframes', () => {
       const propertyAllowlist = new Set(['background-color']);
       const functionAllowlist = new Set<string>();
-      const sanitized = sanitizeStyleTag(
+      const sanitized = sanitizeStyleElement(
         '@keyframes test { 0% { background-color: red; } 100% { background-color: blue; } }',
         propertyAllowlist,
         functionAllowlist,
@@ -263,7 +263,7 @@ span { cursor: url("${relativePath}"), pointer; }`,
     it('escapes the @keyframes name', () => {
       const propertyAllowlist = new Set(['background-color']);
       const functionAllowlist = new Set<string>();
-      const sanitized = sanitizeStyleTag(
+      const sanitized = sanitizeStyleElement(
         String.raw`@keyframes test\{\}\@ {  }`,
         propertyAllowlist,
         functionAllowlist,
@@ -278,7 +278,7 @@ span { cursor: url("${relativePath}"), pointer; }`,
   it('with allowKeyframes = false, disallows keyframes', () => {
     const propertyAllowlist = new Set(['background-color']);
     const functionAllowlist = new Set<string>();
-    const sanitized = sanitizeStyleTag(
+    const sanitized = sanitizeStyleElement(
       '@keyframes test { 0% { background-color: red; } 100% { background-color: blue; } }',
       propertyAllowlist,
       functionAllowlist,
@@ -300,7 +300,7 @@ span { cursor: url("${relativePath}"), pointer; }`,
         jasmine.createSpy<PropertyDiscarder>().and.returnValue(false),
         jasmine.createSpy<PropertyDiscarder>().and.returnValue(false),
       ];
-      sanitizeStyleTag(
+      sanitizeStyleElement(
         'body { background-color: red; background-image: url("https://www.google.com"); color:red; }',
         propertyAllowlist,
         functionAllowlist,
@@ -322,7 +322,7 @@ span { cursor: url("${relativePath}"), pointer; }`,
         jasmine.createSpy<PropertyDiscarder>().and.returnValue(false),
         jasmine.createSpy<PropertyDiscarder>().and.returnValue(false),
       ];
-      const sanitized = sanitizeStyleTag(
+      const sanitized = sanitizeStyleElement(
         'body { background-color: red; }',
         propertyAllowlist,
         functionAllowlist,
@@ -339,7 +339,7 @@ span { cursor: url("${relativePath}"), pointer; }`,
         jasmine.createSpy<PropertyDiscarder>().and.returnValue(true),
         jasmine.createSpy<PropertyDiscarder>().and.returnValue(false),
       ];
-      const sanitized = sanitizeStyleTag(
+      const sanitized = sanitizeStyleElement(
         'body { background-color: red; }',
         propertyAllowlist,
         functionAllowlist,

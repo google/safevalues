@@ -21,18 +21,18 @@ export type ResourceUrlPolicy = (
  * The type of the hints that can be passed to a ResourceUrlPolicy.
  */
 export enum ResourceUrlPolicyHintsType {
-  STYLE_TAG,
+  STYLE_ELEMENT,
   STYLE_ATTRIBUTE,
   HTML_ATTRIBUTE,
 }
 
-interface StyleTagOrAttributeResourceUrlPolicyHints {
+interface StyleElementOrAttributeResourceUrlPolicyHints {
   /**
    * The external resource is being loaded by a stylesheet from a <style> tag or
    * a style attribute.
    */
   readonly type:
-    | ResourceUrlPolicyHintsType.STYLE_TAG
+    | ResourceUrlPolicyHintsType.STYLE_ELEMENT
     | ResourceUrlPolicyHintsType.STYLE_ATTRIBUTE;
   /**
    * The CSS property that attempts to load the resource.
@@ -50,9 +50,9 @@ interface HtmlAttributeResourceUrlPolicyHints {
    */
   readonly attributeName: string;
   /**
-   * The HTML tag that contains the attribute.
+   * The HTML element that contains the attribute.
    */
-  readonly tagName: string;
+  readonly elementName: string;
 }
 
 /**
@@ -60,7 +60,7 @@ interface HtmlAttributeResourceUrlPolicyHints {
  * informed.
  */
 export type ResourceUrlPolicyHints =
-  | StyleTagOrAttributeResourceUrlPolicyHints
+  | StyleElementOrAttributeResourceUrlPolicyHints
   | HtmlAttributeResourceUrlPolicyHints;
 
 /**
