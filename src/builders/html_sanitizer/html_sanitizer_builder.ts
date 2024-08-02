@@ -17,20 +17,22 @@ import {
 
 import {ResourceUrlPolicy} from './resource_url_policy.js';
 
-/** This class allows modifications to the default sanitizer configuration. */
-export class HtmlSanitizerBuilder {
-  private sanitizerTable: SanitizerTable;
+/**
+ * The base class for all sanitizer builders.
+ */
+export abstract class BaseSanitizerBuilder<T extends HtmlSanitizer> {
+  protected sanitizerTable: SanitizerTable;
   // To denote if the builder has called build() and therefore should make no
   // further changes to the sanitizer table.
-  private calledBuild = false;
-  private resourceUrlPolicy?: ResourceUrlPolicy;
+  protected calledBuild = false;
+  protected resourceUrlPolicy?: ResourceUrlPolicy;
 
   constructor() {
     this.sanitizerTable = DEFAULT_SANITIZER_TABLE;
   }
 
   /** Builder option to restrict allowed elements to a smaller subset. */
-  onlyAllowElements(elementSet: ReadonlySet<string>): HtmlSanitizerBuilder {
+  onlyAllowElements(elementSet: ReadonlySet<string>): this {
     const allowedElements = new Set<string>();
     const allowedElementPolicies = new Map<string, ElementPolicy>();
     for (let element of elementSet) {
@@ -66,7 +68,7 @@ export class HtmlSanitizerBuilder {
   allowCustomElement(
     element: string,
     allowedAttributes?: ReadonlySet<string>,
-  ): HtmlSanitizerBuilder {
+  ): this {
     const allowedElements = new Set<string>(
       this.sanitizerTable.allowedElements,
     );
@@ -105,7 +107,7 @@ export class HtmlSanitizerBuilder {
    *
    * If the attribute isn't currently allowed then it won't be added.
    */
-  onlyAllowAttributes(attributeSet: ReadonlySet<string>): HtmlSanitizerBuilder {
+  onlyAllowAttributes(attributeSet: ReadonlySet<string>): this {
     const allowedGlobalAttributes = new Set<string>();
     const globalAttributePolicies = new Map<string, AttributePolicy>();
     const elementPolicies = new Map<string, ElementPolicy>();
@@ -156,7 +158,7 @@ export class HtmlSanitizerBuilder {
    * If called with onlyAllowElements or onlyAllowAttributes, those methods must
    * be called first.
    */
-  allowDataAttributes(attributes: string[]): HtmlSanitizerBuilder {
+  allowDataAttributes(attributes: string[]): this {
     const allowedGlobalAttributes = new Set<string>(
       this.sanitizerTable.allowedGlobalAttributes,
     );
@@ -184,7 +186,7 @@ export class HtmlSanitizerBuilder {
    * things (e.g. `url` to trigger a network request), as well as any custom
    * properties or functions defined by the application.
    */
-  allowStyleAttributes(): HtmlSanitizerBuilder {
+  allowStyleAttributes(): this {
     const globalAttributePolicies = new Map<string, AttributePolicy>(
       this.sanitizerTable.globalAttributePolicies,
     );
@@ -205,7 +207,7 @@ export class HtmlSanitizerBuilder {
    * adopt CSS styles from other page elements and possibly mask themselves as
    * legitimate UI elements, which can lead to phishing.
    */
-  allowClassAttributes(): HtmlSanitizerBuilder {
+  allowClassAttributes(): this {
     const allowedGlobalAttributes = new Set<string>(
       this.sanitizerTable.allowedGlobalAttributes,
     );
@@ -223,7 +225,7 @@ export class HtmlSanitizerBuilder {
    * Preserves id attributes. This carries moderate risk as it allows an
    * element to override other elements with the same ID.
    */
-  allowIdAttributes(): HtmlSanitizerBuilder {
+  allowIdAttributes(): this {
     const allowedGlobalAttributes = new Set<string>(
       this.sanitizerTable.allowedGlobalAttributes,
     );
@@ -244,7 +246,7 @@ export class HtmlSanitizerBuilder {
    * This could be used to override the label associated with a form input by a
    * screen reader, and facilitate phishing.
    */
-  allowIdReferenceAttributes(): HtmlSanitizerBuilder {
+  allowIdReferenceAttributes(): this {
     const allowedGlobalAttributes = new Set<string>(
       this.sanitizerTable.allowedGlobalAttributes,
     );
@@ -303,13 +305,19 @@ export class HtmlSanitizerBuilder {
    * };
    * ```
    */
-  withResourceUrlPolicy(
-    resourceUrlPolicy: ResourceUrlPolicy,
-  ): HtmlSanitizerBuilder {
+  withResourceUrlPolicy(resourceUrlPolicy: ResourceUrlPolicy): this {
     this.resourceUrlPolicy = resourceUrlPolicy;
     return this;
   }
 
+  abstract build(): T;
+}
+
+/**
+ * This class allows modifications to the default sanitizer configuration.
+ * It builds an instance of `HtmlSanitizer`.
+ */
+export class HtmlSanitizerBuilder extends BaseSanitizerBuilder<HtmlSanitizer> {
   build(): HtmlSanitizer {
     if (this.calledBuild) {
       throw new Error('this sanitizer has already called build');
