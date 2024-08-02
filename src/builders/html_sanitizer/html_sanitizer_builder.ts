@@ -5,20 +5,7 @@
 
 import {secretToken} from '../../internals/secrets.js';
 
-import {
-  CSS_FUNCTION_ALLOWLIST,
-  CSS_PROPERTY_ALLOWLIST,
-} from './css/allowlists.js';
-import {
-  PropertyDiscarder,
-  sanitizeStyleAttribute,
-  sanitizeStyleElement,
-} from './css/sanitizer.js';
-import {
-  CssSanitizer,
-  HtmlSanitizer,
-  HtmlSanitizerImpl,
-} from './html_sanitizer.js';
+import {HtmlSanitizer, HtmlSanitizerImpl} from './html_sanitizer.js';
 import {DEFAULT_SANITIZER_TABLE} from './sanitizer_table/default_sanitizer_table.js';
 import {
   AttributePolicy,
@@ -33,9 +20,7 @@ import {ResourceUrlPolicy} from './resource_url_policy.js';
 /**
  * The base class for all sanitizer builders.
  */
-export abstract class BaseSanitizerBuilder<
-  T extends HtmlSanitizer | CssSanitizer,
-> {
+export abstract class BaseSanitizerBuilder<T extends HtmlSanitizer> {
   protected sanitizerTable: SanitizerTable;
   // To denote if the builder has called build() and therefore should make no
   // further changes to the sanitizer table.
@@ -341,99 +326,9 @@ export class HtmlSanitizerBuilder extends BaseSanitizerBuilder<HtmlSanitizer> {
     return new HtmlSanitizerImpl(
       this.sanitizerTable,
       secretToken,
-      /* styleElementSanitizer= */ undefined,
-      /* styleAttributeSanitizer= */ undefined,
+      undefined, // TODO(securitymb): Add a style element sanitizer.
+      undefined, // TODO(securitymb): Add a style attribute sanitizer.
       this.resourceUrlPolicy,
-    );
-  }
-}
-
-/**
- * This class allows modifications to the default sanitizer configuration.
- * It builds an instance of `CssSanitizer`.
- */
-export class CssSanitizerBuilder extends BaseSanitizerBuilder<CssSanitizer> {
-  private animationsAllowed = false;
-  private transitionsAllowed = false;
-
-  allowAnimations(): this {
-    this.animationsAllowed = true;
-    return this;
-  }
-
-  allowTransitions(): this {
-    this.transitionsAllowed = true;
-    return this;
-  }
-
-  /**
-   * Builds a CSS sanitizer.
-   *
-   * Note that this function always adds `style`, `id`, `name` and `class`
-   * attributes to the allowlist as well as the `STYLE` element.
-   */
-  build(): CssSanitizer {
-    this.extendSanitizerTableForCss();
-
-    const propertyDiscarders: PropertyDiscarder[] = [];
-    if (!this.animationsAllowed) {
-      propertyDiscarders.push((property) =>
-        /^(animation|offset)(-|$)/.test(property),
-      );
-    }
-    if (!this.transitionsAllowed) {
-      propertyDiscarders.push((property) => /^transition(-|$)/.test(property));
-    }
-
-    const styleElementSanitizer = (cssText: string) =>
-      sanitizeStyleElement(
-        cssText,
-        CSS_PROPERTY_ALLOWLIST,
-        CSS_FUNCTION_ALLOWLIST,
-        this.resourceUrlPolicy,
-        this.animationsAllowed,
-        propertyDiscarders,
-      );
-    const styleAttributeSanitizer = (cssText: string) =>
-      sanitizeStyleAttribute(
-        cssText,
-        CSS_PROPERTY_ALLOWLIST,
-        CSS_FUNCTION_ALLOWLIST,
-        this.resourceUrlPolicy,
-        propertyDiscarders,
-      );
-
-    return new HtmlSanitizerImpl(
-      this.sanitizerTable,
-      secretToken,
-      styleElementSanitizer,
-      styleAttributeSanitizer,
-      this.resourceUrlPolicy,
-    );
-  }
-
-  private extendSanitizerTableForCss() {
-    const allowedElements = new Set(this.sanitizerTable.allowedElements);
-    const allowedGlobalAttributes = new Set(
-      this.sanitizerTable.allowedGlobalAttributes,
-    );
-    const globalAttributePolicies = new Map(
-      this.sanitizerTable.globalAttributePolicies,
-    );
-
-    allowedElements.add('STYLE');
-    globalAttributePolicies.set('style', {
-      policyAction: AttributePolicyAction.KEEP_AND_SANITIZE_STYLE,
-    });
-    allowedGlobalAttributes.add('id');
-    allowedGlobalAttributes.add('name');
-    allowedGlobalAttributes.add('class');
-
-    this.sanitizerTable = new SanitizerTable(
-      allowedElements,
-      this.sanitizerTable.elementPolicies,
-      allowedGlobalAttributes,
-      globalAttributePolicies,
     );
   }
 }
