@@ -4,8 +4,21 @@
  */
 
 import {secretToken} from '../../internals/secrets.js';
-
-import {HtmlSanitizer, HtmlSanitizerImpl} from './html_sanitizer.js';
+import {
+  CSS_FUNCTION_ALLOWLIST,
+  CSS_PROPERTY_ALLOWLIST,
+} from './css/allowlists.js';
+import {
+  PropertyDiscarder,
+  sanitizeStyleAttribute,
+  sanitizeStyleElement,
+} from './css/sanitizer.js';
+import {
+  CssSanitizer,
+  HtmlSanitizer,
+  HtmlSanitizerImpl,
+} from './html_sanitizer.js';
+import {ResourceUrlPolicy} from './resource_url_policy.js';
 import {DEFAULT_SANITIZER_TABLE} from './sanitizer_table/default_sanitizer_table.js';
 import {
   AttributePolicy,
@@ -14,23 +27,20 @@ import {
   SanitizerTable,
   isCustomElement,
 } from './sanitizer_table/sanitizer_table.js';
-
-import {ResourceUrlPolicy} from './resource_url_policy.js';
-
 /**
  * The base class for all sanitizer builders.
  */
-export abstract class BaseSanitizerBuilder<T extends HtmlSanitizer> {
+export abstract class BaseSanitizerBuilder<
+  T extends HtmlSanitizer | CssSanitizer,
+> {
   protected sanitizerTable: SanitizerTable;
   // To denote if the builder has called build() and therefore should make no
   // further changes to the sanitizer table.
   protected calledBuild = false;
   protected resourceUrlPolicy?: ResourceUrlPolicy;
-
   constructor() {
     this.sanitizerTable = DEFAULT_SANITIZER_TABLE;
   }
-
   /** Builder option to restrict allowed elements to a smaller subset. */
   onlyAllowElements(elementSet: ReadonlySet<string>): this {
     const allowedElements = new Set<string>();
@@ -42,7 +52,6 @@ export abstract class BaseSanitizerBuilder<T extends HtmlSanitizer> {
           `Element: ${element}, is not allowed by html5_contract.textpb`,
         );
       }
-
       const elementPolicy = this.sanitizerTable.elementPolicies.get(element);
       if (elementPolicy !== undefined) {
         allowedElementPolicies.set(element, elementPolicy);
@@ -50,7 +59,6 @@ export abstract class BaseSanitizerBuilder<T extends HtmlSanitizer> {
         allowedElements.add(element);
       }
     }
-
     this.sanitizerTable = new SanitizerTable(
       allowedElements,
       allowedElementPolicies,
@@ -59,7 +67,6 @@ export abstract class BaseSanitizerBuilder<T extends HtmlSanitizer> {
     );
     return this;
   }
-
   /**
    * Builder option to allow a set of custom elements. Must be called either
    * without or after `onlyAllowElements` - will be overwritten otherwise.
@@ -75,12 +82,10 @@ export abstract class BaseSanitizerBuilder<T extends HtmlSanitizer> {
     const allowedElementPolicies = new Map<string, ElementPolicy>(
       this.sanitizerTable.elementPolicies,
     );
-
     element = element.toUpperCase();
     if (!isCustomElement(element)) {
       throw new Error(`Element: ${element} is not a custom element`);
     }
-
     if (allowedAttributes) {
       const elementPolicy = new Map<string, AttributePolicy>();
       for (const attribute of allowedAttributes) {
@@ -92,7 +97,6 @@ export abstract class BaseSanitizerBuilder<T extends HtmlSanitizer> {
     } else {
       allowedElements.add(element);
     }
-
     this.sanitizerTable = new SanitizerTable(
       allowedElements,
       allowedElementPolicies,
@@ -101,7 +105,6 @@ export abstract class BaseSanitizerBuilder<T extends HtmlSanitizer> {
     );
     return this;
   }
-
   /**
    * Builder option to restrict allowed attributes to a smaller subset.
    *
@@ -111,7 +114,6 @@ export abstract class BaseSanitizerBuilder<T extends HtmlSanitizer> {
     const allowedGlobalAttributes = new Set<string>();
     const globalAttributePolicies = new Map<string, AttributePolicy>();
     const elementPolicies = new Map<string, ElementPolicy>();
-
     for (const attribute of attributeSet) {
       if (this.sanitizerTable.allowedGlobalAttributes.has(attribute)) {
         allowedGlobalAttributes.add(attribute);
@@ -123,13 +125,11 @@ export abstract class BaseSanitizerBuilder<T extends HtmlSanitizer> {
         );
       }
     }
-
     for (const [
       elementName,
       originalElementPolicy,
     ] of this.sanitizerTable.elementPolicies.entries()) {
       const newElementPolicy = new Map<string, AttributePolicy>();
-
       for (const [
         attribute,
         attributePolicy,
@@ -140,7 +140,6 @@ export abstract class BaseSanitizerBuilder<T extends HtmlSanitizer> {
       }
       elementPolicies.set(elementName, newElementPolicy);
     }
-
     this.sanitizerTable = new SanitizerTable(
       this.sanitizerTable.allowedElements,
       elementPolicies,
@@ -149,7 +148,6 @@ export abstract class BaseSanitizerBuilder<T extends HtmlSanitizer> {
     );
     return this;
   }
-
   /**
    * Allows the set of data attributes passed.
    *
@@ -178,7 +176,6 @@ export abstract class BaseSanitizerBuilder<T extends HtmlSanitizer> {
     );
     return this;
   }
-
   /**
    * Preserves style attributes. Note that the sanitizer won't parse and
    * sanitize the values but keep them as they are. In particular this means
@@ -201,7 +198,6 @@ export abstract class BaseSanitizerBuilder<T extends HtmlSanitizer> {
     );
     return this;
   }
-
   /**
    * Preserves the class attribute on all elements. This means contents can
    * adopt CSS styles from other page elements and possibly mask themselves as
@@ -220,7 +216,6 @@ export abstract class BaseSanitizerBuilder<T extends HtmlSanitizer> {
     );
     return this;
   }
-
   /**
    * Preserves id attributes. This carries moderate risk as it allows an
    * element to override other elements with the same ID.
@@ -238,7 +233,6 @@ export abstract class BaseSanitizerBuilder<T extends HtmlSanitizer> {
     );
     return this;
   }
-
   /**
    * Preserves (some) attributes that reference existing ids. This carries a
    * moderate security risk, because sanitized content can create semantic
@@ -266,7 +260,6 @@ export abstract class BaseSanitizerBuilder<T extends HtmlSanitizer> {
     );
     return this;
   }
-
   /**
    * Sets the ResourceUrlPolicy to be used by the sanitizer.
    *
@@ -309,10 +302,8 @@ export abstract class BaseSanitizerBuilder<T extends HtmlSanitizer> {
     this.resourceUrlPolicy = resourceUrlPolicy;
     return this;
   }
-
   abstract build(): T;
 }
-
 /**
  * This class allows modifications to the default sanitizer configuration.
  * It builds an instance of `HtmlSanitizer`.
@@ -326,9 +317,89 @@ export class HtmlSanitizerBuilder extends BaseSanitizerBuilder<HtmlSanitizer> {
     return new HtmlSanitizerImpl(
       this.sanitizerTable,
       secretToken,
-      undefined, // TODO(securitymb): Add a style element sanitizer.
-      undefined, // TODO(securitymb): Add a style attribute sanitizer.
+      /* styleElementSanitizer= */ undefined,
+      /* styleAttributeSanitizer= */ undefined,
       this.resourceUrlPolicy,
+    );
+  }
+}
+/**
+ * This class allows modifications to the default sanitizer configuration.
+ * It builds an instance of `CssSanitizer`.
+ */
+export class CssSanitizerBuilder extends BaseSanitizerBuilder<CssSanitizer> {
+  private animationsAllowed = false;
+  private transitionsAllowed = false;
+  allowAnimations(): this {
+    this.animationsAllowed = true;
+    return this;
+  }
+  allowTransitions(): this {
+    this.transitionsAllowed = true;
+    return this;
+  }
+  /**
+   * Builds a CSS sanitizer.
+   *
+   * Note that this function always adds `style`, `id`, `name` and `class`
+   * attributes to the allowlist as well as the `STYLE` element.
+   */
+  build(): CssSanitizer {
+    this.extendSanitizerTableForCss();
+    const propertyDiscarders: PropertyDiscarder[] = [];
+    if (!this.animationsAllowed) {
+      propertyDiscarders.push((property) =>
+        /^(animation|offset)(-|$)/.test(property),
+      );
+    }
+    if (!this.transitionsAllowed) {
+      propertyDiscarders.push((property) => /^transition(-|$)/.test(property));
+    }
+    const styleElementSanitizer = (cssText: string) =>
+      sanitizeStyleElement(
+        cssText,
+        CSS_PROPERTY_ALLOWLIST,
+        CSS_FUNCTION_ALLOWLIST,
+        this.resourceUrlPolicy,
+        this.animationsAllowed,
+        propertyDiscarders,
+      );
+    const styleAttributeSanitizer = (cssText: string) =>
+      sanitizeStyleAttribute(
+        cssText,
+        CSS_PROPERTY_ALLOWLIST,
+        CSS_FUNCTION_ALLOWLIST,
+        this.resourceUrlPolicy,
+        propertyDiscarders,
+      );
+    return new HtmlSanitizerImpl(
+      this.sanitizerTable,
+      secretToken,
+      styleElementSanitizer,
+      styleAttributeSanitizer,
+      this.resourceUrlPolicy,
+    );
+  }
+  private extendSanitizerTableForCss() {
+    const allowedElements = new Set(this.sanitizerTable.allowedElements);
+    const allowedGlobalAttributes = new Set(
+      this.sanitizerTable.allowedGlobalAttributes,
+    );
+    const globalAttributePolicies = new Map(
+      this.sanitizerTable.globalAttributePolicies,
+    );
+    allowedElements.add('STYLE');
+    globalAttributePolicies.set('style', {
+      policyAction: AttributePolicyAction.KEEP_AND_SANITIZE_STYLE,
+    });
+    allowedGlobalAttributes.add('id');
+    allowedGlobalAttributes.add('name');
+    allowedGlobalAttributes.add('class');
+    this.sanitizerTable = new SanitizerTable(
+      allowedElements,
+      this.sanitizerTable.elementPolicies,
+      allowedGlobalAttributes,
+      globalAttributePolicies,
     );
   }
 }

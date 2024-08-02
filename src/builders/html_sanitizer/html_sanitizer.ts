@@ -36,17 +36,41 @@ export interface HtmlSanitizer {
   sanitizeAssertUnchanged(html: string): SafeHtml;
 }
 
+/**
+ * CSS Sanitizer that returns a DocumentFragment with sanitized content.
+ *
+ * The reason why this is not part of the HtmlSanitizer is to avoid a potential
+ * misuse of the CSS Sanitizer that would break its security guarantees.
+ *
+ * The CSS Sanitizer uses Shadow DOM to isolate the sanitized content from the
+ * rest of the page. It provides an encapsulation layer for stylesheets and
+ * ensures that there are no clashes between ids or class names.
+ *
+ * If the CSS Sanitizer was part of the HtmlSanitizer, it would be possible
+ * to call `sanitize` with a string that contains both HTML and CSS, which
+ * wouldn't be nested inside a shadow DOM.
+ *
+ * So to avoid this potential pitfall, the CSS Sanitizer is separated out into
+ * its own interface.
+ */
+export interface CssSanitizer {
+  sanitizeToFragment(htmlWithCss: string): DocumentFragment;
+}
+
 /** A function that sanitizes a CSS string. */
-export type CssSanitizer = (css: string) => string;
+export type CssSanitizationFn = (css: string) => string;
 
 /** Implementation for `HtmlSanitizer` */
-export class HtmlSanitizerImpl implements HtmlSanitizer {
+export class HtmlSanitizerImpl implements HtmlSanitizer, CssSanitizer {
+  private readonly SHADOW_DOM_INTERNAL_CSS =
+    ':host{display:block;clip-path:inset(0);overflow:hidden}';
+
   private changes: string[] = [];
   constructor(
     private readonly sanitizerTable: SanitizerTable,
     token: object,
-    private readonly styleElementSanitizer?: CssSanitizer,
-    private readonly styleAttributeSanitizer?: CssSanitizer,
+    private readonly styleElementSanitizer?: CssSanitizationFn,
+    private readonly styleAttributeSanitizer?: CssSanitizationFn,
     private readonly resourceUrlPolicy?: ResourceUrlPolicy,
   ) {
     ensureTokenIsValid(token);
@@ -78,7 +102,34 @@ export class HtmlSanitizerImpl implements HtmlSanitizer {
 
   sanitizeToFragment(html: string): DocumentFragment {
     const inertDocument = document.implementation.createHTMLDocument('');
+    if (this.styleElementSanitizer && this.styleAttributeSanitizer) {
+      return this.sanitizeWithCssToFragment(html, inertDocument);
+    }
     return this.sanitizeToFragmentInternal(html, inertDocument);
+  }
+
+  private sanitizeWithCssToFragment(
+    htmlWithCss: string,
+    inertDocument: Document,
+  ): DocumentFragment {
+    const elem = document.createElement('safevalues-with-css');
+    const shadow = elem.attachShadow({mode: 'closed'});
+    const sanitized = this.sanitizeToFragmentInternal(
+      htmlWithCss,
+      inertDocument,
+    );
+
+    const internalStyle = document.createElement('style');
+    internalStyle.textContent = this.SHADOW_DOM_INTERNAL_CSS;
+    internalStyle.id = 'safevalues-internal-style';
+
+    shadow.appendChild(internalStyle);
+    shadow.appendChild(sanitized);
+
+    const fragment = inertDocument.createDocumentFragment();
+    fragment.appendChild(elem);
+
+    return fragment;
   }
 
   private sanitizeToFragmentInternal(

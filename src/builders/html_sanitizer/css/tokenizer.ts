@@ -76,15 +76,15 @@ class Tokenizer {
    *
    * https://www.w3.org/TR/2021/CRD-css-syntax-3-20211224/#next-input-code-point
    */
-  private get nextInputCodePoint(): string | EOF {
+  private nextInputCodePoint(): string | EOF {
     return this.css[this.pos];
   }
 
-  private get nextTwoInputCodePoints(): [string | EOF, string | EOF] {
+  private nextTwoInputCodePoints(): [string | EOF, string | EOF] {
     return [this.css[this.pos], this.css[this.pos + 1]];
   }
 
-  private get nextThreeInputCodePoints(): [
+  private nextThreeInputCodePoints(): [
     string | EOF,
     string | EOF,
     string | EOF,
@@ -92,7 +92,7 @@ class Tokenizer {
     return [this.css[this.pos], this.css[this.pos + 1], this.css[this.pos + 2]];
   }
 
-  private get currentInputCodePoint(): string | EOF {
+  private currentInputCodePoint(): string | EOF {
     return this.css[this.pos - 1];
   }
 
@@ -136,7 +136,7 @@ class Tokenizer {
       // ":ho st", which is safe.
       return {tokenKind: CssTokenKind.WHITESPACE};
     }
-    const codePoint = this.nextInputCodePoint;
+    const codePoint = this.nextInputCodePoint();
     this.consumeTheNextInputCodePoint();
     if (codePoint === EOF) {
       return {tokenKind: CssTokenKind.EOF};
@@ -147,8 +147,8 @@ class Tokenizer {
       return this.consumeString(codePoint);
     } else if (codePoint === '#') {
       if (
-        this.isIdentCodePoint(this.nextInputCodePoint) ||
-        this.twoCodePointsAreValidEscape(...this.nextTwoInputCodePoints)
+        this.isIdentCodePoint(this.nextInputCodePoint()) ||
+        this.twoCodePointsAreValidEscape(...this.nextTwoInputCodePoints())
       ) {
         // In spec there's also a step to check if the next three code points
         // would start an ident sequence. However, the only reason to do so
@@ -208,7 +208,7 @@ class Tokenizer {
     } else if (codePoint === '@') {
       if (
         this.threeCodePointsWouldStartAnIdentSequence(
-          ...this.nextThreeInputCodePoints,
+          ...this.nextThreeInputCodePoints(),
         )
       ) {
         const ident = this.consumeIdentSequence();
@@ -271,7 +271,7 @@ class Tokenizer {
       value: '',
     };
     while (true) {
-      const codePoint = this.nextInputCodePoint;
+      const codePoint = this.nextInputCodePoint();
       this.consumeTheNextInputCodePoint();
       if (codePoint === EOF || codePoint === quote) {
         return stringToken;
@@ -283,10 +283,10 @@ class Tokenizer {
         stringToken.value = '';
         return stringToken;
       } else if (codePoint === '\\') {
-        if (this.nextInputCodePoint === EOF) {
+        if (this.nextInputCodePoint() === EOF) {
           // > If the next input code point is EOF, do nothing.
           continue;
-        } else if (this.isNewline(this.nextInputCodePoint)) {
+        } else if (this.isNewline(this.nextInputCodePoint())) {
           this.consumeTheNextInputCodePoint();
         } else {
           const escapedCodePoint = this.consumeEscapedCodePoint();
@@ -300,7 +300,7 @@ class Tokenizer {
 
   /** https://www.w3.org/TR/2021/CRD-css-syntax-3-20211224/#consume-an-escaped-code-point */
   private consumeEscapedCodePoint(): string {
-    const codePoint = this.nextInputCodePoint;
+    const codePoint = this.nextInputCodePoint();
     this.consumeTheNextInputCodePoint();
     if (codePoint === EOF) {
       return '\ufffd';
@@ -311,12 +311,15 @@ class Tokenizer {
       // The spec assumes here that the first hex digit has already been
       // consumed. So in fact, the maximum number of hex digits that can be
       // consumed is 6.
-      while (this.isHexDigit(this.nextInputCodePoint) && hexDigits.length < 6) {
-        hexDigits += this.nextInputCodePoint;
+      while (
+        this.isHexDigit(this.nextInputCodePoint()) &&
+        hexDigits.length < 6
+      ) {
+        hexDigits += this.nextInputCodePoint();
         this.consumeTheNextInputCodePoint();
       }
       // Whitespace directly following an escape sequence is ignored.
-      if (this.isWhitespace(this.nextInputCodePoint)) {
+      if (this.isWhitespace(this.nextInputCodePoint())) {
         this.consumeTheNextInputCodePoint();
       }
       // Needed to parse hexadecimal.
@@ -329,7 +332,7 @@ class Tokenizer {
   }
 
   private consumeAsMuchWhitespaceAsPossible() {
-    while (this.isWhitespace(this.nextInputCodePoint)) {
+    while (this.isWhitespace(this.nextInputCodePoint())) {
       this.consumeTheNextInputCodePoint();
     }
   }
@@ -338,9 +341,9 @@ class Tokenizer {
   private consumeIdentSequence(): string {
     let result = '';
     while (true) {
-      const codePoint = this.nextInputCodePoint;
+      const codePoint = this.nextInputCodePoint();
       this.consumeTheNextInputCodePoint();
-      const codePoint2 = this.nextInputCodePoint;
+      const codePoint2 = this.nextInputCodePoint();
       if (this.isIdentCodePoint(codePoint)) {
         result += codePoint;
       } else if (this.twoCodePointsAreValidEscape(codePoint, codePoint2)) {
@@ -355,7 +358,7 @@ class Tokenizer {
   /** https://www.w3.org/TR/2021/CRD-css-syntax-3-20211224/#consume-an-ident-like-token */
   private consumeIdentLikeToken(): CssToken | CssToken[] {
     const ident = this.consumeIdentSequence();
-    if (/^url$/i.test(ident) && this.nextInputCodePoint === '(') {
+    if (/^url$/i.test(ident) && this.nextInputCodePoint() === '(') {
       // TODO(securitymb): This algorithm may look a little weird but we're
       // following the spec here exactly. We will see later on if this can be
       // optimized.
@@ -363,7 +366,7 @@ class Tokenizer {
       while (this.nextTwoInputsPointsAreWhitespace()) {
         this.consumeTheNextInputCodePoint();
       }
-      const nextTwo = this.nextTwoInputCodePoints;
+      const nextTwo = this.nextTwoInputCodePoints();
       if (
         (this.isWhitespace(nextTwo[0]) &&
           (nextTwo[1] === '"' || nextTwo[1] === "'")) ||
@@ -376,7 +379,7 @@ class Tokenizer {
       } else {
         return this.consumeUrlToken();
       }
-    } else if (this.nextInputCodePoint === '(') {
+    } else if (this.nextInputCodePoint() === '(') {
       this.consumeTheNextInputCodePoint();
       // We lowercase the function name because function names are
       // case-insensitive in CSS.
@@ -413,15 +416,15 @@ class Tokenizer {
     let url = '';
     this.consumeAsMuchWhitespaceAsPossible();
     while (true) {
-      const codePoint = this.nextInputCodePoint;
+      const codePoint = this.nextInputCodePoint();
       this.consumeTheNextInputCodePoint();
       if (codePoint === ')' || codePoint === EOF) {
         return this.createFunctionUrlToken(url);
       } else if (this.isWhitespace(codePoint)) {
         this.consumeAsMuchWhitespaceAsPossible();
         if (
-          this.nextInputCodePoint === ')' ||
-          this.nextInputCodePoint === EOF
+          this.nextInputCodePoint() === ')' ||
+          this.nextInputCodePoint() === EOF
         ) {
           this.consumeTheNextInputCodePoint();
           return this.createFunctionUrlToken(url);
@@ -462,7 +465,7 @@ class Tokenizer {
   /** https://www.w3.org/TR/2021/CRD-css-syntax-3-20211224/#consume-the-remnants-of-a-bad-url */
   private consumeRemnantsOfBadUrl() {
     while (true) {
-      const codePoint = this.nextInputCodePoint;
+      const codePoint = this.nextInputCodePoint();
       this.consumeTheNextInputCodePoint();
       if (codePoint === EOF || codePoint === ')') {
         return;
@@ -484,7 +487,7 @@ class Tokenizer {
   private consumeNumber(): string {
     let repr = '';
     {
-      const next = this.nextInputCodePoint;
+      const next = this.nextInputCodePoint();
       if (next === '+' || next === '-') {
         this.consumeTheNextInputCodePoint();
         repr += next;
@@ -492,7 +495,7 @@ class Tokenizer {
     }
     repr += this.consumeDigits();
     {
-      const next = this.nextInputCodePoint;
+      const next = this.nextInputCodePoint();
       const next2 = this.css[this.pos + 1];
       if (next === '.' && this.isDigit(next2)) {
         this.consumeTheNextInputCodePoint();
@@ -500,7 +503,7 @@ class Tokenizer {
       }
     }
     {
-      const next = this.nextInputCodePoint;
+      const next = this.nextInputCodePoint();
       const next2 = this.css[this.pos + 1];
       const next3 = this.css[this.pos + 2];
       if (next === 'e' || next === 'E') {
@@ -518,8 +521,8 @@ class Tokenizer {
 
   private consumeDigits(): string {
     let repr = '';
-    while (this.isDigit(this.nextInputCodePoint)) {
-      repr += this.nextInputCodePoint;
+    while (this.isDigit(this.nextInputCodePoint())) {
+      repr += this.nextInputCodePoint();
       this.consumeTheNextInputCodePoint();
     }
     return repr;
@@ -533,7 +536,7 @@ class Tokenizer {
     const repr = this.consumeNumber();
     if (
       this.threeCodePointsWouldStartAnIdentSequence(
-        ...this.nextThreeInputCodePoints,
+        ...this.nextThreeInputCodePoints(),
       )
     ) {
       return {
@@ -542,7 +545,7 @@ class Tokenizer {
         dimension: this.consumeIdentSequence(),
       };
     }
-    if (this.nextInputCodePoint === '%') {
+    if (this.nextInputCodePoint() === '%') {
       this.consumeTheNextInputCodePoint();
       return {tokenKind: CssTokenKind.PERCENTAGE, repr};
     }
@@ -550,7 +553,7 @@ class Tokenizer {
   }
 
   private nextTwoInputsPointsAreWhitespace() {
-    return this.nextTwoInputCodePoints.every((c) => this.isWhitespace(c));
+    return this.nextTwoInputCodePoints().every((c) => this.isWhitespace(c));
   }
 
   /** https://www.w3.org/TR/2021/CRD-css-syntax-3-20211224/#check-if-two-code-points-are-a-valid-escape */
@@ -563,8 +566,8 @@ class Tokenizer {
 
   private streamStartsWithValidEscape() {
     return this.twoCodePointsAreValidEscape(
-      this.currentInputCodePoint,
-      this.nextInputCodePoint,
+      this.currentInputCodePoint(),
+      this.nextInputCodePoint(),
     );
   }
 
@@ -588,8 +591,8 @@ class Tokenizer {
 
   private streamStartsWithANumber() {
     return this.threeCodePointsWouldStartANumber(
-      this.currentInputCodePoint,
-      ...this.nextTwoInputCodePoints,
+      this.currentInputCodePoint(),
+      ...this.nextTwoInputCodePoints(),
     );
   }
 
@@ -618,8 +621,8 @@ class Tokenizer {
 
   private streamStartsWithAnIdentSequence() {
     return this.threeCodePointsWouldStartAnIdentSequence(
-      this.currentInputCodePoint,
-      ...this.nextTwoInputCodePoints,
+      this.currentInputCodePoint(),
+      ...this.nextTwoInputCodePoints(),
     );
   }
 
