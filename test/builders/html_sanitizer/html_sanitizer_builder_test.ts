@@ -3,7 +3,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {HtmlSanitizerBuilder} from '../../../src/builders/html_sanitizer/html_sanitizer_builder';
+import {
+  CssSanitizerBuilder,
+  HtmlSanitizerBuilder,
+} from '../../../src/builders/html_sanitizer/html_sanitizer_builder';
 import {
   ResourceUrlPolicy,
   ResourceUrlPolicyHintsType,
@@ -318,6 +321,200 @@ describe('html sanitizer builder test', () => {
       );
       expect(sanitized.toString()).toEqual(
         '<img src="https://returned.by.policy/" />',
+      );
+    });
+  });
+});
+
+describe('CssSanitizerBuilder', () => {
+  const STYLE_SELECTOR = 'style:not(#safevalues-internal-style)';
+  const ELEMENT_NAME = 'safevalues-with-css';
+
+  /** Helper function to find the element with sanitized shadow root. */
+  function findShadowRoot(root: ParentNode): ShadowRoot | null | undefined {
+    return root.querySelector(ELEMENT_NAME)?.shadowRoot;
+  }
+
+  // Overriding attachShadow (and changing the mode to 'open') is necessary to
+  // inspect the contents of the shadow DOM.
+  let originalAttachShadow: typeof Element.prototype.attachShadow;
+  beforeEach(() => {
+    originalAttachShadow = Element.prototype.attachShadow;
+    Element.prototype.attachShadow = function (this: Element) {
+      return originalAttachShadow.call(this, {mode: 'open'});
+    };
+  });
+  afterEach(() => {
+    Element.prototype.attachShadow = originalAttachShadow;
+  });
+
+  describe('sanitizeToFragment', () => {
+    it('returns an instance of DocumentFragment', () => {
+      const sanitizer = new CssSanitizerBuilder().build();
+      const element = sanitizer.sanitizeToFragment('<div></div>');
+      expect(element).toBeInstanceOf(DocumentFragment);
+    });
+
+    it('returns a DocumentFragment whose only child is the sanitized element with shadow DOM', () => {
+      const sanitizer = new CssSanitizerBuilder().build();
+      const element = sanitizer.sanitizeToFragment('<div></div>');
+      expect(element.children.length).toBe(1);
+      expect(element.children[0].tagName.toLowerCase()).toBe(ELEMENT_NAME);
+      expect(element.children[0].shadowRoot).not.toBeNull();
+    });
+
+    it('adds internal CSS to the shadow DOM', () => {
+      // Note that we don't test the exact content of the CSS so that this test
+      // doesn't become a "change detector".
+      const sanitizer = new CssSanitizerBuilder().build();
+      const sanitized = sanitizer.sanitizeToFragment('<div></div>');
+      const internalStyle = findShadowRoot(sanitized)?.querySelector(
+        'style#safevalues-internal-style',
+      );
+      expect(internalStyle).not.toBeNull();
+      expect(internalStyle?.textContent).toContain(':host');
+    });
+
+    it('keeps all STYLE elements', () => {
+      const sanitizer = new CssSanitizerBuilder().build();
+      const sanitized = sanitizer.sanitizeToFragment(
+        '<div></div><style id="style1"></style><style id="style2"></style>',
+      );
+
+      const elements =
+        findShadowRoot(sanitized)?.querySelectorAll(STYLE_SELECTOR);
+
+      expect(elements).toHaveSize(2);
+      expect(Array.from(elements!).map((e) => e.id)).toEqual(
+        jasmine.arrayWithExactContents(['style1', 'style2']),
+      );
+    });
+
+    it('keeps the STYLE attribute', () => {
+      const sanitizer = new CssSanitizerBuilder().build();
+      const sanitized = sanitizer.sanitizeToFragment(
+        '<div style="background-image: url(http://www.example.com/image3.jpg);"></div>',
+      );
+      const div = findShadowRoot(sanitized)?.querySelector('div');
+      const styleAttribute = div?.getAttribute('style');
+      expect(styleAttribute).not.toBeNull();
+    });
+
+    it('sanitizes the content of the STYLE element', () => {
+      const sanitizer = new CssSanitizerBuilder().build();
+      const input = `<div>Hello</div><style>p { color: RED; fake-property: abcd; }</style>`;
+      const output = sanitizer.sanitizeToFragment(input);
+      const style = findShadowRoot(output)?.querySelector(STYLE_SELECTOR);
+      expect(style?.textContent).toBe('p { color: red; }');
+    });
+
+    it('sanitizes the content of the STYLE attribute', () => {
+      const sanitizer = new CssSanitizerBuilder().build();
+      const input = `<div style="color: red; fake-property: abcd;"></div>`;
+      const output = sanitizer.sanitizeToFragment(input);
+      const div = findShadowRoot(output)?.querySelector('div');
+      expect(div?.getAttribute('style')).toBe('color: red;');
+    });
+
+    it('disallows animations by default', () => {
+      const sanitizer = new CssSanitizerBuilder().build();
+      const input = `
+            <div>Hello</div>
+            <style>
+              @keyframes keyframes {
+                from { color: red; }
+                to { color: blue; }
+              }
+              div {
+                animation-duration: 1s;
+                animation-name: test;
+              }
+            </style>`;
+      const output = sanitizer.sanitizeToFragment(input);
+      const style = findShadowRoot(output)?.querySelector(STYLE_SELECTOR);
+      expect(style?.textContent).toBe('div {  }');
+    });
+
+    it('allows animations after allowAnimations is called', () => {
+      const sanitizer = new CssSanitizerBuilder().allowAnimations().build();
+      const input = `
+          <div>Hello</div>
+          <style>
+            @keyframes keyframes {
+              from { color: red; }
+              to { color: blue; }
+            }
+            div {
+              animation-duration: 1s;
+              animation-name: test;
+            }
+          </style>`;
+      const output = sanitizer.sanitizeToFragment(input);
+      const style = findShadowRoot(output)?.querySelector(STYLE_SELECTOR);
+      expect(style?.textContent).toBe(
+        '@keyframes keyframes { 0% { color: red; } 100% { color: blue; } }\n' +
+          'div { animation-duration: 1s;animation-name: test; }',
+      );
+    });
+
+    it('disallows transition-* properties by default', () => {
+      const sanitizer = new CssSanitizerBuilder().build();
+      const input = `<div>Hello</div><style>div { transition-duration: 1s; transition-property: width }</style>`;
+      const output = sanitizer.sanitizeToFragment(input);
+      const style = findShadowRoot(output)?.querySelector(STYLE_SELECTOR);
+      expect(style?.textContent).toBe('div {  }');
+    });
+
+    it('disallows transition shorthand by default', () => {
+      const sanitizer = new CssSanitizerBuilder().build();
+      const input = `<div>Hello</div><style>div { transition: all 1s; }</style>`;
+      const output = sanitizer.sanitizeToFragment(input);
+      const style = findShadowRoot(output)?.querySelector(STYLE_SELECTOR);
+      expect(style?.textContent).toBe('div {  }');
+    });
+
+    it('allows transition-* properties after allowTransitions is called', () => {
+      const sanitizer = new CssSanitizerBuilder().allowTransitions().build();
+      const input = `<div>Hello</div><style>div { transition-duration: 1s; transition-property: width }</style>`;
+      const output = sanitizer.sanitizeToFragment(input);
+      const style = findShadowRoot(output)?.querySelector(STYLE_SELECTOR);
+      expect(style?.textContent).toBe(
+        'div { transition-duration: 1s;transition-property: width; }',
+      );
+    });
+
+    it('allows transition shorthand after allowTransitions is called', () => {
+      const sanitizer = new CssSanitizerBuilder().allowTransitions().build();
+      const input = `<div>Hello</div><style>div { transition: all 1s; }</style>`;
+      const output = sanitizer.sanitizeToFragment(input);
+      const style = findShadowRoot(output)?.querySelector(STYLE_SELECTOR);
+      // Different browsers expand the shorthand differently, and this is not
+      // a specced behavior so it's easier to just check that the shorthand is
+      // not removed.
+      expect(style?.textContent).not.toEqual('div {  }');
+    });
+
+    it('allows all URLs when resource URL policy is not set', () => {
+      const sanitizer = new CssSanitizerBuilder().build();
+      const input = `<div>Hello</div><style>*{background-image: url(https://www.google.com/image.png)}</style>`;
+      const output = sanitizer.sanitizeToFragment(input);
+      const style = findShadowRoot(output)?.querySelector(STYLE_SELECTOR);
+      expect(style?.textContent).toEqual(
+        '* { background-image: url("https://www.google.com/image.png"); }',
+      );
+    });
+
+    it('when resource URL policy is set, its return value is used as URL', () => {
+      const sanitizer = new CssSanitizerBuilder()
+        .withResourceUrlPolicy(() => {
+          return new URL('https://returned.by.policy');
+        })
+        .build();
+      const input = `<div>Hello</div><style>*{background-image: url(https://www.google.com/image.png)}</style>`;
+      const output = sanitizer.sanitizeToFragment(input);
+      const style = findShadowRoot(output)?.querySelector(STYLE_SELECTOR);
+      expect(style?.textContent).toEqual(
+        '* { background-image: url("https://returned.by.policy/"); }',
       );
     });
   });
