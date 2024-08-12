@@ -10,6 +10,7 @@ import {ensureTokenIsValid, secretToken} from '../../internals/secrets.js';
 import {nodeToHtmlInternal} from '../html_builders.js';
 import {restrictivelySanitizeUrl} from '../url_builders.js';
 
+import {CSS_ISOLATION_STYLESHEET} from './css/css_isolation.js';
 import {createInertFragment} from './inert_fragment.js';
 import {getNodeName, isElement, isText} from './no_clobber.js';
 import {
@@ -62,9 +63,6 @@ export type CssSanitizationFn = (css: string) => string;
 
 /** Implementation for `HtmlSanitizer` */
 export class HtmlSanitizerImpl implements HtmlSanitizer, CssSanitizer {
-  private readonly SHADOW_DOM_INTERNAL_CSS =
-    ':host{display:block;clip-path:inset(0);overflow:hidden}';
-
   private changes: string[] = [];
   constructor(
     private readonly sanitizerTable: SanitizerTable,
@@ -120,7 +118,7 @@ export class HtmlSanitizerImpl implements HtmlSanitizer, CssSanitizer {
     );
 
     const internalStyle = document.createElement('style');
-    internalStyle.textContent = this.SHADOW_DOM_INTERNAL_CSS;
+    internalStyle.textContent = CSS_ISOLATION_STYLESHEET;
     internalStyle.id = 'safevalues-internal-style';
 
     shadow.appendChild(internalStyle);
