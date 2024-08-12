@@ -229,7 +229,10 @@ export function trustedResourceUrl(
  */
 export function appendParams(
   trustedUrl: TrustedResourceUrl,
-  params: Map<string, Primitive | null | Array<Primitive | null>>,
+  params: ReadonlyMap<
+    string,
+    Primitive | null | ReadonlyArray<Primitive | null>
+  >,
 ): TrustedResourceUrl {
   const urlSegments = getUrlSegments(unwrapResourceUrl(trustedUrl).toString());
 
@@ -238,7 +241,10 @@ export function appendParams(
   // for-of has a big polyfill.
   // tslint:disable-next-line:ban-iterable-foreach
   params.forEach(
-    (value: Primitive | null | Array<Primitive | null>, key: string) => {
+    (
+      value: Primitive | null | ReadonlyArray<Primitive | null>,
+      key: string,
+    ) => {
       const values = value instanceof Array ? value : [value];
       for (let i = 0; i < values.length; i++) {
         const v = values[i];
