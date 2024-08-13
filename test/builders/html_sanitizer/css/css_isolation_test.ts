@@ -14,7 +14,10 @@ function createIframe(content: SafeHtml): Promise<HTMLIFrameElement> {
     iframe.id = 'safevalues-test-iframe';
     setSrcdoc(iframe, content);
     iframe.addEventListener('load', () => {
-      resolve(iframe);
+      // Additional requestAnimationFrame helps deflake the test on Safari.
+      requestAnimationFrame(() => {
+        resolve(iframe);
+      });
     });
     document.body.appendChild(iframe);
   });
@@ -26,6 +29,7 @@ describe('CSS_ISOLATION_PROPERTIES', () => {
       name: 'position:fixed',
       style: `
         #malicious-element {
+          display: block;
           background: green;
           position: fixed;
           top: 0; bottom: 0;
@@ -37,6 +41,7 @@ describe('CSS_ISOLATION_PROPERTIES', () => {
       name: 'position:absolute',
       style: `
         #malicious-element {
+          display: block;
           background: green;
           position: absolute;
           top: 0; bottom: 0;
@@ -48,6 +53,7 @@ describe('CSS_ISOLATION_PROPERTIES', () => {
       name: 'negative margins',
       style: `
         #malicious-element {
+          display: block;
           background: green;
           margin-top: -50px;
           margin-left: -50px;
@@ -60,6 +66,7 @@ describe('CSS_ISOLATION_PROPERTIES', () => {
       name: 'transform:scale',
       style: `
         #malicious-element {
+          display: block;
           background: green;
           transform: scale(100);
           width: 50px;
@@ -75,14 +82,14 @@ describe('CSS_ISOLATION_PROPERTIES', () => {
         testonlyHtml(`
         Outside text.
         <style>${testCase.style}</style>
-        <div id="sanitized-content">
+        <sanitized-container id="sanitized-container">
           Unsafe markup
-          <div id="malicious-element"></div>
-        </div>`),
+          <malicious-element id="malicious-element"></malicious-element>
+        </sanitized-container>`),
       );
 
       const doc = iframe.contentDocument!;
-      const sanitizedContent = doc.getElementById('sanitized-content')!;
+      const sanitizedContainer = doc.getElementById('sanitized-container')!;
       const maliciousElement = doc.getElementById('malicious-element')!;
 
       // Initially malicious element should cover the first pixel of the iframe.
@@ -90,7 +97,7 @@ describe('CSS_ISOLATION_PROPERTIES', () => {
         .withContext('sanity check')
         .toBe(maliciousElement);
 
-      sanitizedContent.style.cssText = CSS_ISOLATION_PROPERTIES;
+      sanitizedContainer.style.cssText = CSS_ISOLATION_PROPERTIES;
 
       // After the sanitized content is isolated, the malicious element should
       // no longer cover the first pixel of the iframe.
