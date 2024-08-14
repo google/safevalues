@@ -4,7 +4,7 @@ Safevalues is a library to help you prevent Cross-Site Scripting vulnerabilities
 in TypeScript (and JavaScript). It is meant to be used together with
 [tsec](https://github.com/googleinterns/tsec) to provide strong security
 guarantees and help you deploy
-[Trusted Types](https://w3c.github.io/webappsec-trusted-types/dist/spec/) and
+[Trusted Types](https://w3c.github.io/trusted-types/dist/spec/) and
 other CSP restrictions in your applications. Google has used these components
 together to reduce DOM XSS ([paper](https://research.google/pubs/pub49950/)),
 and we hope it will be useful in your codebase.
