@@ -5,6 +5,7 @@
  */
 
 import {CSS_ISOLATION_PROPERTIES} from '../../../../src/builders/html_sanitizer/css/css_isolation';
+import {setInnerHtml} from '../../../../src/dom/elements/element';
 import {setSrcdoc} from '../../../../src/dom/elements/iframe';
 import {SafeHtml} from '../../../../src/internals/html_impl';
 import {testonlyHtml} from '../../../testing/conversions';
@@ -113,4 +114,26 @@ describe('CSS_ISOLATION_PROPERTIES', () => {
       iframe.remove();
     });
   }
+
+  it('ensures that the sanitized content is vertically aligned', () => {
+    // This test would fail with display:inline-block;overflow:hidden and
+    // without vertical-align:top. Hence vertical-align:top is necessary.
+
+    const div = document.createElement('div');
+    setInnerHtml(
+      div,
+      testonlyHtml(`
+      <span>Everything</span>
+      <sanitized-content style="${CSS_ISOLATION_PROPERTIES}">should be</sanitized-content>
+      <span>in one line.</span>
+    `),
+    );
+    document.body.appendChild(div);
+
+    const children = Array.from(div.children) as HTMLElement[];
+    const firstTop = children[0].offsetTop;
+    expect(children.every((child) => child.offsetTop === firstTop)).toBeTrue();
+
+    div.remove();
+  });
 });

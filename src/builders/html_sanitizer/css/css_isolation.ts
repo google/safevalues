@@ -23,7 +23,7 @@
  * the page.
  */
 export const CSS_ISOLATION_PROPERTIES =
-  'display:block;clip-path:inset(0);overflow:hidden';
+  'display:inline-block;clip-path:inset(0);overflow:hidden;vertical-align:top';
 
 /**
  * A stylesheet that isolates the sanitized content from the rest of the page.
