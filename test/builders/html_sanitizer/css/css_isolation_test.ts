@@ -9,19 +9,21 @@ import {setSrcdoc} from '../../../../src/dom/elements/iframe';
 import {SafeHtml} from '../../../../src/internals/html_impl';
 import {testonlyHtml} from '../../../testing/conversions';
 
-function createIframe(content: SafeHtml): Promise<HTMLIFrameElement> {
-  return new Promise((resolve) => {
-    const iframe = document.createElement('iframe');
-    iframe.id = 'safevalues-test-iframe';
-    setSrcdoc(iframe, content);
-    iframe.addEventListener('load', () => {
-      // Additional requestAnimationFrame helps deflake the test on Safari.
-      requestAnimationFrame(() => {
-        resolve(iframe);
-      });
-    });
-    document.body.appendChild(iframe);
+async function createIframe(content: SafeHtml): Promise<HTMLIFrameElement> {
+  const iframe = document.createElement('iframe');
+  iframe.id = 'safevalues-test-iframe';
+  setSrcdoc(iframe, content);
+  const iframeLoaded = new Promise((resolve) => {
+    iframe.addEventListener('load', resolve, {once: true});
   });
+  document.body.appendChild(iframe);
+  await iframeLoaded;
+  // Additional requestAnimationFrame helps deflake the test on Safari.
+  await new Promise((resolve) => {
+    requestAnimationFrame(resolve);
+  });
+
+  return iframe;
 }
 
 describe('CSS_ISOLATION_PROPERTIES', () => {
@@ -31,6 +33,7 @@ describe('CSS_ISOLATION_PROPERTIES', () => {
       style: `
         #malicious-element {
           display: block;
+          z-index: 10;
           background: green;
           position: fixed;
           top: 0; bottom: 0;
@@ -43,6 +46,7 @@ describe('CSS_ISOLATION_PROPERTIES', () => {
       style: `
         #malicious-element {
           display: block;
+          z-index: 10;
           background: green;
           position: absolute;
           top: 0; bottom: 0;
@@ -55,6 +59,7 @@ describe('CSS_ISOLATION_PROPERTIES', () => {
       style: `
         #malicious-element {
           display: block;
+          z-index: 10;
           background: green;
           margin-top: -50px;
           margin-left: -50px;
@@ -68,6 +73,7 @@ describe('CSS_ISOLATION_PROPERTIES', () => {
       style: `
         #malicious-element {
           display: block;
+          z-index: 10;
           background: green;
           transform: scale(100);
           width: 50px;
