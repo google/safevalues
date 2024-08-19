@@ -213,6 +213,20 @@ describe('resource_url_builders', () => {
       ).toBe('https://google.com/?abc&x=y');
     });
 
+    it('can be called with an array', () => {
+      expect(appendParams(urlWithoutSearch, [['x', 'y']]).toString()).toBe(
+        'https://google.com/?x=y',
+      );
+    });
+
+    it('can be called with a URLSearchParams object', () => {
+      const params = new URLSearchParams();
+      params.set('x', 'y');
+      expect(appendParams(urlWithoutSearch, params).toString()).toBe(
+        'https://google.com/?x=y',
+      );
+    });
+
     it('alls encodeURIComponent on all param names and values', () => {
       expect(
         appendParams(urlWithoutSearch, new Map([['&x/', '&y/']])).toString(),

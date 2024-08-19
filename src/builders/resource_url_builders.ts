@@ -219,6 +219,18 @@ export function trustedResourceUrl(
 }
 
 /**
+ * Similar to iterable, but using the concrete types so we don't rely on the
+ * iterable protocol, which needs a poyfill in ES5
+ */
+type IterablePairs<T, U> = ReadonlyMap<T, U> | ReadonlyArray<[T, U]>;
+type SearchParams =
+  | IterablePairs<
+      string,
+      Primitive | null | undefined | ReadonlyArray<Primitive | null | undefined>
+    >
+  | URLSearchParams;
+
+/**
  * Creates a new TrustedResourceUrl with params added to the URL's search
  * parameters.
  *
@@ -230,37 +242,47 @@ export function trustedResourceUrl(
  */
 export function appendParams(
   trustedUrl: TrustedResourceUrl,
-  params: ReadonlyMap<
-    string,
-    Primitive | null | ReadonlyArray<Primitive | null>
-  >,
+  params: SearchParams,
 ): TrustedResourceUrl {
   const urlSegments = getUrlSegments(unwrapResourceUrl(trustedUrl).toString());
 
   let urlParams = urlSegments.params;
   let separator = urlParams.length ? '&' : '?';
-  // for-of has a big polyfill.
-  // tslint:disable-next-line:ban-iterable-foreach
-  params.forEach(
-    (
-      value: Primitive | null | ReadonlyArray<Primitive | null>,
-      key: string,
-    ) => {
-      const values = value instanceof Array ? value : [value];
-      for (let i = 0; i < values.length; i++) {
-        const v = values[i];
-        if (v === null || v === undefined) {
-          continue;
-        }
-        urlParams +=
-          separator +
-          encodeURIComponent(key) +
-          '=' +
-          encodeURIComponent(String(v));
-        separator = '&';
+
+  function addParam(
+    key: string,
+    value:
+      | Primitive
+      | null
+      | undefined
+      | ReadonlyArray<Primitive | null | undefined>,
+  ) {
+    const values = value instanceof Array ? value : [value];
+    for (let i = 0; i < values.length; i++) {
+      const v = values[i];
+      if (v === null || v === undefined) {
+        continue;
       }
-    },
-  );
+      urlParams +=
+        separator +
+        encodeURIComponent(key) +
+        '=' +
+        encodeURIComponent(String(v));
+      separator = '&';
+    }
+  }
+
+  // Avoids for-of and/or Array.from which has a big polyfill in ES5.
+  if (params instanceof Array) {
+    params.forEach(([key, value]) => {
+      addParam(key, value);
+    });
+  } else {
+    params.forEach((value, key) => {
+      addParam(key, value);
+    });
+  }
+
   return createResourceUrlInternal(
     urlSegments.path + urlParams + urlSegments.hash,
   );
