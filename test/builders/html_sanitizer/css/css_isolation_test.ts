@@ -117,15 +117,15 @@ describe('CSS_ISOLATION_PROPERTIES', () => {
 
   it('ensures that the sanitized content is vertically aligned', () => {
     // This test would fail with display:inline-block;overflow:hidden and
-    // without vertical-align:top. Hence vertical-align:top is necessary.
+    // without vertical-align:top. Proving that vertical-align:top is necessary.
 
     const div = document.createElement('div');
     setInnerHtml(
       div,
       testonlyHtml(`
-      <span>Everything</span>
-      <sanitized-content style="${CSS_ISOLATION_PROPERTIES}">should be</sanitized-content>
-      <span>in one line.</span>
+        <span>Everything</span>
+        <sanitized-content style="${CSS_ISOLATION_PROPERTIES}">should be</sanitized-content>
+        <span>in one line.</span>
     `),
     );
     document.body.appendChild(div);
@@ -133,6 +133,32 @@ describe('CSS_ISOLATION_PROPERTIES', () => {
     const children = Array.from(div.children) as HTMLElement[];
     const firstTop = children[0].offsetTop;
     expect(children.every((child) => child.offsetTop === firstTop)).toBeTrue();
+
+    div.remove();
+  });
+
+  it('ensures that text-decoration is inherited', () => {
+    // This test would fail with display:inline-block;overflow:hidden and
+    // without text-decoration:inherit. Proving that text-decoration:inherit is
+    // necessary.
+
+    const div = document.createElement('div');
+    setInnerHtml(
+      div,
+      testonlyHtml(`
+      <u>
+        Everything
+        <sanitized-content style="${CSS_ISOLATION_PROPERTIES}">should be</sanitized-content>
+        underlined
+      </u>
+    `),
+    );
+    document.body.appendChild(div);
+
+    const sanitizedContent = div.querySelector('sanitized-content')!;
+    const decorationLine =
+      getComputedStyle(sanitizedContent).textDecorationLine;
+    expect(decorationLine).toBe('underline');
 
     div.remove();
   });
