@@ -227,6 +227,12 @@ describe('resource_url_builders', () => {
       );
     });
 
+    it('can be called with a record object', () => {
+      expect(appendParams(urlWithoutSearch, {'x': 'y'}).toString()).toBe(
+        'https://google.com/?x=y',
+      );
+    });
+
     it('alls encodeURIComponent on all param names and values', () => {
       expect(
         appendParams(urlWithoutSearch, new Map([['&x/', '&y/']])).toString(),

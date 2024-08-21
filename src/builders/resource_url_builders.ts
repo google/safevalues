@@ -222,10 +222,12 @@ export function trustedResourceUrl(
  * Similar to iterable, but using the concrete types so we don't rely on the
  * iterable protocol, which needs a poyfill in ES5
  */
-type IterablePairs<T, U> = ReadonlyMap<T, U> | ReadonlyArray<[T, U]>;
+type IterableEntries<U> =
+  | ReadonlyMap<string, U>
+  | ReadonlyArray<[string, U]>
+  | Readonly<Record<string, U>>;
 type SearchParams =
-  | IterablePairs<
-      string,
+  | IterableEntries<
       Primitive | null | undefined | ReadonlyArray<Primitive | null | undefined>
     >
   | URLSearchParams;
@@ -277,6 +279,10 @@ export function appendParams(
     params.forEach(([key, value]) => {
       addParam(key, value);
     });
+  } else if (isPlainObject(params)) {
+    Object.entries(params).forEach(([key, value]) => {
+      addParam(key, value);
+    });
   } else {
     params.forEach((value, key) => {
       addParam(key, value);
@@ -286,6 +292,12 @@ export function appendParams(
   return createResourceUrlInternal(
     urlSegments.path + urlParams + urlSegments.hash,
   );
+}
+
+function isPlainObject<T>(
+  x: unknown | Record<string, T>,
+): x is Record<string, T> {
+  return Object.getPrototypeOf(x) === Object.prototype;
 }
 
 const BEFORE_FRAGMENT_REGEXP = /[^#]*/;
