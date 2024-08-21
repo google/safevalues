@@ -303,7 +303,8 @@ export function replaceFragment(
 ) {
   const urlString = unwrapResourceUrl(trustedUrl).toString();
   return createResourceUrlInternal(
-    BEFORE_FRAGMENT_REGEXP.exec(urlString)![0] + '#' + fragment,
+    BEFORE_FRAGMENT_REGEXP.exec(urlString)![0] +
+      (fragment.trim() ? '#' + fragment : ''),
   );
 }
 

@@ -285,6 +285,15 @@ describe('resource_url_builders', () => {
         ).toString(),
       ).toBe('https://google.com/#def');
     });
+
+    it('removes fragment when passed an emtpy string', () => {
+      expect(
+        replaceFragment(
+          trustedResourceUrl`https://google.com/#abc`,
+          '',
+        ).toString(),
+      ).toBe('https://google.com/');
+    });
   });
 
   describe('appendPathSegment', () => {
