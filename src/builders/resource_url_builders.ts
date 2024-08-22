@@ -252,41 +252,38 @@ export function appendParams(
   let separator = urlParams.length ? '&' : '?';
 
   function addParam(
-    key: string,
     value:
       | Primitive
       | null
       | undefined
       | ReadonlyArray<Primitive | null | undefined>,
-  ) {
-    const values = value instanceof Array ? value : [value];
-    for (let i = 0; i < values.length; i++) {
-      const v = values[i];
-      if (v === null || v === undefined) {
-        continue;
-      }
+    key: string,
+  ): void {
+    if (value == null) {
+      return;
+    }
+
+    if (isArray(value)) {
+      // tslint:disable-next-line:g3-no-void-expression
+      value.forEach((v) => addParam(v, key));
+    } else {
       urlParams +=
-        separator +
-        encodeURIComponent(key) +
-        '=' +
-        encodeURIComponent(String(v));
+        separator + encodeURIComponent(key) + '=' + encodeURIComponent(value);
       separator = '&';
     }
   }
 
+  if (isPlainObject(params)) {
+    params = Object.entries(params);
+  }
+
   // Avoids for-of and/or Array.from which has a big polyfill in ES5.
-  if (params instanceof Array) {
-    params.forEach(([key, value]) => {
-      addParam(key, value);
-    });
-  } else if (isPlainObject(params)) {
-    Object.entries(params).forEach(([key, value]) => {
-      addParam(key, value);
-    });
+  if (isArray(params)) {
+    // tslint:disable-next-line:g3-no-void-expression
+    params.forEach((pair) => addParam(pair[1], pair[0]));
   } else {
-    params.forEach((value, key) => {
-      addParam(key, value);
-    });
+    // tslint:disable-next-line:g3-no-void-expression
+    params.forEach(addParam);
   }
 
   return createResourceUrlInternal(
@@ -294,10 +291,14 @@ export function appendParams(
   );
 }
 
+function isArray<T>(x: unknown | readonly T[]): x is readonly T[] {
+  return Array.isArray(x);
+}
+
 function isPlainObject<T>(
-  x: unknown | Record<string, T>,
+  x: object | Record<string, T>,
 ): x is Record<string, T> {
-  return Object.getPrototypeOf(x) === Object.prototype;
+  return x.constructor === Object;
 }
 
 const BEFORE_FRAGMENT_REGEXP = /[^#]*/;
