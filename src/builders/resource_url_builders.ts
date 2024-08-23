@@ -109,6 +109,12 @@ function isValidRelativePathStart(base: string): boolean {
   return new RegExp('^[^:\\s\\\\/]+/').test(base);
 }
 
+interface UrlSegments {
+  readonly urlPath: string;
+  readonly params: string;
+  readonly fragment: string;
+}
+
 /**
  * Splits an url into segments using '?' and '#' delimiters.
  *
@@ -119,15 +125,11 @@ function isValidRelativePathStart(base: string): boolean {
  *
  * @param url The url to split.
  */
-function getUrlSegments(url: string): {
-  path: string;
-  params: string;
-  hash: string;
-} {
-  const segments = url.split(/\?|#/);
-  const params = /\?/.test(url) ? '?' + segments[1] : '';
-  const hash = /#/.test(url) ? '#' + (params ? segments[2] : segments[1]) : '';
-  return {path: segments[0], params, hash};
+function getUrlSegments(url: string): UrlSegments {
+  const parts = url.split(/\?|#/);
+  const params = /\?/.test(url) ? '?' + parts[1] : '';
+  const fragment = /#/.test(url) ? '#' + (params ? parts[2] : parts[1]) : '';
+  return {urlPath: parts[0], params, fragment};
 }
 
 /**
@@ -287,7 +289,7 @@ export function appendParams(
   }
 
   return createResourceUrlInternal(
-    urlSegments.path + urlParams + urlSegments.hash,
+    urlSegments.urlPath + urlParams + urlSegments.fragment,
   );
 }
 
@@ -334,12 +336,12 @@ export function appendPathSegment(
 ): TrustedResourceUrl {
   const urlSegments = getUrlSegments(unwrapResourceUrl(trustedUrl).toString());
 
-  const separator = urlSegments.path.slice(-1) === '/' ? '' : '/';
+  const separator = urlSegments.urlPath.slice(-1) === '/' ? '' : '/';
   const newPath =
-    urlSegments.path + separator + encodeURIComponent(pathSegment);
+    urlSegments.urlPath + separator + encodeURIComponent(pathSegment);
 
   return createResourceUrlInternal(
-    newPath + urlSegments.params + urlSegments.hash,
+    newPath + urlSegments.params + urlSegments.fragment,
   );
 }
 
