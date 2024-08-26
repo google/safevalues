@@ -43,6 +43,7 @@ export {
   appendPathSegment,
   objectUrlFromScript,
   replaceFragment,
+  replaceParams,
   toAbsoluteResourceUrl,
   trustedResourceUrl,
 } from './builders/resource_url_builders.js';

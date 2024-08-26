@@ -11,6 +11,7 @@ import {
   appendPathSegment,
   objectUrlFromScript,
   replaceFragment,
+  replaceParams,
   toAbsoluteResourceUrl,
   trustedResourceUrl,
 } from '../../src/builders/resource_url_builders';
@@ -270,6 +271,33 @@ describe('resource_url_builders', () => {
       expect(appendParams(urlWithoutSearch, params2).toString()).toBe(
         'https://google.com/?%26=ampersand&%23=hash&%23=mesh',
       );
+    });
+  });
+
+  describe('replaceParams', () => {
+    it('replaces existing params', () => {
+      expect(
+        replaceParams(trustedResourceUrl`https://google.com/?x=y`, [
+          ['a', 'b'],
+        ]).toString(),
+      ).toBe('https://google.com/?a=b');
+    });
+
+    it('works when there are no params', () => {
+      expect(
+        replaceParams(trustedResourceUrl`https://google.com/`, [
+          ['x', 'y'],
+        ]).toString(),
+      ).toBe('https://google.com/?x=y');
+    });
+
+    it('clears the params when passed emtpy new params', () => {
+      expect(
+        replaceParams(
+          trustedResourceUrl`https://google.com/?x=y`,
+          [],
+        ).toString(),
+      ).toBe('https://google.com/');
     });
   });
 

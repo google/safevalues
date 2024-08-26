@@ -126,9 +126,9 @@ interface UrlSegments {
  * @param url The url to split.
  */
 function getUrlSegments(url: string): UrlSegments {
-  const parts = url.split(/\?|#/);
-  const params = /\?/.test(url) ? '?' + parts[1] : '';
-  const fragment = /#/.test(url) ? '#' + (params ? parts[2] : parts[1]) : '';
+  const parts = url.split(/[?#]/);
+  const params = /[?]/.test(url) ? '?' + parts[1] : '';
+  const fragment = /[#]/.test(url) ? '#' + (params ? parts[2] : parts[1]) : '';
   return {urlPath: parts[0], params, fragment};
 }
 
@@ -235,6 +235,29 @@ type SearchParams =
   | URLSearchParams;
 
 /**
+ * Creates a new TrustedResourceUrl with params to replace the URL's existing
+ * search parameters.
+ *
+ * @param params What to add to the URL. Parameters with value `null` or
+ * `undefined` are skipped. Both keys and values will be encoded. Do not pass
+ * pre-encoded values as this will result them being double encoded. If the
+ * value is an array then the same parameter is added for every element in the
+ * array.
+ */
+export function replaceParams(
+  trustedUrl: TrustedResourceUrl,
+  params: SearchParams,
+): TrustedResourceUrl {
+  const urlSegments = getUrlSegments(unwrapResourceUrl(trustedUrl).toString());
+  return appendParamsInternal(
+    urlSegments.urlPath,
+    '',
+    urlSegments.fragment,
+    params,
+  );
+}
+
+/**
  * Creates a new TrustedResourceUrl with params added to the URL's search
  * parameters.
  *
@@ -249,9 +272,21 @@ export function appendParams(
   params: SearchParams,
 ): TrustedResourceUrl {
   const urlSegments = getUrlSegments(unwrapResourceUrl(trustedUrl).toString());
+  return appendParamsInternal(
+    urlSegments.urlPath,
+    urlSegments.params,
+    urlSegments.fragment,
+    params,
+  );
+}
 
-  let urlParams = urlSegments.params;
-  let separator = urlParams.length ? '&' : '?';
+function appendParamsInternal(
+  path: string,
+  params: string,
+  hash: string,
+  newParams: SearchParams,
+): TrustedResourceUrl {
+  let separator = params.length ? '&' : '?';
 
   function addParam(
     value:
@@ -269,28 +304,26 @@ export function appendParams(
       // tslint:disable-next-line:g3-no-void-expression
       value.forEach((v) => addParam(v, key));
     } else {
-      urlParams +=
+      params +=
         separator + encodeURIComponent(key) + '=' + encodeURIComponent(value);
       separator = '&';
     }
   }
 
-  if (isPlainObject(params)) {
-    params = Object.entries(params);
+  if (isPlainObject(newParams)) {
+    newParams = Object.entries(newParams);
   }
 
   // Avoids for-of and/or Array.from which has a big polyfill in ES5.
-  if (isArray(params)) {
+  if (isArray(newParams)) {
     // tslint:disable-next-line:g3-no-void-expression
-    params.forEach((pair) => addParam(pair[1], pair[0]));
+    newParams.forEach((pair) => addParam(pair[1], pair[0]));
   } else {
     // tslint:disable-next-line:g3-no-void-expression
-    params.forEach(addParam);
+    newParams.forEach(addParam);
   }
 
-  return createResourceUrlInternal(
-    urlSegments.urlPath + urlParams + urlSegments.fragment,
-  );
+  return createResourceUrlInternal(path + params + hash);
 }
 
 function isArray<T>(x: unknown | readonly T[]): x is readonly T[] {
