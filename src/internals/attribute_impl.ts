@@ -12,6 +12,8 @@ import {ensureTokenIsValid, secretToken} from './secrets.js';
 
 /**
  * A prefix with which an attribute is safe to set using plain strings.
+ *
+ * @final
  */
 export class SafeAttributePrefix {
   private readonly privateDoNotAccessOrElseWrappedAttributePrefix: string;
@@ -29,6 +31,15 @@ export class SafeAttributePrefix {
   }
 }
 
+/**
+ * Internal interface for `SafeAttributePrefix`.
+ *
+ * `SafeAttributePrefix` should remain an opaque type to users & they should
+ * never be able to instantiate it directly, but we still need to create values.
+ *
+ * There are multiple ways to do this, but the following is the one that
+ * minimizes code size.
+ */
 interface AttributePrefixImpl {
   privateDoNotAccessOrElseWrappedAttributePrefix: string;
 }
