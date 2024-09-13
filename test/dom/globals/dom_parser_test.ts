@@ -6,6 +6,8 @@
 
 import * as safeDomParser from '../../../src/dom/globals/dom_parser';
 
+const ERROR_REGEX = /unsafe XML/;
+
 describe('safeDomParser', () => {
   it('can parse XML', () => {
     const doc = safeDomParser.parseXml(new DOMParser(), '<mydoc />');
@@ -18,7 +20,7 @@ describe('safeDomParser', () => {
         new DOMParser(),
         '<img xmlns="http://www.w3.org/1999/xhtml" />',
       );
-    }).toThrowError(/XML document that embeds HTML or SVG/);
+    }).toThrowError(ERROR_REGEX);
   });
 
   it('rejects XML that contains root explicitly from the HTML namespace', () => {
@@ -27,7 +29,7 @@ describe('safeDomParser', () => {
         new DOMParser(),
         '<h:img xmlns:h="http://www.w3.org/1999/xhtml" />',
       );
-    }).toThrowError(/XML document that embeds HTML or SVG/);
+    }).toThrowError(ERROR_REGEX);
   });
 
   it('rejects XML that contains nested element implicitly from the HTML namespace', () => {
@@ -36,7 +38,7 @@ describe('safeDomParser', () => {
         new DOMParser(),
         '<doc xmlns="http://www.w3.org/1999/xhtml"><img /></doc>',
       );
-    }).toThrowError(/XML document that embeds HTML or SVG/);
+    }).toThrowError(ERROR_REGEX);
   });
 
   it('rejects XML that contains nested element explicitly from the HTML namespace', () => {
@@ -45,7 +47,7 @@ describe('safeDomParser', () => {
         new DOMParser(),
         '<doc xmlns:h="http://www.w3.org/1999/xhtml"><h:img /></doc>',
       );
-    }).toThrowError(/XML document that embeds HTML or SVG/);
+    }).toThrowError(ERROR_REGEX);
   });
 
   it('rejects XML that contains nested HTML document', () => {
@@ -54,7 +56,7 @@ describe('safeDomParser', () => {
         new DOMParser(),
         '<doc><root xmlns="http://www.w3.org/1999/xhtml"><img /></root></doc>',
       );
-    }).toThrowError(/XML document that embeds HTML or SVG/);
+    }).toThrowError(ERROR_REGEX);
   });
 
   it('rejects XML that contains nested HTML document with explicit namespace', () => {
@@ -63,7 +65,7 @@ describe('safeDomParser', () => {
         new DOMParser(),
         '<doc><root xmlns:h="http://www.w3.org/1999/xhtml"><h:img /></root></doc>',
       );
-    }).toThrowError(/XML document that embeds HTML or SVG/);
+    }).toThrowError(ERROR_REGEX);
   });
 
   it('rejects XML that contains an element from encoded HTML namespace', () => {
@@ -72,7 +74,7 @@ describe('safeDomParser', () => {
         new DOMParser(),
         '<img xmlns="http://www.w3.org/1999&#47;xhtml" />',
       );
-    }).toThrowError(/XML document that embeds HTML or SVG/);
+    }).toThrowError(ERROR_REGEX);
   });
 
   it('rejects XML that contains element from the SVG namespace', () => {
@@ -81,6 +83,15 @@ describe('safeDomParser', () => {
         new DOMParser(),
         '<doc><svg xmlns="http://www.w3.org/2000/svg" /></doc>',
       );
-    }).toThrowError(/XML document that embeds HTML or SVG/);
+    }).toThrowError(ERROR_REGEX);
+  });
+
+  it('rejects XML that contains element from the MathML namespace', () => {
+    expect(() => {
+      safeDomParser.parseXml(
+        new DOMParser(),
+        '<doc><math xmlns="http://www.w3.org/1998/Math/MathML">oops!</math></doc>',
+      );
+    }).toThrowError(ERROR_REGEX);
   });
 });
