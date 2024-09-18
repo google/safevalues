@@ -17,12 +17,18 @@ import {
 } from '../../internals/attribute_impl.js';
 import {SafeHtml, unwrapHtml} from '../../internals/html_impl.js';
 
+type ScriptOrStyle =
+  | HTMLScriptElement
+  | HTMLStyleElement
+  | SVGScriptElement
+  | SVGStyleElement;
+
 /**
  * Safely set {@link Element.innerHTML} on a given ShadowRoot or Element which
  * may not be a `<script>` element or a `<style>` element.
  */
 export function setInnerHtml<T extends Element | ShadowRoot>(
-  elOrRoot: Exclude<T, HTMLScriptElement | HTMLStyleElement>,
+  elOrRoot: Exclude<T, ScriptOrStyle>,
   v: SafeHtml,
 ) {
   if (isElement(elOrRoot)) {
@@ -46,7 +52,7 @@ export function setOuterHtml(e: Element, v: SafeHtml) {
  * Safely call {@link Element.insertAdjacentHTML} for the given Element.
  */
 export function insertAdjacentHtml<T extends Element>(
-  element: Exclude<T, HTMLScriptElement | HTMLStyleElement>,
+  element: Exclude<T, ScriptOrStyle>,
   position: 'afterbegin' | 'afterend' | 'beforebegin' | 'beforeend',
   v: SafeHtml,
 ) {
@@ -114,9 +120,9 @@ export function setPrefixedAttribute(
 function throwIfScriptOrStyle(element: Element): void {
   let message = '';
   const tagName = element.tagName;
-  if (tagName === 'SCRIPT' || tagName === 'STYLE') {
+  if (/^(script|style)$/i.test(tagName)) {
     if (process.env.NODE_ENV !== 'production') {
-      if (tagName === 'SCRIPT') {
+      if (tagName.toLowerCase() === 'script') {
         message = 'Use safeScriptEl.setTextContent with a SafeScript.';
       } else {
         message = 'Use safeStyleEl.setTextContent with a SafeStyleSheet.';

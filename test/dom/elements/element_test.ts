@@ -22,8 +22,35 @@ describe('safeElement', () => {
       expect(div.innerHTML).toBe('<div id="test-html"></div>');
     });
 
-    it('can not set style.innerHTML', () => {
+    it('cannot set style.innerHTML', () => {
       const style = document.createElement('style') as HTMLElement;
+      expect(() => {
+        safeElement.setInnerHtml(style, testonlyHtml('bad'));
+      }).toThrow();
+    });
+
+    it('cannot set script.innerHTML', () => {
+      const script = document.createElement('script') as HTMLElement;
+      expect(() => {
+        safeElement.setInnerHtml(script, testonlyHtml('bad'));
+      }).toThrow();
+    });
+
+    it('cannot set svg:script.innerHTML', () => {
+      const script = document.createElementNS(
+        'http://www.w3.org/2000/svg',
+        'script',
+      ) as Element;
+      expect(() => {
+        safeElement.setInnerHtml(script, testonlyHtml('bad'));
+      }).toThrow();
+    });
+
+    it('cannot set svg:style.innerHTML', () => {
+      const style = document.createElementNS(
+        'http://www.w3.org/2000/svg',
+        'style',
+      ) as Element;
       expect(() => {
         safeElement.setInnerHtml(style, testonlyHtml('bad'));
       }).toThrow();
@@ -67,7 +94,7 @@ describe('safeElement', () => {
       expect(div.innerHTML).toBe('<p>Hello SafeHtml team!</p>');
     });
 
-    it('can not insert adjacent HTML in style', () => {
+    it('cannot insert adjacent HTML in style', () => {
       const style = document.createElement('style') as HTMLElement;
       expect(() => {
         safeElement.insertAdjacentHtml(
@@ -78,9 +105,38 @@ describe('safeElement', () => {
       }).toThrow();
     });
 
-    it('can not insert adjacent HTML in a script parent', () => {
+    it('cannot insert adjacent HTML in a script parent', () => {
       const script = document.createElement('script') as HTMLElement;
       const child = document.createElement('p') as HTMLElement;
+      script.appendChild(child);
+      expect(() => {
+        safeElement.insertAdjacentHtml(child, 'afterend', testonlyHtml('bad'));
+      }).toThrow();
+    });
+
+    it('cannot insert adjacent HTML in svg:style', () => {
+      const style = document.createElementNS(
+        'http://www.w3.org/2000/svg',
+        'style',
+      ) as Element;
+      expect(() => {
+        safeElement.insertAdjacentHtml(
+          style,
+          'afterbegin',
+          testonlyHtml('bad'),
+        );
+      }).toThrow();
+    });
+
+    it('cannot insert adjacent HTML in svg:script parent', () => {
+      const script = document.createElementNS(
+        'http://www.w3.org/2000/svg',
+        'script',
+      ) as Element;
+      const child = document.createElementNS(
+        'http://www.w3.org/2000/svg',
+        'a',
+      ) as Element;
       script.appendChild(child);
       expect(() => {
         safeElement.insertAdjacentHtml(child, 'afterend', testonlyHtml('bad'));
