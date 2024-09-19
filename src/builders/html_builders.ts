@@ -28,27 +28,27 @@ import {SafeScript, unwrapScript} from '../internals/script_impl.js';
  */
 export function htmlEscape(
   value: SafeHtml | string,
-  options: {
+  options?: {
     preserveNewlines?: boolean;
     preserveSpaces?: boolean;
     preserveTabs?: boolean;
-  } = {},
+  },
 ): SafeHtml {
   if (isHtml(value)) {
     return value;
   }
   let htmlEscapedString = htmlEscapeToString(String(value));
-  if (options.preserveSpaces) {
+  if (options?.preserveSpaces) {
     // Do this first to ensure we preserve spaces after newlines and tabs.
     htmlEscapedString = htmlEscapedString.replace(
       /(^|[\r\n\t ]) /g,
       '$1&#160;',
     );
   }
-  if (options.preserveNewlines) {
+  if (options?.preserveNewlines) {
     htmlEscapedString = htmlEscapedString.replace(/(\r\n|\n|\r)/g, '<br>');
   }
-  if (options.preserveTabs) {
+  if (options?.preserveTabs) {
     htmlEscapedString = htmlEscapedString.replace(
       /(\t+)/g,
       '<span style="white-space:pre">$1</span>',
@@ -62,25 +62,25 @@ export function htmlEscape(
  */
 export function scriptToHtml(
   script: SafeScript,
-  options: {
+  options?: {
     defer?: boolean;
     id?: string;
     nonce?: string;
     type?: string;
-  } = {},
+  },
 ): SafeHtml {
   const unwrappedScript = unwrapScript(script).toString();
   let stringTag = `<script`;
-  if (options.id) {
+  if (options?.id) {
     stringTag += ` id="${htmlEscapeToString(options.id)}"`;
   }
-  if (options.nonce) {
+  if (options?.nonce) {
     stringTag += ` nonce="${htmlEscapeToString(options.nonce)}"`;
   }
-  if (options.type) {
+  if (options?.type) {
     stringTag += ` type="${htmlEscapeToString(options.type)}"`;
   }
-  if (options.defer) {
+  if (options?.defer) {
     stringTag += ` defer`;
   }
   stringTag += `>${unwrappedScript}\u003C/script>`;
@@ -93,7 +93,7 @@ export function scriptToHtml(
  */
 export function scriptUrlToHtml(
   src: TrustedResourceUrl,
-  options: {
+  options?: {
     async?: boolean;
     customElement?: string;
     defer?: boolean;
@@ -101,31 +101,31 @@ export function scriptUrlToHtml(
     nonce?: string;
     type?: string;
     crossorigin?: 'anonymous' | 'use-credentials';
-  } = {},
+  },
 ): SafeHtml {
   const unwrappedSrc = unwrapResourceUrl(src).toString();
   let stringTag = `<script src="${htmlEscapeToString(unwrappedSrc)}"`;
-  if (options.async) {
+  if (options?.async) {
     stringTag += ' async';
   }
-  if (options.customElement) {
+  if (options?.customElement) {
     stringTag += ` custom-element="${htmlEscapeToString(
       options.customElement,
     )}"`;
   }
-  if (options.defer) {
+  if (options?.defer) {
     stringTag += ` defer`;
   }
-  if (options.id) {
+  if (options?.id) {
     stringTag += ` id="${htmlEscapeToString(options.id)}"`;
   }
-  if (options.nonce) {
+  if (options?.nonce) {
     stringTag += ` nonce="${htmlEscapeToString(options.nonce)}"`;
   }
-  if (options.type) {
+  if (options?.type) {
     stringTag += ` type="${htmlEscapeToString(options.type)}"`;
   }
-  if (options.crossorigin) {
+  if (options?.crossorigin) {
     stringTag += ` crossorigin="${htmlEscapeToString(options.crossorigin)}"`;
   }
   stringTag += '>\u003C/script>';
