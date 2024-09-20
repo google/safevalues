@@ -39,7 +39,7 @@ const ALLOWED_SCHEMES = ['data:', 'http:', 'https:', 'mailto:', 'ftp:'];
  *     (`:`) character to appear after one of  the `/` `?` or `#` characters,
  *     which means the colon appears in path, query or fragment part of the URL.
  */
-export const IS_NOT_JAVASCRIPT_URL_PATTERN =
+export const IS_NOT_JAVASCRIPT_URL_PATTERN: RegExp =
   /^\s*(?!javascript:)(?:[\w+.-]+:|[^:/?#]*(?:[/?#]|$))/i;
 
 /**

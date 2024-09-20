@@ -15,11 +15,11 @@ import {
 } from '../../internals/resource_url_impl.js';
 
 /** Sets the Src attribute using a TrustedResourceUrl */
-export function setSrc(iframe: HTMLIFrameElement, v: TrustedResourceUrl) {
+export function setSrc(iframe: HTMLIFrameElement, v: TrustedResourceUrl): void {
   iframe.src = unwrapResourceUrl(v).toString();
 }
 
 /** Sets the Srcdoc attribute using a SafeHtml */
-export function setSrcdoc(iframe: HTMLIFrameElement, v: SafeHtml) {
+export function setSrcdoc(iframe: HTMLIFrameElement, v: SafeHtml): void {
   iframe.srcdoc = unwrapHtml(v) as string;
 }

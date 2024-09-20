@@ -40,4 +40,4 @@ export const CSS_ISOLATION_PROPERTIES =
 /**
  * A stylesheet that isolates the sanitized content from the rest of the page.
  */
-export const CSS_ISOLATION_STYLESHEET = `:host{${CSS_ISOLATION_PROPERTIES}}`;
+export const CSS_ISOLATION_STYLESHEET: ':host{display:inline-block;clip-path:inset(0);overflow:hidden;vertical-align:top;text-decoration:inherit}' = `:host{${CSS_ISOLATION_PROPERTIES}}`;

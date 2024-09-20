@@ -25,7 +25,7 @@ export function setTextContent(
   script: HTMLScriptElement,
   v: SafeScript,
   options?: {omitNonce?: boolean},
-) {
+): void {
   script.textContent = unwrapScript(v) as string;
   if (options?.omitNonce) return;
   setNonceForScriptElement(script);
@@ -36,7 +36,7 @@ export function setSrc(
   script: HTMLScriptElement,
   v: TrustedResourceUrl,
   options?: {omitNonce?: boolean},
-) {
+): void {
   script.src = unwrapResourceUrl(v) as string;
   if (options?.omitNonce) return;
   setNonceForScriptElement(script);

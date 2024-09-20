@@ -30,7 +30,7 @@ type ScriptOrStyle =
 export function setInnerHtml<T extends Element | ShadowRoot>(
   elOrRoot: Exclude<T, ScriptOrStyle>,
   v: SafeHtml,
-) {
+): void {
   if (isElement(elOrRoot)) {
     throwIfScriptOrStyle(elOrRoot);
   }
@@ -40,7 +40,7 @@ export function setInnerHtml<T extends Element | ShadowRoot>(
 /**
  * Safely set {@link Element.outerHTML} for the given Element.
  */
-export function setOuterHtml(e: Element, v: SafeHtml) {
+export function setOuterHtml(e: Element, v: SafeHtml): void {
   const parent = e.parentElement;
   if (parent !== null) {
     throwIfScriptOrStyle(parent);
@@ -55,7 +55,7 @@ export function insertAdjacentHtml<T extends Element>(
   element: Exclude<T, ScriptOrStyle>,
   position: 'afterbegin' | 'afterend' | 'beforebegin' | 'beforeend',
   v: SafeHtml,
-) {
+): void {
   const tagContext =
     position === 'beforebegin' || position === 'afterend'
       ? element.parentElement
@@ -83,7 +83,7 @@ export function buildPrefixedAttributeSetter(
 ) {
   const prefixes = [prefix, ...otherPrefixes];
 
-  return (e: Element, attr: string, value: string) => {
+  return (e: Element, attr: string, value: string): void => {
     setPrefixedAttribute(prefixes, e, attr, value);
   };
 }
@@ -99,7 +99,7 @@ export function setPrefixedAttribute(
   e: Element,
   attr: string,
   value: string,
-) {
+): void {
   if (attrPrefixes.length === 0) {
     let message = '';
     if (process.env.NODE_ENV !== 'production') {

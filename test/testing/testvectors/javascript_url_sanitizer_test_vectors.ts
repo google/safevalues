@@ -24,7 +24,7 @@ export class UrlTestVectorOnDemandScheme {
 }
 
 /** List of test vectors for default URL sanitization. */
-export const URL_TEST_VECTORS = [
+export const URL_TEST_VECTORS: UrlTestVector[] = [
   new UrlTestVector('', ''),
   new UrlTestVector('http://example.com/', 'http://example.com/'),
   new UrlTestVector('https://example.com', 'https://example.com'),
@@ -87,4 +87,4 @@ export const URL_TEST_VECTORS = [
 ];
 
 /** List of test vectors for URL sanitization with a custom scheme. */
-export const URL_TEST_VECTORS_WITH_SCHEME = [];
+export const URL_TEST_VECTORS_WITH_SCHEME: UrlTestVectorOnDemandScheme[] = [];

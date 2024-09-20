@@ -400,7 +400,7 @@ const GLOBAL_ATTRIBUTE_POLICIES: ReadonlyArray<[string, AttributePolicy]> = [
  * Sanitizer table for the default sanitizer configuration
  *
  */
-export const DEFAULT_SANITIZER_TABLE = new SanitizerTable(
+export const DEFAULT_SANITIZER_TABLE: SanitizerTable = new SanitizerTable(
   new Set(ALLOWED_ELEMENTS),
   new Map(ELEMENT_POLICIES),
   new Set(ALLOWED_GLOBAL_ATTRIBUTES),

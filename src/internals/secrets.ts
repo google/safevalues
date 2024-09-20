@@ -18,7 +18,7 @@ export const secretToken = {};
  * Asserts that the given token matches the secret safevalues token. An
  * exception is thrown if that is not the case.
  */
-export function ensureTokenIsValid(token: object) {
+export function ensureTokenIsValid(token: object): void {
   if (process.env.NODE_ENV !== 'production') {
     if (token !== secretToken) {
       throw new Error('Bad secret');

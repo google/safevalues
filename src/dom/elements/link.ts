@@ -108,7 +108,7 @@ export function setHrefAndRelWithTrustedResourceUrl(
   link: HTMLLinkElement,
   url: TrustedResourceUrl,
   rel: TrustedResourecUrlRelTypes | string,
-) {
+): void {
   link.href = unwrapResourceUrl(url).toString();
   link.rel = rel;
 }

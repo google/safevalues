@@ -348,7 +348,7 @@ const BEFORE_FRAGMENT_REGEXP = /[^#]*/;
 export function replaceFragment(
   trustedUrl: TrustedResourceUrl,
   fragment: string,
-) {
+): TrustedResourceUrl {
   const urlString = unwrapResourceUrl(trustedUrl).toString();
   return createResourceUrlInternal(
     BEFORE_FRAGMENT_REGEXP.exec(urlString)![0] +
@@ -399,7 +399,9 @@ export function objectUrlFromScript(
  *
  * @param pathRelativeUrl The resource to which the origin shall be prepended.
  */
-export function toAbsoluteResourceUrl(pathRelativeUrl: TrustedResourceUrl) {
+export function toAbsoluteResourceUrl(
+  pathRelativeUrl: TrustedResourceUrl,
+): TrustedResourceUrl {
   const originalUrl = unwrapResourceUrl(pathRelativeUrl).toString();
   const qualifiedUrl = new URL(originalUrl, window.document.baseURI);
   return createResourceUrlInternal(qualifiedUrl.toString());

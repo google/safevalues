@@ -10,7 +10,7 @@ import {SafeHtml, unwrapHtml} from '../../internals/html_impl.js';
  * write safely calls {@link Document.write} on the given {@link Document} with
  * the given {@link SafeHtml}.
  */
-export function write(doc: Document, text: SafeHtml) {
+export function write(doc: Document, text: SafeHtml): void {
   doc.write(unwrapHtml(text) as string);
 }
 

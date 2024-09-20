@@ -12,7 +12,11 @@ const UNSAFE_SVG_ATTRIBUTES = ['href', 'xlink:href'];
  * Set attribute on SVGElement if the attribute doesn't have security
  * implications. If the attribute can potentially cause XSS, throw an error.
  */
-export function setAttribute(svg: SVGElement, attr: string, value: string) {
+export function setAttribute(
+  svg: SVGElement,
+  attr: string,
+  value: string,
+): void {
   const attrLower = attr.toLowerCase();
   if (
     UNSAFE_SVG_ATTRIBUTES.indexOf(attrLower) !== -1 ||

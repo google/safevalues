@@ -12,7 +12,7 @@ import '../../environment/dev.js';
  * javascript: and data: URL are blocked as they can lead to XSS and the <use>
  * element only loads resources same-origin.
  */
-export function setHref(useEl: SVGUseElement, url: string) {
+export function setHref(useEl: SVGUseElement, url: string): void {
   const scheme = extractScheme(url);
   if (scheme === 'javascript:' || scheme === 'data:') {
     if (process.env.NODE_ENV !== 'production') {

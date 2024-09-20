@@ -11,7 +11,7 @@
 /**
  * Allowlist of CSS properties.
  */
-export const CSS_PROPERTY_ALLOWLIST = new Set<string>([
+export const CSS_PROPERTY_ALLOWLIST: Set<string> = new Set([
   'accent-color',
   // 'additive-symbols', -> only valid in @counter-style, which we disallow
   'align-content',
@@ -479,7 +479,7 @@ export const CSS_PROPERTY_ALLOWLIST = new Set<string>([
 /**
  * Allowlist of CSS functions.
  */
-export const CSS_FUNCTION_ALLOWLIST = new Set<string>([
+export const CSS_FUNCTION_ALLOWLIST: Set<string> = new Set([
   // go/keep-sorted start
   'alpha',
   'cubic-bezier',

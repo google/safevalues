@@ -68,9 +68,9 @@ export class HtmlSanitizerImpl implements HtmlSanitizer, CssSanitizer {
   constructor(
     private readonly sanitizerTable: SanitizerTable,
     token: object,
-    private readonly styleElementSanitizer?: CssSanitizationFn,
-    private readonly styleAttributeSanitizer?: CssSanitizationFn,
-    private readonly resourceUrlPolicy?: ResourceUrlPolicy,
+    private readonly styleElementSanitizer?: CssSanitizationFn | undefined,
+    private readonly styleAttributeSanitizer?: CssSanitizationFn | undefined,
+    private readonly resourceUrlPolicy?: ResourceUrlPolicy | undefined,
   ) {
     ensureTokenIsValid(token);
   }

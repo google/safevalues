@@ -13,6 +13,6 @@ import {
 export function setTextContent(
   elem: HTMLStyleElement,
   safeStyleSheet: SafeStyleSheet,
-) {
+): void {
   elem.textContent = unwrapStyleSheet(safeStyleSheet);
 }
