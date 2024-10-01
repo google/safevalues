@@ -13,8 +13,7 @@ import {getScriptNonce} from '../globals/window.js';
 
 /** Propagates CSP nonce to dynamically created scripts. */
 function setNonceForScriptElement(script: HTMLScriptElement) {
-  const win = script.ownerDocument && script.ownerDocument.defaultView;
-  const nonce = getScriptNonce(win || window);
+  const nonce = getScriptNonce(script.ownerDocument || document);
   if (nonce) {
     script.setAttribute('nonce', nonce);
   }
