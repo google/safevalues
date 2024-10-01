@@ -222,6 +222,11 @@ describe('html_builders', () => {
           crossorigin: 'anonymous',
         }).toString(),
       ).toEqual('<script src="//abc&lt;" crossorigin="anonymous"></script>');
+      expect(
+        scriptUrlToHtml(testonlyResourceUrl('foo'), {
+          attributionSrc: '',
+        }).toString(),
+      ).toEqual('<script src="foo" attributionsrc=""></script>');
     });
 
     it('escapes attributes', () => {

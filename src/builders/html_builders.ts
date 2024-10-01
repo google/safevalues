@@ -95,6 +95,7 @@ export function scriptUrlToHtml(
   src: TrustedResourceUrl,
   options?: {
     async?: boolean;
+    attributionSrc?: string;
     customElement?: string;
     defer?: boolean;
     id?: string;
@@ -107,6 +108,9 @@ export function scriptUrlToHtml(
   let stringTag = `<script src="${htmlEscapeToString(unwrappedSrc)}"`;
   if (options?.async) {
     stringTag += ' async';
+  }
+  if (options?.attributionSrc !== undefined) {
+    stringTag += ` attributionsrc="${htmlEscapeToString(options.attributionSrc)}"`;
   }
   if (options?.customElement) {
     stringTag += ` custom-element="${htmlEscapeToString(
