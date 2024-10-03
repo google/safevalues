@@ -26,10 +26,10 @@ removed completely.
 
 ```typescript
 import {legacyUnsafeResourceUrl} from 'safevalues/restricted/legacy';
-import {safeScriptEl} from 'safevalues/dom';
+import {setScriptSrc} from 'safevalues/dom';
 
 // TODO: move legacy conversion to caller
-safeScriptEl.setSrc(script,legacyUnsafeResourceUrl(url));
+setScriptSrc(script,legacyUnsafeResourceUrl(url));
 ```
 
 ## Reviewed conversions
@@ -48,7 +48,7 @@ If you are using tsec however, you can directly use a reviewed conversion which
 will let you create a polyfilled value & force you to provide a justification.
 
 ```typescript
-import {safeScriptEl} from 'safevalues/dom';
+import {setScriptSrc} from 'safevalues/dom';
 import {scriptSafeByReview} from 'safevalues/restricted/reviewed';
 
 if (document.domain === '') {
@@ -56,6 +56,6 @@ if (document.domain === '') {
         userInput,
         {justification: `Even though the input is user controller, the wrapping if statement
          ensures that this code is only ever run in a sandboxed origin`});
-    safeScriptEl.setSrc(scriptEl, scriptText);
+    setScriptSrc(scriptEl, scriptText);
 }
 ```

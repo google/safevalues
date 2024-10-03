@@ -26,9 +26,9 @@ element.textContent = value;
 #### Safe alternative: Use a safe setter
 
 ```typescript {.good}
-import {safeElement} from 'safevalues/dom';
+import {setElementInnerHtml} from 'safevalues/dom';
 
-safeElement.setInnerHtml(element, safeHtmlValue);
+setElementInnerHtml(element, safeHtmlValue);
 ```
 
 ### Assigning to `HTMLElement#outerHTML` <!-- DO NOT DELETE: ban-element-outerhtml-assignments -->
@@ -42,9 +42,9 @@ element.outerHTML = value;
 #### Safe alternative
 
 ```typescript {.good}
-import {safeElement} from 'safevalues/dom';
+import {setElementOuterHtml} from 'safevalues/dom';
 
-safeElement.setOuterHtml(element, safeHtmlValue);
+setElementOuterHtml(element, safeHtmlValue);
 ```
 
 ### Assigning to `HTMLIframeElement#srcdoc` <!-- DO NOT DELETE: ban-iframe-srcdoc-assignments -->
@@ -58,9 +58,9 @@ iframe.srcdoc = value;
 #### Safe alternative: Use a general-purpose safe setter
 
 ```typescript {.good}
-import {safeIframeEl} from 'safevalues/dom';
+import {setIframeSrcdoc} from 'safevalues/dom';
 
-safeIframeEl.setSrcdoc(iframe, safeHtmlValue);
+setIframeSrcdoc(iframe, safeHtmlValue);
 ```
 
 ### Calling `HTMLElement#insertAdjacentHTML` <!-- DO NOT DELETE: ban-element-insertadjacenthtml -->
@@ -83,9 +83,9 @@ element.insertAdjacentText('beforeend', value);
 #### Safe alternative: Use a safe setter
 
 ```typescript {.good}
-import {safeElement} from 'safevalues/dom';
+import {elementInsertAdjacentHTML} from 'safevalues/dom';
 
-safeElement.insertAdjacentHTML(element, 'beforeend', safeHtmlValue);
+elementInsertAdjacentHTML(element, 'beforeend', safeHtmlValue);
 ```
 
 ### Calling `Document#write` <!-- DO NOT DELETE: ban-document-write-calls -->
@@ -99,26 +99,22 @@ document.write(value);
 #### Safe alternative
 
 ```typescript {.good}
-import {safeDocument} from 'safevalues/dom';
+import {documentWrite} from 'safevalues/dom';
 
-safeDocument.write(document, safeHtmlValue);
+documentWrite(document, safeHtmlValue);
 ```
 
 ### Calling `Document#writeln` <!-- DO NOT DELETE: ban-document-writeln-calls -->
 
 #### Risky code
 
-```typescript {.bad}
-document.writeln(value);
-```
+safevalues does not have a safe alternative for `writeln`. If you need such an
+API, please file a feature request to safehtml-team@.
 
 #### Safe alternative
 
-```typescript {.good}
-import {safeDocument} from 'safevalues/dom';
-
-safeDocument.writeln(document, safeHtmlValue);
-```
+safevalues does not have a safe alternative for `writeln`. If you need such an
+API, please file a feature request to safehtml-team@. ```
 
 ### Calling `DOMParser#parseFromString` <!-- DO NOT DELETE: ban-domparser-parsefromstring -->
 
@@ -132,10 +128,10 @@ parser.parseFromString(value, mimeType);
 #### Safe alternative
 
 ```typescript {.good}
-import {safeDomParser} from 'safevalues/dom';
+import {domParserParseFromString} from 'safevalues/dom';
 
 const parser = new DOMParser();
-safeDomParser.parseFromString(parser, safeHtmlValue, mimeType);
+domParserParseFromString(parser, safeHtmlValue, mimeType);
 ```
 
 ### Calling `Range#createContextualFragment` <!-- DO NOT DELETE: ban-range-createcontextualfragment -->
@@ -150,10 +146,10 @@ range.createContextualFragment(value);
 #### Safe alternative
 
 ```typescript {.good}
-import {safeRange} from 'safevalues/dom';
+import {rangeCreateContextualFragment} from 'safevalues/dom';
 
 const range = document.createRange();
-safeRange.createContextualFragment(range, safeHtmlValue);
+rangeCreateContextualFragment(range, safeHtmlValue);
 ```
 
 ## TrustedResourceUrl: Loading code <!-- DO NOT DELETE: trustedresourceurl -->
@@ -175,9 +171,9 @@ scriptEl.src = url;
 #### Safe alternative
 
 ```typescript {.good}
-import {safeScriptEl} from 'safevalues/dom';
+import {setScriptSrc} from 'safevalues/dom';
 
-safeScriptEl.setSrc(scriptEl, trustedResourceUrl);
+setScriptSrc(scriptEl, trustedResourceUrl);
 ```
 
 ### Assigning to `HTMLObjectElement#data` <!-- DO NOT DELETE: ban-object-data-assignments -->
@@ -191,9 +187,9 @@ objectEl.data = url;
 #### Safe alternative
 
 ```typescript {.good}
-import {safeObjectEl} from 'safevalues/dom';
+import {setObjectData} from 'safevalues/dom';
 
-safeObjectEl.setData(objectEl, trustedResourceUrl);
+setObjectData(objectEl, trustedResourceUrl);
 ```
 
 ### Assigning to `HTMLIFrameElement#src` <!-- DO NOT DELETE: ban-iframe-src-assignments -->
@@ -207,9 +203,9 @@ iframe.src = url;
 #### Safe alternative: Use a general-purpose safe setter
 
 ```typescript {.good}
-import {safeIframeEl} from 'safevalues/dom';
+import {setIframeSrc} from 'safevalues/dom';
 
-safeIframeEl.setSrc(iframe, trustedResourceUrl);
+setIframeSrc(iframe, trustedResourceUrl);
 ```
 
 ### Calling the constructor of `Worker` or `SharedWorker` <!-- DO NOT DELETE: ban-worker-calls -->
@@ -224,10 +220,10 @@ new SharedWorker(url);
 #### Safe alternative
 
 ```typescript {.good}
-import {safeWorker} from 'safevalues/dom';
+import {createWorker, createSharedWorker} from 'safevalues/dom';
 
-safeWorker.create(trustedResourceUrl);
-safeWorker.createShared(trustedResourceUrl);
+createWorker(trustedResourceUrl);
+createSharedWorker(trustedResourceUrl);
 ```
 
 ### Calling `importScripts` in a worker scope <!-- DO NOT DELETE: ban-worker-importscripts -->
@@ -241,9 +237,9 @@ self.importScripts(url);
 #### Safe alternative
 
 ```typescript {.good}
-import {safeWorker} from 'safevalues/dom';
+import {workerGlobalScopeImportScripts} from 'safevalues/dom';
 
-safeWorker.importScripts(self, trustedResourceUrl);
+workerGlobalScopeImportScripts(self, trustedResourceUrl);
 ```
 
 ### Calling `ServiceWorkerContainer#register` <!-- DO NOT DELETE: ban-serviceworkercontainer-register -->
@@ -257,9 +253,9 @@ serviceWorkerContainer.register(url);
 #### Safe alternative
 
 ```typescript {.good}
-import {safeServiceWorkerContainer} from 'safevalues/dom';
+import {serviceWorkerContainerRegister} from 'safevalues/dom';
 
-safeServiceWorkerContainer.register(self, trustedResourceUrl);
+serviceWorkerContainerRegister(self, trustedResourceUrl);
 ```
 
 ## SafeScript: Executable code snippets
@@ -268,16 +264,16 @@ The `safeScriptValue` variable in the following examples is a `SafeScript`
 instance. To learn how to build a `SafeScript` instance, see the
 [`SafeScript` documentation](http://go/safehtmltypes?polyglot=typescript#safescript).
 
-Only use the `safevalues/dom` API `safeScriptEl.setTextContent` to set the text
-content of a \<script\> tag, instead of DOM APIs like `text`, `textContent`,
+Only use the `safevalues/dom` API `setScriptTextContent` to set the text content
+of a \<script\> tag, instead of DOM APIs like `text`, `textContent`,
 `innerHTML`, `innerText`, or `appendChild`. The safe API prompts you to use a
 `SafeScript` value for executable content and propagates security nonces so that
 CSP does not block script execution.
 
 ```typescript {.good}
-import {safeScriptEl} from 'safevalues/dom'
+import {setScriptTextContent} from 'safevalues/dom'
 
-safeScriptEl.setTextContent(script, safeScriptValue);
+setScriptTextContent(script, safeScriptValue);
 ```
 
 ### Calls to `eval`
@@ -290,13 +286,13 @@ is hard to get right and prone to problems.
 
 There might be a few cases where dynamically evaluating code is inevitable. If
 your code falls into one of these cases, make sure to convert the content you
-are evaluating to `SafeScript` and use `safeGlobal.globalEval` to avoid using
-`eval` directly.
+are evaluating to `SafeScript` and use `globalEval` to avoid using `eval`
+directly.
 
 ```typescript {.good}
-import {safeGlobal} from 'safevalues/dom'
+import {globalEval} from 'safevalues/dom'
 
-safeGlobal.globalEval(safeScriptValue);
+globalEval(safeScriptValue);
 ```
 
 `setTimeout` and `setInterval` can also achieve `eval`-like effects when they
@@ -344,10 +340,10 @@ following options.
     Use this instead:
 
     ```typescript {.good}
-    import {safeAnchorEl} from 'safevalues/dom';
+    import {setAnchorHref} from 'safevalues/dom';
 
     elem.tabindex = 1;
-    safeAnchorEl.setHref(anchor, safeUrl`https://example.com`);
+    setAnchorHref(anchor, safeUrl`https://example.com`);
     ```
 
 -   To set attributes whose names are not statically known (e.g. for ARIA, some
@@ -357,12 +353,12 @@ following options.
     that your code is not setting any dangerous attributes at run time.
 
     ```typescript {.good}
-    import {safeElement} from 'safevalues/dom';
+    import {setElementPrefixedAttribute} from 'safevalues/dom';
     import {safeAttrPrefix} from 'safevalues';
 
     // In this example, `attr` can be any name starting with "aria-" or "role", but nothing else.
     // If you try to set an attribute with other prefixes, the setter will throw an exception.
-    safeElement.setPrefixedAttribute(
+    setElementPrefixedAttribute(
         [safeAttrPrefix`aria-`, safeAttrPrefix`role`], elem, attr, value);
     ```
 
