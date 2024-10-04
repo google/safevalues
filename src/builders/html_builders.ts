@@ -181,7 +181,7 @@ export function doctypeHtml(): SafeHtml {
 
 /**
  * Non-exported version of `nodeToHtml`, with an explicit temporary root to
- * accomodate for the sanitizer's user case.
+ * accommodate for the sanitizer's user case.
  */
 export function nodeToHtmlInternal(
   node: Node,
