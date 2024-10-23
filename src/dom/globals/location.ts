@@ -13,7 +13,7 @@ import {unwrapUrlOrSanitize, Url} from '../../builders/url_builders.js';
 export function setHref(loc: Location, url: Url): void {
   const sanitizedUrl = unwrapUrlOrSanitize(url);
   if (sanitizedUrl !== undefined) {
-    loc.href = sanitizedUrl;
+    mockableLocation.setHref(loc, sanitizedUrl);
   }
 }
 
@@ -24,7 +24,7 @@ export function setHref(loc: Location, url: Url): void {
 export function replace(loc: Location, url: Url): void {
   const sanitizedUrl = unwrapUrlOrSanitize(url);
   if (sanitizedUrl !== undefined) {
-    loc.replace(sanitizedUrl);
+    mockableLocation.replace(loc, sanitizedUrl);
   }
 }
 
@@ -35,6 +35,26 @@ export function replace(loc: Location, url: Url): void {
 export function assign(loc: Location, url: Url): void {
   const sanitizedUrl = unwrapUrlOrSanitize(url);
   if (sanitizedUrl !== undefined) {
-    loc.assign(sanitizedUrl);
+    mockableLocation.assign(loc, sanitizedUrl);
   }
 }
+
+/**
+ * Set of wrappers around the location object for tests to observe and mock it.
+ * Window.location is a read-only property. Users used to mock it with our
+ * former exports like safeLocation. This is not possible anymore now that
+ * functions are directly exported on the module.
+ * Ideally, we wouldn't provide this. It just happens that the safe wrappers are
+ * a handy plug-in point for mocks...
+ */
+const mockableLocation = {
+  setHref(loc: Location, url: string) {
+    loc.href = url;
+  },
+  replace(loc: Location, url: string) {
+    loc.replace(url);
+  },
+  assign(loc: Location, url: string) {
+    loc.assign(url);
+  },
+};
