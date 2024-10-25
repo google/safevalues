@@ -36,7 +36,10 @@ export * as safeWindow from './globals/window.js';
 export * as safeWorker from './globals/worker.js';
 
 // Re-export functions with new names that don't conflict with browser APIs.
-export {setHref as setAnchorHref} from './elements/anchor.js';
+export {
+  setHref as setAnchorHref,
+  setHrefLite as setAnchorHrefLite,
+} from './elements/anchor.js';
 export {setHref as setAreaHref} from './elements/area.js';
 export {setHref as setBaseHref} from './elements/base.js';
 export {setFormaction as setButtonFormaction} from './elements/button.js';
@@ -52,6 +55,7 @@ export {setAction as setFormAction} from './elements/form.js';
 export {
   setSrc as setIframeSrc,
   setSrcdoc as setIframeSrcdoc,
+  setSrcdocWithIntent as setIframeSrcdocWithIntent,
 } from './elements/iframe.js';
 export {setFormaction as setInputFormaction} from './elements/input.js';
 export {
@@ -76,7 +80,11 @@ export {
   parseHtml as domParserParseHtml,
   parseXml as domParserParseXml,
 } from './globals/dom_parser.js';
-export {fetchResourceUrl, globalEval} from './globals/global.js';
+export {
+  fetchResourceUrl,
+  globalEval,
+  type SafeResponse,
+} from './globals/global.js';
 export {
   assign as locationAssign,
   replace as locationReplace,
