@@ -17,7 +17,10 @@ import {CssSanitizerBuilder} from './html_sanitizer_builder.js';
 const defaultCssSanitizer = /* #__PURE__ */ pure(() =>
   new CssSanitizerBuilder().build(),
 );
-/** Sanitizes untrusted CSS using the default sanitizer configuration. */
+/**
+ * Sanitizes untrusted CSS using the default sanitizer configuration.
+ *
+ */
 export function sanitizeHtmlWithCss(css: string): DocumentFragment {
   return defaultCssSanitizer.sanitizeToFragment(css);
 }
