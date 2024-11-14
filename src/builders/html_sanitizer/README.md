@@ -41,13 +41,13 @@ All sanitizer instances (default and custom built) expose 3 methods:
 
 ```
 import {sanitizeHtml} from 'safevalues';
-import {safeDocument} from 'safevalues/dom';
+import {documentWrite} from 'safevalues/dom';
 
 /**
  * Shows an HTML error snippet coming from an untrusted source.
  */
 function showError(errorSnippet: string) {
-  safeDocument.write(document, sanitizeHtml(`<div>Reported error:<br> ${errorSnippet}<div>`));
+  documentWrite(document, sanitizeHtml(`<div>Reported error:<br> ${errorSnippet}<div>`));
 }
 ```
 

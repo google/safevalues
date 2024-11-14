@@ -5,7 +5,7 @@
  */
 
 import {htmlEscape} from 'safevalues';
-import {safeElement} from 'safevalues/dom';
+import {setElementInnerHtml} from 'safevalues/dom';
 import {
   htmlSafeByReview,
   styleSheetSafeByReview,
@@ -35,7 +35,7 @@ describe('safevalues/restricted/reviewed', () => {
 describe('safevalues/dom', () => {
   it('can be referenced', () => {
     const e = document.createElement('div');
-    safeElement.setInnerHtml(
+    setElementInnerHtml(
       e,
       htmlSafeByReview('<p>hello</p>', {justification: 'test'}),
     );

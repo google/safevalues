@@ -141,11 +141,11 @@ provide as they don't require you to cast the value.
 
 ```typescript
 import {sanitizeHtml} from 'safevalues';
-import {safeElement} from 'safevalues/dom';
+import {setElementInnerHtml} from 'safevalues/dom';
 
 const el = document.createElement('div');
 const html = sanitizeHtml('<article>my post <script>alert(0)</script></article>');
-safeElement.setInnerHtml(el, html);  // Trusted Type and tsec compatible
+setElementInnerHtml(el, html);  // Trusted Type and tsec compatible
 ```
 
 `safevalues/dom` is Trusted Type compatible, and tsec compatible.
@@ -166,12 +166,12 @@ exercising navigations in tests. They improve confidence that your app will be
 compatible with Trusted Types and CSP's `javascript:` navigation protections.
 
 ```typescript
-import {safeLocation} from 'safevalues/dom';
+import {setLocationHref} from 'safevalues/dom';
 
 let userControlledUrl = 'https://github.com/google/safevalues';
-safeLocation.setHref(document.location, userControlledUrl);  // OK
+setLocationHref(document.location, userControlledUrl);  // OK
 userControlledUrl = 'javascript:evil()';
-safeLocation.setHref(document.location, userControlledUrl);  // Blocked
+setLocationHref(document.location, userControlledUrl);  // Blocked
 ```
 
 `tsec` will - in the future - enforce that all DOM URL sinks are accessed using

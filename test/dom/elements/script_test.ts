@@ -6,7 +6,7 @@
 
 import {trustedResourceUrl} from '../../../src/builders/resource_url_builders';
 import {safeScript} from '../../../src/builders/script_builders';
-import {safeDocument} from '../../../src/dom/index';
+import {documentWrite} from '../../../src/dom/index';
 import {testonlyHtml} from '../../testing/conversions';
 
 import * as safeScriptEl from '../../../src/dom/elements/script';
@@ -87,7 +87,7 @@ describe('safeScriptEl', () => {
       const iframe = document.createElement('iframe');
       document.body.appendChild(iframe);
       const iframeDocument = iframe.contentWindow!.document;
-      safeDocument.write(
+      documentWrite(
         iframeDocument,
         testonlyHtml(`<script nonce="${nonceIframe}"><script>`),
       );
