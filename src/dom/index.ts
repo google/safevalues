@@ -17,7 +17,6 @@ export * as safeFormEl from './elements/form.js';
 export * as safeIframeEl from './elements/iframe.js';
 export * as safeInputEl from './elements/input.js';
 export * as safeLinkEl from './elements/link.js';
-export * as safeObjectEl from './elements/object.js';
 export * as safeScriptEl from './elements/script.js';
 export * as safeStyleEl from './elements/style.js';
 export * as safeDomParser from './globals/dom_parser.js';
