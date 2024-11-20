@@ -21,7 +21,6 @@ export * as safeScriptEl from './elements/script.js';
 export * as safeStyleEl from './elements/style.js';
 export * as safeDomParser from './globals/dom_parser.js';
 export * as safeLocation from './globals/location.js';
-export * as safeServiceWorkerContainer from './globals/service_worker_container.js';
 export * as safeUrl from './globals/url.js';
 export * as safeWindow from './globals/window.js';
 export * as safeWorker from './globals/worker.js';
