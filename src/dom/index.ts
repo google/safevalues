@@ -9,22 +9,6 @@
  * a clearly defined interface.
  */
 
-// Old names. These are deprecated. Use the function directly defined on safevalues.dom instead.
-export * as safeAnchorEl from './elements/anchor.js';
-export * as safeButtonEl from './elements/button.js';
-export * as safeElement from './elements/element.js';
-export * as safeFormEl from './elements/form.js';
-export * as safeIframeEl from './elements/iframe.js';
-export * as safeInputEl from './elements/input.js';
-export * as safeLinkEl from './elements/link.js';
-export * as safeScriptEl from './elements/script.js';
-export * as safeStyleEl from './elements/style.js';
-export * as safeDomParser from './globals/dom_parser.js';
-export * as safeLocation from './globals/location.js';
-export * as safeUrl from './globals/url.js';
-export * as safeWindow from './globals/window.js';
-export * as safeWorker from './globals/worker.js';
-
 // Re-export functions with new names that don't conflict with browser APIs.
 export {setHref as setAnchorHref} from './elements/anchor.js';
 export {setHref as setAreaHref} from './elements/area.js';
