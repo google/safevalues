@@ -2,7 +2,7 @@
 
 Safevalues is a library to help you prevent Cross-Site Scripting vulnerabilities
 in TypeScript (and JavaScript). It is meant to be used together with
-[tsec](https://github.com/googleinterns/tsec) to provide strong security
+[safety-web](https://github.com/google/safety-web) to provide strong security
 guarantees and help you deploy
 [Trusted Types](https://w3c.github.io/trusted-types/dist/spec/) and
 other CSP restrictions in your applications. Google has used these components
@@ -40,13 +40,14 @@ these sinks.
 ### DOM sink wrappers
 
 To build a Trusted Type-compatible app and surface potential violations at
-compile time, we recommend that you compile your code with
-[tsec](https://github.com/googleinterns/tsec). tsec bans certain DOM APIs.
-`safevalues` defines wrappers around these APIs which lets you assign Trusted
-Types with them.
+compile time, we recommend that you lint your code with
+[safety-web](https://github.com/google/safety-web). safety-web bans certain DOM
+APIs. `safevalues` defines wrappers around these APIs which lets you assign
+Trusted Types with them.
 
 Some wrappers don't require a particular type, but sanitize the argument they
-get before they assign it to the DOM sink (e.g. `safeLocation.setHref`).
+get before they assign it to the DOM sink (e.g. `setLocationHref` from
+`safevalues/dom`).
 
 ### Trusted Type polyfills
 
@@ -71,7 +72,7 @@ See ([#212](https://github.com/google/safevalues/issues/212)).
 
 --------------------------------------------------------------------------------
 
-[Read on](https://github.com/google/safevalues/tree/main/src) about for more
+[Read on](https://github.com/google/safevalues/tree/main/src) for more
 information on our APIs.
 
 ## Disclaimer

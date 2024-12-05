@@ -1,3 +1,9 @@
+/**
+ * @license
+ * Copyright Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import {foo} from './index';
 
 describe('#Foo', () => {

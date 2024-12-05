@@ -6,7 +6,7 @@ Below are all the builders we currently provide.
 
 ### `SafeHtml`
 
-Note: this type aliases the
+Note: This type wraps the
 [TrustedHTML](https://developer.mozilla.org/en-US/docs/Web/API/TrustedHTML)
 Trusted Type.
 
@@ -41,7 +41,7 @@ compatible with `safevalues` like [Lit](https://lit.dev).
 
 ### `SafeScript`
 
-Note: this type aliases the
+Note: This type wraps the
 [TrustedScript](https://developer.mozilla.org/en-US/docs/Web/API/TrustedScript)
 Trusted Type.
 
@@ -60,7 +60,7 @@ const script = safeScript`return this;`;
 
 ### `TrustedResourceUrl`
 
-Note: this type aliases the
+Note: This type wraps the
 [TrustedScriptURL](https://developer.mozilla.org/en-US/docs/Web/API/TrustedScriptURL)
 Trusted Type.
 
@@ -132,8 +132,7 @@ Using Trusted Types in TypeScript still has a limitation as the standard lib has
 [no awareness of Trusted Types](https://github.com/microsoft/TypeScript/issues/30024).
 This means that you cannot assign a Trusted Type value to a sink directly.
 
-While `tsec`
-[can recognise direct assignments to dangerous sinks](https://github.com/google/tsec#writing-trusted-type-compatible-code),
+While `safety-web` can recognise direct assignments to dangerous sinks,
 we recommend using one of the dedicated wrappers from `safevalues/dom` we
 provide as they don't require you to cast the value.
 
@@ -145,10 +144,10 @@ import {setElementInnerHtml} from 'safevalues/dom';
 
 const el = document.createElement('div');
 const html = sanitizeHtml('<article>my post <script>alert(0)</script></article>');
-setElementInnerHtml(el, html);  // Trusted Type and tsec compatible
+setElementInnerHtml(el, html);  // Trusted Type and safety-web compatible
 ```
 
-`safevalues/dom` is Trusted Type compatible, and tsec compatible.
+`safevalues/dom` is Trusted Type compatible, and safety-web compatible.
 
 ### Remove `javascript:` URLs sink assignments
 
@@ -174,8 +173,8 @@ userControlledUrl = 'javascript:evil()';
 setLocationHref(document.location, userControlledUrl);  // Blocked
 ```
 
-`tsec` will - in the future - enforce that all DOM URL sinks are accessed using
-the `safevalues/dom` wrappers.
+`safety-web` will – in the future – provide a rule to enforce that all DOM URL
+sinks are accessed using the `safevalues/dom` wrappers.
 
 ## Reviewed and legacy conversions
 
@@ -187,8 +186,8 @@ particular usage.
 To help with these migrations, we provide two additional sets of functions that
 can reduce the impact of the issues above.
 
-WARNING: Make sure you use `tsec` to keep track of how your code is using these
-functions.
+WARNING: Make sure you use `safety-web` to keep track of how your code is using
+these functions.
 
 More information:
 [Restricted functions documentation](https://github.com/google/safevalues/tree/main/src/restricted).

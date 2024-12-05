@@ -1,7 +1,8 @@
 {
   "name": "safevalues-import",
   "version": "1.0.0",
-  "description": "",
+  "description": "test only project set up with Jest",
+  "license": "Apache-2.0",
   "main": "index.js",
   "scripts": {
     "test": "jest"
@@ -11,7 +12,6 @@
     "url": "git+https://github.com/danrevah/safevalues-import.git"
   },
   "author": "",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/danrevah/safevalues-import/issues"
   },

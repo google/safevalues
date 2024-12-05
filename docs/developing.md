@@ -13,7 +13,7 @@ dedicated `if` statement without other conditions.
 Error messages should only be present in development mode. Use an `if` statement
 to achieve this as follows:
 
-```
+```typescript
 import {process.env.NODE_ENV !== 'production'} from './environment';
 
 let message = '';
@@ -29,7 +29,7 @@ Security and development checks that only involve compile-time assertions or
 values that have no downstream effects should only be present in development
 mode. Use an `if` statement to achieve this as follows:
 
-```
+```typescript
 import {process.env.NODE_ENV !== 'production'} from './environment';
 
 if (process.env.NODE_ENV !== 'production') {

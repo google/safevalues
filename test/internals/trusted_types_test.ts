@@ -12,6 +12,10 @@ import {unwrapHtml} from '../../src/internals/html_impl';
 import {unwrapResourceUrl} from '../../src/internals/resource_url_impl';
 import {unwrapScript} from '../../src/internals/script_impl';
 import {TEST_ONLY} from '../../src/internals/trusted_types';
+import {
+  TrustedTypePolicyFactory,
+  TrustedTypePolicyOptions,
+} from '../../src/internals/trusted_types_typings';
 
 /** A mock TrustedHTML type */
 class MockTrustedHTML {
@@ -39,8 +43,6 @@ class MockTrustedScriptURL {
 
 /** A mock window.trustedTypes based on the mocked Trusted Types from above */
 const mockTrustedTypes = {
-  emptyHTML: new MockTrustedHTML(''),
-  emptyScript: new MockTrustedScript(''),
   createPolicy: (name: string, stringifiers: TrustedTypePolicyOptions) => ({
     name,
     createHTML: (s: string) => new MockTrustedHTML(stringifiers.createHTML!(s)),
@@ -49,56 +51,15 @@ const mockTrustedTypes = {
     createScriptURL: (s: string) =>
       new MockTrustedScriptURL(stringifiers.createScriptURL!(s)),
   }),
-  isHTML: (o: unknown) => o instanceof MockTrustedHTML,
-  isScript: (o: unknown) => o instanceof MockTrustedScript,
-  isScriptURL: (o: unknown) => o instanceof MockTrustedScriptURL,
-};
-
-// Preserve a reference to all objects that we override for our tests.
-const NATIVE_TT = {
-  'trustedTypes': Object.getOwnPropertyDescriptor(window, 'trustedTypes'),
-  'TrustedHTML': Object.getOwnPropertyDescriptor(window, 'TrustedHTML'),
-  'TrustedScript': Object.getOwnPropertyDescriptor(window, 'TrustedScript'),
-  'TrustedScriptURL': Object.getOwnPropertyDescriptor(
-    window,
-    'TrustedScriptURL',
-  ),
-};
-
-/**
- * Sets the globals to mock trustedTypes support or remove support
- * Note that we can't use normal spies here because some of the properties don't
- * have getters or might not exist in some browsers. All we know is that they
- * should be configurable
- */
-function setTrustedTypesSupported(trustedTypesSupported: boolean) {
-  if (trustedTypesSupported) {
-    Object.defineProperties(window, {
-      'trustedTypes': {value: mockTrustedTypes, configurable: true},
-      'TrustedHTML': {value: MockTrustedHTML, configurable: true},
-      'TrustedScript': {value: MockTrustedScript, configurable: true},
-      'TrustedScriptURL': {value: MockTrustedScriptURL, configurable: true},
-    });
-  } else {
-    delete window['trustedTypes' as keyof Window];
-    delete window['TrustedHTML' as keyof Window];
-    delete window['TrustedScript' as keyof Window];
-    delete window['TrustedScriptURL' as keyof Window];
-  }
-}
-
-/** Reset the globals that we replaced to avoid impacting other tests. */
-function resetDefaultTrustedTypesSupport() {
-  for (const [prop, descriptor] of Object.entries(NATIVE_TT)) {
-    if (descriptor === undefined) {
-      delete window[prop as keyof Window];
-    } else {
-      Object.defineProperty(window, prop, descriptor);
-    }
-  }
-}
+} as unknown as TrustedTypePolicyFactory;
 
 describe('Trusted Types in safevalues', () => {
+  beforeAll(() => {
+    // Clear any cached policy created from other tests before running this
+    // test suite.
+    TEST_ONLY.resetDefaults();
+  });
+
   // `usesTrustedTypes` describes behaviour that should be observed when Trusted
   // Types are supported and enabled, and `usesStrings` behaviour when Trusted
   // Types are either not support or not enabled. They are separate functions
@@ -106,6 +67,14 @@ describe('Trusted Types in safevalues', () => {
   // evaluate the four possible states of Trusted Types enabled/disabled in the
   // library, and Trusted Types supported/not supported by the browser.
   const usesTrustedTypes = () => {
+    beforeEach(() => {
+      spyOn(mockTrustedTypes, 'createPolicy').and.callThrough();
+    });
+
+    afterEach(() => {
+      expect(mockTrustedTypes.createPolicy).toHaveBeenCalled();
+    });
+
     it('should be used by SafeHtml', () => {
       const safe = htmlEscape('aaa');
       expect(safe.toString()).toEqual('aaa');
@@ -133,6 +102,10 @@ describe('Trusted Types in safevalues', () => {
   };
 
   const usesStrings = () => {
+    beforeEach(() => {
+      spyOn(mockTrustedTypes, 'createPolicy').and.callThrough();
+    });
+
     afterEach(() => {
       expect(mockTrustedTypes.createPolicy).not.toHaveBeenCalled();
     });
@@ -161,14 +134,11 @@ describe('Trusted Types in safevalues', () => {
 
   describe('when enabled and supported', () => {
     beforeEach(() => {
-      setTrustedTypesSupported(true);
-      TEST_ONLY.resetDefaults();
-      TEST_ONLY.setTrustedTypesPolicyName('safevalues#testing');
-      spyOn(mockTrustedTypes, 'createPolicy').and.callThrough();
+      TEST_ONLY.setTrustedTypes(mockTrustedTypes);
+      TEST_ONLY.setPolicyName('safevalues#testing');
     });
 
     afterEach(() => {
-      resetDefaultTrustedTypesSupport();
       TEST_ONLY.resetDefaults();
     });
 
@@ -177,14 +147,11 @@ describe('Trusted Types in safevalues', () => {
 
   describe('when supported but disabled', () => {
     beforeEach(() => {
-      setTrustedTypesSupported(true);
-      TEST_ONLY.resetDefaults();
-      TEST_ONLY.setTrustedTypesPolicyName('');
-      spyOn(mockTrustedTypes, 'createPolicy').and.callThrough();
+      TEST_ONLY.setTrustedTypes(mockTrustedTypes);
+      TEST_ONLY.setPolicyName('');
     });
 
     afterEach(() => {
-      resetDefaultTrustedTypesSupport();
       TEST_ONLY.resetDefaults();
     });
 
@@ -193,14 +160,11 @@ describe('Trusted Types in safevalues', () => {
 
   describe('when enabled but not supported', () => {
     beforeEach(() => {
-      setTrustedTypesSupported(false);
-      TEST_ONLY.resetDefaults();
-      TEST_ONLY.setTrustedTypesPolicyName('safevalues#testing');
-      spyOn(mockTrustedTypes, 'createPolicy').and.callThrough();
+      TEST_ONLY.setTrustedTypes(undefined);
+      TEST_ONLY.setPolicyName('safevalues#testing');
     });
 
     afterEach(() => {
-      resetDefaultTrustedTypesSupport();
       TEST_ONLY.resetDefaults();
     });
 
@@ -209,14 +173,11 @@ describe('Trusted Types in safevalues', () => {
 
   describe('when disabled and not supported', () => {
     beforeEach(() => {
-      setTrustedTypesSupported(false);
-      TEST_ONLY.resetDefaults();
-      TEST_ONLY.setTrustedTypesPolicyName('');
-      spyOn(mockTrustedTypes, 'createPolicy').and.callThrough();
+      TEST_ONLY.setTrustedTypes(undefined);
+      TEST_ONLY.setPolicyName('');
     });
 
     afterEach(() => {
-      resetDefaultTrustedTypesSupport();
       TEST_ONLY.resetDefaults();
     });
 

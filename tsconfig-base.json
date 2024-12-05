@@ -8,7 +8,6 @@
     "types": [
       "jasmine",
       "node",
-      "trusted-types"
     ],
       "declaration": true,
       "strict": true,

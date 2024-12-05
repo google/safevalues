@@ -4,82 +4,101 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+/** @fileoverview Internal implementations of TrustedResourceUrl. */
+
+import {getPolicy, UnwrapType} from './trusted_types.js';
+import {TrustedScriptURL} from './trusted_types_typings.js';
+
 import '../environment/dev.js';
 
 import {ensureTokenIsValid, secretToken} from './secrets.js';
-import {getTrustedTypes, getTrustedTypesPolicy} from './trusted_types.js';
-
-/**
- * Runtime implementation of `TrustedScriptURL` in browsers that don't support
- * it.
- */
-class ResourceUrlImpl {
-  readonly privateDoNotAccessOrElseWrappedResourceUrl: string;
-
-  constructor(url: string, token: object) {
-    ensureTokenIsValid(token);
-    this.privateDoNotAccessOrElseWrappedResourceUrl = url;
-  }
-
-  toString(): string {
-    return this.privateDoNotAccessOrElseWrappedResourceUrl.toString();
-  }
-}
-
-const GlobalTrustedScriptURL =
-  typeof window !== 'undefined' ? window.TrustedScriptURL : undefined;
 
 /**
  * String that is safe to use in all URL contexts in DOM APIs and HTML
  * documents; even as a reference to resources that may load in the current
  * origin (e.g. scripts and stylesheets).
+ *
+ * @final
  */
-export type TrustedResourceUrl = TrustedScriptURL;
+export class TrustedResourceUrl {
+  private readonly privateDoNotAccessOrElseWrappedResourceUrl:
+    | TrustedScriptURL
+    | string;
 
-/**
- * Also exports the constructor so that instanceof checks work.
- */
-export const TrustedResourceUrl = (GlobalTrustedScriptURL ??
-  ResourceUrlImpl) as unknown as TrustedScriptURL;
+  private constructor(token: object, value: TrustedScriptURL | string) {
+    if (process.env.NODE_ENV !== 'production') {
+      ensureTokenIsValid(token);
+    }
 
-/**
- * Builds a new `TrustedResourceUrl` from the given string, without
- * enforcing safety guarantees. It may cause side effects by creating a Trusted
- * Types policy. This shouldn't be exposed to application developers, and must
- * only be used as a step towards safe builders or safe constants.
- */
-export function createResourceUrlInternal(url: string): TrustedResourceUrl {
-  /** @noinline */
-  const noinlineUrl = url;
-  const trustedScriptURL =
-    getTrustedTypesPolicy()?.createScriptURL(noinlineUrl);
-  return (trustedScriptURL ??
-    new ResourceUrlImpl(noinlineUrl, secretToken)) as TrustedResourceUrl;
+    this.privateDoNotAccessOrElseWrappedResourceUrl = value;
+  }
+
+  toString(): string {
+    // String coercion minimizes code size.
+    // tslint:disable-next-line:restrict-plus-operands
+    return this.privateDoNotAccessOrElseWrappedResourceUrl + '';
+  }
 }
 
 /**
- * Checks if the given value is a `TrustedResourceUrl` instance.
+ * Internal interface for `TrustedResourceUrl`.
+ *
+ * `TrustedResourceUrl` should remain an opaque type to users & they should never be able
+ * to instantiate it directly, but we still need to create values.
+ *
+ * There are multiple ways to do this, but the following is the one that
+ * minimizes code size.
  */
-export function isResourceUrl(value: unknown): value is TrustedResourceUrl {
-  return (
-    getTrustedTypes()?.isScriptURL(value) || value instanceof ResourceUrlImpl
+interface ResourceUrlImpl {
+  privateDoNotAccessOrElseWrappedResourceUrl: TrustedScriptURL | string;
+}
+const ResourceUrlImpl = TrustedResourceUrl as {
+  new (token: object, value: TrustedScriptURL | string): TrustedResourceUrl;
+};
+
+function constructResourceUrl(
+  value: TrustedScriptURL | string,
+): TrustedResourceUrl {
+  return new ResourceUrlImpl(secretToken, value);
+}
+
+/**
+ * Builds a new `TrustedResourceUrl` from the given string, without enforcing
+ * safety guarantees. It may cause side effects by creating a Trusted Types
+ * policy. This shouldn't be exposed to application developers, and must only be
+ * used as a step towards safe builders or safe constants.
+ */
+export function createResourceUrlInternal(value: string): TrustedResourceUrl {
+  // Inlining this variable can cause large codesize increases when it is a
+  // large constant string. See sizetests/examples/constants for an example.
+  /** @noinline */
+  const noinlineValue = value;
+  const policy = getPolicy();
+  return constructResourceUrl(
+    policy ? policy.createScriptURL(noinlineValue) : noinlineValue,
   );
+}
+
+/** Checks if the given value is a `TrustedResourceUrl` instance */
+export function isResourceUrl(value: unknown): value is TrustedResourceUrl {
+  return value instanceof TrustedResourceUrl;
 }
 
 /**
  * Returns the value of the passed `TrustedResourceUrl` object while ensuring it
  * has the correct type.
+ * Using this function directly is not common. Safe types are not meant to be
+ * unwrapped, but rather passed to other APIs that consume them, like the DOM
+ * wrappers in safevalues/dom.
  *
- * Returns a native `TrustedScriptURL` or a string if Trusted Types are
- * disabled.
+ * Returns a native `TrustedScriptURL` instance typed as {toString(): string} or a string if Trusted Types are disabled.
  */
 export function unwrapResourceUrl(
   value: TrustedResourceUrl,
-): TrustedScriptURL | string {
-  if (getTrustedTypes()?.isScriptURL(value)) {
-    return value;
-  } else if (value instanceof ResourceUrlImpl) {
-    return value.privateDoNotAccessOrElseWrappedResourceUrl;
+): UnwrapType<TrustedScriptURL> | string {
+  if (isResourceUrl(value)) {
+    return (value as unknown as ResourceUrlImpl)
+      .privateDoNotAccessOrElseWrappedResourceUrl;
   } else {
     let message = '';
     if (process.env.NODE_ENV !== 'production') {

@@ -1,7 +1,5 @@
 # HTML Sanitizer
 
-[TOC]
-
 ## Overview
 
 This directory contains the implementation of an HTML sanitizer which is
@@ -39,7 +37,7 @@ All sanitizer instances (default and custom built) expose 3 methods:
 
 ## Default sanitizer usage
 
-```
+```typescript
 import {sanitizeHtml} from 'safevalues';
 import {documentWrite} from 'safevalues/dom';
 
