@@ -50,12 +50,12 @@ class CssSanitizer {
   }
 
   private getStyleSheet(cssText: string): CSSStyleSheet {
-    const style = this.inertDocument.createElement('style');
-    const safeStyle = createStyleSheetInternal(cssText);
-    setTextContent(style, safeStyle);
-    this.inertDocument.head.appendChild(style);
-    const sheet = style.sheet!; // guaranteed to be non-null
-    style.remove();
+    const styleEl = this.inertDocument.createElement('style');
+    const safeStyleSheet = createStyleSheetInternal(cssText);
+    setTextContent(styleEl, safeStyleSheet);
+    this.inertDocument.head.appendChild(styleEl);
+    const sheet = styleEl.sheet!; // guaranteed to be non-null
+    styleEl.remove();
     return sheet;
   }
 
