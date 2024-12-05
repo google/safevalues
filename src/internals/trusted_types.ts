@@ -70,7 +70,6 @@ function createPolicy(): TrustedTypePolicy | null {
   // called with a name that is already registered, even in report-only mode.
   // Until the API changes, catch the error not to break the applications
   // functionally. In such case, the code will fall back to using strings.
-  // TODO(engels): Check if this code can be simplified now.
   try {
     const identity = (x: string) => x;
     policy = trustedTypesInternal.createPolicy(policyName, {
