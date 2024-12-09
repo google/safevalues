@@ -68,4 +68,5 @@ export {
   createShared as createSharedWorker,
   create as createWorker,
   importScripts as workerGlobalScopeImportScripts,
+  type ScopeWithImportScripts as WorkerGlobalScopeWithImportScripts,
 } from './globals/worker.js';
