@@ -1,13 +1,17 @@
 #!/bin/bash
 # Adds package.json files to cjs/mjs subtrees
 
-echo '{
-    "type": "commonjs"
-}' > dist/cjs/package.json
+VERSION=$(cat VERSION)
 
-echo '{
-    "type": "module"
-}' > dist/mjs/package.json
+echo "{
+    \"type\": \"commonjs\",
+    \"version\": \"${VERSION}\"
+}" > dist/cjs/package.json
+
+echo "{
+    \"type\": \"module\",
+    \"version\": \"${VERSION}\"
+}" > dist/mjs/package.json
 
 rm -rf dist/mjs/test
 mv dist/mjs/src/* dist/mjs
