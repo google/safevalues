@@ -5,7 +5,6 @@
  */
 
 import {secretToken} from '../../../src/internals/secrets';
-import {HTML_TEST_VECTORS} from '../../testing/testvectors/html_test_vectors';
 
 import {
   CssSanitizationFn,
@@ -51,16 +50,46 @@ function sanitizeAssertUnchanged(table: SanitizerTable, html: string): string {
     .toString();
 }
 
-describe('HtmlSanitizer', () => {
-  describe('using test vectors', () => {
-    for (const v of HTML_TEST_VECTORS) {
-      it(`passes testVector[${v.name}]`, () => {
-        const sanitized = sanitizeHtml(v.input).toString();
-        expect(v.acceptable).toContain(sanitized);
-      });
-    }
-  });
+describe('sanitizeHtml', () => {
+  interface TestCase {
+    html: string;
+    expected: string;
+  }
+  const testCases: TestCase[] = [
+    {
+      html: '<a href="javascript:evil()"></a>',
+      expected: '<a href="about:invalid#zClosurez"></a>',
+    },
+    {
+      html: 'ab<script>alert(1)</script>cd',
+      expected: 'abcd',
+    },
+    {
+      html: 'ab<style>*{}</style>cd',
+      expected: 'abcd',
+    },
+    {
+      html: '<iframe src="javascript:evil()"></iframe>',
+      expected: '',
+    },
+    {
+      html: '<img src=1 onerror=alert(1)>',
+      expected: '<img src="1" />',
+    },
+    {
+      html: '<select><style></select><script>alert(1)</script>',
+      expected: '<select></select>',
+    },
+  ];
+  for (const testCase of testCases) {
+    it(`sanitizes ${JSON.stringify(testCase.html)} correctly`, () => {
+      const sanitized = sanitizeHtml(testCase.html).toString();
+      expect(sanitized).toEqual(testCase.expected);
+    });
+  }
+});
 
+describe('HtmlSanitizer', () => {
   it('drops unknown elements', () => {
     const emptyTable = new SanitizerTable(
       new Set(),
