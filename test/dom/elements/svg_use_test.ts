@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import * as svgUseEl from '../../../src/dom/elements/svg_use';
+import {setSvgUseHref} from '../../../src/dom/elements/svg_use';
 
-describe('svgUseEl', () => {
+describe('setSvgUseHref', () => {
   let element: SVGUseElement;
 
   beforeEach(() => {
@@ -14,30 +14,28 @@ describe('svgUseEl', () => {
     element.setAttribute('href', 'unchanged');
   });
 
-  describe('setHref', () => {
-    it('can set inline resource identifiers', () => {
-      svgUseEl.setHref(element, '#MyElement');
-      expect(element.href.baseVal).toEqual('#MyElement');
-    });
+  it('can set inline resource identifiers', () => {
+    setSvgUseHref(element, '#MyElement');
+    expect(element.href.baseVal).toEqual('#MyElement');
+  });
 
-    it('can set relative URLs', () => {
-      svgUseEl.setHref(element, 'image.svg');
-      expect(element.href.baseVal).toEqual('image.svg');
-    });
+  it('can set relative URLs', () => {
+    setSvgUseHref(element, 'image.svg');
+    expect(element.href.baseVal).toEqual('image.svg');
+  });
 
-    it('can set URLs with safe scheme', () => {
-      svgUseEl.setHref(element, 'https://google.com/image.svg');
-      expect(element.href.baseVal).toEqual('https://google.com/image.svg');
-    });
+  it('can set URLs with safe scheme', () => {
+    setSvgUseHref(element, 'https://google.com/image.svg');
+    expect(element.href.baseVal).toEqual('https://google.com/image.svg');
+  });
 
-    it('can not set URLs with data: scheme', () => {
-      svgUseEl.setHref(element, 'data:image/svg+xml,<svg></svg>');
-      expect(element.href.baseVal).toEqual('unchanged');
-    });
+  it('can not set URLs with data: scheme', () => {
+    setSvgUseHref(element, 'data:image/svg+xml,<svg></svg>');
+    expect(element.href.baseVal).toEqual('unchanged');
+  });
 
-    it('can not set URLs with javascript: scheme', () => {
-      svgUseEl.setHref(element, 'javascript:alert(1)');
-      expect(element.href.baseVal).toEqual('unchanged');
-    });
+  it('can not set URLs with javascript: scheme', () => {
+    setSvgUseHref(element, 'javascript:alert(1)');
+    expect(element.href.baseVal).toEqual('unchanged');
   });
 });

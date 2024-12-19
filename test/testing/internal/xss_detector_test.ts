@@ -4,9 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {setSrc, setTextContent} from '../../../src/dom/elements/script';
+import {
+  setScriptSrc,
+  setScriptTextContent,
+} from '../../../src/dom/elements/script';
 import {globalEval} from '../../../src/dom/globals/global';
-import {createContextualFragment} from '../../../src/dom/globals/range';
+import {rangeCreateContextualFragment} from '../../../src/dom/globals/range';
 import {
   testonlyHtml,
   testonlyResourceUrl,
@@ -35,7 +38,7 @@ describe('XSSDetector', () => {
     const detector = new XSSDetector();
 
     const script = document.createElement('script');
-    setTextContent(script, testonlyScript(detector.payload));
+    setScriptTextContent(script, testonlyScript(detector.payload));
     document.body.appendChild(script);
     document.body.removeChild(script);
 
@@ -47,7 +50,7 @@ describe('XSSDetector', () => {
 
     const script = document.createElement('script');
     const url = testonlyResourceUrl(`data:text/javascript,${detector.payload}`);
-    setSrc(script, url);
+    setScriptSrc(script, url);
     document.body.appendChild(script);
     document.body.removeChild(script);
 
@@ -61,7 +64,7 @@ describe('XSSDetector', () => {
 
     const html = testonlyHtml(`<script>${detector.payload}<${'/'}script>`);
     const range = document.createRange();
-    const script = createContextualFragment(range, html).firstChild!;
+    const script = rangeCreateContextualFragment(range, html).firstChild!;
     document.body.appendChild(script);
     document.body.removeChild(script);
 
@@ -78,7 +81,7 @@ describe('XSSDetector', () => {
       `<img src=bad-scheme:_ onerror="${detector.payload}">`,
     );
     const range = document.createRange();
-    createContextualFragment(range, html);
+    rangeCreateContextualFragment(range, html);
 
     expect(detector.wasTriggered()).toBe(false);
 

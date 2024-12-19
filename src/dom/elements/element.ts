@@ -27,7 +27,7 @@ type ScriptOrStyle =
  * Safely set {@link Element.innerHTML} on a given ShadowRoot or Element which
  * may not be a `<script>` element or a `<style>` element.
  */
-export function setInnerHtml<T extends Element | ShadowRoot>(
+export function setElementInnerHtml<T extends Element | ShadowRoot>(
   elOrRoot: Exclude<T, ScriptOrStyle>,
   v: SafeHtml,
 ): void {
@@ -40,7 +40,7 @@ export function setInnerHtml<T extends Element | ShadowRoot>(
 /**
  * Safely set {@link Element.outerHTML} for the given Element.
  */
-export function setOuterHtml(e: Element, v: SafeHtml): void {
+export function setElementOuterHtml(e: Element, v: SafeHtml): void {
   const parent = e.parentElement;
   if (parent !== null) {
     throwIfScriptOrStyle(parent);
@@ -51,7 +51,7 @@ export function setOuterHtml(e: Element, v: SafeHtml): void {
 /**
  * Safely call {@link Element.insertAdjacentHTML} for the given Element.
  */
-export function insertAdjacentHtml<T extends Element>(
+export function elementInsertAdjacentHtml<T extends Element>(
   element: Exclude<T, ScriptOrStyle>,
   position: 'afterbegin' | 'afterend' | 'beforebegin' | 'beforeend',
   v: SafeHtml,
@@ -84,7 +84,7 @@ export function buildPrefixedAttributeSetter(
   const prefixes = [prefix, ...otherPrefixes];
 
   return (e: Element, attr: string, value: string): void => {
-    setPrefixedAttribute(prefixes, e, attr, value);
+    setElementPrefixedAttribute(prefixes, e, attr, value);
   };
 }
 
@@ -94,7 +94,7 @@ export function buildPrefixedAttributeSetter(
  * to be set must has one of the safe prefixes, otherwise the function throws
  * an Error.
  */
-export function setPrefixedAttribute(
+export function setElementPrefixedAttribute(
   attrPrefixes: readonly SafeAttributePrefix[],
   e: Element,
   attr: string,
@@ -123,9 +123,9 @@ function throwIfScriptOrStyle(element: Element): void {
   if (/^(script|style)$/i.test(tagName)) {
     if (process.env.NODE_ENV !== 'production') {
       if (tagName.toLowerCase() === 'script') {
-        message = 'Use safeScriptEl.setTextContent with a SafeScript.';
+        message = 'Use setScriptTextContent with a SafeScript.';
       } else {
-        message = 'Use safeStyleEl.setTextContent with a SafeStyleSheet.';
+        message = 'Use setStyleTextContent with a SafeStyleSheet.';
       }
     }
     throw new Error(message);

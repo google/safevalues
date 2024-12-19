@@ -13,11 +13,12 @@ import {
 // the global scope typing.
 
 /**
- * ScopeWithImportScripts is an {@link WindowOrWorkerGlobalScope} that also
- * has {@link WorkerGlobalScope.importScripts} as {@link WorkerGlobalScope} in
- * some cases cannot be depended on directly.
+ * WorkerGlobalScopeWithImportScripts is an {@link WindowOrWorkerGlobalScope}
+ * that also has {@link WorkerGlobalScope.importScripts} as
+ * {@link WorkerGlobalScope} in some cases cannot be depended on directly.
  */
-export interface ScopeWithImportScripts extends WindowOrWorkerGlobalScope {
+export interface WorkerGlobalScopeWithImportScripts
+  extends WindowOrWorkerGlobalScope {
   importScripts: (...url: string[]) => void;
 }
 
@@ -26,17 +27,17 @@ export interface ScopeWithImportScripts extends WindowOrWorkerGlobalScope {
  *
  * Example usage:
  *   const trustedResourceUrl = trustedResourceUrl`/safe_script.js`;
- *   safedom.safeWorker.create(trustedResourceUrl);
+ *   createWorker(trustedResourceUrl);
  * which is a safe alternative to
  *   new Worker(url);
  * The latter can result in loading untrusted code.
  */
-export function create(url: TrustedResourceUrl, options?: {}): Worker {
+export function createWorker(url: TrustedResourceUrl, options?: {}): Worker {
   return new Worker(unwrapResourceUrl(url) as string, options);
 }
 
 /** Safely creates a shared Web Worker. */
-export function createShared(
+export function createSharedWorker(
   url: TrustedResourceUrl,
   options?: string | WorkerOptions,
 ): SharedWorker {
@@ -44,8 +45,8 @@ export function createShared(
 }
 
 /** Safely calls importScripts */
-export function importScripts(
-  scope: ScopeWithImportScripts,
+export function workerGlobalScopeImportScripts(
+  scope: WorkerGlobalScopeWithImportScripts,
   ...urls: TrustedResourceUrl[]
 ): void {
   scope.importScripts(...urls.map((url) => unwrapResourceUrl(url) as string));

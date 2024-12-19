@@ -17,7 +17,7 @@
  *    that bug and possibly other ones.
  */
 
-import {setTextContent} from '../../../dom/elements/style.js';
+import {setStyleTextContent} from '../../../dom/elements/style.js';
 import {createStyleSheetInternal} from '../../../internals/style_sheet_impl.js';
 import {
   ResourceUrlPolicy,
@@ -52,7 +52,7 @@ class CssSanitizer {
   private getStyleSheet(cssText: string): CSSStyleSheet {
     const styleEl = this.inertDocument.createElement('style');
     const safeStyleSheet = createStyleSheetInternal(cssText);
-    setTextContent(styleEl, safeStyleSheet);
+    setStyleTextContent(styleEl, safeStyleSheet);
     this.inertDocument.head.appendChild(styleEl);
     const sheet = styleEl.sheet!; // guaranteed to be non-null
     styleEl.remove();

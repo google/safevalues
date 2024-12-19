@@ -12,7 +12,7 @@ import {
 /**
  * Sets the Src attribute from the given SafeUrl.
  */
-export function setSrc(
+export function setEmbedSrc(
   embedEl: HTMLEmbedElement,
   url: TrustedResourceUrl,
 ): void {
