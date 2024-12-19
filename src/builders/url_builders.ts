@@ -72,6 +72,21 @@ export function sanitizeJavaScriptUrl(url: string): string | undefined {
 }
 
 /**
+ * Sanitizes a URL by blocking javascript: URLs.
+ *
+ * This function is a temporary solution to refactor SafeUrl builders that can
+ * bless javascript: URLs as SafeUrl. It sanitizes the URL and returns an
+ * innocuous URL if the URL is sanitized away. This is part of go/safeurl-deletion-steps.
+ */
+export function sanitizeUrlForMigration(url: string): SafeUrl {
+  const sanitizedUrl = sanitizeJavaScriptUrl(url);
+  if (sanitizedUrl === undefined) {
+    return INNOCUOUS_URL;
+  }
+  return createUrlInternal(sanitizedUrl);
+}
+
+/**
  * Type alias for URLs passed to DOM sink wrappers.
  */
 export type Url = string;
