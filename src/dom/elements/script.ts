@@ -21,7 +21,7 @@ function setNonceForScriptElement(script: HTMLScriptElement) {
 }
 
 /** Sets textContent from the given SafeScript. */
-export function setTextContent(
+export function setScriptTextContent(
   script: HTMLScriptElement,
   v: SafeScript,
   options?: {omitNonce?: boolean},
@@ -32,7 +32,7 @@ export function setTextContent(
 }
 
 /** Sets the Src attribute using a TrustedResourceUrl */
-export function setSrc(
+export function setScriptSrc(
   script: HTMLScriptElement,
   v: TrustedResourceUrl,
   options?: {omitNonce?: boolean},

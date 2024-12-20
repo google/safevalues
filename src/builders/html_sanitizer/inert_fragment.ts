@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {createContextualFragment} from '../../dom/globals/range.js';
+import {rangeCreateContextualFragment} from '../../dom/globals/range.js';
 import '../../environment/dev.js';
 import {createHtmlInternal} from '../../internals/html_impl.js';
 
@@ -32,5 +32,5 @@ export function createInertFragment(
   // further process and is never returned directly to the caller. We can't use
   // a reviewed conversion in order to avoid an import loop.
   const temporarySafeHtml = createHtmlInternal(dirtyHtml);
-  return createContextualFragment(range, temporarySafeHtml);
+  return rangeCreateContextualFragment(range, temporarySafeHtml);
 }

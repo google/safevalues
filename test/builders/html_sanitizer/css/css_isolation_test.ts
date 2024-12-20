@@ -5,15 +5,15 @@
  */
 
 import {CSS_ISOLATION_PROPERTIES} from '../../../../src/builders/html_sanitizer/css/css_isolation';
-import {setInnerHtml} from '../../../../src/dom/elements/element';
-import {setSrcdoc} from '../../../../src/dom/elements/iframe';
+import {setElementInnerHtml} from '../../../../src/dom/elements/element';
+import {setIframeSrcdoc} from '../../../../src/dom/elements/iframe';
 import {SafeHtml} from '../../../../src/internals/html_impl';
 import {testonlyHtml} from '../../../testing/conversions';
 
 async function createIframe(content: SafeHtml): Promise<HTMLIFrameElement> {
   const iframe = document.createElement('iframe');
   iframe.id = 'safevalues-test-iframe';
-  setSrcdoc(iframe, content);
+  setIframeSrcdoc(iframe, content);
   const iframeLoaded = new Promise((resolve) => {
     iframe.addEventListener('load', resolve, {once: true});
   });
@@ -120,7 +120,7 @@ describe('CSS_ISOLATION_PROPERTIES', () => {
     // without vertical-align:top. Proving that vertical-align:top is necessary.
 
     const div = document.createElement('div');
-    setInnerHtml(
+    setElementInnerHtml(
       div,
       testonlyHtml(`
         <span>Everything</span>
@@ -143,7 +143,7 @@ describe('CSS_ISOLATION_PROPERTIES', () => {
     // necessary.
 
     const div = document.createElement('div');
-    setInnerHtml(
+    setElementInnerHtml(
       div,
       testonlyHtml(`
       <u>

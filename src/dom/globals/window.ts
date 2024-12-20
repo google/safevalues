@@ -7,10 +7,10 @@
 import {unwrapUrlOrSanitize, Url} from '../../builders/url_builders.js';
 
 /**
- * open calls {@link Window.open} on the given {@link Window}, given a
+ * windowOpen calls {@link Window.open} on the given {@link Window}, given a
  * target {@link Url}.
  */
-export function open(
+export function windowOpen(
   win: Window,
   url: Url,
   target?: string,

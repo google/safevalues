@@ -7,10 +7,10 @@
 import {unwrapUrlOrSanitize, Url} from '../../builders/url_builders.js';
 
 /**
- * setHref safely sets {@link Location.href} on the given {@link Location} with
- * given {@link Url}.
+ * setLocationHref safely sets {@link Location.href} on the given
+ * {@link Location} with given {@link Url}.
  */
-export function setHref(loc: Location, url: Url): void {
+export function setLocationHref(loc: Location, url: Url): void {
   const sanitizedUrl = unwrapUrlOrSanitize(url);
   if (sanitizedUrl !== undefined) {
     loc.href = sanitizedUrl;
@@ -18,10 +18,10 @@ export function setHref(loc: Location, url: Url): void {
 }
 
 /**
- * replace safely calls {@link Location.replace} on the given {@link Location}
- * with given {@link Url}.
+ * locationReplace safely calls {@link Location.replace} on the given
+ * {@link Location} with given {@link Url}.
  */
-export function replace(loc: Location, url: Url): void {
+export function locationReplace(loc: Location, url: Url): void {
   const sanitizedUrl = unwrapUrlOrSanitize(url);
   if (sanitizedUrl !== undefined) {
     loc.replace(sanitizedUrl);
@@ -29,10 +29,10 @@ export function replace(loc: Location, url: Url): void {
 }
 
 /**
- * assign safely calls {@link Location.assign} on the given {@link Location}
- * with given {@link Url}.
+ * locationAssign safely calls {@link Location.assign} on the given
+ * {@link Location} with given {@link Url}.
  */
-export function assign(loc: Location, url: Url): void {
+export function locationAssign(loc: Location, url: Url): void {
   const sanitizedUrl = unwrapUrlOrSanitize(url);
   if (sanitizedUrl !== undefined) {
     loc.assign(sanitizedUrl);

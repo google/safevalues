@@ -7,7 +7,7 @@
 import {SafeHtml, unwrapHtml} from '../../internals/html_impl.js';
 
 /** Safely creates a contextualFragment. */
-export function createContextualFragment(
+export function rangeCreateContextualFragment(
   range: Range,
   html: SafeHtml,
 ): DocumentFragment {
