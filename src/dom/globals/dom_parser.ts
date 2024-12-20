@@ -12,7 +12,7 @@ import {
 } from '../../internals/html_impl.js';
 
 /** Safely parses a string using the HTML parser. */
-export function parseHtml(parser: DOMParser, html: SafeHtml): HTMLDocument {
+export function parseHtml(parser: DOMParser, html: SafeHtml): Document {
   return parseFromString(parser, html, 'text/html');
 }
 
