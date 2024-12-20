@@ -9,7 +9,6 @@
  * a clearly defined interface.
  */
 
-// Re-export functions with new names that don't conflict with browser APIs.
 export {setHref as setAnchorHref} from './elements/anchor.js';
 export {setHref as setAreaHref} from './elements/area.js';
 export {setHref as setBaseHref} from './elements/base.js';
