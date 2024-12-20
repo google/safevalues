@@ -245,7 +245,6 @@ export abstract class BaseSanitizerBuilder<
     const allowedGlobalAttributes = new Set<string>(
       this.sanitizerTable.allowedGlobalAttributes,
     );
-    // TODO(b/190693339): Generate this subtable from the contract.
     allowedGlobalAttributes
       .add('aria-activedescendant')
       .add('aria-controls')

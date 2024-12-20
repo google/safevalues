@@ -160,8 +160,6 @@ export class HtmlSanitizerImpl implements HtmlSanitizer, CssSanitizer {
           this.styleElementSanitizer &&
           sanitizedParent.nodeName === 'STYLE'
         ) {
-          // TODO(securitymb): The sanitizer should record a change whenever
-          // any meaningful change is made to the stylesheet.
           const sanitizedCss = this.styleElementSanitizer(currentNode.data);
           sanitizedNode = this.createTextNode(sanitizedCss);
         } else {
@@ -242,8 +240,6 @@ export class HtmlSanitizerImpl implements HtmlSanitizer, CssSanitizer {
         case AttributePolicyAction.KEEP_AND_SANITIZE_STYLE:
           if (this.styleAttributeSanitizer) {
             const sanitizedCss = this.styleAttributeSanitizer(value);
-            // TODO(securitymb): The sanitizer should record a change whenever
-            // any meaningful change is made to the stylesheet.
             setAttribute(newNode, name, sanitizedCss);
           } else {
             setAttribute(newNode, name, value);
@@ -258,8 +254,6 @@ export class HtmlSanitizerImpl implements HtmlSanitizer, CssSanitizer {
             };
             const url = parseUrl(value);
             const sanitizedUrl = this.resourceUrlPolicy(url, hints);
-            // TODO(securitymb): A change should be recorded if the resource url
-            // changes the URL.
             if (sanitizedUrl) {
               setAttribute(newNode, name, sanitizedUrl.toString());
             }

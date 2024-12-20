@@ -65,7 +65,6 @@ export interface SafeResponse {
  * previously it was building and including the whole module without
  * tree-shaking.
  *
- * TODO(b/254093954) find out why this is and remove this workaround.
  */
 function privatecreateHtmlInternal(html: string): SafeHtml {
   return createHtmlInternal(html);
