@@ -116,15 +116,6 @@ export function serializeToken(token: CssToken): string {
  * @return The serialized tokens.
  */
 export function serializeTokens(tokens: CssToken[]): string {
-  // TODO(securitymb): Per spec [1] we should add an empty comment between certain
-  // kinds of tokens. However, given that we're willfully violating the spec
-  // by emitting a whitespace token for comments, we *probably* don't need to
-  // worry about this.
-  //
-  // We should probably test it more thouroughly though, and implement the
-  // empty comments if needed.
-  //
-  // [1]: https://www.w3.org/TR/css-syntax-3/#serialization:~:text=For%20any%20consecutive,(%2Dtoken
   return tokens.map(serializeToken).join('');
 }
 
