@@ -8,7 +8,7 @@ Below are all the builders we currently provide.
 
 Note: This type wraps the
 [TrustedHTML](https://developer.mozilla.org/en-US/docs/Web/API/TrustedHTML)
-Trusted Type.
+Trusted Types value.
 
 #### Escaping HTML entities
 
@@ -43,7 +43,7 @@ compatible with `safevalues` like [Lit](https://lit.dev).
 
 Note: This type wraps the
 [TrustedScript](https://developer.mozilla.org/en-US/docs/Web/API/TrustedScript)
-Trusted Type.
+Trusted Types value.
 
 #### Building a script from a literal value
 
@@ -62,7 +62,7 @@ const script = safeScript`return this;`;
 
 Note: This type wraps the
 [TrustedScriptURL](https://developer.mozilla.org/en-US/docs/Web/API/TrustedScriptURL)
-Trusted Type.
+Trusted Types value.
 
 #### Building a URL from a literal value with limited interpolation
 
@@ -92,7 +92,7 @@ const url2 = trustedResourceUrl`/static/${env}/js/main.js?opt=${opt}`;
 
 #### Building a style sheet from a literal value with some banned characters
 
-Note: This type doesn't wrap a Trusted Type.
+Note: This type doesn't wrap a Trusted Types value.
 
 ```typescript
 import {safeStyleSheet, concatStyleSheets} from 'safevalues';
@@ -130,7 +130,7 @@ without relying on typing tricks or additional tooling.
 
 Using Trusted Types in TypeScript still has a limitation as the standard lib has
 [no awareness of Trusted Types](https://github.com/microsoft/TypeScript/issues/30024).
-This means that you cannot assign a Trusted Type value to a sink directly.
+This means that you cannot assign a Trusted Types value to a sink directly.
 
 While `safety-web` can recognise direct assignments to dangerous sinks,
 we recommend using one of the dedicated wrappers from `safevalues/dom` we
@@ -144,10 +144,10 @@ import {setElementInnerHtml} from 'safevalues/dom';
 
 const el = document.createElement('div');
 const html = sanitizeHtml('<article>my post <script>alert(0)</script></article>');
-setElementInnerHtml(el, html);  // Trusted Type and safety-web compatible
+setElementInnerHtml(el, html);  // Trusted Types and safety-web compatible
 ```
 
-`safevalues/dom` is Trusted Type compatible, and safety-web compatible.
+`safevalues/dom` is Trusted Types compatible, and safety-web compatible.
 
 ### Remove `javascript:` URLs sink assignments
 
@@ -191,7 +191,3 @@ these functions.
 
 More information:
 [Restricted functions documentation](https://github.com/google/safevalues/tree/main/src/restricted).
-
-## Disclaimer
-
-**This is not an officially supported Google product.**

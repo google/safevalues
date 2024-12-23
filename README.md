@@ -4,7 +4,7 @@ Safevalues is a library to help you prevent Cross-Site Scripting vulnerabilities
 in TypeScript (and JavaScript). It is meant to be used together with
 [safety-web](https://github.com/google/safety-web) to provide strong security
 guarantees and help you deploy
-[Trusted Types](https://w3c.github.io/trusted-types/dist/spec/) and
+[TrustedTypes](https://w3c.github.io/trusted-types/dist/spec/) and
 other CSP restrictions in your applications. Google has used these components
 together to reduce DOM XSS ([paper](https://research.google/pubs/pub49950/)),
 and we hope it will be useful in your codebase.
@@ -14,8 +14,8 @@ and we hope it will be useful in your codebase.
 ### Policy definition for building safe-by-construction Trusted Types
 
 Trusted Types is a browser API that enables developers to control the values
-that can be assigned to XSS sinks. Developers need to define a Trusted Type
-policy to build these values, and then the Trusted Type API constrains these
+that can be assigned to XSS sinks. Developers need to define a Trusted Types
+policy to build these values, and then the Trusted Types API constraints these
 policies.
 
 The Trusted Types API is not opinionated on what *should be* considered safe. It
@@ -39,7 +39,7 @@ these sinks.
 
 ### DOM sink wrappers
 
-To build a Trusted Type-compatible app and surface potential violations at
+To build a Trusted Types-compatible app and surface potential violations at
 compile time, we recommend that you lint your code with
 [safety-web](https://github.com/google/safety-web). safety-web bans certain DOM
 APIs. `safevalues` defines wrappers around these APIs which lets you assign
@@ -49,7 +49,7 @@ Some wrappers don't require a particular type, but sanitize the argument they
 get before they assign it to the DOM sink (e.g. `setLocationHref` from
 `safevalues/dom`).
 
-### Trusted Type polyfills
+### Trusted Types polyfills
 
 Whenever possible, `safevalues` uses Trusted Types to build its values, in order
 to benefit from the runtime protection of Trusted Types. When Trusted Types is
@@ -74,7 +74,3 @@ See ([#212](https://github.com/google/safevalues/issues/212)).
 
 [Read on](https://github.com/google/safevalues/tree/main/src) for more
 information on our APIs.
-
-## Disclaimer
-
-**This is not an officially supported Google product.**
