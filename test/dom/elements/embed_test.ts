@@ -6,9 +6,9 @@
 
 import {trustedResourceUrl} from '../../../src/builders/resource_url_builders';
 
-import * as safeEmbedEl from '../../../src/dom/elements/embed';
+import {setEmbedSrc} from '../../../src/dom/elements/embed';
 
-describe('safeEmbedEl', () => {
+describe('embed API wrappers', () => {
   let embedEl: HTMLEmbedElement;
   beforeEach(() => {
     embedEl = document.createElement('embed');
@@ -16,7 +16,7 @@ describe('safeEmbedEl', () => {
 
   it('sets `src` attribute as expected', () => {
     const url = trustedResourceUrl`https://google.com/content`;
-    safeEmbedEl.setSrc(embedEl, url);
+    setEmbedSrc(embedEl, url);
     expect(embedEl.src).toBe('https://google.com/content');
   });
 });

@@ -10,6 +10,9 @@ import {
 } from '../../internals/resource_url_impl.js';
 
 /** Sets the data attribute using a TrustedResourceUrl */
-export function setData(obj: HTMLObjectElement, v: TrustedResourceUrl): void {
+export function setObjectData(
+  obj: HTMLObjectElement,
+  v: TrustedResourceUrl,
+): void {
   obj.data = unwrapResourceUrl(v) as string;
 }

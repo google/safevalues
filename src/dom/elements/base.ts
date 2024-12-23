@@ -12,7 +12,7 @@ import {
 /**
  * Sets the Href attribute from the given TrustedResourceUrl.
  */
-export function setHref(
+export function setBaseHref(
   baseEl: HTMLBaseElement,
   url: TrustedResourceUrl,
 ): void {

@@ -49,7 +49,7 @@ export type TrustedResourecUrlRelTypes = 'stylesheet' | 'manifest';
 /**
  * Safely sets a link element's "href" property using a sensitive "rel" value.
  */
-export function setHrefAndRel(
+export function setLinkHrefAndRel(
   link: HTMLLinkElement,
   url: TrustedResourceUrl,
   rel: TrustedResourecUrlRelTypes,
@@ -59,7 +59,7 @@ export function setHrefAndRel(
  * Safely sets a link element's "href" property using a non-sensitive "rel"
  * value.
  */
-export function setHrefAndRel(
+export function setLinkHrefAndRel(
   link: HTMLLinkElement,
   url: Url,
   rel: SafeUrlRelTypes,
@@ -69,19 +69,19 @@ export function setHrefAndRel(
  * Safely sets a link element's "href" property using an arbitrary "rel"
  * value.
  */
-export function setHrefAndRel(
+export function setLinkHrefAndRel(
   link: HTMLLinkElement,
   url: TrustedResourceUrl,
   rel: string,
 ): void;
 
-export function setHrefAndRel(
+export function setLinkHrefAndRel(
   link: HTMLLinkElement,
   url: TrustedResourceUrl | Url,
   rel: string,
 ) {
   if (isResourceUrl(url)) {
-    setHrefAndRelWithTrustedResourceUrl(link, url, rel);
+    setLinkWithResourceUrlHrefAndRel(link, url, rel);
     return;
   } else {
     if ((SAFE_URL_REL_VALUES as readonly string[]).indexOf(rel) === -1) {
@@ -104,7 +104,7 @@ export function setHrefAndRel(
  * is always a TrustedResourceUrl, since the resulting binary size will be
  * smaller.
  */
-export function setHrefAndRelWithTrustedResourceUrl(
+export function setLinkWithResourceUrlHrefAndRel(
   link: HTMLLinkElement,
   url: TrustedResourceUrl,
   rel: TrustedResourecUrlRelTypes | string,

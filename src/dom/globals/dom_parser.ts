@@ -12,8 +12,11 @@ import {
 } from '../../internals/html_impl.js';
 
 /** Safely parses a string using the HTML parser. */
-export function parseHtml(parser: DOMParser, html: SafeHtml): Document {
-  return parseFromString(parser, html, 'text/html');
+export function domParserParseHtml(
+  parser: DOMParser,
+  html: SafeHtml,
+): Document {
+  return domParserParseFromString(parser, html, 'text/html');
 }
 
 /**
@@ -21,8 +24,12 @@ export function parseHtml(parser: DOMParser, html: SafeHtml): Document {
  * contain any elements from the HTML or SVG namespaces, an error is thrown for
  * security reasons.
  */
-export function parseXml(parser: DOMParser, xml: string): XMLDocument {
-  const doc = parseFromString(parser, createHtmlInternal(xml), 'text/xml');
+export function domParserParseXml(parser: DOMParser, xml: string): XMLDocument {
+  const doc = domParserParseFromString(
+    parser,
+    createHtmlInternal(xml),
+    'text/xml',
+  );
 
   const iterator = document.createNodeIterator(doc, NodeFilter.SHOW_ELEMENT);
 
@@ -54,7 +61,7 @@ function isUnsafeNamespace(ns: string | null): boolean {
 }
 
 /** Safely parses a string using the HTML or XML parser. */
-export function parseFromString(
+export function domParserParseFromString(
   parser: DOMParser,
   content: SafeHtml,
   contentType: DOMParserSupportedType,

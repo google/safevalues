@@ -9,7 +9,7 @@ import {unwrapUrlOrSanitize, Url} from '../../builders/url_builders.js';
 /**
  * Sets the Href attribute from the given Url.
  */
-export function setHref(area: HTMLAreaElement, url: Url): void {
+export function setAreaHref(area: HTMLAreaElement, url: Url): void {
   const sanitizedUrl = unwrapUrlOrSanitize(url);
   if (sanitizedUrl !== undefined) {
     area.href = sanitizedUrl;

@@ -10,7 +10,7 @@ import {
 } from '../../internals/resource_url_impl.js';
 
 /** Safely registers a service worker by URL */
-export function register(
+export function serviceWorkerContainerRegister(
   container: ServiceWorkerContainer,
   scriptURL: TrustedResourceUrl,
   options?: RegistrationOptions,

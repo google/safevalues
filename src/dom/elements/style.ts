@@ -10,7 +10,7 @@ import {
 } from '../../internals/style_sheet_impl.js';
 
 /** Safe setters for `HTMLStyleElement`s. */
-export function setTextContent(
+export function setStyleTextContent(
   elem: HTMLStyleElement,
   safeStyleSheet: SafeStyleSheet,
 ): void {

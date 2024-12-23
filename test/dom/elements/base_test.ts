@@ -6,17 +6,17 @@
 
 import {trustedResourceUrl} from '../../../src/builders/resource_url_builders';
 
-import * as safeBaseEl from '../../../src/dom/elements/base';
+import {setBaseHref} from '../../../src/dom/elements/base';
 
-describe('safeBaseEl', () => {
+describe('base API wrappers', () => {
   let baseEl: HTMLBaseElement;
   beforeEach(() => {
     baseEl = document.createElement('base');
   });
 
-  it('sets `href` attribute as expected', () => {
+  it('setBaseHref sets `href` attribute as expected', () => {
     const url = trustedResourceUrl`http://google.com/some/path`;
-    safeBaseEl.setHref(baseEl, url);
+    setBaseHref(baseEl, url);
     expect(baseEl.href).toBe('http://google.com/some/path');
   });
 });

@@ -6,9 +6,12 @@
 
 import {trustedResourceUrl} from '../../../src/builders/resource_url_builders';
 
-import * as safeLinkEl from '../../../src/dom/elements/link';
+import {
+  setLinkHrefAndRel,
+  setLinkWithResourceUrlHrefAndRel,
+} from '../../../src/dom/elements/link';
 
-describe('safeLink#setHrefAndRel', () => {
+describe('setLinkHrefAndRel', () => {
   let linkElem: HTMLLinkElement;
   describe('with TS safe types', () => {
     beforeEach(() => {
@@ -17,18 +20,14 @@ describe('safeLink#setHrefAndRel', () => {
 
     it('sets TrustedResourceUrl `href` and arbitraty `rel` attribute as expected ', () => {
       const url = trustedResourceUrl`https://google.com/test.css`;
-      safeLinkEl.setHrefAndRelWithTrustedResourceUrl(
-        linkElem,
-        url,
-        'stylesheet',
-      );
+      setLinkWithResourceUrlHrefAndRel(linkElem, url, 'stylesheet');
       expect(linkElem.href).toBe('https://google.com/test.css');
       expect(linkElem.rel).toBe('stylesheet');
     });
 
     it('expects TrustedResourceUrl `href` for unknown `rel` values', () => {
       const url = trustedResourceUrl`https://google.com/test.css`;
-      safeLinkEl.setHrefAndRel(linkElem, url, 'stylesheet');
+      setLinkHrefAndRel(linkElem, url, 'stylesheet');
       expect(linkElem.href).toBe('https://google.com/test.css');
       expect(linkElem.rel).toBe('stylesheet');
     });
@@ -41,7 +40,7 @@ describe('safeLink#setHrefAndRel', () => {
 
     it('sets `href` and `rel` attribute as expected', () => {
       const url = 'https://google.com/author.html';
-      safeLinkEl.setHrefAndRel(linkElem, url, 'author');
+      setLinkHrefAndRel(linkElem, url, 'author');
       expect(linkElem.href).toBe('https://google.com/author.html');
       expect(linkElem.rel).toBe('author');
     });
