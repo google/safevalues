@@ -360,9 +360,6 @@ class Tokenizer {
   private consumeIdentLikeToken(): CssToken | CssToken[] {
     const ident = this.consumeIdentSequence();
     if (/^url$/i.test(ident) && this.nextInputCodePoint() === '(') {
-      // TODO(securitymb): This algorithm may look a little weird but we're
-      // following the spec here exactly. We will see later on if this can be
-      // optimized.
       this.consumeTheNextInputCodePoint();
       while (this.nextTwoInputsPointsAreWhitespace()) {
         this.consumeTheNextInputCodePoint();
