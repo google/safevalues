@@ -1,0 +1,27 @@
+name: Publish Package to npmjs
+on:
+  workflow_dispatch:
+    inputs:
+      wombat_token:
+        description: 'Wombat token for releasing on NPM'
+        required: true
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      # Setup .npmrc file to publish to npm
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.x"
+          registry-url: "https://wombat-dressing-room.appspot.com/"
+      - run: yarn install --frozen-lockfile
+      - run: yarn run build
+      - run: npm publish --provenance --access public --verbose
+        env:
+          NODE_AUTH_TOKEN: ${{ inputs.wombat_token }}
