@@ -26,28 +26,21 @@ export function windowOpen(
 /**
  * Returns CSP nonce, if set for any script tag.
  */
-export function getScriptNonce(documentOrWindow?: Document | Window): string {
-  return getNonceFor('script', documentOrWindow);
+export function getScriptNonce(doc?: Document): string {
+  return getNonceFor('script', doc);
 }
 
 /**
  * Returns CSP nonce, if set for any style tag.
  */
-export function getStyleNonce(documentOrWindow?: Document | Window): string {
-  return getNonceFor('style', documentOrWindow);
+export function getStyleNonce(doc?: Document): string {
+  return getNonceFor('style', doc);
 }
 
 function getNonceFor(
   elementName: 'script' | 'style',
-  documentOrWindow: Document | Window = document,
+  doc: Document = document,
 ): string {
-  // Note: We can't use `instanceof` here because `documentOrWindow` likely
-  // comes from a different realm.
-  const doc =
-    'document' in documentOrWindow
-      ? documentOrWindow.document
-      : documentOrWindow;
-
   // document.querySelector can be undefined in non-browser environments.
   const el = doc.querySelector?.<HTMLScriptElement | HTMLStyleElement>(
     `${elementName}[nonce]`,

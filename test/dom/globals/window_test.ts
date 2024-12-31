@@ -16,24 +16,6 @@ describe('Window', () => {
       expect(getScriptNonce(doc)).toEqual('123');
     });
 
-    it('accepts a window', async () => {
-      const iframe = document.createElement('iframe');
-      const iframeLoaded = new Promise((resolve) => {
-        iframe.onload = resolve;
-      });
-      document.body.appendChild(iframe);
-      await iframeLoaded;
-
-      const doc = iframe.contentDocument!;
-      const script = doc.createElement('script');
-      script.setAttribute('nonce', '234');
-      doc.body.appendChild(script);
-
-      const win = iframe.contentWindow!;
-      expect(win).not.toBeNull();
-      expect(getScriptNonce(win)).toEqual('234');
-    });
-
     it('returns empty string if no script tag is found', () => {
       const doc = document.implementation.createHTMLDocument();
       expect(getScriptNonce(doc)).toEqual('');
