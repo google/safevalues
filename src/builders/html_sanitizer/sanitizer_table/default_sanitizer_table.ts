@@ -278,6 +278,7 @@ const ALLOWED_GLOBAL_ATTRIBUTES: readonly string[] = [
   'cellpadding',
   'cellspacing',
   'checked',
+  'cite',
   'color',
   'cols',
   'colspan',
@@ -307,6 +308,7 @@ const ALLOWED_GLOBAL_ATTRIBUTES: readonly string[] = [
   'nonce',
   'open',
   'placeholder',
+  'poster',
   'preload',
   'rel',
   'required',
@@ -361,12 +363,6 @@ const GLOBAL_ATTRIBUTE_POLICIES: ReadonlyArray<[string, AttributePolicy]> = [
     },
   ],
   [
-    'cite',
-    {
-      policyAction: AttributePolicyAction.KEEP_AND_SANITIZE_URL,
-    },
-  ],
-  [
     'loading',
     {
       policyAction: AttributePolicyAction.KEEP_AND_NORMALIZE,
@@ -375,12 +371,6 @@ const GLOBAL_ATTRIBUTE_POLICIES: ReadonlyArray<[string, AttributePolicy]> = [
           ['loading', new Set<string>(['eager', 'lazy'])],
         ]);
       }),
-    },
-  ],
-  [
-    'poster',
-    {
-      policyAction: AttributePolicyAction.KEEP_AND_SANITIZE_URL,
     },
   ],
   [

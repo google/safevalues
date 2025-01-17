@@ -20,7 +20,5 @@ export const SECURITY_SENSITIVE_ATTRIBUTES = [
   'action',
   'formaction',
   'sandbox',
-  'cite',
-  'poster',
   'icon',
 ] as const;
