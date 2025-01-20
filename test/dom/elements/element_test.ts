@@ -5,11 +5,17 @@
  */
 
 import {safeAttrPrefix} from '../../../src/builders/attribute_builders';
-import {testonlyHtml} from '../../testing/conversions';
+import {testonlyHtml, testonlyResourceUrl} from '../../testing/conversions';
+import {
+  ELEMENT_ATTRIBUTE_CONTRACTS,
+  GLOBAL_ATTRIBUTE_CONTRACTS,
+  SetAttributeAction,
+} from '../../testing/testvectors/attribute_contracts_test_vectors';
 
 import {
   buildPrefixedAttributeSetter,
   elementInsertAdjacentHtml,
+  setElementAttribute,
   setElementInnerHtml,
   setElementOuterHtml,
 } from '../../../src/dom/elements/element';
@@ -145,4 +151,113 @@ describe('element API wrappers', () => {
       });
     });
   });
+
+  describe('setElementAttribute', () => {
+    for (const {
+      action,
+      elementName,
+      attributeName,
+    } of ELEMENT_ATTRIBUTE_CONTRACTS) {
+      checkElementAttributeContract(action, elementName, attributeName);
+    }
+
+    // Check on multiple elements to make sure it is consistent
+    for (const {action, attributeName} of GLOBAL_ATTRIBUTE_CONTRACTS) {
+      checkElementAttributeContract(action, 'DIV', attributeName);
+      checkElementAttributeContract(action, 'SCRIPT', attributeName);
+      checkElementAttributeContract(action, 'A', attributeName);
+      checkElementAttributeContract(action, 'IFRAME', attributeName);
+    }
+  });
 });
+
+function checkElementAttributeContract(
+  action: SetAttributeAction,
+  elementName: string,
+  attributeName: string,
+) {
+  switch (action) {
+    case SetAttributeAction.ALLOW:
+      it(`allows "${attributeName}" attribute on ${elementName}`, () => {
+        const el = document.createElement(elementName);
+        setElementAttribute(el, attributeName, 'foo');
+        expect(el.getAttribute(attributeName)).toEqual('foo');
+
+        setElementAttribute(el, attributeName, 'javascript:foo');
+        expect(el.getAttribute(attributeName)).toEqual('javascript:foo');
+      });
+      break;
+
+    case SetAttributeAction.REJECT:
+      it(`rejects "${attributeName}" attribute on ${elementName}`, () => {
+        const el = document.createElement(elementName);
+        expect(() => {
+          setElementAttribute(el, attributeName, 'foo');
+        }).toThrowError();
+
+        expect(() => {
+          setElementAttribute(el, attributeName, testonlyHtml('foo'));
+        }).toThrowError();
+
+        expect(() => {
+          setElementAttribute(el, attributeName, testonlyResourceUrl('foo'));
+        }).toThrowError();
+      });
+      break;
+
+    case SetAttributeAction.REQUIRE_HTML:
+      it(`requires SafeHtml for "${attributeName}" attribute on ${elementName}`, () => {
+        const el = document.createElement(elementName);
+        setElementAttribute(el, attributeName, testonlyHtml('foo'));
+        expect(el.getAttribute(attributeName)).toEqual('foo');
+
+        expect(() => {
+          setElementAttribute(el, attributeName, 'foo');
+        }).toThrowError();
+
+        expect(() => {
+          setElementAttribute(el, attributeName, testonlyResourceUrl('foo'));
+        }).toThrowError();
+      });
+      break;
+
+    case SetAttributeAction.REQUIRE_RESOURCE_URL:
+      it(`requires TrustedResourceUrl for "${attributeName}" attribute on ${elementName}`, () => {
+        const el = document.createElement(elementName);
+        setElementAttribute(el, attributeName, testonlyResourceUrl('foo'));
+        expect(el.getAttribute(attributeName)).toEqual('foo');
+
+        expect(() => {
+          setElementAttribute(el, attributeName, 'foo');
+        }).toThrowError();
+
+        expect(() => {
+          setElementAttribute(el, attributeName, testonlyHtml('foo'));
+        }).toThrowError();
+      });
+      break;
+
+    case SetAttributeAction.SANITIZE_JAVASCRIPT_URL:
+      it('sets non "javascript:" urls for "${attributeName}" attribute on ${elementName} correctly', () => {
+        const el = document.createElement(elementName);
+        setElementAttribute(el, attributeName, 'foo');
+        expect(el.getAttribute(attributeName)).toEqual('foo');
+      });
+      it(`sanitizes "javascript:" urls for "${attributeName}" attribute on ${elementName}`, () => {
+        const el = document.createElement(elementName);
+        setElementAttribute(el, attributeName, 'javascript:foo');
+        expect(el.getAttribute(attributeName)).toBeNull();
+      });
+      break;
+
+    default:
+      checkExhaustive(action);
+  }
+}
+
+function checkExhaustive(
+  value: never,
+  msg = `unexpected value ${value}!`,
+): never {
+  throw new Error(msg);
+}

@@ -16,6 +16,7 @@ export {setButtonFormaction} from './elements/button.js';
 export {
   buildPrefixedAttributeSetter,
   elementInsertAdjacentHtml,
+  setElementAttribute,
   setElementInnerHtml,
   setElementOuterHtml,
   setElementPrefixedAttribute,
