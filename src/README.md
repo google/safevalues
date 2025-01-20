@@ -132,11 +132,15 @@ Using Trusted Types in TypeScript still has a limitation as the standard lib has
 [no awareness of Trusted Types](https://github.com/microsoft/TypeScript/issues/30024).
 This means that you cannot assign a Trusted Types value to a sink directly.
 
-While `safety-web` can recognise direct assignments to dangerous sinks,
-we recommend using one of the dedicated wrappers from `safevalues/dom` we
-provide as they don't require you to cast the value.
+While `safety-web` can recognise direct assignments to dangerous sinks, we
+recommend using one of the dedicated wrappers from `safevalues/dom` we provide
+as they don't require you to cast the value.
 
 ### Assigning safe types to DOM sinks
+
+For instance, if you want to assign a `SafeHtml` value to the `innerHTML`
+property of an element, you can use the `setElementInnerHtml` function from
+`safevalues/dom`:
 
 ```typescript
 import {sanitizeHtml} from 'safevalues';
@@ -147,7 +151,8 @@ const html = sanitizeHtml('<article>my post <script>alert(0)</script></article>'
 setElementInnerHtml(el, html);  // Trusted Types and safety-web compatible
 ```
 
-`safevalues/dom` is Trusted Types compatible, and safety-web compatible.
+`safevalues/dom` functions are Trusted Types compatible, and safety-web
+compatible.
 
 ### Remove `javascript:` URLs sink assignments
 
@@ -175,6 +180,50 @@ setLocationHref(document.location, userControlledUrl);  // Blocked
 
 `safety-web` will – in the future – provide a rule to enforce that all DOM URL
 sinks are accessed using the `safevalues/dom` wrappers.
+
+## Safety-web false positives
+
+`safety-web` will sometimes report false positives, in particular in loosely
+typed JavaScript code. For instance, safety-web may complain if you're setting a
+`src` property, e.g. `myImg.src = value;`, and it can't tell if `myImg` is an
+`HTMLImageElement` or `HTMLScriptElement`.
+
+One way to work around this is to improve the typing of your code, but this is
+not always possible. safevalues provides `setElementAttribute`, a generic
+attribute setter that can be used to set security-sensitive attributes *and* non-sensitive
+attributes. `setElementAttribute` performs a runtime check on the
+element and attribute name to ensure that the attribute is safely set.
+
+Example:
+
+```
+import {setElementAttribute} from 'safevalues/dom';
+import {trustedResourceUrl} from 'safevalues';
+
+// myImg is of type unknown, but at runtime it's an HTMLImageElement.
+declare const myImg: unknown
+
+myImg.src = value;  // safety-web will complain here. Use setElementAttribute instead:
+setElementAttribute(myImg, 'src', value);  // This works at runtime, and is not flagged by safety-web.
+
+// myScript is of type unknown, but at runtime it's an HTMLScriptElement.
+declare const myScript: unknown
+setElementAttribute(myScript, 'src', 'https://attacker.com/script.js');  // This is not flagged by safety-web, but will be blocked at runtime because setting a script src requires a TrustedResourceUrl, not a plain string.
+
+// Instead:
+setElementAttribute(myScript, 'src', trustedResourceUrl`https://myapp.com/script.js');  // This is not flagged by safety-web, and will work at runtime.
+```
+
+You should use the right safe type for the right element-attribute pair. For
+instance:
+
+```
+const myScript = document.createElement('script');
+`setElementAttribute(myScript, 'src', safeScript`https://myapp.com/script.js');
+```
+
+is incorrect, because a `script` element's `src` attribute should be a
+`TrustedResourceUrl`, not a `SafeScript`.
 
 ## Reviewed and legacy conversions
 
