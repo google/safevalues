@@ -332,24 +332,29 @@ describe('CssSanitizerBuilder', () => {
   const ELEMENT_NAME = 'safevalues-with-css';
 
   /** Helper function to find the element with sanitized shadow root. */
-  function findShadowRoot(root: ParentNode): ShadowRoot | null | undefined {
-    return root.querySelector(ELEMENT_NAME)?.shadowRoot;
+  function findShadowRootElement(root: ParentNode): Element | null | undefined {
+    return root.querySelector(ELEMENT_NAME);
   }
 
-  // Overriding attachShadow (and changing the mode to 'open') is necessary to
-  // inspect the contents of the shadow DOM.
-  let originalAttachShadow: typeof Element.prototype.attachShadow;
-  beforeEach(() => {
-    originalAttachShadow = Element.prototype.attachShadow;
-    Element.prototype.attachShadow = function (this: Element) {
-      return originalAttachShadow.call(this, {mode: 'open'});
-    };
-  });
-  afterEach(() => {
-    Element.prototype.attachShadow = originalAttachShadow;
-  });
+  /** Helper function to find the sanitized shadow root. */
+  function findShadowRoot(root: ParentNode): ShadowRoot | null | undefined {
+    return findShadowRootElement(root)?.shadowRoot;
+  }
 
   describe('sanitizeToFragment', () => {
+    // Overriding attachShadow (and changing the mode to 'open') is necessary to
+    // inspect the contents of the shadow DOM.
+    let originalAttachShadow: typeof Element.prototype.attachShadow;
+    beforeEach(() => {
+      originalAttachShadow = Element.prototype.attachShadow;
+      Element.prototype.attachShadow = function (this: Element) {
+        return originalAttachShadow.call(this, {mode: 'open'});
+      };
+    });
+    afterEach(() => {
+      Element.prototype.attachShadow = originalAttachShadow;
+    });
+
     it('returns an instance of DocumentFragment', () => {
       const sanitizer = new CssSanitizerBuilder().build();
       const element = sanitizer.sanitizeToFragment('<div></div>');
@@ -517,6 +522,31 @@ describe('CssSanitizerBuilder', () => {
       expect(style?.textContent).toEqual(
         '* { background-image: url("https://returned.by.policy/"); }',
       );
+    });
+  });
+
+  describe('shadow DOM', () => {
+    it('is closed by default', () => {
+      const sanitizer = new CssSanitizerBuilder().build();
+      const sanitized = sanitizer.sanitizeToFragment('<div></div>');
+      const elem = findShadowRootElement(sanitized);
+
+      // elem.shadowRoot returns null both when the shadow DOM is closed and
+      // when there's no shadow DOM at all. attachShadow throws an exception
+      // when there's already a shadow DOM.
+      //
+      // So to reliably check that the shadow DOM exists and is closed, we
+      // check both that elem.shadowRoot is null and that attachShadow throws
+      // an exception.
+      expect(elem?.shadowRoot).toBeNull();
+      expect(() => elem?.attachShadow({mode: 'open'})).toThrow();
+    });
+
+    it('is open after calling withOpenShadow', () => {
+      const sanitizer = new CssSanitizerBuilder().withOpenShadow().build();
+      const sanitized = sanitizer.sanitizeToFragment('<div></div>');
+      const shadowRoot = findShadowRoot(sanitized);
+      expect(shadowRoot).toBeInstanceOf(ShadowRoot);
     });
   });
 });

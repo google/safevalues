@@ -330,6 +330,7 @@ export class HtmlSanitizerBuilder extends BaseSanitizerBuilder<HtmlSanitizer> {
 export class CssSanitizerBuilder extends BaseSanitizerBuilder<CssSanitizer> {
   private animationsAllowed = false;
   private transitionsAllowed = false;
+  private openShadow = false;
   allowAnimations(): this {
     this.animationsAllowed = true;
     return this;
@@ -338,6 +339,18 @@ export class CssSanitizerBuilder extends BaseSanitizerBuilder<CssSanitizer> {
     this.transitionsAllowed = true;
     return this;
   }
+  /**
+   * Sets the shadow DOM mode to 'open'.
+   *
+   * While this method is not formally restricted, it can potentially be used to
+   * bypass the security guarantees of the CSS sanitizer. If you need open
+   * shadow DOM, please contact ise-web-members@ to discuss your use case.
+   */
+  withOpenShadow(): this {
+    this.openShadow = true;
+    return this;
+  }
+
   /**
    * Builds a CSS sanitizer.
    *
@@ -378,6 +391,7 @@ export class CssSanitizerBuilder extends BaseSanitizerBuilder<CssSanitizer> {
       styleElementSanitizer,
       styleAttributeSanitizer,
       this.resourceUrlPolicy,
+      this.openShadow,
     );
   }
   private extendSanitizerTableForCss() {

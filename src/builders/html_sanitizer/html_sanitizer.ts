@@ -71,6 +71,7 @@ export class HtmlSanitizerImpl implements HtmlSanitizer, CssSanitizer {
     private readonly styleElementSanitizer?: CssSanitizationFn | undefined,
     private readonly styleAttributeSanitizer?: CssSanitizationFn | undefined,
     private readonly resourceUrlPolicy?: ResourceUrlPolicy | undefined,
+    private readonly openShadow?: boolean,
   ) {
     ensureTokenIsValid(token);
   }
@@ -112,7 +113,8 @@ export class HtmlSanitizerImpl implements HtmlSanitizer, CssSanitizer {
     inertDocument: Document,
   ): DocumentFragment {
     const elem = document.createElement('safevalues-with-css');
-    const shadow = elem.attachShadow({mode: 'closed'});
+    const mode = this.openShadow ? 'open' : 'closed';
+    const shadow = elem.attachShadow({mode});
     const sanitized = this.sanitizeToFragmentInternal(
       htmlWithCss,
       inertDocument,
