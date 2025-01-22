@@ -283,6 +283,7 @@ const ALLOWED_GLOBAL_ATTRIBUTES: readonly string[] = [
   'cols',
   'colspan',
   'controls',
+  'controlslist',
   'datetime',
   'disabled',
   'download',
