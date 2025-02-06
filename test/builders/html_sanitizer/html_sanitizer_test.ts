@@ -96,6 +96,7 @@ describe('HtmlSanitizer', () => {
       new Map(),
       new Set(),
       new Map(),
+      undefined,
     );
 
     const sanitized = sanitize(emptyTable, '<a></a>');
@@ -109,6 +110,7 @@ describe('HtmlSanitizer', () => {
       new Map([['FORM', new Map()]]),
       new Set(),
       new Map(),
+      undefined,
     );
 
     const sanitized = sanitize(allowFormElements, '<form></form>');
@@ -122,6 +124,7 @@ describe('HtmlSanitizer', () => {
       new Map(),
       new Set(['name']),
       new Map(),
+      undefined,
     );
 
     const sanitized = sanitize(
@@ -145,6 +148,7 @@ describe('HtmlSanitizer', () => {
       new Map(),
       new Set(),
       new Map(),
+      undefined,
     );
 
     const sanitized = sanitize(sanitizerTable, '<a></a>');
@@ -157,6 +161,7 @@ describe('HtmlSanitizer', () => {
       new Map(),
       new Set(),
       new Map(),
+      undefined,
     );
 
     const sanitized = sanitize(sanitizerTable, '<a href="value"></a>');
@@ -169,6 +174,7 @@ describe('HtmlSanitizer', () => {
       new Map([['A', new Map()]]),
       new Set(),
       new Map([['href', {policyAction: AttributePolicyAction.KEEP}]]),
+      undefined,
     );
 
     const sanitized = sanitize(sanitizerTable, '<a href="value"></a>');
@@ -183,10 +189,68 @@ describe('HtmlSanitizer', () => {
       ]),
       new Set(),
       new Map([['href', {policyAction: AttributePolicyAction.DROP}]]),
+      undefined,
     );
 
     const sanitized = sanitize(sanitizerTable, '<a href="value"></a>');
     expect(sanitized).toBe('<a href="value"></a>');
+  });
+
+  it('uses the element specific attribute policy even when a globally allowed attribute prefixes is provided', () => {
+    const sanitizerTable = new SanitizerTable(
+      new Set(),
+      new Map([
+        [
+          'A',
+          new Map([['foo-href', {policyAction: AttributePolicyAction.DROP}]]),
+        ],
+      ]),
+      new Set(),
+      new Map(),
+      new Set(['foo-']),
+    );
+
+    const sanitized = sanitize(sanitizerTable, '<a foo-href="value"></a>');
+    expect(sanitized).toBe('<a></a>');
+  });
+
+  it('uses the global attribute policies even when a globally allowed attribute prefixes is provided', () => {
+    const sanitizerTable = new SanitizerTable(
+      new Set(),
+      new Map([['A', new Map([])]]),
+      new Set(),
+      new Map([['foo-href', {policyAction: AttributePolicyAction.DROP}]]),
+      new Set(['foo-']),
+    );
+
+    const sanitized = sanitize(sanitizerTable, '<a foo-href="value"></a>');
+    expect(sanitized).toBe('<a></a>');
+  });
+
+  it('uses the globally allowed attribute prefixes when the attribute does not match another policy', () => {
+    const sanitizerTableElementPolicy = new SanitizerTable(
+      new Set(),
+      new Map([['A', new Map([])]]),
+      new Set(),
+      new Map([]),
+      new Set(['foo-']),
+    );
+
+    expect(
+      sanitize(sanitizerTableElementPolicy, '<a foo-href="value"></a>'),
+    ).toBe('<a foo-href="value"></a>');
+
+    const sanitizerTableAllowedElements = new SanitizerTable(
+      new Set(['A']),
+      new Map(),
+      new Set(),
+      new Map([]),
+      new Set(['foo-']),
+    );
+
+    expect(
+      sanitize(sanitizerTableAllowedElements, '<a foo-href="value"></a>'),
+    ).toBe('<a foo-href="value"></a>');
   });
 
   it('drops attributes with the drop attribute policy', () => {
@@ -197,6 +261,7 @@ describe('HtmlSanitizer', () => {
       ]),
       new Set(),
       new Map(),
+      undefined,
     );
 
     const sanitized = sanitize(sanitizerTable, '<a drop></a>');
@@ -211,6 +276,7 @@ describe('HtmlSanitizer', () => {
       ]),
       new Set(),
       new Map(),
+      undefined,
     );
 
     const sanitized = sanitize(sanitizerTable, '<a keep="value"></a>');
@@ -233,6 +299,7 @@ describe('HtmlSanitizer', () => {
       ]),
       new Set(),
       new Map<string, AttributePolicy>(),
+      undefined,
     );
 
     const sanitized = sanitize(
@@ -258,6 +325,7 @@ describe('HtmlSanitizer', () => {
       ]),
       new Set(),
       new Map(),
+      undefined,
     );
 
     const sanitized = sanitize(sanitizerTable, '<a normalize="VALUE"></a>');
@@ -283,6 +351,7 @@ describe('HtmlSanitizer', () => {
         ['constrained_attribute', {policyAction: AttributePolicyAction.KEEP}],
         ['another_attribute', {policyAction: AttributePolicyAction.KEEP}],
       ]),
+      undefined,
     );
 
     const sanitized = sanitize(
@@ -317,6 +386,7 @@ describe('HtmlSanitizer', () => {
         ['constrained_attribute', {policyAction: AttributePolicyAction.KEEP}],
         ['another_attribute', {policyAction: AttributePolicyAction.KEEP}],
       ]),
+      undefined,
     );
 
     const sanitized = sanitize(
@@ -347,6 +417,7 @@ describe('HtmlSanitizer', () => {
         ],
         ['constrained_attribute', {policyAction: AttributePolicyAction.KEEP}],
       ]),
+      undefined,
     );
 
     const sanitized = sanitize(
@@ -373,6 +444,7 @@ describe('HtmlSanitizer', () => {
         ],
         ['constrained_attribute', {policyAction: AttributePolicyAction.KEEP}],
       ]),
+      undefined,
     );
 
     const sanitized = sanitize(
@@ -398,6 +470,7 @@ describe('HtmlSanitizer', () => {
       ]),
       new Set(),
       new Map(),
+      undefined,
     );
     const html = `
       <img   src=ftp://not-load-subresources>
@@ -463,6 +536,7 @@ describe('HtmlSanitizer', () => {
               },
             ],
           ]),
+          undefined,
         );
 
         const sanitized = sanitize(
@@ -508,6 +582,7 @@ describe('HtmlSanitizer', () => {
             },
           ],
         ]),
+        undefined,
       );
       const resourceUrlPolicy = jasmine
         .createSpy<ResourceUrlPolicy>('resourceUrlPolicy')
@@ -567,6 +642,7 @@ describe('HtmlSanitizer', () => {
             },
           ],
         ]),
+        undefined,
       );
       const resourceUrlPolicy = jasmine
         .createSpy<ResourceUrlPolicy>('resourceUrlPolicy')
@@ -643,6 +719,7 @@ describe('HtmlSanitizer', () => {
         ]),
         new Set(),
         new Map(),
+        undefined,
       );
       const resourceUrlPolicy = jasmine
         .createSpy<ResourceUrlPolicy>('resourceUrlPolicy')
@@ -687,6 +764,7 @@ describe('HtmlSanitizer', () => {
         ]),
         new Set(),
         new Map(),
+        undefined,
       );
       const resourceUrlPolicy = jasmine
         .createSpy<ResourceUrlPolicy>('resourceUrlPolicy')
@@ -726,6 +804,7 @@ describe('HtmlSanitizer', () => {
         ]),
         new Set(),
         new Map(),
+        undefined,
       );
       const resourceUrlPolicy = jasmine
         .createSpy<ResourceUrlPolicy>('resourceUrlPolicy')
@@ -761,6 +840,7 @@ describe('HtmlSanitizer', () => {
         ]),
         new Set(),
         new Map(),
+        undefined,
       );
       const resourceUrlPolicy: ResourceUrlPolicy = (url) => {
         return url.pathname.endsWith('forbid') ? null : url;
@@ -785,6 +865,7 @@ describe('HtmlSanitizer', () => {
         new Map([]),
         new Set(),
         new Map(),
+        undefined,
       );
       const styleElementSanitizer = jasmine
         .createSpy<CssSanitizationFn>('styleElementSanitizer')
@@ -806,6 +887,7 @@ describe('HtmlSanitizer', () => {
         new Map([]),
         new Set(),
         new Map(),
+        undefined,
       );
 
       const sanitized = sanitize(
@@ -827,6 +909,7 @@ describe('HtmlSanitizer', () => {
             {policyAction: AttributePolicyAction.KEEP_AND_SANITIZE_STYLE},
           ],
         ]),
+        undefined,
       );
       const styleAttributeSanitizer = jasmine
         .createSpy<CssSanitizationFn>('styleAttributeSanitizer')
@@ -856,6 +939,7 @@ describe('HtmlSanitizer', () => {
             {policyAction: AttributePolicyAction.KEEP_AND_SANITIZE_STYLE},
           ],
         ]),
+        undefined,
       );
 
       const sanitized = sanitize(
@@ -874,6 +958,7 @@ describe('HtmlSanitizer', () => {
         new Map(),
         new Set(),
         new Map([]),
+        undefined,
       );
 
       expect(() =>
@@ -890,6 +975,7 @@ describe('HtmlSanitizer', () => {
         new Map(),
         new Set(),
         new Map([]),
+        undefined,
       );
 
       expect(() =>
@@ -916,6 +1002,7 @@ describe('HtmlSanitizer', () => {
           ],
           ['constrained_attribute', {policyAction: AttributePolicyAction.KEEP}],
         ]),
+        undefined,
       );
 
       const sanitizer = new HtmlSanitizerImpl(sanitizerTable, secretToken);
@@ -941,6 +1028,7 @@ describe('HtmlSanitizer', () => {
             {policyAction: AttributePolicyAction.KEEP_AND_SANITIZE_URL},
           ],
         ]),
+        undefined,
       );
 
       expect(() =>
@@ -970,6 +1058,7 @@ describe('HtmlSanitizer', () => {
             {policyAction: AttributePolicyAction.KEEP_AND_NORMALIZE},
           ],
         ]),
+        undefined,
       );
 
       expect(
@@ -990,6 +1079,7 @@ describe('HtmlSanitizer', () => {
         new Map(),
         new Set(),
         new Map([]),
+        undefined,
       );
 
       expect(
@@ -1006,6 +1096,7 @@ describe('HtmlSanitizer', () => {
         new Map(),
         new Set(),
         new Map([]),
+        undefined,
       );
 
       expect(

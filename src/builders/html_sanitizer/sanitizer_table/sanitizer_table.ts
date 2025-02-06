@@ -11,7 +11,7 @@ export class SanitizerTable {
     readonly elementPolicies: ReadonlyMap<string, ElementPolicy>,
     readonly allowedGlobalAttributes: ReadonlySet<string>,
     readonly globalAttributePolicies: ReadonlyMap<string, AttributePolicy>,
-    readonly globallyAllowedAttributePrefixes?: ReadonlySet<string> | undefined,
+    readonly globallyAllowedAttributePrefixes: ReadonlySet<string> | undefined,
   ) {}
 
   isAllowedElement(elementName: string): boolean {

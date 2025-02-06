@@ -65,6 +65,7 @@ export abstract class BaseSanitizerBuilder<
       allowedElementPolicies,
       this.sanitizerTable.allowedGlobalAttributes,
       this.sanitizerTable.globalAttributePolicies,
+      this.sanitizerTable.globallyAllowedAttributePrefixes,
     );
     return this;
   }
@@ -103,6 +104,7 @@ export abstract class BaseSanitizerBuilder<
       allowedElementPolicies,
       this.sanitizerTable.allowedGlobalAttributes,
       this.sanitizerTable.globalAttributePolicies,
+      this.sanitizerTable.globallyAllowedAttributePrefixes,
     );
     return this;
   }
@@ -146,18 +148,35 @@ export abstract class BaseSanitizerBuilder<
       elementPolicies,
       allowedGlobalAttributes,
       globalAttributePolicies,
+      this.sanitizerTable.globallyAllowedAttributePrefixes,
     );
     return this;
   }
   /**
-   * Allows the set of data attributes passed.
+   * Allows all or a definite set of data attributes passed.
    *
-   * These values must be prefixed with "data-"
+   * When called without arguments, all data attributes are allowed.
+   * When a set of attributes is passed, its values must be prefixed with "data-"
    *
    * If called with onlyAllowElements or onlyAllowAttributes, those methods must
    * be called first.
    */
-  allowDataAttributes(attributes: string[]): this {
+  allowDataAttributes(attributes?: string[]): this {
+    if (attributes === undefined) {
+      const globallyAllowedAttributePrefixes = new Set<string>(
+        this.sanitizerTable.globallyAllowedAttributePrefixes,
+      );
+      globallyAllowedAttributePrefixes.add('data-');
+
+      this.sanitizerTable = new SanitizerTable(
+        this.sanitizerTable.allowedElements,
+        this.sanitizerTable.elementPolicies,
+        this.sanitizerTable.allowedGlobalAttributes,
+        this.sanitizerTable.globalAttributePolicies,
+        globallyAllowedAttributePrefixes,
+      );
+      return this;
+    }
     const allowedGlobalAttributes = new Set<string>(
       this.sanitizerTable.allowedGlobalAttributes,
     );
@@ -174,6 +193,7 @@ export abstract class BaseSanitizerBuilder<
       this.sanitizerTable.elementPolicies,
       allowedGlobalAttributes,
       this.sanitizerTable.globalAttributePolicies,
+      this.sanitizerTable.globallyAllowedAttributePrefixes,
     );
     return this;
   }
@@ -196,6 +216,7 @@ export abstract class BaseSanitizerBuilder<
       this.sanitizerTable.elementPolicies,
       this.sanitizerTable.allowedGlobalAttributes,
       globalAttributePolicies,
+      this.sanitizerTable.globallyAllowedAttributePrefixes,
     );
     return this;
   }
@@ -214,6 +235,7 @@ export abstract class BaseSanitizerBuilder<
       this.sanitizerTable.elementPolicies,
       allowedGlobalAttributes,
       this.sanitizerTable.globalAttributePolicies,
+      this.sanitizerTable.globallyAllowedAttributePrefixes,
     );
     return this;
   }
@@ -231,6 +253,7 @@ export abstract class BaseSanitizerBuilder<
       this.sanitizerTable.elementPolicies,
       allowedGlobalAttributes,
       this.sanitizerTable.globalAttributePolicies,
+      this.sanitizerTable.globallyAllowedAttributePrefixes,
     );
     return this;
   }
@@ -257,6 +280,7 @@ export abstract class BaseSanitizerBuilder<
       this.sanitizerTable.elementPolicies,
       allowedGlobalAttributes,
       this.sanitizerTable.globalAttributePolicies,
+      this.sanitizerTable.globallyAllowedAttributePrefixes,
     );
     return this;
   }
@@ -414,6 +438,7 @@ export class CssSanitizerBuilder extends BaseSanitizerBuilder<CssSanitizer> {
       this.sanitizerTable.elementPolicies,
       allowedGlobalAttributes,
       globalAttributePolicies,
+      this.sanitizerTable.globallyAllowedAttributePrefixes,
     );
   }
 }

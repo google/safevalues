@@ -213,7 +213,7 @@ describe('html sanitizer builder test', () => {
   });
 
   describe('when calling allowDataAttributes:', () => {
-    it('allows data attributes', () => {
+    it('allows an exhaustive list of data attributes', () => {
       const sanitizer = new HtmlSanitizerBuilder()
         .allowDataAttributes(['data-foo'])
         .build();
@@ -244,6 +244,46 @@ describe('html sanitizer builder test', () => {
           )
           .toString(),
       ).toEqual('<article data-foo="hello"></article>');
+    });
+
+    it('allows any data- attributes when called with no argument', () => {
+      const sanitizer = new HtmlSanitizerBuilder()
+        .allowDataAttributes()
+        .build();
+
+      expect(
+        sanitizer
+          .sanitize(
+            '<article data-foo="hello" src="https://google.com"></article>',
+          )
+          .toString(),
+      ).toEqual('<article data-foo="hello"></article>');
+    });
+
+    describe('multiple times in the same builder', () => {
+      it('allows any data- prefixed attributes when at least one call has no argument provided', () => {
+        const sanitizerFinishWithNoArgument = new HtmlSanitizerBuilder()
+          .allowDataAttributes(['data-foo', 'data-bar'])
+          .allowDataAttributes()
+          .build();
+
+        expect(
+          sanitizerFinishWithNoArgument
+            .sanitize('<article data-hello="hello"></article>')
+            .toString(),
+        ).toEqual('<article data-hello="hello"></article>');
+
+        const sanitizerFinishWithList = new HtmlSanitizerBuilder()
+          .allowDataAttributes()
+          .allowDataAttributes(['data-foo', 'data-bar'])
+          .build();
+
+        expect(
+          sanitizerFinishWithList
+            .sanitize('<article data-hello="hello" data-bar="bar"></article>')
+            .toString(),
+        ).toEqual('<article data-hello="hello" data-bar="bar"></article>');
+      });
     });
   });
 

@@ -396,4 +396,5 @@ export const DEFAULT_SANITIZER_TABLE: SanitizerTable = new SanitizerTable(
   new Map(ELEMENT_POLICIES),
   new Set(ALLOWED_GLOBAL_ATTRIBUTES),
   new Map(GLOBAL_ATTRIBUTE_POLICIES),
+  undefined,
 );

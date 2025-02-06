@@ -103,4 +103,17 @@ Example:
 const sanitizer = new HtmlSanitizerBuilder()
                             .allowDataAttributes(['data-foo', 'data-bar'])
                             .build();
+
+// Allow any data-* attributes
+const sanitizer = new HtmlSanitizerBuilder()
+                            .allowDataAttributes()
+                            .build();
+```
+
+```typescript
+// Allow class and id attributes
+const sanitizer = new HtmlSanitizerBuilder()
+                            .allowClassAttributes()
+                            .allowIdAttributes()
+                            .build();
 ```

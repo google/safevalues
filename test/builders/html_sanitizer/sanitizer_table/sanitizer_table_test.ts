@@ -19,6 +19,7 @@ const sanitizerTable = new SanitizerTable(
   new Map([
     ['href', {policyAction: AttributePolicyAction.KEEP_AND_SANITIZE_URL}],
   ]),
+  new Set<string>(['test-allowed-attribute-prefix-']),
 );
 
 describe('sanitizer table test', () => {
@@ -32,6 +33,14 @@ describe('sanitizer table test', () => {
 
   it('returns the element specific policy for an attribute', () => {
     const policy = sanitizerTable.getAttributePolicy('href', 'A').policyAction;
+    expect(policy).toBe(AttributePolicyAction.KEEP);
+  });
+
+  it('returns the global policy for prefixed attributes', () => {
+    const policy = sanitizerTable.getAttributePolicy(
+      'test-allowed-attribute-prefix-attr',
+      'A',
+    ).policyAction;
     expect(policy).toBe(AttributePolicyAction.KEEP);
   });
 
