@@ -28,6 +28,12 @@ describe('objectUrlFromSafeSource', () => {
       objectUrlRegExp,
     );
     expect(buildBlobWithType('audio/mp3;1="2;";3=5')).toMatch(objectUrlRegExp);
+    expect(buildBlobWithType('application/octet-stream')).toMatch(
+      objectUrlRegExp,
+    );
+    expect(buildBlobWithType('APPLICATION/octet-stream')).toMatch(
+      objectUrlRegExp,
+    );
 
     expect(() => buildBlobWithType('image/jpg x')).toThrow();
     expect(() => buildBlobWithType('x image/jpg')).toThrow();

@@ -5,29 +5,35 @@
  */
 
 /**
- * A pattern that matches safe MIME types. Only matches image, video and audio
- * types, with some parameter support (most notably, we haven't implemented the
- * more complex parts like %-encoded characters or non-alphanumerical ones for
- * simplicity's sake). Also, the specs are fairly complex, and they don't
- * necessarily agree with Chrome on some aspects, and so we settled on a subset
- * where the behavior makes sense to all parties involved.
+ * A pattern that matches safe MIME types. Only matches image, video, audio and
+ * application/octet-stream types, with some parameter support (most notably, we
+ * haven't implemented the more complex parts like %-encoded characters or
+ * non-alphanumerical ones for simplicity's sake). Also, the specs are fairly
+ * complex, and they don't necessarily agree with Chrome on some aspects, and so
+ * we settled on a subset where the behavior makes sense to all parties
+ * involved.
+ * Use application/octet-stream for blobs that are meant to be downloaded.
  *
  * The spec is available at https://mimesniff.spec.whatwg.org/ (and see
  * https://tools.ietf.org/html/rfc2397 for data: urls, which override some of
  * it).
  */
 function isSafeMimeType(mimeType: string): boolean {
+  if (mimeType.toLowerCase() === 'application/octet-stream') {
+    return true;
+  }
   const match = mimeType.match(/^([^;]+)(?:;\w+=(?:\w+|"[\w;,= ]+"))*$/i);
   return (
     match?.length === 2 &&
     (isSafeImageMimeType(match[1]) ||
       isSafeVideoMimeType(match[1]) ||
-      isSafeAudioMimeType(match[1]))
+      isSafeAudioMimeType(match[1]) ||
+      isSafeFontMimeType(match[1]))
   );
 }
 
 function isSafeImageMimeType(mimeType: string): boolean {
-  return /^image\/(?:bmp|gif|jpeg|jpg|png|tiff|webp|x-icon|heic|heif)$/i.test(
+  return /^image\/(?:bmp|gif|jpeg|jpg|png|tiff|webp|x-icon|heic|heif|avif|x-ms-bmp)$/i.test(
     mimeType,
   );
 }
@@ -39,9 +45,13 @@ function isSafeVideoMimeType(mimeType: string): boolean {
 }
 
 function isSafeAudioMimeType(mimeType: string): boolean {
-  return /^audio\/(?:3gpp2|3gpp|aac|L16|midi|mp3|mp4|mpeg|oga|ogg|opus|x-m4a|x-matroska|x-wav|wav|webm)$/i.test(
+  return /^audio\/(?:3gpp2|3gpp|aac|amr|L16|midi|mp3|mp4|mpeg|oga|ogg|opus|x-m4a|x-matroska|x-wav|wav|webm)$/i.test(
     mimeType,
   );
+}
+
+function isSafeFontMimeType(mimeType: string): boolean {
+  return /^font\/[\w-]+$/i.test(mimeType);
 }
 
 /**
