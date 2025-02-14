@@ -1,6 +1,7 @@
 {
   "extends": "./tsconfig-base.json",
   "compilerOptions": {
+    "moduleResolution": "node",
       "module": "esnext",
       "outDir": "dist/mjs",
       "target": "es2015"
