@@ -272,6 +272,10 @@ export const GLOBAL_ATTRIBUTE_CONTRACTS: GlobalAttributeContractVector[] = [
     action: SetAttributeAction.ALLOW,
   },
   {
+    attributeName: 'crossorigin',
+    action: SetAttributeAction.ALLOW,
+  },
+  {
     attributeName: 'datetime',
     action: SetAttributeAction.ALLOW,
   },
