@@ -309,6 +309,7 @@ const ALLOWED_GLOBAL_ATTRIBUTES: readonly string[] = [
   'muted',
   'nonce',
   'open',
+  'playsinline',
   'placeholder',
   'poster',
   'preload',

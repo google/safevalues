@@ -372,6 +372,10 @@ export const GLOBAL_ATTRIBUTE_CONTRACTS: GlobalAttributeContractVector[] = [
     action: SetAttributeAction.ALLOW,
   },
   {
+    attributeName: 'playsinline',
+    action: SetAttributeAction.ALLOW,
+  },
+  {
     attributeName: 'placeholder',
     action: SetAttributeAction.ALLOW,
   },
