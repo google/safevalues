@@ -84,7 +84,7 @@ export const EMPTY_HTML: SafeHtml = /* #__PURE__ */ pure(() =>
 
 /** Checks if the given value is a `SafeHtml` instance */
 export function isHtml(value: unknown): value is SafeHtml {
-  return value instanceof SafeHtml;
+  return value instanceof SafeHtml || value?.constructor?.name === 'SafeHtml';
 }
 
 /**
