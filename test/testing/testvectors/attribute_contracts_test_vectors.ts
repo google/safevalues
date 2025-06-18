@@ -272,6 +272,10 @@ export const GLOBAL_ATTRIBUTE_CONTRACTS: GlobalAttributeContractVector[] = [
     action: SetAttributeAction.ALLOW,
   },
   {
+    attributeName: 'coords',
+    action: SetAttributeAction.ALLOW,
+  },
+  {
     attributeName: 'crossorigin',
     action: SetAttributeAction.ALLOW,
   },
@@ -317,6 +321,10 @@ export const GLOBAL_ATTRIBUTE_CONTRACTS: GlobalAttributeContractVector[] = [
   },
   {
     attributeName: 'hidden',
+    action: SetAttributeAction.ALLOW,
+  },
+  {
+    attributeName: 'inert',
     action: SetAttributeAction.ALLOW,
   },
   {
@@ -457,6 +465,10 @@ export const GLOBAL_ATTRIBUTE_CONTRACTS: GlobalAttributeContractVector[] = [
   },
   {
     attributeName: 'type',
+    action: SetAttributeAction.ALLOW,
+  },
+  {
+    attributeName: 'usemap',
     action: SetAttributeAction.ALLOW,
   },
   {
