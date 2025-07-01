@@ -233,6 +233,17 @@ const ELEMENT_POLICIES: ReadonlyArray<[string, ElementPolicy]> = [
       ],
     ]),
   ],
+  [
+    'USE',
+    new Map<string, AttributePolicy>([
+      [
+        'href',
+        {
+          policyAction: AttributePolicyAction.KEEP_AND_SANITIZE_URL,
+        },
+      ],
+    ]),
+  ],
 ];
 
 const ALLOWED_GLOBAL_ATTRIBUTES: readonly string[] = [
