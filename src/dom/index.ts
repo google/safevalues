@@ -9,7 +9,7 @@
  * a clearly defined interface.
  */
 
-export {setAnchorHref} from './elements/anchor.js';
+export {setAnchorHref, setAnchorRel} from './elements/anchor.js';
 export {setAreaHref} from './elements/area.js';
 export {setBaseHref} from './elements/base.js';
 export {setButtonFormaction} from './elements/button.js';
