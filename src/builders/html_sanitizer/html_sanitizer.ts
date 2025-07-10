@@ -14,17 +14,17 @@ import {restrictivelySanitizeUrl} from '../url_builders.js';
 import {CSS_ISOLATION_STYLESHEET} from './css/css_isolation.js';
 import {createInertFragment} from './inert_fragment.js';
 import {getNodeName, isElement, isText} from './no_clobber.js';
-import {
-  parseUrl,
-  ResourceUrlPolicy,
-  ResourceUrlPolicyHints,
-  ResourceUrlPolicyHintsType,
-} from './resource_url_policy.js';
 import {DEFAULT_SANITIZER_TABLE} from './sanitizer_table/default_sanitizer_table.js';
 import {
   AttributePolicyAction,
   SanitizerTable,
 } from './sanitizer_table/sanitizer_table.js';
+import {
+  parseUrl,
+  UrlPolicy,
+  UrlPolicyHints,
+  UrlPolicyHintsType,
+} from './url_policy.js';
 
 /**
  * An HTML5-compliant markup sanitizer that produces SafeHtml markup.
@@ -70,7 +70,7 @@ export class HtmlSanitizerImpl implements HtmlSanitizer, CssSanitizer {
     token: object,
     private readonly styleElementSanitizer?: CssSanitizationFn | undefined,
     private readonly styleAttributeSanitizer?: CssSanitizationFn | undefined,
-    private readonly resourceUrlPolicy?: ResourceUrlPolicy | undefined,
+    private readonly resourceUrlPolicy?: UrlPolicy | undefined,
     private readonly openShadow?: boolean,
   ) {
     ensureTokenIsValid(token);
@@ -249,8 +249,8 @@ export class HtmlSanitizerImpl implements HtmlSanitizer, CssSanitizer {
           break;
         case AttributePolicyAction.KEEP_AND_USE_RESOURCE_URL_POLICY:
           if (this.resourceUrlPolicy) {
-            const hints: ResourceUrlPolicyHints = {
-              type: ResourceUrlPolicyHintsType.HTML_ATTRIBUTE,
+            const hints: UrlPolicyHints = {
+              type: UrlPolicyHintsType.HTML_ATTRIBUTE,
               attributeName: name,
               elementName,
             };
@@ -269,8 +269,8 @@ export class HtmlSanitizerImpl implements HtmlSanitizer, CssSanitizer {
           break;
         case AttributePolicyAction.KEEP_AND_USE_RESOURCE_URL_POLICY_FOR_SRCSET:
           if (this.resourceUrlPolicy) {
-            const hints: ResourceUrlPolicyHints = {
-              type: ResourceUrlPolicyHintsType.HTML_ATTRIBUTE,
+            const hints: UrlPolicyHints = {
+              type: UrlPolicyHintsType.HTML_ATTRIBUTE,
               attributeName: name,
               elementName,
             };

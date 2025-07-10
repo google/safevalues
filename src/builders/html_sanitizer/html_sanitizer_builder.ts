@@ -19,7 +19,6 @@ import {
   HtmlSanitizer,
   HtmlSanitizerImpl,
 } from './html_sanitizer.js';
-import {ResourceUrlPolicy} from './resource_url_policy.js';
 import {DEFAULT_SANITIZER_TABLE} from './sanitizer_table/default_sanitizer_table.js';
 import {
   AttributePolicy,
@@ -28,6 +27,7 @@ import {
   SanitizerTable,
   isCustomElement,
 } from './sanitizer_table/sanitizer_table.js';
+import {UrlPolicy} from './url_policy.js';
 /**
  * The base class for all sanitizer builders.
  */
@@ -38,7 +38,7 @@ export abstract class BaseSanitizerBuilder<
   // To denote if the builder has called build() and therefore should make no
   // further changes to the sanitizer table.
   protected calledBuild = false;
-  protected resourceUrlPolicy?: ResourceUrlPolicy;
+  protected resourceUrlPolicy?: UrlPolicy; // For controlling 0-click exfiltrations.
   constructor() {
     this.sanitizerTable = DEFAULT_SANITIZER_TABLE;
   }
@@ -322,7 +322,7 @@ export abstract class BaseSanitizerBuilder<
    * };
    * ```
    */
-  withResourceUrlPolicy(resourceUrlPolicy: ResourceUrlPolicy): this {
+  withResourceUrlPolicy(resourceUrlPolicy: UrlPolicy): this {
     this.resourceUrlPolicy = resourceUrlPolicy;
     return this;
   }

@@ -16,22 +16,22 @@ import {
   Srcset,
 } from '../../../src/builders/html_sanitizer/html_sanitizer';
 import {
-  ResourceUrlPolicy,
-  ResourceUrlPolicyHintsType,
-} from '../../../src/builders/html_sanitizer/resource_url_policy';
-import {
   AttributePolicy,
   AttributePolicyAction,
   ElementPolicy,
   SanitizerTable,
 } from '../../../src/builders/html_sanitizer/sanitizer_table/sanitizer_table';
+import {
+  UrlPolicy,
+  UrlPolicyHintsType,
+} from '../../../src/builders/html_sanitizer/url_policy';
 
 function sanitize(
   table: SanitizerTable,
   html: string,
   styleElementSanitizer?: CssSanitizationFn,
   styleAttributeSanitizer?: CssSanitizationFn,
-  resourceUrlPolicy?: ResourceUrlPolicy,
+  resourceUrlPolicy?: UrlPolicy,
 ): string {
   return new HtmlSanitizerImpl(
     table,
@@ -585,7 +585,7 @@ describe('HtmlSanitizer', () => {
         undefined,
       );
       const resourceUrlPolicy = jasmine
-        .createSpy<ResourceUrlPolicy>('resourceUrlPolicy')
+        .createSpy<UrlPolicy>('resourceUrlPolicy')
         .and.returnValue(new URL('https://google.com'));
 
       sanitize(
@@ -600,7 +600,7 @@ describe('HtmlSanitizer', () => {
       expect(resourceUrlPolicy).toHaveBeenCalledWith(
         new URL('https://google.com/local'),
         {
-          type: ResourceUrlPolicyHintsType.HTML_ATTRIBUTE,
+          type: UrlPolicyHintsType.HTML_ATTRIBUTE,
           attributeName: 'src_local',
           elementName: 'IMG',
         },
@@ -608,7 +608,7 @@ describe('HtmlSanitizer', () => {
       expect(resourceUrlPolicy).toHaveBeenCalledWith(
         new URL('https://google.com/global'),
         {
-          type: ResourceUrlPolicyHintsType.HTML_ATTRIBUTE,
+          type: UrlPolicyHintsType.HTML_ATTRIBUTE,
           attributeName: 'src_global',
           elementName: 'IMG',
         },
@@ -645,7 +645,7 @@ describe('HtmlSanitizer', () => {
         undefined,
       );
       const resourceUrlPolicy = jasmine
-        .createSpy<ResourceUrlPolicy>('resourceUrlPolicy')
+        .createSpy<UrlPolicy>('resourceUrlPolicy')
         .and.returnValue(new URL('https://google.com'));
 
       sanitize(
@@ -662,7 +662,7 @@ describe('HtmlSanitizer', () => {
       expect(resourceUrlPolicy).toHaveBeenCalledWith(
         new URL('https://google.com/local1'),
         {
-          type: ResourceUrlPolicyHintsType.HTML_ATTRIBUTE,
+          type: UrlPolicyHintsType.HTML_ATTRIBUTE,
           attributeName: 'srcset_local',
           elementName: 'IMG',
         },
@@ -670,7 +670,7 @@ describe('HtmlSanitizer', () => {
       expect(resourceUrlPolicy).toHaveBeenCalledWith(
         new URL('https://google.com/local2'),
         {
-          type: ResourceUrlPolicyHintsType.HTML_ATTRIBUTE,
+          type: UrlPolicyHintsType.HTML_ATTRIBUTE,
           attributeName: 'srcset_local',
           elementName: 'IMG',
         },
@@ -678,7 +678,7 @@ describe('HtmlSanitizer', () => {
       expect(resourceUrlPolicy).toHaveBeenCalledWith(
         new URL('https://google.com/global1'),
         {
-          type: ResourceUrlPolicyHintsType.HTML_ATTRIBUTE,
+          type: UrlPolicyHintsType.HTML_ATTRIBUTE,
           attributeName: 'srcset_global',
           elementName: 'IMG',
         },
@@ -686,7 +686,7 @@ describe('HtmlSanitizer', () => {
       expect(resourceUrlPolicy).toHaveBeenCalledWith(
         new URL('https://google.com/global2'),
         {
-          type: ResourceUrlPolicyHintsType.HTML_ATTRIBUTE,
+          type: UrlPolicyHintsType.HTML_ATTRIBUTE,
           attributeName: 'srcset_global',
           elementName: 'IMG',
         },
@@ -722,7 +722,7 @@ describe('HtmlSanitizer', () => {
         undefined,
       );
       const resourceUrlPolicy = jasmine
-        .createSpy<ResourceUrlPolicy>('resourceUrlPolicy')
+        .createSpy<UrlPolicy>('resourceUrlPolicy')
         .and.returnValue(new URL('https://returned.by.policy'));
 
       const sanitized = sanitize(
@@ -767,7 +767,7 @@ describe('HtmlSanitizer', () => {
         undefined,
       );
       const resourceUrlPolicy = jasmine
-        .createSpy<ResourceUrlPolicy>('resourceUrlPolicy')
+        .createSpy<UrlPolicy>('resourceUrlPolicy')
         .and.returnValue(new URL('https://google.com'));
 
       sanitize(
@@ -807,7 +807,7 @@ describe('HtmlSanitizer', () => {
         undefined,
       );
       const resourceUrlPolicy = jasmine
-        .createSpy<ResourceUrlPolicy>('resourceUrlPolicy')
+        .createSpy<UrlPolicy>('resourceUrlPolicy')
         .and.returnValue(null);
 
       const sanitized = sanitize(
@@ -842,7 +842,7 @@ describe('HtmlSanitizer', () => {
         new Map(),
         undefined,
       );
-      const resourceUrlPolicy: ResourceUrlPolicy = (url) => {
+      const resourceUrlPolicy: UrlPolicy = (url) => {
         return url.pathname.endsWith('forbid') ? null : url;
       };
 

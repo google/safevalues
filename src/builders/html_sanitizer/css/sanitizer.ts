@@ -19,11 +19,7 @@
 
 import {setStyleTextContent} from '../../../dom/elements/style.js';
 import {createStyleSheetInternal} from '../../../internals/style_sheet_impl.js';
-import {
-  ResourceUrlPolicy,
-  ResourceUrlPolicyHintsType,
-  parseUrl,
-} from '../resource_url_policy.js';
+import {UrlPolicy, UrlPolicyHintsType, parseUrl} from '../url_policy.js';
 import {escapeIdent, serializeTokens} from './serializer.js';
 import {tokenizeCss} from './tokenizer.js';
 import {CssToken, CssTokenKind} from './tokens.js';
@@ -42,7 +38,7 @@ class CssSanitizer {
   constructor(
     private readonly propertyAllowlist: ReadonlySet<string>,
     private readonly functionAllowlist: ReadonlySet<string>,
-    private readonly resourceUrlPolicy: ResourceUrlPolicy | undefined,
+    private readonly resourceUrlPolicy: UrlPolicy | undefined,
     private readonly allowKeyframes: boolean,
     private readonly propertyDiscarders: PropertyDiscarder[],
   ) {
@@ -147,8 +143,8 @@ class CssSanitizer {
         if (this.resourceUrlPolicy) {
           parsedUrl = this.resourceUrlPolicy(parsedUrl, {
             type: calledFromStyleElement
-              ? ResourceUrlPolicyHintsType.STYLE_ELEMENT
-              : ResourceUrlPolicyHintsType.STYLE_ATTRIBUTE,
+              ? UrlPolicyHintsType.STYLE_ELEMENT
+              : UrlPolicyHintsType.STYLE_ATTRIBUTE,
             propertyName,
           });
         }
@@ -301,7 +297,7 @@ export function sanitizeStyleElement(
   cssText: string,
   propertyAllowlist: ReadonlySet<string>,
   functionAllowlist: ReadonlySet<string>,
-  resourceUrlPolicy: ResourceUrlPolicy | undefined,
+  resourceUrlPolicy: UrlPolicy | undefined,
   allowKeyframes: boolean,
   propertyDiscarders: PropertyDiscarder[],
 ): string {
@@ -324,7 +320,7 @@ export function sanitizeStyleAttribute(
   cssText: string,
   propertyAllowlist: ReadonlySet<string>,
   functionAllowlist: ReadonlySet<string>,
-  resourceUrlPolicy: ResourceUrlPolicy | undefined,
+  resourceUrlPolicy: UrlPolicy | undefined,
   propertyDiscarders: PropertyDiscarder[],
 ): string {
   return new CssSanitizer(

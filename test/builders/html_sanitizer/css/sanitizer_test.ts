@@ -5,9 +5,9 @@
  */
 
 import {
-  ResourceUrlPolicy,
-  ResourceUrlPolicyHintsType,
-} from '../../../../src/builders/html_sanitizer/css/../resource_url_policy';
+  UrlPolicy,
+  UrlPolicyHintsType,
+} from '../../../../src/builders/html_sanitizer/css/../url_policy';
 import {
   PropertyDiscarder,
   sanitizeStyleAttribute,
@@ -25,7 +25,7 @@ describe('sanitizeStyleElement', () => {
     'background-image',
     'color',
   ]);
-  const IDENTITY_RESOURCE_POLICY: ResourceUrlPolicy = (url) => url;
+  const IDENTITY_RESOURCE_POLICY: UrlPolicy = (url) => url;
   const FUNCTION_ALLOWLIST = new Set(['rgb', 'rgba', 'url']);
   const TEST_CASES: TestCase[] = [
     {
@@ -158,7 +158,7 @@ span { cursor: url("${relativePath}"), pointer; }`,
   describe('with a custom resource url policy', () => {
     it('calls the policy with a valid URL and hints', () => {
       const resourceUrlPolicy = jasmine
-        .createSpy<ResourceUrlPolicy>()
+        .createSpy<UrlPolicy>()
         .and.returnValue(new URL('about:blank'));
       const propertyAllowlist = new Set([
         'background-image',
@@ -183,21 +183,21 @@ span { cursor: url("${relativePath}"), pointer; }`,
       expect(resourceUrlPolicy).toHaveBeenCalledWith(
         new URL('https://www.google.com'),
         {
-          type: ResourceUrlPolicyHintsType.STYLE_ELEMENT,
+          type: UrlPolicyHintsType.STYLE_ELEMENT,
           propertyName: 'background-image',
         },
       );
       expect(resourceUrlPolicy).toHaveBeenCalledWith(
         new URL('file:///etc/passwd'),
         {
-          type: ResourceUrlPolicyHintsType.STYLE_ELEMENT,
+          type: UrlPolicyHintsType.STYLE_ELEMENT,
           propertyName: 'border-image-source',
         },
       );
       expect(resourceUrlPolicy).toHaveBeenCalledWith(
         new URL('/relative/path', document.baseURI),
         {
-          type: ResourceUrlPolicyHintsType.STYLE_ELEMENT,
+          type: UrlPolicyHintsType.STYLE_ELEMENT,
           propertyName: 'cursor',
         },
       );
@@ -205,7 +205,7 @@ span { cursor: url("${relativePath}"), pointer; }`,
 
     it('uses the returned URL if the policy returns a string', () => {
       const resourceUrlPolicy = jasmine
-        .createSpy<ResourceUrlPolicy>()
+        .createSpy<UrlPolicy>()
         .and.returnValue(new URL('https://from-policy.com'));
       const propertyAllowlist = new Set(['background-image']);
       const functionAllowlist = new Set(['url']);
@@ -226,7 +226,7 @@ span { cursor: url("${relativePath}"), pointer; }`,
 
     it('deletes a property if the policy returns null', () => {
       const resourceUrlPolicy = jasmine
-        .createSpy<ResourceUrlPolicy>()
+        .createSpy<UrlPolicy>()
         .and.returnValue(null);
       const propertyAllowlist = new Set(['background-image']);
       const functionAllowlist = new Set(['url']);
@@ -364,7 +364,7 @@ describe('sanitizeStyleAttribute', () => {
     'background-image',
     'color',
   ]);
-  const IDENTITY_RESOURCE_POLICY: ResourceUrlPolicy = (url) => url;
+  const IDENTITY_RESOURCE_POLICY: UrlPolicy = (url) => url;
   const FUNCTION_ALLOWLIST = new Set(['rgb', 'rgba', 'url']);
   const TEST_CASES: TestCase[] = [
     {
@@ -426,7 +426,7 @@ describe('sanitizeStyleAttribute', () => {
   describe('with a custom resource url policy', () => {
     it('calls the policy with a valid URL and hints', () => {
       const resourceUrlPolicy = jasmine
-        .createSpy<ResourceUrlPolicy>()
+        .createSpy<UrlPolicy>()
         .and.returnValue(new URL('about:blank'));
       const propertyAllowlist = new Set([
         'background-image',
@@ -451,21 +451,21 @@ describe('sanitizeStyleAttribute', () => {
       expect(resourceUrlPolicy).toHaveBeenCalledWith(
         new URL('https://www.google.com'),
         {
-          type: ResourceUrlPolicyHintsType.STYLE_ATTRIBUTE,
+          type: UrlPolicyHintsType.STYLE_ATTRIBUTE,
           propertyName: 'background-image',
         },
       );
       expect(resourceUrlPolicy).toHaveBeenCalledWith(
         new URL('file:///etc/passwd'),
         {
-          type: ResourceUrlPolicyHintsType.STYLE_ATTRIBUTE,
+          type: UrlPolicyHintsType.STYLE_ATTRIBUTE,
           propertyName: 'border-image-source',
         },
       );
       expect(resourceUrlPolicy).toHaveBeenCalledWith(
         new URL('/relative/path', document.baseURI),
         {
-          type: ResourceUrlPolicyHintsType.STYLE_ATTRIBUTE,
+          type: UrlPolicyHintsType.STYLE_ATTRIBUTE,
           propertyName: 'cursor',
         },
       );
@@ -473,7 +473,7 @@ describe('sanitizeStyleAttribute', () => {
 
     it('uses the returned URL if the policy returns a string', () => {
       const resourceUrlPolicy = jasmine
-        .createSpy<ResourceUrlPolicy>()
+        .createSpy<UrlPolicy>()
         .and.returnValue(new URL('https://from-policy.com'));
       const propertyAllowlist = new Set(['background-image']);
       const functionAllowlist = new Set(['url']);
@@ -493,7 +493,7 @@ describe('sanitizeStyleAttribute', () => {
 
     it('deletes a property if the policy returns null', () => {
       const resourceUrlPolicy = jasmine
-        .createSpy<ResourceUrlPolicy>()
+        .createSpy<UrlPolicy>()
         .and.returnValue(null);
       const propertyAllowlist = new Set(['background-image']);
       const functionAllowlist = new Set(['url']);

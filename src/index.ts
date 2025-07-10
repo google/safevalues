@@ -34,10 +34,10 @@ export {
   HtmlSanitizerBuilder,
 } from './builders/html_sanitizer/html_sanitizer_builder.js';
 export {
-  ResourceUrlPolicyHintsType,
-  type ResourceUrlPolicy,
-  type ResourceUrlPolicyHints,
-} from './builders/html_sanitizer/resource_url_policy.js';
+  UrlPolicyHintsType,
+  type UrlPolicy,
+  type UrlPolicyHints,
+} from './builders/html_sanitizer/url_policy.js';
 export {
   appendParams,
   appendPathSegment,

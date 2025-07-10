@@ -9,9 +9,9 @@ import {
   HtmlSanitizerBuilder,
 } from '../../../src/builders/html_sanitizer/html_sanitizer_builder';
 import {
-  ResourceUrlPolicy,
-  ResourceUrlPolicyHintsType,
-} from '../../../src/builders/html_sanitizer/resource_url_policy';
+  UrlPolicy,
+  UrlPolicyHintsType,
+} from '../../../src/builders/html_sanitizer/url_policy';
 
 describe('html sanitizer builder test', () => {
   it('throws an error when calling build twice', () => {
@@ -342,7 +342,7 @@ describe('html sanitizer builder test', () => {
   describe('when calling withResourceUrlPolicy:', () => {
     it('sets resourceUrlPolicy to the provided value', () => {
       const resourceUrlPolicy = jasmine
-        .createSpy<ResourceUrlPolicy>()
+        .createSpy<UrlPolicy>()
         .and.returnValue(new URL('https://returned.by.policy'));
       const sanitizer = new HtmlSanitizerBuilder()
         .withResourceUrlPolicy(resourceUrlPolicy)
@@ -355,7 +355,7 @@ describe('html sanitizer builder test', () => {
       expect(resourceUrlPolicy).toHaveBeenCalledOnceWith(
         new URL('https://google.com'),
         {
-          type: ResourceUrlPolicyHintsType.HTML_ATTRIBUTE,
+          type: UrlPolicyHintsType.HTML_ATTRIBUTE,
           attributeName: 'src',
           elementName: 'IMG',
         },
