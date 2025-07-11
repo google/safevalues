@@ -71,6 +71,7 @@ export class HtmlSanitizerImpl implements HtmlSanitizer, CssSanitizer {
     private readonly styleElementSanitizer?: CssSanitizationFn | undefined,
     private readonly styleAttributeSanitizer?: CssSanitizationFn | undefined,
     private readonly resourceUrlPolicy?: UrlPolicy | undefined,
+    private readonly navigationUrlPolicy?: UrlPolicy | undefined,
     private readonly openShadow?: boolean,
   ) {
     ensureTokenIsValid(token);
@@ -225,15 +226,12 @@ export class HtmlSanitizerImpl implements HtmlSanitizer, CssSanitizer {
           setAttribute(newNode, name, value);
           break;
         case AttributePolicyAction.KEEP_AND_SANITIZE_URL:
-          const sanitizedAttrUrl = restrictivelySanitizeUrl(value);
-          if (sanitizedAttrUrl !== value) {
-            this.recordChange(
-              `Url in attribute ${name} was modified during sanitization. Original url:"${value}" was sanitized to: "${sanitizedAttrUrl}"`,
+          if (process.env.NODE_ENV !== 'production') {
+            throw new Error(
+              `All KEEP_AND_SANITIZE_URL cases in the safevalues sanitizer should go through the navigation or resource url policy cases. Got ${name} on element ${elementName}.`,
             );
           }
-
-          setAttribute(newNode, name, sanitizedAttrUrl);
-          break;
+          throw new Error();
         case AttributePolicyAction.KEEP_AND_NORMALIZE:
           // We don't consider changing the case of an attribute value to be a
           // semantic change
@@ -292,6 +290,33 @@ export class HtmlSanitizerImpl implements HtmlSanitizer, CssSanitizer {
             // This is how the sanitizer behaved before the resource url
             // policy was introduced.
             setAttribute(newNode, name, value);
+          }
+          break;
+        case AttributePolicyAction.KEEP_AND_USE_NAVIGATION_URL_POLICY:
+          let attrUrl = value;
+          if (this.navigationUrlPolicy) {
+            const hints: UrlPolicyHints = {
+              type: UrlPolicyHintsType.HTML_ATTRIBUTE,
+              attributeName: name,
+              elementName,
+            };
+            const url = parseUrl(value);
+            const policyUrl = this.navigationUrlPolicy(url, hints);
+            if (policyUrl === null) {
+              this.recordChange(
+                `Url in attribute ${name} was blocked during sanitization. Original url:"${value}"`,
+              );
+              break;
+            }
+            attrUrl = policyUrl.toString();
+          }
+          // Always restrictively sanitize the URL independently of the policy.
+          attrUrl = restrictivelySanitizeUrl(attrUrl);
+          setAttribute(newNode, name, attrUrl);
+          if (attrUrl !== value) {
+            this.recordChange(
+              `Url in attribute ${name} was modified during sanitization. Original url:"${value}" was sanitized to: "${attrUrl}"`,
+            );
           }
           break;
         case AttributePolicyAction.DROP:

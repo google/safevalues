@@ -39,6 +39,7 @@ export abstract class BaseSanitizerBuilder<
   // further changes to the sanitizer table.
   protected calledBuild = false;
   protected resourceUrlPolicy?: UrlPolicy; // For controlling 0-click exfiltrations.
+  protected navigationUrlPolicy?: UrlPolicy; // For controlling 1-click exfiltrations.
   constructor() {
     this.sanitizerTable = DEFAULT_SANITIZER_TABLE;
   }
@@ -285,9 +286,9 @@ export abstract class BaseSanitizerBuilder<
     return this;
   }
   /**
-   * Sets the ResourceUrlPolicy to be used by the sanitizer.
+   * Sets the UrlPolicy to be used for resource URLs by the sanitizer.
    *
-   * The ResourceUrlPolicy can be used to decide whether a given URL is allowed
+   * The resource UrlPolicy can be used to decide whether a given URL is allowed
    * to be loaded as an external resource. It is a function that an instance
    * of `URL` and a set of hints giving a context on why an image was loaded.
    *
@@ -299,7 +300,7 @@ export abstract class BaseSanitizerBuilder<
    * `https://forbidden.google.com` but allows all other images.
    *
    * ```typescript
-   * const resourceUrlPolicy: ResourceUrlPolicy = (url) => {
+   * const resourceUrlPolicy: UrlPolicy = (url) => {
    *   if (url.origin === 'https://forbidden.google.com') {
    *     return null;
    *   }
@@ -307,13 +308,13 @@ export abstract class BaseSanitizerBuilder<
    * };
    * ```
    *
-   * You can also use the `ResourceUrlPolicyHints` to make the policy more
+   * You can also use the `UrlPolicyHints` to make the policy more
    * informed. For example the following policy only allows images loaded
    * via an <img src> element but drops all other images.
    *
    * ```typescript
-   * const resourceUrlPolicy: ResourceUrlPolicy = (url, hints) => {
-   *   if (hints.type === ResourceUrlPolicyHintsType.HTML_ATTRIBUTE &&
+   * const resourceUrlPolicy: UrlPolicy = (url, hints) => {
+   *   if (hints.type === UrlPolicyHintsType.HTML_ATTRIBUTE &&
    *       hints.attributeName === 'src' &&
    *       hints.elementName === 'IMG') {
    *     return url;
@@ -324,6 +325,50 @@ export abstract class BaseSanitizerBuilder<
    */
   withResourceUrlPolicy(resourceUrlPolicy: UrlPolicy): this {
     this.resourceUrlPolicy = resourceUrlPolicy;
+    return this;
+  }
+
+  /**
+   * Sets the UrlPolicy to be used for navigation URLs by the sanitizer.
+   *
+   * The navigation UrlPolicy can be used to decide whether a given URL is
+   * allowed to be used for navigation. It is a function that takes an instance
+   * of `URL` and a set of hints giving a context on where this URL is used.
+   *
+   * The policy can return `null` to indicate that the attribute should be
+   * dropped, otherwise it should return a valid `URL` that will be used to
+   * replace the original URL in the sanitized output. URLs are always sanitized
+   * after the policy is applied.
+   *
+   * For example the following policy only allows navigations to
+   * `https://allowed.google.com`.
+   *
+   * ```typescript
+   * const navigationUrlPolicy: UrlPolicy = (url) => {
+   *   if (url.origin === 'https://allowed.google.com') {
+   *     return url;
+   *   }
+   *   return null;
+   * };
+   * ```
+   *
+   * You can also use the `UrlPolicyHints` to make the policy more
+   * informed. For example the following policy only allows navigations from an
+   * anchor tag but drops all other navigations.
+   *
+   * ```typescript
+   * const navigationUrlPolicy: UrlPolicy = (url, hints) => {
+   *   if (hints.type === UrlPolicyHintsType.HTML_ATTRIBUTE &&
+   *       hints.attributeName === 'href' &&
+   *       hints.elementName === 'A') {
+   *     return url;
+   *   }
+   *   return null;
+   * };
+   * ```
+   */
+  withNavigationUrlPolicy(navigationUrlPolicy: UrlPolicy): this {
+    this.navigationUrlPolicy = navigationUrlPolicy;
     return this;
   }
   abstract build(): T;
@@ -344,6 +389,7 @@ export class HtmlSanitizerBuilder extends BaseSanitizerBuilder<HtmlSanitizer> {
       /* styleElementSanitizer= */ undefined,
       /* styleAttributeSanitizer= */ undefined,
       this.resourceUrlPolicy,
+      this.navigationUrlPolicy,
     );
   }
 }
@@ -415,6 +461,7 @@ export class CssSanitizerBuilder extends BaseSanitizerBuilder<CssSanitizer> {
       styleElementSanitizer,
       styleAttributeSanitizer,
       this.resourceUrlPolicy,
+      this.navigationUrlPolicy,
       this.openShadow,
     );
   }

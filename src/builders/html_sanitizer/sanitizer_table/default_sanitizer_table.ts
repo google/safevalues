@@ -124,7 +124,8 @@ const ELEMENT_POLICIES: ReadonlyArray<[string, ElementPolicy]> = [
       [
         'href',
         {
-          policyAction: AttributePolicyAction.KEEP_AND_SANITIZE_URL,
+          policyAction:
+            AttributePolicyAction.KEEP_AND_USE_NAVIGATION_URL_POLICY,
         },
       ],
     ]),
@@ -135,7 +136,8 @@ const ELEMENT_POLICIES: ReadonlyArray<[string, ElementPolicy]> = [
       [
         'href',
         {
-          policyAction: AttributePolicyAction.KEEP_AND_SANITIZE_URL,
+          policyAction:
+            AttributePolicyAction.KEEP_AND_USE_NAVIGATION_URL_POLICY,
         },
       ],
     ]),

@@ -365,6 +365,90 @@ describe('html sanitizer builder test', () => {
       );
     });
   });
+
+  describe('when calling withNavigationUrlPolicy:', () => {
+    it('sets navigationUrlPolicy to the provided value', () => {
+      const navigationUrlPolicy = jasmine
+        .createSpy<UrlPolicy>()
+        .and.returnValue(new URL('https://returned.by.policy'));
+      const sanitizer = new HtmlSanitizerBuilder()
+        .withNavigationUrlPolicy(navigationUrlPolicy)
+        .build();
+
+      const sanitized = sanitizer.sanitize('<a href="https://google.com"></a>');
+
+      expect(navigationUrlPolicy).toHaveBeenCalledOnceWith(
+        new URL('https://google.com'),
+        {
+          type: UrlPolicyHintsType.HTML_ATTRIBUTE,
+          attributeName: 'href',
+          elementName: 'A',
+        },
+      );
+      expect(sanitized.toString()).toEqual(
+        '<a href="https://returned.by.policy/"></a>',
+      );
+    });
+
+    it('drops attributes when the policy returns null', () => {
+      const navigationUrlPolicy = jasmine
+        .createSpy<UrlPolicy>()
+        .and.returnValue(null);
+      const sanitizer = new HtmlSanitizerBuilder()
+        .withNavigationUrlPolicy(navigationUrlPolicy)
+        .build();
+
+      const sanitized = sanitizer.sanitize('<a href="https://google.com"></a>');
+
+      expect(navigationUrlPolicy).toHaveBeenCalledOnceWith(
+        new URL('https://google.com'),
+        {
+          type: UrlPolicyHintsType.HTML_ATTRIBUTE,
+          attributeName: 'href',
+          elementName: 'A',
+        },
+      );
+      expect(sanitized.toString()).toEqual('<a></a>');
+    });
+
+    it('drops javascript urls regardless of the policy', () => {
+      const navigationUrlPolicy = jasmine
+        .createSpy<UrlPolicy>()
+        .and.returnValue(new URL('javascript:alert(1)'));
+      const sanitizer = new HtmlSanitizerBuilder()
+        .withNavigationUrlPolicy(navigationUrlPolicy)
+        .build();
+
+      const sanitized = sanitizer.sanitize(
+        '<a href="javascript:alert(1)"></a>',
+      );
+
+      expect(navigationUrlPolicy).toHaveBeenCalledOnceWith(
+        new URL('javascript:alert(1)'),
+        {
+          type: UrlPolicyHintsType.HTML_ATTRIBUTE,
+          attributeName: 'href',
+          elementName: 'A',
+        },
+      );
+      expect(sanitized.toString()).toEqual(
+        '<a href="about:invalid#zClosurez"></a>',
+      );
+    });
+
+    it('drops sanitizes urls even when no policy is provided', () => {
+      const sanitizer = new HtmlSanitizerBuilder()
+        // No policy is provided.
+        // .withNavigationUrlPolicy(...)
+        .build();
+      const sanitized = sanitizer.sanitize(
+        '<a href="javascript:alert(1)"></a>',
+      );
+      expect(sanitized.toString()).toEqual(
+        '<a href="about:invalid#zClosurez"></a>',
+      );
+    });
+  });
 });
 
 describe('CssSanitizerBuilder', () => {
@@ -562,6 +646,20 @@ describe('CssSanitizerBuilder', () => {
       expect(style?.textContent).toEqual(
         '* { background-image: url("https://returned.by.policy/"); }',
       );
+    });
+
+    it('when navigation URL policy is set, its return value is used as URL', () => {
+      const sanitizer = new CssSanitizerBuilder()
+        .withNavigationUrlPolicy(() => {
+          return new URL('https://returned.by.policy');
+        })
+        .build();
+      const input = `<div>Hello div</div><a href="https://www.google.com">Hello anchor</a>`;
+      const output = sanitizer.sanitizeToFragment(input);
+      const anchor = findShadowRoot(output)?.querySelector(
+        'a',
+      ) as HTMLAnchorElement;
+      expect(anchor.href!).toEqual('https://returned.by.policy/');
     });
   });
 

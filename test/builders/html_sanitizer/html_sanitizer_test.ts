@@ -292,7 +292,10 @@ describe('HtmlSanitizer', () => {
           new Map<string, AttributePolicy>([
             [
               'sanitize_url',
-              {policyAction: AttributePolicyAction.KEEP_AND_SANITIZE_URL},
+              {
+                policyAction:
+                  AttributePolicyAction.KEEP_AND_USE_NAVIGATION_URL_POLICY,
+              },
             ],
           ]),
         ],
@@ -1025,7 +1028,10 @@ describe('HtmlSanitizer', () => {
         new Map([
           [
             'sanitize_url',
-            {policyAction: AttributePolicyAction.KEEP_AND_SANITIZE_URL},
+            {
+              policyAction:
+                AttributePolicyAction.KEEP_AND_USE_NAVIGATION_URL_POLICY,
+            },
           ],
         ]),
         undefined,
