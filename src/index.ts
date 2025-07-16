@@ -35,6 +35,11 @@ export {
 } from './builders/html_sanitizer/html_sanitizer_builder.js';
 export {
   UrlPolicyHintsType,
+  // Legacy aliases for the ResourceUrlPolicy. All usages should be migrated to
+  // the new names.
+  // UrlPolicyHintsType as ResourceUrlPolicyHintsType,
+  type UrlPolicy as ResourceUrlPolicy,
+  type UrlPolicyHints as ResourceUrlPolicyHints,
   type UrlPolicy,
   type UrlPolicyHints,
 } from './builders/html_sanitizer/url_policy.js';
