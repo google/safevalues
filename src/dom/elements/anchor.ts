@@ -15,3 +15,11 @@ export function setAnchorHref(anchor: HTMLAnchorElement, url: Url): void {
     anchor.href = sanitizedUrl;
   }
 }
+
+/**
+ * Bypasses errors from `.setAttribute('rel', ...)`, which is only unsafe for
+ * `<link>` elements.
+ */
+export function setAnchorRel(anchor: HTMLAnchorElement, rel: string): void {
+  anchor.rel = rel;
+}
