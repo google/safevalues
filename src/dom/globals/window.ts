@@ -16,10 +16,14 @@ export function windowOpen(
   target?: string,
   features?: string,
 ): Window | null {
+  console.log('windowOpen window.ts sriii: ', url); // CONSOLE LOG OK
   const sanitizedUrl = unwrapUrlOrSanitize(url);
+  console.log('sanitizedUrl window.ts sriii: ', sanitizedUrl); // CONSOLE LOG OK
   if (sanitizedUrl !== undefined) {
+    console.log('sanitizedUrl is not undefined sriii'); // CONSOLE LOG OK
     return win.open(sanitizedUrl, target, features);
   }
+  console.log('sanitizedUrl is undefined sriii'); // CONSOLE LOG OK
   return null;
 }
 
