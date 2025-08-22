@@ -1,0 +1,49 @@
+blaze-out/k8-fastbuild/bin/third_party/javascript/safevalues/safevalues_for_3p_internal_for_reporting.ts:1:1 - error TS21205: [tsetse] [ThirdPartyAPIOptimizationSafetyCheckRule] Export "safeScript" has a safe type: (templateObj: TemplateStringsArray, ...emptyArgs: readonly ""[]) => SafeScript
+🟢 function call signature
+∟∟🟢 Parameter "templateObj": TemplateStringsArray
+∟∟∟∟🟢 target type: TemplateStringsArray contains a recursive type reference
+∟∟🟢 Parameter "emptyArgs": readonly ""[]
+∟∟∟∟🟢 target type: readonly T[] is defined in the TS Standard Library .d.ts and assumed to be optimization-safe already.
+∟∟∟∟🟢 type argument: """" is primitive
+∟∟🟢 Return type: SafeScript
+∟∟∟∟🟢 property "privateDoNotAccessOrElseWrappedScript"
+∟∟∟∟∟∟🟢 Property is private.
+∟∟∟∟🟢 property "toString"
+∟∟∟∟∟∟🟢 Safe property name (won't be renamed)
+
+
+1 /**
+  
+blaze-out/k8-fastbuild/bin/third_party/javascript/safevalues/safevalues_for_3p_internal_for_reporting.ts:1:1 - error TS21205: [tsetse] [ThirdPartyAPIOptimizationSafetyCheckRule] Export "sanitizeHtml" has a safe type: (html: string) => SafeHtml
+🟢 function call signature
+∟∟🟢 Parameter "html": "string" is primitive
+∟∟🟢 Return type: SafeHtml
+∟∟∟∟🟢 property "privateDoNotAccessOrElseWrappedHtml"
+∟∟∟∟∟∟🟢 Property is private.
+∟∟∟∟🟢 property "toString"
+∟∟∟∟∟∟🟢 Safe property name (won't be renamed)
+
+
+1 /**
+  
+blaze-out/k8-fastbuild/bin/third_party/javascript/safevalues/safevalues_for_3p_internal_for_reporting.ts:1:1 - error TS21205: [tsetse] [ThirdPartyAPIOptimizationSafetyCheckRule] Export "trustedResourceUrl" has a safe type: (templateObj: TemplateStringsArray, ...rest: Primitive[]) => TrustedResourceUrl
+🟢 function call signature
+∟∟🟢 Parameter "templateObj": TemplateStringsArray
+∟∟∟∟🟢 target type: TemplateStringsArray contains a recursive type reference
+∟∟🟢 Parameter "rest": Primitive[]
+∟∟∟∟🟢 target type: T[] is defined in the TS Standard Library .d.ts and assumed to be optimization-safe already.
+∟∟∟∟🟢 type argument: Primitive
+∟∟∟∟∟∟🟢 union member: "string" is primitive
+∟∟∟∟∟∟🟢 union member: "number" is primitive
+∟∟∟∟∟∟🟢 union member: "false" is primitive
+∟∟∟∟∟∟🟢 union member: "true" is primitive
+∟∟🟢 Return type: TrustedResourceUrl
+∟∟∟∟🟢 property "privateDoNotAccessOrElseWrappedResourceUrl"
+∟∟∟∟∟∟🟢 Property is private.
+∟∟∟∟🟢 property "toString"
+∟∟∟∟∟∟🟢 Safe property name (won't be renamed)
+
+
+1 /**
+  
+
