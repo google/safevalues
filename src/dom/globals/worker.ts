@@ -17,7 +17,7 @@ import {
  * that also has {@link WorkerGlobalScope.importScripts} as
  * {@link WorkerGlobalScope} in some cases cannot be depended on directly.
  */
-export interface WorkerGlobalScopeWithImportScripts
+export declare interface WorkerGlobalScopeWithImportScripts
   extends WindowOrWorkerGlobalScope {
   importScripts: (...url: string[]) => void;
 }
