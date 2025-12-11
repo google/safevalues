@@ -83,7 +83,7 @@ export function elementInsertAdjacentHtml<T extends Element>(
  *
  * The returned setter ensures that setting any dangerous attribute, e.g.,
  * "src", "href" will cause an exception. This is intended to be used as the
- * safe alterantive of `Element#setAttribute`, when applications need to set
+ * safe alternative of `Element#setAttribute`, when applications need to set
  * attributes that do not have security implications and do not have a
  * corresponding DOM property.
  */
@@ -158,8 +158,8 @@ function isElement(elOrRoot: Element | ShadowRoot): elOrRoot is Element {
  * html namespace & might throw if used with the wrong type of element or
  * attribute value
  *
- * If code size is a concern, consider using `setPrefixedAttribute`, or the
- * element-specific setters.
+ * If code size is a concern, consider using `setElementPrefixedAttribute`, or
+ * the element-specific setters.
  *
  * The security sensitive element/attributes pairs are the following:
  *   - anchor#href -> forwarded to `setAnchorHref`
