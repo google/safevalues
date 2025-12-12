@@ -59,6 +59,7 @@ export function createStyleSheetInternal(value: string): SafeStyleSheet {
 
 /**
  * Checks if the given value is a `SafeStyleSheet` instance.
+ *
  */
 export function isStyleSheet(value: unknown): value is SafeStyleSheet {
   return value instanceof SafeStyleSheet;

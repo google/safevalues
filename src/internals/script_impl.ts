@@ -85,7 +85,10 @@ export const EMPTY_SCRIPT: SafeScript = /* #__PURE__ */ pure(() =>
   constructScript(trustedTypes ? trustedTypes.emptyScript : ''),
 );
 
-/** Checks if the given value is a `SafeScript` instance */
+/**
+ * Checks if the given value is a `SafeScript` instance
+ *
+ */
 export function isScript(value: unknown): value is SafeScript {
   return value instanceof SafeScript;
 }
