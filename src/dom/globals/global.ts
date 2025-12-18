@@ -13,6 +13,7 @@ export {fetchResourceUrl, type SafeResponse} from './fetch.js';
  *
  * Strongly consider avoiding this, as eval blocks CSP adoption and does not
  * benefit from compiler optimizations.
+ *
  */
 export function globalEval(
   win: Window | typeof globalThis,
