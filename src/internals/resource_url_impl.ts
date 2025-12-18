@@ -79,7 +79,10 @@ export function createResourceUrlInternal(value: string): TrustedResourceUrl {
   );
 }
 
-/** Checks if the given value is a `TrustedResourceUrl` instance */
+/**
+ * Checks if the given value is a `TrustedResourceUrl` instance
+ *
+ */
 export function isResourceUrl(value: unknown): value is TrustedResourceUrl {
   return value instanceof TrustedResourceUrl;
 }
