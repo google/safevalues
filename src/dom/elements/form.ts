@@ -8,6 +8,7 @@ import {unwrapUrlOrSanitize, Url} from '../../builders/url_builders.js';
 
 /**
  * Sets the Action attribute from the given Url.
+ *
  */
 export function setFormAction(form: HTMLFormElement, url: Url): void {
   const sanitizedUrl = unwrapUrlOrSanitize(url);
