@@ -315,7 +315,6 @@ const ALLOWED_GLOBAL_ATTRIBUTES: readonly string[] = [
   'open',
   'playsinline',
   'placeholder',
-  'poster',
   'preload',
   'rel',
   'required',
@@ -379,6 +378,12 @@ const GLOBAL_ATTRIBUTE_POLICIES: ReadonlyArray<[string, AttributePolicy]> = [
           ['loading', new Set<string>(['eager', 'lazy'])],
         ]);
       }),
+    },
+  ],
+  [
+    'poster',
+    {
+      policyAction: AttributePolicyAction.KEEP_AND_USE_RESOURCE_URL_POLICY,
     },
   ],
   [
