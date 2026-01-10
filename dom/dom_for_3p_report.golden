@@ -1,0 +1,180 @@
+blaze-out/k8-fastbuild/bin/third_party/javascript/safevalues/dom/dom_for_3p_internal_for_reporting.ts:1:1 - error TS21205: [tsetse] [ThirdPartyAPIOptimizationSafetyCheckRule] Export "setElementAttribute" has a safe type: (el: HTMLElement, attr: string, value: string | TrustedResourceUrl | SafeHtml) => void
+🟢 function call signature
+∟∟🟢 Parameter "el": HTMLElement is defined in the TS Standard Library .d.ts and assumed to be optimization-safe already.
+∟∟🟢 Parameter "attr": "string" is primitive
+∟∟🟢 Parameter "value": string | TrustedResourceUrl | SafeHtml
+∟∟∟∟🟢 union member: "string" is primitive
+∟∟∟∟🟢 union member: TrustedResourceUrl
+∟∟∟∟∟∟🟢 property "privateDoNotAccessOrElseWrappedResourceUrl"
+∟∟∟∟∟∟∟∟🟢 Property is private.
+∟∟∟∟∟∟🟢 property "toString"
+∟∟∟∟∟∟∟∟🟢 Safe property name (won't be renamed)
+∟∟∟∟🟢 union member: SafeHtml
+∟∟∟∟∟∟🟢 property "privateDoNotAccessOrElseWrappedHtml"
+∟∟∟∟∟∟∟∟🟢 Property is private.
+∟∟∟∟∟∟🟢 property "toString"
+∟∟∟∟∟∟∟∟🟢 Safe property name (won't be renamed)
+∟∟🟢 Return type: "void" is void-like type
+
+
+1 /**
+  
+blaze-out/k8-fastbuild/bin/third_party/javascript/safevalues/dom/dom_for_3p_internal_for_reporting.ts:1:1 - error TS21205: [tsetse] [ThirdPartyAPIOptimizationSafetyCheckRule] Export "setElementInnerHtml" has a safe type: <T extends Element | ShadowRoot>(elOrRoot: Exclude<T, ScriptOrStyle>, v: SafeHtml) => void
+🟢 function call signature
+∟∟🟢 Parameter "elOrRoot": Exclude<T, ScriptOrStyle>
+∟∟∟∟🟢 property "innerHTML"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "ownerDocument"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "getHTML"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "setHTMLUnsafe"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "addEventListener"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "removeEventListener"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "baseURI"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "childNodes"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "firstChild"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "isConnected"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "lastChild"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "nextSibling"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "nodeName"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "nodeType"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "nodeValue"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "parentElement"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "parentNode"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "previousSibling"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "textContent"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "appendChild"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "cloneNode"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "compareDocumentPosition"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "contains"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "getRootNode"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "hasChildNodes"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "insertBefore"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "isDefaultNamespace"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "isEqualNode"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "isSameNode"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "lookupNamespaceURI"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "lookupPrefix"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "normalize"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "removeChild"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "replaceChild"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "ELEMENT_NODE"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "ATTRIBUTE_NODE"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "TEXT_NODE"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "CDATA_SECTION_NODE"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "ENTITY_REFERENCE_NODE"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "ENTITY_NODE"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "PROCESSING_INSTRUCTION_NODE"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "COMMENT_NODE"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "DOCUMENT_NODE"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "DOCUMENT_TYPE_NODE"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "DOCUMENT_FRAGMENT_NODE"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "NOTATION_NODE"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "DOCUMENT_POSITION_DISCONNECTED"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "DOCUMENT_POSITION_PRECEDING"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "DOCUMENT_POSITION_FOLLOWING"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "DOCUMENT_POSITION_CONTAINS"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "DOCUMENT_POSITION_CONTAINED_BY"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "dispatchEvent"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "getAnimations"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "childElementCount"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "children"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "firstElementChild"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "lastElementChild"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "append"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "prepend"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "querySelector"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "querySelectorAll"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟∟∟🟢 property "replaceChildren"
+∟∟∟∟∟∟🟢 Property in TS standard library (assumed to be optimization-safe)
+∟∟🟢 Parameter "v": SafeHtml
+∟∟∟∟🟢 property "privateDoNotAccessOrElseWrappedHtml"
+∟∟∟∟∟∟🟢 Property is private.
+∟∟∟∟🟢 property "toString"
+∟∟∟∟∟∟🟢 Safe property name (won't be renamed)
+∟∟🟢 Return type: "void" is void-like type
+
+
+1 /**
+  
+
