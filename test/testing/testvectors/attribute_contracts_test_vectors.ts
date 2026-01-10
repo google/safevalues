@@ -75,6 +75,11 @@ export const ELEMENT_ATTRIBUTE_CONTRACTS: ElementAttributeContractVector[] = [
     attributeName: 'src',
     action: SetAttributeAction.ALLOW,
   },
+  {
+    elementName: 'USE',
+    attributeName: 'href',
+    action: SetAttributeAction.SANITIZE_JAVASCRIPT_URL,
+  },
 ];
 
 /** Test vectors for global attribute contracts. */
