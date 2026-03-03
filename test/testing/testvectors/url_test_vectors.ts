@@ -153,16 +153,16 @@ export const URL_TEST_VECTORS: UrlTestVector[] = [
     'data:video/webm;foo\u003Dbar;base64,z\u003D',
   ),
   new UrlTestVector(
-    'data:video/webm;foo\u003D"bar";base64,z\u003D',
-    'data:video/webm;foo\u003D"bar";base64,z\u003D',
+    'data:video/webm;foo\u003D\"bar\";base64,z\u003D',
+    'data:video/webm;foo\u003D\"bar\";base64,z\u003D',
   ),
   new UrlTestVector(
-    'data:video/webm;codecs\u003D"vp8,opus";base64,z\u003D',
-    'data:video/webm;codecs\u003D"vp8,opus";base64,z\u003D',
+    'data:video/webm;codecs\u003D\"vp8,opus\";base64,z\u003D',
+    'data:video/webm;codecs\u003D\"vp8,opus\";base64,z\u003D',
   ),
   new UrlTestVector(
-    'data:video/webm;codecs\u003D"vp8, opus";base64,z\u003D',
-    'data:video/webm;codecs\u003D"vp8, opus";base64,z\u003D',
+    'data:video/webm;codecs\u003D\"vp8, opus\";base64,z\u003D',
+    'data:video/webm;codecs\u003D\"vp8, opus\";base64,z\u003D',
   ),
 ];
 
