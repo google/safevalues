@@ -4,10 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {
-  setScriptSrc,
-  setScriptTextContent,
-} from '../../../src/dom/elements/script';
+import {setScriptSrc} from '../../../src/dom/elements/script';
 import {globalEval} from '../../../src/dom/globals/global';
 import {rangeCreateContextualFragment} from '../../../src/dom/globals/range';
 import {
@@ -19,12 +16,6 @@ import {
 import {XSSDetector} from './xss_detector';
 
 describe('XSSDetector', () => {
-  it('triggers synchronously for eval ', async () => {
-    const detector = new XSSDetector();
-    globalEval(window, testonlyScript(detector.payload));
-    expect(detector.wasTriggered()).toBe(true);
-  });
-
   it('times out when not triggered', async () => {
     const detector = new XSSDetector();
 
@@ -32,17 +23,6 @@ describe('XSSDetector', () => {
     expect(detector.payload).toBeTruthy();
 
     expect(await detector.waitForTrigger()).toBe(false);
-  });
-
-  it('triggers synchronously for inline script', async () => {
-    const detector = new XSSDetector();
-
-    const script = document.createElement('script');
-    setScriptTextContent(script, testonlyScript(detector.payload));
-    document.body.appendChild(script);
-    document.body.removeChild(script);
-
-    expect(detector.wasTriggered()).toBe(true);
   });
 
   it('triggers asynchronously for script with src', async () => {
@@ -54,21 +34,7 @@ describe('XSSDetector', () => {
     document.body.appendChild(script);
     document.body.removeChild(script);
 
-    expect(detector.wasTriggered()).toBe(false);
-
     expect(await detector.waitForTrigger()).toBe(true);
-  });
-
-  it('triggers synchronously for inline script parsed with Range', () => {
-    const detector = new XSSDetector();
-
-    const html = testonlyHtml(`<script>${detector.payload}<${'/'}script>`);
-    const range = document.createRange();
-    const script = rangeCreateContextualFragment(range, html).firstChild!;
-    document.body.appendChild(script);
-    document.body.removeChild(script);
-
-    expect(detector.wasTriggered()).toBe(true);
   });
 
   it('triggers asynchronously when parsing img with onerror handler', async () => {
@@ -83,8 +49,6 @@ describe('XSSDetector', () => {
     const range = document.createRange();
     rangeCreateContextualFragment(range, html);
 
-    expect(detector.wasTriggered()).toBe(false);
-
     expect(await detector.waitForTrigger()).toBe(true);
   });
 
@@ -98,18 +62,10 @@ describe('XSSDetector', () => {
     expect(detector2.payload).toBeTruthy();
     expect(detector3.payload).toBeTruthy();
 
-    expect(detector1.wasTriggered()).toBe(false);
-    expect(detector2.wasTriggered()).toBe(false);
-    expect(detector3.wasTriggered()).toBe(false);
-
     globalEval(window, testonlyScript(detector2.payload));
     setTimeout(() => {
       globalEval(window, testonlyScript(detector3.payload));
     }, 0);
-
-    expect(detector1.wasTriggered()).toBe(false);
-    expect(detector2.wasTriggered()).toBe(true);
-    expect(detector3.wasTriggered()).toBe(false);
 
     expect(await detector1.waitForTrigger()).toBe(false);
     expect(await detector2.waitForTrigger()).toBe(true);
@@ -119,7 +75,6 @@ describe('XSSDetector', () => {
   it('throws an error if the detector is checked whith an unused payload', async () => {
     const detector = new XSSDetector();
 
-    expect(() => detector.wasTriggered()).toThrow();
     await expectAsync(detector.waitForTrigger()).toBeRejected();
   });
 });

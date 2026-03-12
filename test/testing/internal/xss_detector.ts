@@ -20,9 +20,6 @@ export class XSSDetector {
   // A promise to wait for things to load.
   private readonly promise: Promise<boolean>;
 
-  // Whether this detector was triggered.
-  private triggered = false;
-
   // Whether the payload was accessed, as a fail safe to make sure the test
   // doesn't accidentally forget to inject the payload.
   private payloadAccessed = false;
@@ -43,7 +40,6 @@ export class XSSDetector {
       this.global[`XSS_${this.RANDOM_ID}`] = () => {
         this.cleanup();
         clearTimeout(timeoutId);
-        this.triggered = true;
         resolve(true);
       };
     });
@@ -63,11 +59,6 @@ export class XSSDetector {
     if (!this.payloadAccessed) {
       throw new Error('Payload was never accessed');
     }
-  }
-
-  wasTriggered(): boolean {
-    this.ensurePayloadAccessed();
-    return this.triggered;
   }
 
   async waitForTrigger(): Promise<boolean> {
