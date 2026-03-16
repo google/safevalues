@@ -18,6 +18,26 @@ import {
 
 import {XSSDetector} from './xss_detector';
 
+// crbug.com/492350390 - Chrome Beta has a bug where it doesn't run scripts created
+// with `createContextualFragment`. The bug is already fixed in Canary so this
+// measure is temporary to fix tap/security.types failures.
+async function isBuggyChrome(): Promise<boolean> {
+  const range = document.createRange();
+  const fragment = rangeCreateContextualFragment(
+    range,
+    testonlyHtml(
+      `<script>document.currentScript.dataset.executed = "1"<${'/'}script>`,
+    ),
+  );
+  const script = fragment.firstElementChild! as HTMLScriptElement;
+  document.body.appendChild(script);
+  await new Promise((resolve) => {
+    setTimeout(resolve, 100);
+  });
+  document.body.removeChild(script);
+  return script.dataset['executed'] !== '1';
+}
+
 describe('XSSDetector', () => {
   it('triggers synchronously for eval ', async () => {
     const detector = new XSSDetector();
@@ -59,7 +79,12 @@ describe('XSSDetector', () => {
     expect(await detector.waitForTrigger()).toBe(true);
   });
 
-  it('triggers synchronously for inline script parsed with Range', () => {
+  it('triggers synchronously for inline script parsed with Range', async () => {
+    if (await isBuggyChrome()) {
+      pending('Skipping test because of crbug.com/492350390');
+      return;
+    }
+
     const detector = new XSSDetector();
 
     const html = testonlyHtml(`<script>${detector.payload}<${'/'}script>`);
