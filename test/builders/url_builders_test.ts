@@ -32,4 +32,17 @@ describe('url_sanitizer', () => {
       });
     }
   });
+
+  describe('sanitizeUrlForMigration', () => {
+    it(`blesses non javascript: URLs as SafeUrl`, () => {
+      expect(unwrapUrl(sanitizeUrlForMigration('tel:+1234567890'))).toEqual(
+        'tel:+1234567890',
+      );
+    });
+    it(`returns an innocuous URL for javascript: URLs`, () => {
+      expect(sanitizeUrlForMigration('javascript:evil()')).toEqual(
+        INNOCUOUS_URL,
+      );
+    });
+  });
 });
