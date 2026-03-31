@@ -1,0 +1,66 @@
+blaze-out/k8-fastbuild/bin/third_party/javascript/safevalues/restricted/restricted_for_3p_js_internal_for_reporting.ts:1:1 - error TS21205: [tsetse] [ThirdPartyAPIOptimizationSafetyCheckRule] Export "htmlSafeByReview" has a safe type: (html: string, options: { justification: string; }) => SafeHtml
+🟢 function call signature
+∟∟🟢 Parameter "html": "string" is primitive
+∟∟🟢 Parameter "options" ignored via @google3-ignore-for-3p-optimization-safety
+∟∟🟢 Return type: SafeHtml
+∟∟∟∟🟢 property "privateDoNotAccessOrElseWrappedHtml"
+∟∟∟∟∟∟🟢 Property is private.
+∟∟∟∟🟢 property "toString"
+∟∟∟∟∟∟🟢 Safe property name (won't be renamed)
+
+
+1 /**
+  
+blaze-out/k8-fastbuild/bin/third_party/javascript/safevalues/restricted/restricted_for_3p_js_internal_for_reporting.ts:1:1 - error TS21205: [tsetse] [ThirdPartyAPIOptimizationSafetyCheckRule] Export "resourceUrlSafeByReview" has a safe type: (url: string, options: { justification: string; }) => TrustedResourceUrl
+🟢 function call signature
+∟∟🟢 Parameter "url": "string" is primitive
+∟∟🟢 Parameter "options" ignored via @google3-ignore-for-3p-optimization-safety
+∟∟🟢 Return type: TrustedResourceUrl
+∟∟∟∟🟢 property "privateDoNotAccessOrElseWrappedResourceUrl"
+∟∟∟∟∟∟🟢 Property is private.
+∟∟∟∟🟢 property "toString"
+∟∟∟∟∟∟🟢 Safe property name (won't be renamed)
+
+
+1 /**
+  
+blaze-out/k8-fastbuild/bin/third_party/javascript/safevalues/restricted/restricted_for_3p_js_internal_for_reporting.ts:1:1 - error TS21205: [tsetse] [ThirdPartyAPIOptimizationSafetyCheckRule] Export "scriptSafeByReview" has a safe type: (script: string, options: { justification: string; }) => SafeScript
+🟢 function call signature
+∟∟🟢 Parameter "script": "string" is primitive
+∟∟🟢 Parameter "options" ignored via @google3-ignore-for-3p-optimization-safety
+∟∟🟢 Return type: SafeScript
+∟∟∟∟🟢 property "privateDoNotAccessOrElseWrappedScript"
+∟∟∟∟∟∟🟢 Property is private.
+∟∟∟∟🟢 property "toString"
+∟∟∟∟∟∟🟢 Safe property name (won't be renamed)
+
+
+1 /**
+  
+blaze-out/k8-fastbuild/bin/third_party/javascript/safevalues/restricted/restricted_for_3p_js_internal_for_reporting.ts:1:1 - error TS21205: [tsetse] [ThirdPartyAPIOptimizationSafetyCheckRule] Export "styleSheetSafeByReview" has a safe type: (stylesheet: string, options: { justification: string; }) => SafeStyleSheet
+🟢 function call signature
+∟∟🟢 Parameter "stylesheet": "string" is primitive
+∟∟🟢 Parameter "options" ignored via @google3-ignore-for-3p-optimization-safety
+∟∟🟢 Return type: SafeStyleSheet
+∟∟∟∟🟢 property "privateDoNotAccessOrElseWrappedStyleSheet"
+∟∟∟∟∟∟🟢 Property is private.
+∟∟∟∟🟢 property "toString"
+∟∟∟∟∟∟🟢 Safe property name (won't be renamed)
+
+
+1 /**
+  
+blaze-out/k8-fastbuild/bin/third_party/javascript/safevalues/restricted/restricted_for_3p_js_internal_for_reporting.ts:1:1 - error TS21205: [tsetse] [ThirdPartyAPIOptimizationSafetyCheckRule] Export "urlSafeByReview" has a safe type: (url: string, options: { justification: string; }) => SafeUrl
+🟢 function call signature
+∟∟🟢 Parameter "url": "string" is primitive
+∟∟🟢 Parameter "options" ignored via @google3-ignore-for-3p-optimization-safety
+∟∟🟢 Return type: SafeUrl
+∟∟∟∟🟢 property "privateDoNotAccessOrElseWrappedUrl"
+∟∟∟∟∟∟🟢 Property is private.
+∟∟∟∟🟢 property "toString"
+∟∟∟∟∟∟🟢 Safe property name (won't be renamed)
+
+
+1 /**
+  
+
