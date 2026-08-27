@@ -87,7 +87,11 @@ function isTemplateObject(templateObj: TemplateStringsArray): boolean {
    * ############################## WARNING ##############################
    */
 
-  if (!Array.isArray(templateObj) || !Array.isArray(templateObj.raw)) {
+  if (
+    !Array.isArray(templateObj) ||
+    !Object.prototype.hasOwnProperty.call(templateObj, 'raw') ||
+    !Array.isArray(templateObj.raw)
+  ) {
     return false;
   }
 

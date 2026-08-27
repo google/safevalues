@@ -51,6 +51,19 @@ describe('assertIsTemplateObject', () => {
     }).toThrowError(/##### ERROR #####/);
   });
 
+  it('rejects invalid input: raw property inherited via prototype pollution', () => {
+    const tagFn = getTagFunction() as Function;
+    const pollutedRaw = Object.freeze(['']);
+    try {
+      (Object.prototype as any).raw = pollutedRaw;
+      expect(() => {
+        return tagFn(Object.freeze(['']));
+      }).toThrowError(/##### ERROR #####/);
+    } finally {
+      delete (Object.prototype as any).raw;
+    }
+  });
+
   it('rejects invalid input 2: missing properties of string[]', () => {
     const tagFn = getTagFunction() as Function;
     expect(() => {
