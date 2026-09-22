@@ -337,6 +337,34 @@ describe('html sanitizer builder test', () => {
         sanitizer.sanitize('<div aria-labelledby="my-id"></div>').toString(),
       ).toEqual('<div aria-labelledby="my-id"></div>');
     });
+
+    it('allows aria-describedby and headers attributes when called', () => {
+      const sanitizer = new HtmlSanitizerBuilder()
+        .allowIdReferenceAttributes()
+        .build();
+
+      expect(
+        sanitizer
+          .sanitize(
+            '<div aria-describedby="desc-id"></div><table><tr><td headers="th-id"></td></tr></table>',
+          )
+          .toString(),
+      ).toEqual(
+        '<div aria-describedby="desc-id"></div><table><tbody><tr><td headers="th-id"></td></tr></tbody></table>',
+      );
+    });
+
+    it('drops aria-describedby and headers attributes when not called', () => {
+      const sanitizer = new HtmlSanitizerBuilder().build();
+
+      expect(
+        sanitizer
+          .sanitize(
+            '<div aria-describedby="desc-id"></div><table><tr><td headers="th-id"></td></tr></table>',
+          )
+          .toString(),
+      ).toEqual('<div></div><table><tbody><tr><td></td></tr></tbody></table>');
+    });
   });
 
   describe('when calling withResourceUrlPolicy:', () => {
