@@ -28,19 +28,26 @@ import {
   isCustomElement,
 } from './sanitizer_table/sanitizer_table.js';
 import {UrlPolicy} from './url_policy.js';
+const BUILDER_INTERNAL_TOKEN = {};
+
 /**
  * The base class for all sanitizer builders.
  */
 export abstract class BaseSanitizerBuilder<
   T extends HtmlSanitizer | CssSanitizer,
 > {
-  protected sanitizerTable: SanitizerTable;
+  private sanitizerTable: SanitizerTable;
   // To denote if the builder has called build() and therefore should make no
   // further changes to the sanitizer table.
-  protected calledBuild = false;
-  protected resourceUrlPolicy?: UrlPolicy; // For controlling 0-click exfiltrations.
-  protected navigationUrlPolicy?: UrlPolicy; // For controlling 1-click exfiltrations.
-  constructor() {
+  private calledBuild = false;
+  private resourceUrlPolicy?: UrlPolicy; // For controlling 0-click exfiltrations.
+  private navigationUrlPolicy?: UrlPolicy; // For controlling 1-click exfiltrations.
+  protected constructor(token: object) {
+    if (token !== BUILDER_INTERNAL_TOKEN) {
+      throw new Error(
+        'BaseSanitizerBuilder cannot be subclassed outside of safevalues',
+      );
+    }
     this.sanitizerTable = DEFAULT_SANITIZER_TABLE;
   }
   /** Builder option to restrict allowed elements to a smaller subset. */
@@ -371,14 +378,7 @@ export abstract class BaseSanitizerBuilder<
     this.navigationUrlPolicy = navigationUrlPolicy;
     return this;
   }
-  abstract build(): T;
-}
-/**
- * This class allows modifications to the default sanitizer configuration.
- * It builds an instance of `HtmlSanitizer`.
- */
-export class HtmlSanitizerBuilder extends BaseSanitizerBuilder<HtmlSanitizer> {
-  build(): HtmlSanitizer {
+  protected buildHtmlSanitizer(): HtmlSanitizer {
     if (this.calledBuild) {
       throw new Error('this sanitizer has already called build');
     }
@@ -392,15 +392,100 @@ export class HtmlSanitizerBuilder extends BaseSanitizerBuilder<HtmlSanitizer> {
       this.navigationUrlPolicy,
     );
   }
+  protected buildCssSanitizer(
+    animationsAllowed: boolean,
+    transitionsAllowed: boolean,
+    openShadow: boolean,
+  ): CssSanitizer {
+    this.extendSanitizerTableForCss();
+    const propertyDiscarders: PropertyDiscarder[] = [];
+    if (!animationsAllowed) {
+      propertyDiscarders.push((property) =>
+        /^(animation|offset)(-|$)/.test(property),
+      );
+    }
+    if (!transitionsAllowed) {
+      propertyDiscarders.push((property) => /^transition(-|$)/.test(property));
+    }
+    const styleElementSanitizer = (cssText: string) =>
+      sanitizeStyleElement(
+        cssText,
+        CSS_PROPERTY_ALLOWLIST,
+        CSS_FUNCTION_ALLOWLIST,
+        this.resourceUrlPolicy,
+        animationsAllowed,
+        propertyDiscarders,
+      );
+    const styleAttributeSanitizer = (cssText: string) =>
+      sanitizeStyleAttribute(
+        cssText,
+        CSS_PROPERTY_ALLOWLIST,
+        CSS_FUNCTION_ALLOWLIST,
+        this.resourceUrlPolicy,
+        propertyDiscarders,
+      );
+    return new HtmlSanitizerImpl(
+      this.sanitizerTable,
+      secretToken,
+      styleElementSanitizer,
+      styleAttributeSanitizer,
+      this.resourceUrlPolicy,
+      this.navigationUrlPolicy,
+      openShadow,
+    );
+  }
+  private extendSanitizerTableForCss() {
+    const allowedElements = new Set(this.sanitizerTable.allowedElements);
+    const allowedGlobalAttributes = new Set(
+      this.sanitizerTable.allowedGlobalAttributes,
+    );
+    const globalAttributePolicies = new Map(
+      this.sanitizerTable.globalAttributePolicies,
+    );
+    allowedElements.add('STYLE');
+    globalAttributePolicies.set('style', {
+      policyAction: AttributePolicyAction.KEEP_AND_SANITIZE_STYLE,
+    });
+    allowedGlobalAttributes.add('id');
+    allowedGlobalAttributes.add('name');
+    allowedGlobalAttributes.add('class');
+    this.sanitizerTable = new SanitizerTable(
+      allowedElements,
+      this.sanitizerTable.elementPolicies,
+      allowedGlobalAttributes,
+      globalAttributePolicies,
+      this.sanitizerTable.globallyAllowedAttributePrefixes,
+    );
+  }
+  abstract build(): T;
+}
+/**
+ * This class allows modifications to the default sanitizer configuration.
+ * It builds an instance of `HtmlSanitizer`.
+ *
+ * @final
+ */
+export class HtmlSanitizerBuilder extends BaseSanitizerBuilder<HtmlSanitizer> {
+  constructor() {
+    super(BUILDER_INTERNAL_TOKEN);
+  }
+  build(): HtmlSanitizer {
+    return this.buildHtmlSanitizer();
+  }
 }
 /**
  * This class allows modifications to the default sanitizer configuration.
  * It builds an instance of `CssSanitizer`.
+ *
+ * @final
  */
 export class CssSanitizerBuilder extends BaseSanitizerBuilder<CssSanitizer> {
   private animationsAllowed = false;
   private transitionsAllowed = false;
   private openShadow = false;
+  constructor() {
+    super(BUILDER_INTERNAL_TOKEN);
+  }
   allowAnimations(): this {
     this.animationsAllowed = true;
     return this;
@@ -428,64 +513,10 @@ export class CssSanitizerBuilder extends BaseSanitizerBuilder<CssSanitizer> {
    * attributes to the allowlist as well as the `STYLE` element.
    */
   build(): CssSanitizer {
-    this.extendSanitizerTableForCss();
-    const propertyDiscarders: PropertyDiscarder[] = [];
-    if (!this.animationsAllowed) {
-      propertyDiscarders.push((property) =>
-        /^(animation|offset)(-|$)/.test(property),
-      );
-    }
-    if (!this.transitionsAllowed) {
-      propertyDiscarders.push((property) => /^transition(-|$)/.test(property));
-    }
-    const styleElementSanitizer = (cssText: string) =>
-      sanitizeStyleElement(
-        cssText,
-        CSS_PROPERTY_ALLOWLIST,
-        CSS_FUNCTION_ALLOWLIST,
-        this.resourceUrlPolicy,
-        this.animationsAllowed,
-        propertyDiscarders,
-      );
-    const styleAttributeSanitizer = (cssText: string) =>
-      sanitizeStyleAttribute(
-        cssText,
-        CSS_PROPERTY_ALLOWLIST,
-        CSS_FUNCTION_ALLOWLIST,
-        this.resourceUrlPolicy,
-        propertyDiscarders,
-      );
-    return new HtmlSanitizerImpl(
-      this.sanitizerTable,
-      secretToken,
-      styleElementSanitizer,
-      styleAttributeSanitizer,
-      this.resourceUrlPolicy,
-      this.navigationUrlPolicy,
+    return this.buildCssSanitizer(
+      this.animationsAllowed,
+      this.transitionsAllowed,
       this.openShadow,
-    );
-  }
-  private extendSanitizerTableForCss() {
-    const allowedElements = new Set(this.sanitizerTable.allowedElements);
-    const allowedGlobalAttributes = new Set(
-      this.sanitizerTable.allowedGlobalAttributes,
-    );
-    const globalAttributePolicies = new Map(
-      this.sanitizerTable.globalAttributePolicies,
-    );
-    allowedElements.add('STYLE');
-    globalAttributePolicies.set('style', {
-      policyAction: AttributePolicyAction.KEEP_AND_SANITIZE_STYLE,
-    });
-    allowedGlobalAttributes.add('id');
-    allowedGlobalAttributes.add('name');
-    allowedGlobalAttributes.add('class');
-    this.sanitizerTable = new SanitizerTable(
-      allowedElements,
-      this.sanitizerTable.elementPolicies,
-      allowedGlobalAttributes,
-      globalAttributePolicies,
-      this.sanitizerTable.globallyAllowedAttributePrefixes,
     );
   }
 }
