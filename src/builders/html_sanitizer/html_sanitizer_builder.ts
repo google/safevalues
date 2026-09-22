@@ -40,8 +40,15 @@ export abstract class BaseSanitizerBuilder<
   protected calledBuild = false;
   protected resourceUrlPolicy?: UrlPolicy; // For controlling 0-click exfiltrations.
   protected navigationUrlPolicy?: UrlPolicy; // For controlling 1-click exfiltrations.
+  private allowedAttributeSubset?: ReadonlySet<string>;
   constructor() {
     this.sanitizerTable = DEFAULT_SANITIZER_TABLE;
+  }
+  private isAttributeAllowedBySubset(attribute: string): boolean {
+    return (
+      this.allowedAttributeSubset === undefined ||
+      this.allowedAttributeSubset.has(attribute)
+    );
   }
   /** Builder option to restrict allowed elements to a smaller subset. */
   onlyAllowElements(elementSet: ReadonlySet<string>): this {
@@ -115,11 +122,32 @@ export abstract class BaseSanitizerBuilder<
    * If the attribute isn't currently allowed then it won't be added.
    */
   onlyAllowAttributes(attributeSet: ReadonlySet<string>): this {
+    if (this.allowedAttributeSubset === undefined) {
+      this.allowedAttributeSubset = new Set(attributeSet);
+    } else {
+      const intersection = new Set<string>();
+      for (const attribute of attributeSet) {
+        if (this.allowedAttributeSubset.has(attribute)) {
+          intersection.add(attribute);
+        }
+      }
+      this.allowedAttributeSubset = intersection;
+    }
+
     const allowedGlobalAttributes = new Set<string>();
     const globalAttributePolicies = new Map<string, AttributePolicy>();
     const elementPolicies = new Map<string, ElementPolicy>();
-    for (const attribute of attributeSet) {
-      if (this.sanitizerTable.allowedGlobalAttributes.has(attribute)) {
+    const globallyAllowedAttributePrefixes = new Set<string>(
+      this.sanitizerTable.globallyAllowedAttributePrefixes,
+    );
+    const allowAllDataAttributes =
+      globallyAllowedAttributePrefixes.delete('data-');
+
+    for (const attribute of this.allowedAttributeSubset) {
+      if (
+        this.sanitizerTable.allowedGlobalAttributes.has(attribute) ||
+        (allowAllDataAttributes && attribute.indexOf('data-') === 0)
+      ) {
         allowedGlobalAttributes.add(attribute);
       }
       if (this.sanitizerTable.globalAttributePolicies.has(attribute)) {
@@ -138,7 +166,7 @@ export abstract class BaseSanitizerBuilder<
         attribute,
         attributePolicy,
       ] of originalElementPolicy.entries()) {
-        if (attributeSet.has(attribute)) {
+        if (this.allowedAttributeSubset.has(attribute)) {
           newElementPolicy.set(attribute, attributePolicy);
         }
       }
@@ -149,7 +177,7 @@ export abstract class BaseSanitizerBuilder<
       elementPolicies,
       allowedGlobalAttributes,
       globalAttributePolicies,
-      this.sanitizerTable.globallyAllowedAttributePrefixes,
+      globallyAllowedAttributePrefixes,
     );
     return this;
   }
@@ -158,12 +186,27 @@ export abstract class BaseSanitizerBuilder<
    *
    * When called without arguments, all data attributes are allowed.
    * When a set of attributes is passed, its values must be prefixed with "data-"
-   *
-   * If called with onlyAllowElements or onlyAllowAttributes, those methods must
-   * be called first.
    */
   allowDataAttributes(attributes?: string[]): this {
     if (attributes === undefined) {
+      if (this.allowedAttributeSubset !== undefined) {
+        const allowedGlobalAttributes = new Set<string>(
+          this.sanitizerTable.allowedGlobalAttributes,
+        );
+        for (const attribute of this.allowedAttributeSubset) {
+          if (attribute.indexOf('data-') === 0) {
+            allowedGlobalAttributes.add(attribute);
+          }
+        }
+        this.sanitizerTable = new SanitizerTable(
+          this.sanitizerTable.allowedElements,
+          this.sanitizerTable.elementPolicies,
+          allowedGlobalAttributes,
+          this.sanitizerTable.globalAttributePolicies,
+          this.sanitizerTable.globallyAllowedAttributePrefixes,
+        );
+        return this;
+      }
       const globallyAllowedAttributePrefixes = new Set<string>(
         this.sanitizerTable.globallyAllowedAttributePrefixes,
       );
@@ -187,7 +230,9 @@ export abstract class BaseSanitizerBuilder<
           `data attribute: ${attribute} does not begin with the prefix "data-"`,
         );
       }
-      allowedGlobalAttributes.add(attribute);
+      if (this.isAttributeAllowedBySubset(attribute)) {
+        allowedGlobalAttributes.add(attribute);
+      }
     }
     this.sanitizerTable = new SanitizerTable(
       this.sanitizerTable.allowedElements,
@@ -206,6 +251,9 @@ export abstract class BaseSanitizerBuilder<
    * properties or functions defined by the application.
    */
   allowStyleAttributes(): this {
+    if (!this.isAttributeAllowedBySubset('style')) {
+      return this;
+    }
     const globalAttributePolicies = new Map<string, AttributePolicy>(
       this.sanitizerTable.globalAttributePolicies,
     );
@@ -227,6 +275,9 @@ export abstract class BaseSanitizerBuilder<
    * legitimate UI elements, which can lead to phishing.
    */
   allowClassAttributes(): this {
+    if (!this.isAttributeAllowedBySubset('class')) {
+      return this;
+    }
     const allowedGlobalAttributes = new Set<string>(
       this.sanitizerTable.allowedGlobalAttributes,
     );
@@ -245,6 +296,9 @@ export abstract class BaseSanitizerBuilder<
    * element to override other elements with the same ID.
    */
   allowIdAttributes(): this {
+    if (!this.isAttributeAllowedBySubset('id')) {
+      return this;
+    }
     const allowedGlobalAttributes = new Set<string>(
       this.sanitizerTable.allowedGlobalAttributes,
     );
@@ -269,13 +323,19 @@ export abstract class BaseSanitizerBuilder<
     const allowedGlobalAttributes = new Set<string>(
       this.sanitizerTable.allowedGlobalAttributes,
     );
-    allowedGlobalAttributes
-      .add('aria-activedescendant')
-      .add('aria-controls')
-      .add('aria-labelledby')
-      .add('aria-owns')
-      .add('for')
-      .add('list');
+    const idRefAttributes = [
+      'aria-activedescendant',
+      'aria-controls',
+      'aria-labelledby',
+      'aria-owns',
+      'for',
+      'list',
+    ];
+    for (const attribute of idRefAttributes) {
+      if (this.isAttributeAllowedBySubset(attribute)) {
+        allowedGlobalAttributes.add(attribute);
+      }
+    }
     this.sanitizerTable = new SanitizerTable(
       this.sanitizerTable.allowedElements,
       this.sanitizerTable.elementPolicies,
