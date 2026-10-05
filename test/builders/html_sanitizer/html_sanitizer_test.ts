@@ -361,13 +361,9 @@ describe('HtmlSanitizer', () => {
       sanitizerTable,
       '<a value_dependent_attribute="" constrained_attribute="accepted_value" another_attribute="accepted_value"></a>',
     );
-    const expectedValues = [
+    expect(sanitized).toBe(
       '<a value_dependent_attribute="" constrained_attribute="accepted_value" another_attribute="accepted_value"></a>',
-      '<a value_dependent_attribute="" another_attribute="accepted_value" constrained_attribute="accepted_value"></a>',
-      '<a constrained_attribute="accepted_value" value_dependent_attribute="" another_attribute="accepted_value"></a>',
-      '<a another_attribute="accepted_value" constrained_attribute="accepted_value" value_dependent_attribute=""></a>',
-    ];
-    expect(expectedValues).toContain(sanitized);
+    );
   });
 
   it('removes the value dependent attribute when not all of the conditions are met', () => {
@@ -396,11 +392,9 @@ describe('HtmlSanitizer', () => {
       sanitizerTable,
       '<a value_dependent_attribute="" constrained_attribute="accepted_value" another_attribute="invalid_value"></a>',
     );
-    const expectedValues = [
-      '<a another_attribute="invalid_value" constrained_attribute="accepted_value"></a>',
+    expect(sanitized).toBe(
       '<a constrained_attribute="accepted_value" another_attribute="invalid_value"></a>',
-    ];
-    expect(expectedValues).toContain(sanitized);
+    );
   });
 
   it('removes the value dependent attribute when the constrained attribute has an improper value', () => {
