@@ -4,8 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {TrustedResourceUrl} from '../../src/internals/resource_url_impl';
-
 import {
   appendParams,
   appendPathSegment,
@@ -150,7 +148,7 @@ describe('resource_url_builders', () => {
       expect(() => trustedResourceUrl` abc/${foo}`).toThrowError(
         /Trying to interpolate expressions in an unsupported url format./,
       );
-      // Two slashes. IE allowed (allows?) '\' instead of '/'.
+      // Two slashes. Browsers allow '\' instead of '/'.
       expect(() => {
         return trustedResourceUrl`/\\${foo}`;
       }).toThrowError(/The path start in the url is invalid./);
@@ -410,14 +408,14 @@ describe('resource_url_builders', () => {
 
     it('returns the expected contents when fetched', async () => {
       const url = objectUrlFromScript(safeScript`console.log('hello world');`);
-      const fetchedContent = await fetchScriptContent(url);
-      expect(fetchedContent).toEqual(`console.log('hello world');`);
+      const response = await fetch(url.toString());
+      expect(await response.text()).toEqual(`console.log('hello world');`);
     });
 
     it('can be revoked using revokeObjectURL', async () => {
       const url = objectUrlFromScript(safeScript`console.log('hello world');`);
       URL.revokeObjectURL(url.toString());
-      await expectAsync(fetchScriptContent(url)).toBeRejected();
+      await expectAsync(fetch(url.toString())).toBeRejected();
     });
   });
 
@@ -484,31 +482,3 @@ describe('resource_url_builders', () => {
     }
   });
 });
-
-/**
- * Fetches asynchronously the content at `url` and returns a `Promise`.
- *
- * The content is fetched using the fetch API. If the browser does not support
- * the `fetch` API, it falls back to using XMLHttpRequest.
- */
-async function fetchScriptContent(url: TrustedResourceUrl): Promise<string> {
-  if (typeof fetch !== 'undefined') {
-    const response = await fetch(url.toString());
-    return response.text();
-  } else {
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', url.toString());
-    xhr.send(null);
-
-    return new Promise((resolve, reject) => {
-      xhr.onerror = reject;
-      xhr.onload = () => {
-        if (xhr.status === 200) {
-          resolve(xhr.responseText);
-        } else {
-          reject();
-        }
-      };
-    });
-  }
-}
