@@ -165,6 +165,21 @@ describe('resource_url_builders', () => {
       expect(() => trustedResourceUrl`about:blankX${foo}`).toThrowError(
         /The about url is invalid./,
       );
+      // Control characters stripped by URL parsers, which would otherwise
+      // resolve to an attacker-controlled origin.
+      const evil = 'evil.com';
+      expect(new URL(`/\t/${evil}`, 'https://example.com').toString()).toBe(
+        'https://evil.com/',
+      );
+      expect(() => trustedResourceUrl`/\t/${evil}`).toThrowError(
+        /The path start in the url is invalid./,
+      );
+      expect(new URL(`\x01//${evil}`, 'https://example.com').toString()).toBe(
+        'https://evil.com/',
+      );
+      expect(() => trustedResourceUrl`\x01//${evil}`).toThrowError(
+        /Trying to interpolate expressions in an unsupported url format./,
+      );
     });
 
     it('calls encodeURIComponent on interpolated values', () => {
