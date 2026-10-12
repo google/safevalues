@@ -327,6 +327,46 @@ describe('html sanitizer builder test', () => {
     });
   });
 
+  describe('when calling allowNameAttributes():', () => {
+    it('allows name attributes', () => {
+      const sanitizer = new HtmlSanitizerBuilder()
+        .allowNameAttributes()
+        .build();
+
+      expect(
+        sanitizer.sanitize('<div name="my-name"></div>').toString(),
+      ).toEqual('<div name="my-name"></div>');
+    });
+
+    it('allows name attributes on anchors', () => {
+      const sanitizer = new HtmlSanitizerBuilder()
+        .allowNameAttributes()
+        .build();
+
+      expect(sanitizer.sanitize('<a name="anchor"></a>').toString()).toEqual(
+        '<a name="anchor"></a>',
+      );
+    });
+
+    it('drops name attributes when not called', () => {
+      const sanitizer = new HtmlSanitizerBuilder().build();
+
+      expect(
+        sanitizer.sanitize('<div name="my-name"></div>').toString(),
+      ).toEqual('<div></div>');
+    });
+
+    it('still drops form elements', () => {
+      const sanitizer = new HtmlSanitizerBuilder()
+        .allowNameAttributes()
+        .build();
+
+      expect(
+        sanitizer.sanitize('<form name="my-form"></form>').toString(),
+      ).toEqual('');
+    });
+  });
+
   describe('when calling allowIdReferenceAttributes():', () => {
     it('allows idref attributes', () => {
       const sanitizer = new HtmlSanitizerBuilder()

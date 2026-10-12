@@ -117,3 +117,14 @@ const sanitizer = new HtmlSanitizerBuilder()
                             .allowIdAttributes()
                             .build();
 ```
+
+`name` attributes can also be allowed, e.g. for content that relies on named
+anchors (`<a name="...">`). Like `id`, this enables DOM clobbering, so prefer
+`id` or `data-` attributes when you control the markup.
+
+```typescript
+// Allow name attributes
+const sanitizer = new HtmlSanitizerBuilder()
+                            .allowNameAttributes()
+                            .build();
+```

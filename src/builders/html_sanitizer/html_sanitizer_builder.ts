@@ -259,6 +259,31 @@ export abstract class BaseSanitizerBuilder<
     return this;
   }
   /**
+   * Preserves name attributes. This carries moderate risk as named elements
+   * can shadow ("clobber") existing properties of `window`, `document` and
+   * other DOM objects, and confuse code that reads them. `FORM` elements are
+   * always dropped by the sanitizer, which removes the most severe clobbering
+   * vectors.
+   *
+   * Prefer `allowIdAttributes` or `allowDataAttributes` when you control the
+   * markup. This option exists for content that relies on named anchors
+   * (`<a name="...">`).
+   */
+  allowNameAttributes(): this {
+    const allowedGlobalAttributes = new Set<string>(
+      this.sanitizerTable.allowedGlobalAttributes,
+    );
+    allowedGlobalAttributes.add('name');
+    this.sanitizerTable = new SanitizerTable(
+      this.sanitizerTable.allowedElements,
+      this.sanitizerTable.elementPolicies,
+      allowedGlobalAttributes,
+      this.sanitizerTable.globalAttributePolicies,
+      this.sanitizerTable.globallyAllowedAttributePrefixes,
+    );
+    return this;
+  }
+  /**
    * Preserves (some) attributes that reference existing ids. This carries a
    * moderate security risk, because sanitized content can create semantic
    * associations with existing elements in the page, regardless of the layout.
