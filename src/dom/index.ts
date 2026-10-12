@@ -49,7 +49,12 @@ export {
 export {rangeCreateContextualFragment} from './globals/range.js';
 export {serviceWorkerContainerRegister} from './globals/service_worker_container.js';
 export {objectUrlFromSafeSource} from './globals/url.js';
-export {getScriptNonce, getStyleNonce, windowOpen} from './globals/window.js';
+export {
+  getScriptNonce,
+  getStyleNonce,
+  openWindowInNewTab,
+  windowOpen,
+} from './globals/window.js';
 export {
   createSharedWorker,
   createWorker,
