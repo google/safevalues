@@ -12,102 +12,10 @@ import {
 } from '../internals/resource_url_impl.js';
 import {SafeScript, unwrapScript} from '../internals/script_impl.js';
 import {assertIsTemplateObject} from '../internals/string_literal.js';
+import {validateResourceUrlPrefix} from './resource_url_format.js';
 
 /** Type that we know how to interpolate */
 type Primitive = string | number | boolean;
-
-/**
- * Check whether the base url contains a valid origin,
- *
- * A string for an origin must contain only alphanumeric or any of the
- * following: `-.:`, and must not be an IP address. Remember that, as per the
- * documentation for TrustedResourceUrl, the origin must be trustworthy.
- *
- * @param base The base url that contains an origin.
- */
-function hasValidOrigin(base: string): boolean {
-  if (!(/^https:\/\//.test(base) || /^\/\//.test(base))) {
-    return false;
-  }
-
-  const originStart = base.indexOf('//') + 2;
-  const originEnd = base.indexOf('/', originStart);
-  // If the base url only contains the prefix (e.g. //), or the slash
-  // for the origin is right after the prefix (e.g. ///), the origin is
-  // missing.
-  if (originEnd <= originStart) {
-    throw new Error(
-      `Can't interpolate data in a url's origin, ` +
-        `Please make sure to fully specify the origin, terminated with '/'.`,
-    );
-  }
-
-  const origin = base.substring(originStart, originEnd);
-  if (!/^[0-9a-z.:-]+$/i.test(origin)) {
-    throw new Error('The origin contains unsupported characters.');
-  }
-  if (!/^[^:]*(:[0-9]+)?$/i.test(origin)) {
-    throw new Error('Invalid port number.');
-  }
-  if (!/(^|\.)[a-z][^.]*$/i.test(origin)) {
-    throw new Error('The top-level domain must start with a letter.');
-  }
-  return true;
-}
-
-/**
- * Check whether the base url contains a valid about url at its beginning.
- *
- * An about url is either exactly 'about:blank' or 'about:blank#<str>' where
- * <str> can be an arbitrary string.
- *
- * @param base The base url.
- */
-function isValidAboutUrl(base: string): boolean {
-  if (!/^about:blank/.test(base)) {
-    return false;
-  }
-  if (base !== 'about:blank' && !/^about:blank#/.test(base)) {
-    throw new Error('The about url is invalid.');
-  }
-  return true;
-}
-
-/**
- * Check whether the base url contains a valid path start at its beginning.
- *
- * A valid path start is either a '/' or a '/' followed by at least one
- * character that is not '/' or '\'.
- *
- * @param base The base url.
- */
-function isValidPathStart(base: string): boolean {
-  if (!/^\//.test(base)) {
-    return false;
-  }
-  if (
-    base === '/' ||
-    (base.length > 1 && base[1] !== '/' && base[1] !== '\\')
-  ) {
-    return true;
-  }
-  throw new Error('The path start in the url is invalid.');
-}
-
-/**
- * Check whether the base url contains a valid relative path start at its
- * beginning.
- *
- * A valid relative path start is a non empty string that has no ':', '/' nor
- * '\', and that is followed by a '/'.
- *
- * @param base The base url.
- */
-function isValidRelativePathStart(base: string): boolean {
-  // Using the RegExp syntax as the native JS RegExp syntax is not well handled
-  // by some downstream bundlers with this regex.
-  return new RegExp('^[^:\\s\\\\/]+/').test(base);
-}
 
 interface UrlSegments {
   readonly urlPath: string;
@@ -192,24 +100,10 @@ export function trustedResourceUrl(
     return createResourceUrlInternal(templateObj[0]);
   }
 
-  const base = templateObj[0].toLowerCase();
-
   if (process.env.NODE_ENV !== 'production') {
-    if (/^data:/.test(base)) {
-      throw new Error(
-        'Data URLs cannot have expressions in the template literal input.',
-      );
-    }
-
-    if (
-      !hasValidOrigin(base) &&
-      !isValidPathStart(base) &&
-      !isValidRelativePathStart(base) &&
-      !isValidAboutUrl(base)
-    ) {
-      throw new Error(
-        'Trying to interpolate expressions in an unsupported url format.',
-      );
+    const errorMsg = validateResourceUrlPrefix(templateObj[0]);
+    if (errorMsg !== undefined) {
+      throw new Error(errorMsg);
     }
   }
 
