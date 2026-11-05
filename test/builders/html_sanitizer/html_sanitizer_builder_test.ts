@@ -4,7 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import {HtmlSanitizer} from '../../../src/builders/html_sanitizer/html_sanitizer';
 import {
+  BaseSanitizerBuilder,
   CssSanitizerBuilder,
   HtmlSanitizerBuilder,
 } from '../../../src/builders/html_sanitizer/html_sanitizer_builder';
@@ -14,6 +16,21 @@ import {
 } from '../../../src/builders/html_sanitizer/url_policy';
 
 describe('html sanitizer builder test', () => {
+  it('throws an error when BaseSanitizerBuilder is constructed with an external token', () => {
+    class CustomSanitizerBuilder extends BaseSanitizerBuilder<HtmlSanitizer> {
+      constructor() {
+        super({});
+      }
+      build(): HtmlSanitizer {
+        return this.buildHtmlSanitizer();
+      }
+    }
+
+    expect(() => new CustomSanitizerBuilder()).toThrowError(
+      'BaseSanitizerBuilder cannot be subclassed outside of safevalues',
+    );
+  });
+
   it('throws an error when calling build twice', () => {
     const sanitizerBuilder = new HtmlSanitizerBuilder();
     sanitizerBuilder.build();
