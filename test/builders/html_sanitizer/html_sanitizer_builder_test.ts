@@ -210,6 +210,48 @@ describe('html sanitizer builder test', () => {
           .toString(),
       ).toEqual('<area href="https://google.com" />');
     });
+
+    it('allows class and style when called before allowClassAttributes and allowStyleAttributes', () => {
+      const sanitizer = new HtmlSanitizerBuilder()
+        .onlyAllowAttributes(new Set(['class', 'style']))
+        .allowClassAttributes()
+        .allowStyleAttributes()
+        .build();
+
+      expect(
+        sanitizer
+          .sanitize('<div class="c" style="color: red;" title="t"></div>')
+          .toString(),
+      ).toEqual('<div class="c" style="color: red;"></div>');
+    });
+
+    it('allows id and drops class when called before allowIdAttributes and allowClassAttributes', () => {
+      const sanitizer = new HtmlSanitizerBuilder()
+        .onlyAllowAttributes(new Set(['id']))
+        .allowIdAttributes()
+        .allowClassAttributes()
+        .build();
+
+      expect(
+        sanitizer
+          .sanitize('<div id="my-id" class="my-class"></div>')
+          .toString(),
+      ).toEqual('<div id="my-id"></div>');
+    });
+
+    it('allows id and drops class when called after allowIdAttributes and allowClassAttributes', () => {
+      const sanitizer = new HtmlSanitizerBuilder()
+        .allowIdAttributes()
+        .allowClassAttributes()
+        .onlyAllowAttributes(new Set(['id']))
+        .build();
+
+      expect(
+        sanitizer
+          .sanitize('<div id="my-id" class="my-class"></div>')
+          .toString(),
+      ).toEqual('<div id="my-id"></div>');
+    });
   });
 
   describe('when calling allowDataAttributes:', () => {
@@ -233,14 +275,14 @@ describe('html sanitizer builder test', () => {
 
     it('allows data attributes when called with onlyAllowAttributes', () => {
       const sanitizer = new HtmlSanitizerBuilder()
-        .onlyAllowAttributes(new Set<string>(['src']))
-        .allowDataAttributes(['data-foo'])
+        .onlyAllowAttributes(new Set<string>(['src', 'data-foo']))
+        .allowDataAttributes(['data-foo', 'data-bar'])
         .build();
 
       expect(
         sanitizer
           .sanitize(
-            '<article data-foo="hello" src="https://google.com"></article>',
+            '<article data-foo="hello" data-bar="world" src="https://google.com"></article>',
           )
           .toString(),
       ).toEqual('<article data-foo="hello"></article>');
