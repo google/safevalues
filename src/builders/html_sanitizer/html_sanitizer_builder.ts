@@ -297,9 +297,11 @@ export abstract class BaseSanitizerBuilder<
     allowedGlobalAttributes
       .add('aria-activedescendant')
       .add('aria-controls')
+      .add('aria-describedby')
       .add('aria-labelledby')
       .add('aria-owns')
       .add('for')
+      .add('headers')
       .add('list');
     this.sanitizerTable = new SanitizerTable(
       this.sanitizerTable.allowedElements,
